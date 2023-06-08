@@ -53,5 +53,40 @@ namespace EvolvedTax.Business.MailService
                 }
             }
         }
+        public async Task SendEmailToInstituteAsync(string UserFullName, String Email, string subject, string content, string URL)
+        {
+            var FromEmail = "technology@evolvedtax.com";
+            var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            var Host = "smtp.office365.com";
+            var Port = 587;
+            Email = "mr.owaisalibaig@gmail.com";
+            content = AppConstants.EmailToInstitute
+                .Replace("{{Name}}", UserFullName)
+                .Replace("{{link}}", URL);
+            // .Replace("{{link}}", string.Concat(URL, "?clientEmail=", email.ClientEmailId));
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(FromEmail);
+                message.To.Add(new MailAddress(Email));
+                message.Subject = subject;
+                message.IsBodyHtml = true; //to make message body as html
+                message.Body = content;
+                smtp.Port = Port;
+                smtp.Host = Host;
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                await smtp.SendMailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                // Exception Details
+            }
+
+        }
     }
 }

@@ -1,0 +1,187 @@
+﻿using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.CommonService;
+using EvolvedTax.Business.Services.GeneralQuestionareService;
+using EvolvedTax.Business.Services.SignupService;
+using EvolvedTax.Business.Services.W8BenFormService;
+using EvolvedTax.Business.Services.W8ECIFormService;
+using EvolvedTax.Business.Services.W9FormService;
+using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using static System.Net.WebRequestMethods;
+
+
+namespace EvolvedTax.Controllers
+{
+    //[SessionTimeout]
+    public class TaxInformation : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        readonly IWebHostEnvironment _webHostEnvironment;
+        readonly EvolvedtaxContext _evolvedtaxContext;
+        readonly ISignupQuestionareService _signupQuestionareService;
+        readonly ICommonService _commonService;
+        readonly private IMailService _emailService;
+
+        public TaxInformation(ILogger<HomeController> logger, IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
+        ISignupQuestionareService signupQuestionareService, ICommonService commonService, IMailService emailService)
+        {
+
+            _signupQuestionareService = signupQuestionareService;
+
+            _evolvedtaxContext = evolvedtaxContext;
+            _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
+            _commonService = commonService;
+            _emailService = emailService;
+        }
+
+
+        public IActionResult Index()
+        {
+
+
+            return View();
+        }
+
+
+
+        public async Task<IActionResult> SignUp()
+        {
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+
+            ViewBag.SecuredQ1 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ2 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ3 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+
+            ViewBag.EntityType = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityType
+            });
+
+
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.State,
+                Value = p.Id.ToString()
+            });
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(InstituteSignUpFormRequest model)
+        {
+            string FormName = string.Empty;
+
+            var responseForm = _signupQuestionareService.Save(model);
+            if (responseForm == 0)
+            {
+                return View(model);
+            }
+            else
+            {
+                var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                string fullnaame = model.SUFirstName + " " + model.SULastName;
+                string email = model.SUEmailAddress;
+
+                var fullUrl = $"{scheme}://{host}";
+                //string URL = Path.Combine(fullUrl, "Account", "login");
+                string URL = string.Concat(fullUrl, "/Account", "/login");
+
+                await _emailService.SendEmailToInstituteAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
+
+
+                //TempData["Type"] = ResponseMessageConstants.SuccessSaved;
+                //TempData["MessageSignup"] = "Information has been saved successfully.";
+
+                return View("Index");
+
+
+
+            }
+
+
+        }
+
+
+        public IActionResult SignUpSuccessMessage()
+        {
+            string? message = TempData["MessageSignUp"] as string;
+            ViewBag.MessageSignUp = message;
+            return View();
+        }
+
+        //[HttpPost]
+        //public ActionResult ValidateEmailDomain(string email)
+        //{
+
+
+        //    try
+        //    {
+        //        string domainEmail = email.Split('@')[1];
+        //        var emails = _evolvedtaxContext.EmailDomains.Where(e => e.EmailDomain1.ToLower().Contains(domainEmail.ToLower())).ToList();
+        //        if (emails.Any())
+        //        {
+        //            return Json(new { isValid = false });
+        //        }
+        //        // IPHostEntry entry = Dns.GetHostEntry(domain);
+        //        return Json(new { isValid = true });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { isValid = false });
+        //    }
+        //}
+
+        [HttpGet]
+        public ActionResult ValidateEmailDomainAddress(string SUEmailAddress)
+        {
+
+            try
+            {
+                string domainEmail = SUEmailAddress.Split('@')[1];
+                var emails = _evolvedtaxContext.EmailDomains.Where(e => e.EmailDomain1.ToLower().Contains(domainEmail.ToLower())).ToList();
+                if (emails.Any())
+                {
+                    return Json(false);
+                }
+                // IPHostEntry entry = Dns.GetHostEntry(domain);
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+
+
+
+    }
+}
