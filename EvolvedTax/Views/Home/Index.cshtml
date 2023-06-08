@@ -1,0 +1,159 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #the-canvas {
+        width: 100%;
+        /*height: 100%;*/
+        margin-bottom: 50px;
+    }
+
+    #pdf_container {
+        background: #ccc;
+        text-align: center;
+        display: none;
+        padding: 5px;
+        width: 100%;
+        /*height: 820px;*/
+        overflow: auto;
+        margin-bottom: 50px;
+        /* adjust margin-bottom to accommodate the height of the #buttons div */
+        z-index: 0;
+    }
+
+    .btn-width {
+        width: 100px;
+        margin-left: 10px;
+    }
+
+    #buttons {
+        position: fixed;
+        bottom: -50px;
+        left: 18.1%;
+        width: 82%;
+        background-color: white;
+        padding: 10px 20px 10px 20px;
+        z-index: 1;
+        float: right;
+    }
+
+</style>
+<div class="col-md-12">
+    <div id="pdf_container">
+        <!-- your PDF content goes here -->
+    </div>
+</div>
+
+<div id="buttons" class="mb-5 mr-3">
+    <div class="row pull-right">
+        <div>
+            <input type="button" class="btn btn-default btn-width" value="Load File" onclick="LoadPdfFromUrl('@Url.Content("~/Form_W9.pdf")')">
+        </div>
+        <div>
+            <input type="button" class="btn btn-dark btn-width" value="Edit" onclick="LoadPdfFromUrl('@Url.Content("~/123-45-6789.pdf")')">
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary btn-width">Submit</button>
+        </div>
+    </div>
+</div>
+
+<div class="ibox-content">
+    <div id="modal-form" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width:fit-content">
+                <div class="modal-body">
+                    <div id="pdf_containers">
+                        <canvas id="canvas2"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css" rel="stylesheet" type="text/css" />
+    <script>
+        function LoadPdfFromUrls(canvasId) {
+            debugger
+            // Get the canvas element by ID
+            var canvas1 = document.getElementById(canvasId);
+
+            // Get the context of the first canvas
+            var context1 = canvas1.getContext('2d');
+
+            // Render the canvas content in another canvas
+            var canvas2 = document.getElementById('canvas2');
+            var context2 = canvas2.getContext('2d');
+            canvas2.width = canvas1.width;
+            canvas2.height = canvas1.height;
+            var destX = 0, destY = 0, destWidth = canvas1.width, destHeight = canvas1.height;
+            context2.drawImage(canvas1, destX, destY, destWidth, destHeight);
+
+        };
+       
+    </script>
+    <script type="text/javascript">
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+        var pdfDoc = null;
+        var scale = 1; //Set Scale for zooming PDF.
+        var resolution = 1.35; //Set Resolution to Adjust PDF clarity.
+        var url = '../Form_W9.pdf';
+       
+        function LoadPdfFromUrl(url) {
+            //Read PDF from URL.
+            pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+                pdfDoc = pdfDoc_;
+
+                //Reference the Container DIV.
+                var pdf_container = document.getElementById("pdf_container");
+
+                pdf_container.innerHTML = "";
+
+                pdf_container.style.display = "block";
+
+                //Loop and render all pages.
+                for (var i = 1; i <= pdfDoc.numPages; i++) {
+                    RenderPage(pdf_container, i);
+                }
+            });
+        };
+        function RenderPage(pdf_container, num) {
+            pdfDoc.getPage(num).then(function (page) {
+                //Create Canvas element and append to the Container DIV.
+                var canvas = document.createElement('canvas');
+                canvas.id = 'pdf-' + num;
+                canvas.className = 'pdf-files';
+                ctx = canvas.getContext('2d');
+                pdf_container.appendChild(canvas);
+
+                //Create and add empty DIV to add SPACE between pages.
+                var spacer = document.createElement("div");
+                spacer.style.height = "20px";
+                pdf_container.appendChild(spacer);
+
+                //Set the Canvas dimensions using ViewPort and Scale.
+                var viewport = page.getViewport({ scale: scale });
+                canvas.height = resolution * viewport.height;
+                canvas.width = resolution * viewport.width;
+
+                //Render the PDF page.
+                var renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport,
+                    transform: [resolution, 0, 0, resolution, 0, 0]
+                };
+                page.render(renderContext);
+                canvas.addEventListener('click', function () {
+                    var canvasId = this.id;
+                    var pageNum = canvasId.split('-')[1]; // Assumes ID is in the format "pdf-<page number>"
+                    LoadPdfFromUrls(canvasId);
+                    $('#modal-form').modal('show');
+                });
+            });
+        };
+    </script>
+    }

@@ -1,0 +1,14 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/EvolvedTax/bin/Debug/net7.0
+/.vs/EvolvedTax/FileContentIndex
+/.cr/personal/FavoritesList
+/EvolvedTax/obj
+/EvolvedTax.Business/bin/Debug/net7.0
+/EvolvedTax.Business/obj
+/EvolvedTax.Common/bin/Debug/net7.0
+/EvolvedTax.Common/obj
+/EvolvedTax.Data/bin/Debug/net7.0
+/EvolvedTax.Data/obj

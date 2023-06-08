@@ -1,0 +1,37 @@
+﻿@using EvolvedTax;
+@inject IHttpContextAccessor _httpContextAccessor
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <img alt="image" class="rounded-circle" src="~/Images/profile_small.jpg" />
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="block m-t-xs font-bold">@_httpContextAccessor.HttpContext?.Session.GetString("InstituteName")</span>
+                        @*<span class="text-muted text-xs block">Art Director <b class="caret"></b></span>*@
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs" style="position: absolute; top: 91px; left: 0px; will-change: top, left;">
+                        <li><a class="dropdown-item" href="@Url.Action("Login", "Account")">Logout</a></li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    <img src="~/images/evolved_tax_mark_logo.png" width="50px"/>
+                </div>
+            </li>
+            <li class="@Html.IsSelected(controller: "Home")">
+                <a href="@Url.Action("GQIndividual", "Home")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Home", cssClass: "in")">
+                    <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Home")">GQ Individual</a></li>
+                </ul>
+            </li>
+            <li class="@Html.IsSelected(controller: "Institute")">
+                <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institute</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
+                    @*<li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>*@
+                    <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
+                    <li class="@Html.IsSelected(action: "Client")"><a href="@Url.Action("Client", "Institute")">Client</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
