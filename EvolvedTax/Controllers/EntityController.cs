@@ -33,6 +33,12 @@ namespace EvolvedTax.Controllers
         }
         public async Task<IActionResult> GQEntity()
         {
+            string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            if (_generalQuestionareEntityService.IsClientAlreadyExist(clientEmail))
+            {
+                HttpContext.Session.SetString("ClientEmail", "");
+                return RedirectToAction("DownloadForm", "Home", new { clientEmail = clientEmail });
+            }
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
@@ -116,7 +122,7 @@ namespace EvolvedTax.Controllers
                     model.USCitizen = "1";
                     FormName = model.FormType;
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
-                    var response = _w9FormService.UpdateForIndividual(model);
+                    var response = _w9FormService.UpdateForEntity(model);
                     //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
                     filePathResponse = response;
                 }
@@ -140,7 +146,7 @@ namespace EvolvedTax.Controllers
                     model.USCitizen = "1";
                     FormName = model.FormType;
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
-                    var response = _w9FormService.SaveForIndividual(model);
+                    var response = _w9FormService.SaveForEntity(model);
                     //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
                     HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
                     filePathResponse = response;

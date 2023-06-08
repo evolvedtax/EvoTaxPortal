@@ -134,9 +134,7 @@ public partial class EvolvedtaxContext : DbContext
 
         modelBuilder.Entity<GeneralQuestionEntity>(entity =>
         {
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+            entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.BackupWithHolding)
                 .HasMaxLength(10)
                 .IsUnicode(false);

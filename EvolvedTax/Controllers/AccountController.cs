@@ -61,10 +61,6 @@ namespace EvolvedTax.Controllers
         [SessionTimeout]
         public IActionResult OTP(string clientEmail)
         {
-            if (_generalQuestionareService.IsClientAlreadyExist(clientEmail))
-            {
-                return RedirectToAction("DownloadForm","Home", new { clientEmail = clientEmail});
-            }
             HttpContext.Session.SetString("ClientEmail", clientEmail);
             return View();
         }
