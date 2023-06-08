@@ -12,6 +12,14 @@ public class FormRequest
     public string TypeofTaxNumber { get; set; } = string.Empty;
     public string USCitizen { get; set; } = string.Empty;
     public string US1 { get; set; } = string.Empty;
+    public string IndividualOrEntityStatus { get; set; } = string.Empty;
+    //-----------ENTITY STATUS---------//
+    public string GQOrgName { get; set; } = string.Empty;
+    public string EntityType { get; set; } = string.Empty;
+    public string Ccountry { get; set; } = string.Empty;
+    public string BackupWithHolding { get; set; } = string.Empty;
+    public string Payeecode { get; set; } = string.Empty;
+    public string Fatca { get; set; } = string.Empty;
     //-----------W9-------------------//
     public int Id { get; set; }
 

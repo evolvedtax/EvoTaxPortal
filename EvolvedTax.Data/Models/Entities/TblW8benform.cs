@@ -61,5 +61,5 @@ public partial class TblW8benform
 
     public string? W8benemailAddress { get; set; }
 
-    public string? W8benonBehalfName { get; set; }
+    public bool? W8benonBehalfName { get; set; }
 }

@@ -123,7 +123,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 DealerCertification = true,
                 Status = "1",
                 W8eciemailAddress = request.EmailId,
-                W8ecionBehalfName = request.W8ECIOnBehalfName == true ? "1" : "0"
+                W8ecionBehalfName = request.W8ECIOnBehalfName
             };
 
             _evolvedtaxContext.TblW8eciforms.Add(model);
@@ -594,7 +594,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 response.DealerCertification = true;
                 response.Status = "1";
                 response.W8eciemailAddress = request.EmailId;
-                response.W8ecionBehalfName = request.W8ECIOnBehalfName == true ? "1" : "0";
+                response.W8ecionBehalfName = request.W8ECIOnBehalfName;
 
                 _evolvedtaxContext.TblW8eciforms.Update(response);
                 _evolvedtaxContext.SaveChanges();

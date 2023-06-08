@@ -81,7 +81,7 @@ namespace EvolvedTax.Controllers
                 formVals["Otp6"].ToString());
             if (Otp == "123456")
             {
-                return RedirectToAction("Entity", "Home");
+                return RedirectToAction("Index", "Status");
                 //return RedirectToAction("Entities", "Institute");
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus;

@@ -13,6 +13,9 @@ namespace EvolvedTax.Common.Constants
 
         public const string Entity = "Entity";
         public const string Client = "Client";
+
+        public const string IndividualStatus = "IndividualStatus";
+        public const string EntityStatus = "EntityStatus";
         //-----------FILE TEMPLATES----------------------//
         public const string W9TemplateFileName = @"Form_W9.pdf";
         public const string W8BENTemplateFileName = @"Form_W8Ben.pdf";

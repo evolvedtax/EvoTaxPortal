@@ -1,5 +1,6 @@
 ﻿using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.CommonService;
+using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.UserService;
@@ -57,6 +58,7 @@ namespace EvolvedTax.Helpers
             #region @@@[------Services]
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGeneralQuestionareService, GeneralQuestionareService>();
+            services.AddScoped<IGeneralQuestionareEntityService, GeneralQuestionareEntityService>();
             services.AddScoped<IW9FormService, W9FormService>();
             services.AddScoped<IW8BenFormService, W8BenFormService>();
             services.AddScoped<IW8ECIFormService, W8ECIFormService>();

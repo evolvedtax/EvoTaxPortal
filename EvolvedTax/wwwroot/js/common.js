@@ -249,19 +249,14 @@ var COMMON = (function () {
         };
 
         xhr.onload = function () {
+            debugger
             if (xhr.status === 200) {
                 // File upload successful
                 console.log('File uploaded successfully');
-
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
-                if (response.completed) {
-                    // Hide the progress bar
-                    var progressDiv = document.getElementById('progress');
-                    progressDiv.style.display = 'none';
-
-                    // Perform any additional actions on completion
-                    // For example, display a success message
+                if (response.Status) {
+                    COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
                     console.log('Upload completed successfully');
                 } else {
                     // Continue showing the progress bar until completion record is received

@@ -10,8 +10,10 @@ namespace EvolvedTax.Business.Services.W9FormService
 {
     public interface IW9FormService
     {
-        public string Save(FormRequest model);
-        public string Update(FormRequest model);
+        public string SaveForIndividual(FormRequest model);
+        public string UpdateForIndividual(FormRequest model);
+        public string SaveForEntity(FormRequest model);
+        public string UpdateForEntity(FormRequest model);
         public FormRequest GetDataByClientEmailId(string ClientEmailId);
         public Task<bool> UpdateByClientEmailId(string ClientId, PdfFormDetailsRequest request);
     }

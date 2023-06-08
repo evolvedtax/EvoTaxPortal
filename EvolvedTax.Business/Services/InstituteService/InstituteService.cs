@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using EvolvedTax.Data.Models.DTOs.Request;
+using Microsoft.EntityFrameworkCore;
+using EvolvedTax.Data.Models.DTOs;
+using Azure;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -67,20 +70,22 @@ namespace EvolvedTax.Business.Services.InstituteService
         public List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId)
         {
             var result = from ic in _evolvedtaxContext.InstitutesClients
-                         join im in _evolvedtaxContext.InstituteMasters on ic.InstituteId equals im.InstId
+                         join ie in _evolvedtaxContext.InstituteEntities on ic.InstituteId equals ie.InstituteId
                          where ClientId.Contains(ic.ClientId)
                          select new InstituteClientResponse
                          {
                              ClientEmailId = ic.ClientEmailId,
-                             InstituteUserName = im.FirstName + " " + im.LastName,
-                             InstituteName = im.InstitutionName ?? string.Empty,
+                             InstituteUserName = ic.PartnerName1 + " " + ic.PartnerName1 ?? "",
+                             InstituteName = ie.EntityName ?? "",
                          };
 
             return result.ToList();
         }
 
-        public async Task<bool> UploadEntityData(IFormFile file, int InstId, string InstituteName)
+        public async Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName)
         {
+            bool Status = false;
+            var response = new List<int>();
             var entityList = new List<InstituteEntity>();
             using (var stream = file.OpenReadStream())
             {
@@ -106,16 +111,29 @@ namespace EvolvedTax.Business.Services.InstituteService
                         InstituteId = InstId,
                         InstituteName = InstituteName,
                     };
-                    entityList.Add(entity);
+                    // Check for duplicate records based on ClientEmailId in the database
+                    if (await _evolvedtaxContext.InstituteEntities.AnyAsync(p =>
+                        p.Ein == entity.Ein &&
+                        p.InstituteId == entity.InstituteId))
+                    {
+                        response.Add(row);
+                        Status = true;
+                    }
+                    else
+                    {
+                        entityList.Add(entity);
+                    }
                 }
                 await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
-            return true;
+            return new MessageResponseModel { Status = Status, Message = response };
         }
-        public async Task<bool> UploadClientData(IFormFile file, int InstId, int EntityId)
+        public async Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId)
         {
-            var entityList = new List<InstitutesClient>();
+            bool Status = false;
+            var response = new List<int>();
+            var clientList = new List<InstitutesClient>();
             using (var stream = file.OpenReadStream())
             {
                 IWorkbook workbook = new XSSFWorkbook(stream);
@@ -125,7 +143,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 {
                     IRow excelRow = sheet.GetRow(row);
 
-                    var entity = new InstitutesClient
+                    var client = new InstitutesClient
                     {
                         EntityName = excelRow.GetCell(0)?.ToString() ?? string.Empty,
                         PartnerName1 = excelRow.GetCell(1)?.ToString() ?? string.Empty,
@@ -144,12 +162,27 @@ namespace EvolvedTax.Business.Services.InstituteService
                         InstituteId = (short)InstId,
                         EntityId = EntityId,
                     };
-                    entityList.Add(entity);
+
+                    // Check for duplicate records based on ClientEmailId in the database
+                    if (await _evolvedtaxContext.InstitutesClients.AnyAsync(p =>
+                        p.ClientEmailId == client.ClientEmailId &&
+                        p.InstituteId == client.InstituteId &&
+                        p.EntityId == client.EntityId))
+                    {
+                        response.Add(row);
+                        Status = true;
+                    }
+                    else
+                    {
+                        clientList.Add(client);
+                    }
                 }
-                await _evolvedtaxContext.InstitutesClients.AddRangeAsync(entityList);
+
+                await _evolvedtaxContext.InstitutesClients.AddRangeAsync(clientList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
-            return true;
+            return new MessageResponseModel { Status = Status, Message = response };
+
         }
         public async Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request)
         {

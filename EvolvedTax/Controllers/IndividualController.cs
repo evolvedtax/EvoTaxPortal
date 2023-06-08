@@ -1,27 +1,18 @@
-﻿using System.Text;
-using EvolvedTax.Business.Services.CommonService;
+﻿using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
-using EvolvedTax.Data.EFRepository;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
-using EvolvedTax.Helpers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.DotNet.Scaffolding.Shared.Project;
-using PdfSharpCore;
-using PdfSharpCore.Pdf;
-using PdfSharpCore.Pdf.IO;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
-    [SessionTimeout]
-    public class HomeController : Controller
+    public class IndividualController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly EvolvedtaxContext _evolvedtaxContext;
         private readonly IW9FormService _w9FormService;
@@ -32,7 +23,7 @@ namespace EvolvedTax.Controllers
         private readonly IInstituteService _instituteService;
 
 
-        public HomeController(ILogger<HomeController> logger, IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
+        public IndividualController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
             IW9FormService w9FormService, IGeneralQuestionareService generalQuestionareService, IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, ICommonService commonService, IInstituteService instituteService)
         {
             _w8ECIFormService = w8ECIFormService;
@@ -41,7 +32,6 @@ namespace EvolvedTax.Controllers
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
             _webHostEnvironment = webHostEnvironment;
-            _logger = logger;
             _commonService = commonService;
             _instituteService = instituteService;
         }
@@ -50,11 +40,6 @@ namespace EvolvedTax.Controllers
         {
             return View();
         }
-        public IActionResult Entity()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> GQIndividual()
         {
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
@@ -107,6 +92,7 @@ namespace EvolvedTax.Controllers
             string FormName = string.Empty;
             string filePathResponse = string.Empty;
 
+            model.IndividualOrEntityStatus = AppConstants.IndividualStatus;
             model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
             model.BasePath = _webHostEnvironment.WebRootPath;
@@ -362,6 +348,6 @@ namespace EvolvedTax.Controllers
             }
             return View();
         }
-        
+
     }
 }

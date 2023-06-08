@@ -50,7 +50,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
                 SsnOrItin = request.Ssnitnein,
                 Status = "1",
                 W8benemailAddress = request.EmailId,
-                W8benonBehalfName = request.W8BENOnBehalfName == true ? "1" : "0"
+                W8benonBehalfName = request.W8BENOnBehalfName
             };
             if (request.EligibleForTheRateOfWithholding != "")
             {
@@ -237,7 +237,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
                 response.SsnOrItin = request.Ssnitnein;
                 response.Status = "1";
                 response.W8benemailAddress = request.EmailId;
-                response.W8benonBehalfName = request.W8BENOnBehalfName == true ? "1" : "0";
+                response.W8benonBehalfName = request.W8BENOnBehalfName;
 
                 if (request.EligibleForTheRateOfWithholding != "")
                 {

@@ -1,4 +1,5 @@
-﻿using EvolvedTax.Data.Models.DTOs.Request;
+﻿using EvolvedTax.Data.Models.DTOs;
+using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.Entities;
 using Microsoft.AspNetCore.Http;
@@ -17,8 +18,8 @@ namespace EvolvedTax.Business.Services.InstituteService
         IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId);
         List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId);
         InstituteClientResponse GetClientDataByClientEmailId(string ClientEmailId);
-        Task<bool> UploadEntityData(IFormFile file, int InstId, string InstituteName);
-        Task<bool> UploadClientData(IFormFile file, int InstId, int EntityId);
+        Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName);
+        Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId);
         Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
         InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId);
