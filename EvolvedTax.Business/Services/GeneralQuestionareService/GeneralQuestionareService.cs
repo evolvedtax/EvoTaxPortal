@@ -20,7 +20,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
             _evolvedtaxContext = evolvedtaxContext;
         }
 
-        public FormRequest GetDataByClientEmail(string ClientEmail)
+        public FormRequest? GetDataByClientEmail(string ClientEmail)
         {
             return _evolvedtaxContext.GeneralQuestionIndividuals.Where(p => p.UserName == ClientEmail).Select(p => new FormRequest
             {
@@ -45,7 +45,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
                 UserName = p.UserName ?? string.Empty,
                 USCitizen = p.Uscitizen ?? string.Empty,
                 US1 = p.Us1 ?? string.Empty,
-            }).First();
+            }).FirstOrDefault();
         }
 
         public int Save(FormRequest request)

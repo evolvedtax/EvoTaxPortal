@@ -17,6 +17,8 @@ using EvolvedTax.Common.Constants;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using NPOI.SS.Formula.Functions;
 using Org.BouncyCastle.Asn1.Ocsp;
+using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
+using System.Linq.Expressions;
 
 namespace EvolvedTax.Business.Services.W9FormService
 {
@@ -24,10 +26,12 @@ namespace EvolvedTax.Business.Services.W9FormService
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IGeneralQuestionareService _generalQuestionareService;
-        public W9FormService(EvolvedtaxContext evolvedtaxContext, IGeneralQuestionareService generalQuestionareService)
+        readonly IGeneralQuestionareEntityService _generalQuestionareEntityService;
+        public W9FormService(EvolvedtaxContext evolvedtaxContext, IGeneralQuestionareService generalQuestionareService, IGeneralQuestionareEntityService generalQuestionareEntityService)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _generalQuestionareService = generalQuestionareService;
+            _generalQuestionareEntityService = generalQuestionareEntityService;
         }
         public string SaveForIndividual(FormRequest request)
         {
@@ -49,7 +53,10 @@ namespace EvolvedTax.Business.Services.W9FormService
                 W9emailAddress = request.EmailId,
                 W9entryDate = DateTime.Now,
             };
-
+            if (_evolvedtaxContext.TblW9forms.Any(p => p.W9emailAddress == request.EmailId))
+            {
+                return UpdateForIndividual(request);
+            }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
             return W9Creation(request);
@@ -71,11 +78,15 @@ namespace EvolvedTax.Business.Services.W9FormService
                 ListofAccounts = " ",
                 Exemptions = request.Payeecode,
                 Fatca = request.Fatca,
-                SsnTin = request.TypeofTaxNumber,
+                SsnTin = request.Ssnitnein,
                 W9emailAddress = request.EmailId,
                 W9entryDate = DateTime.Now,
             };
 
+            if (_evolvedtaxContext.TblW9forms.Any(p => p.W9emailAddress == request.EmailId))
+            {
+                return UpdateForEntity(request);
+            }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
             return W9Creation(request);
@@ -83,7 +94,15 @@ namespace EvolvedTax.Business.Services.W9FormService
         protected static string W9Creation(FormRequest request)
         {
             string templatefile = request.TemplateFilePath;
-            string newFile1 = string.Concat(string.Concat(request.GQFirstName, " ", request.GQLastName).Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", Guid.NewGuid(), "_temp.pdf");
+            string newFile1 = string.Empty;
+            if (request.IndividualOrEntityStatus == AppConstants.IndividualStatus)
+            {
+                newFile1 = string.Concat(string.Concat(request.GQFirstName, " ", request.GQLastName).Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", Guid.NewGuid(), "_temp.pdf");
+            }
+            else
+            {
+                newFile1 = string.Concat(request.GQOrgName.Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", Guid.NewGuid(), "_temp.pdf");
+            }
             string newFile = Path.Combine(request.BasePath, newFile1);
 
             PdfReader pdfReader = new PdfReader(templatefile);
@@ -102,6 +121,14 @@ namespace EvolvedTax.Business.Services.W9FormService
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].SSN[0].f1_12[0]", request?.Ssnitnein?.Substring(4, 2));
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].SSN[0].f1_13[0]", request?.Ssnitnein?.Substring(7, 4));
                 }
+                // following seven boxes.
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
             }
             else
             {
@@ -111,17 +138,71 @@ namespace EvolvedTax.Business.Services.W9FormService
                 // ElseIf Mid(SSN_TIN1, 3, 1) = "-" Then
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].EmployerID[0].f1_14[0]", request?.Ssnitnein?.Substring(0, 2));
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].EmployerID[0].f1_15[0]", request?.Ssnitnein?.Substring(3, 7));
-            }
-            // 3. Check appropriate box for federal tax classification of the person whose name is entered on line 1. Check only one of the 
-            // following seven boxes. 
-            // pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", 1)
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                // Exempt payee code (if any)
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_5[0]", request.Payeecode);
+                // Exemption From FATCA reporting code(If any)
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_6[0]", request.Fatca);
 
+                // 3. Check appropriate box for federal tax classification of the person whose name is entered on line 1. Check only one of the 
+                switch (request?.EntityType)
+                {
+                    case "1": //Individual
+                              //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                    case "2": // C Corporation
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                    case "3": // S Corporation
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                    case "4": // Partnership
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                    case "5": // Trust/estate
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                    case "6": // Limited liability company
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[4]", "0");
+                        //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[5]", "0");
+                        pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[6]", "0");
+                        break;
+                }
+            }
+            
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].f1_3[0]", TextBox3.Text)
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].f1_4[0]", "4")
             // 4. Exemptions(codes apply only to certain entities, Not individuals; see instructions on page 3)
@@ -137,8 +218,8 @@ namespace EvolvedTax.Business.Services.W9FormService
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_9[0]", "9")
             // 7 List account number(s) here (optional)
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_10[0]", ListofAccounts1)
-            
-            
+
+
 
             // Else
             // MsgBox("Please Check the Tax Number Or Social Security")
@@ -239,7 +320,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             return true;
         }
 
-        public FormRequest GetDataByClientEmailId(string ClientEmailId)
+        public FormRequest GetDataForIndividualByClientEmailId(string ClientEmailId)
         {
             var gQuestionData = _generalQuestionareService.GetDataByClientEmail(ClientEmailId);
             var w9Data = _evolvedtaxContext.TblW9forms.FirstOrDefault(p => p.W9emailAddress == ClientEmailId);
@@ -247,6 +328,21 @@ namespace EvolvedTax.Business.Services.W9FormService
             gQuestionData.EmailId = w9Data?.W9emailAddress ?? ClientEmailId;
             gQuestionData.W9PrintName = w9Data?.W9printName;
             return gQuestionData;
+        }
+
+        public FormRequest GetDataForEntityByClientEmailId(string ClientEmailId)
+        {
+            var gQuestionData = _generalQuestionareEntityService.GetDataByClientEmail(ClientEmailId);
+            var w9Data = _evolvedtaxContext.TblW9forms.FirstOrDefault(p => p.W9emailAddress == ClientEmailId);
+            gQuestionData.Ssnitnein = w9Data?.SsnTin;
+            gQuestionData.EmailId = w9Data?.W9emailAddress ?? ClientEmailId;
+            gQuestionData.W9PrintName = w9Data?.W9printName;
+            return gQuestionData;
+        }
+
+        public string GetPrintNameByClientEmailId(string ClientEmailId)
+        {
+            return _evolvedtaxContext?.TblW9forms?.FirstOrDefault(p => p.W9emailAddress == ClientEmailId)?.W9printName ?? "";
         }
         public string UpdateForIndividual(FormRequest request)
         {

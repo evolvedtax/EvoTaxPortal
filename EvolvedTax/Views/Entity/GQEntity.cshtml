@@ -141,6 +141,10 @@
             
             //-------------------//
             $('select').change();
+            var checkedRadioButton = $("input[type='radio'][name='BackupWithHolding']:checked");
+            if (checkedRadioButton.length > 0) {
+                checkedRadioButton.trigger("click");
+            }
             var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
             if (checkedRadioButton.length > 0) {
                 checkedRadioButton.trigger("click");

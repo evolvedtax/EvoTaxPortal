@@ -12,7 +12,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
             _evolvedtaxContext = evolvedtaxContext;
         }
 
-        public FormRequest GetDataByClientEmail(string ClientEmail)
+        public FormRequest? GetDataByClientEmail(string ClientEmail)
         {
             return _evolvedtaxContext.GeneralQuestionEntities.Where(p => p.UserName == ClientEmail).Select(p => new FormRequest
             {
@@ -38,7 +38,8 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 Payeecode = p.Payeecode ?? string.Empty,
                 Fatca = p.Fatca ?? string.Empty,
                 BackupWithHolding = p.BackupWithHolding ?? string.Empty,
-            }).First();
+                Ssnitnein = p.Number
+            }).FirstOrDefault();
         }
 
         public int Save(FormRequest request)

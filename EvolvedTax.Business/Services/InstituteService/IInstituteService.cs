@@ -17,7 +17,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId);
         IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId);
         List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId);
-        InstituteClientResponse GetClientDataByClientEmailId(string ClientEmailId);
+        InstituteClientResponse? GetClientDataByClientEmailId(string ClientEmailId);
         Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName);
         Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId);
         Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);

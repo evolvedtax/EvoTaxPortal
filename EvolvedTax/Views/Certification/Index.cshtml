@@ -81,7 +81,7 @@
           data-ajax-failure="COMMON.ajaxfailure"
           data-ajax-loading="#ajax-loader"
           data-ajax-success="ajaxsuccess"
-          data-ajax-url="@Url.Action("Certify","Home")">
+          data-ajax-url="@Url.Action("Certify","Certification")">
         <div id="certifyDiv" hidden>
             <div class="form-check abc-radio abc-radio-info form-check-inline">
                 <input class="form-check-input" type="checkbox" asp-for=Agreement1 id="agreement1">
@@ -199,7 +199,7 @@
         <div class="modal-content" style="width:max-content">
             <div class="modal-body">
 
-                <form id="form" asp-action="Certification" asp-controller="Home" method="post">
+                <form id="form" asp-action="Index" asp-controller="Certification" method="post">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -298,7 +298,7 @@
             var entityName = response.entityName;
             var instituteEmail = response.InstituteEmail;
 
-            var link1 = $("<a>")
+            var link = $("<a>")
                 .attr("href", "javascript:void(0)")
                 .click(function () {
                     openFile(response.fileName);
@@ -306,16 +306,12 @@
                 .text("Please click here to download a copy for your records.").css("text-decoration", "underline");
 
             var text = "<p><strong>Dear " + name + ",</strong></p>" +
-                "<p><strong>Your completed form " + formName + " has been submitted to " + entityName + ".</strong></p> <br/>";
-            var linkText = $('<p><strong></strong></p>').append(link1).append('<strong> </strong>');
+                "<p><strong>Your completed form " + formName + " to " + entityName + ". To ensure you have a copy for your records, please click the link below to download a PDF version of your submitted form:</strong></p> <br/>";
 
-            var disclaimerText = $("<a>")
-                .attr("href", "mailto:" + instituteEmail)
-                .attr("target", "_blank")
-                .text("Please contact " + entityName + " for any update required, if any.")
-                .css("text-decoration", "underline");
+            var disclaimerText = "If you need to make any changes or have any inquiries regarding your submitted form, please reach out to " + entityName + " dedicated support team. They will be happy to assist you.<br/> Thank you for your cooperation and prompt submission. We appreciate your attention to detail and adherence to the required procedures.";
 
-            $('#certifyDiv').append(text, linkText, '<br /><br />', disclaimerText);
+
+            $('#certifyDiv').append(text, link, '<br /><br /><br />', disclaimerText);
         }
 
         function openFile(fileName) {

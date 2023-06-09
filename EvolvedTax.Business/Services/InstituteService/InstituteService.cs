@@ -204,7 +204,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             return true;
         }
 
-        public InstituteClientResponse GetClientDataByClientEmailId(string ClientEmailId)
+        public InstituteClientResponse? GetClientDataByClientEmailId(string ClientEmailId)
         {
             return _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == ClientEmailId).Select(p => new InstituteClientResponse
             {
@@ -212,7 +212,22 @@ namespace EvolvedTax.Business.Services.InstituteService
                 ClientStatusDate = p.ClientStatusDate,
                 ClientStatus = p.ClientStatus,
                 FormName = p.FormName,
-            }).First();
+                Address1 = p.Address1,
+                Address2 = p.Address2,
+                City = p.City,
+                ClientEmailId = p.ClientEmailId,
+                ClientId = p.ClientId,
+                Country = p.Country,
+                EntityId = p.EntityId,
+                EntityName = p.EntityName,
+                InstituteId = p.InstituteId,
+                PartnerName1 = p.PartnerName1,
+                PartnerName2 = p.PartnerName2,
+                PhoneNumber = p.PhoneNumber,
+                Province = p.Province,
+                State = p.State,
+                Zip = p.Zip,
+            }).FirstOrDefault();
         }
 
         public InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId)

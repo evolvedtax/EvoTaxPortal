@@ -18,14 +18,13 @@ namespace EvolvedTax.Controllers
     //[SessionTimeout]
     public class TaxInformation : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         readonly IWebHostEnvironment _webHostEnvironment;
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly ISignupQuestionareService _signupQuestionareService;
         readonly ICommonService _commonService;
         readonly private IMailService _emailService;
 
-        public TaxInformation(ILogger<HomeController> logger, IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
+        public TaxInformation(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
         ISignupQuestionareService signupQuestionareService, ICommonService commonService, IMailService emailService)
         {
 
@@ -33,7 +32,6 @@ namespace EvolvedTax.Controllers
 
             _evolvedtaxContext = evolvedtaxContext;
             _webHostEnvironment = webHostEnvironment;
-            _logger = logger;
             _commonService = commonService;
             _emailService = emailService;
         }
