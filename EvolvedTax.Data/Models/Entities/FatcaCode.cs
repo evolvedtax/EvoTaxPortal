@@ -10,5 +10,4 @@ public partial class FatcaCode
 
     public int FatcaId { get; set; }
 
-    public string? FatcaValue { get; set; }
 }

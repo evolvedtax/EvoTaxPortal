@@ -10,5 +10,4 @@ public partial class ExemptPayeeCode
     public string? ExemptValue { get; set; }
     public int ExemptId { get; set; }
 
-    public string? ExemptValue { get; set; }
 }
