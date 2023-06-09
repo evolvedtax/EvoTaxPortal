@@ -184,6 +184,84 @@
 <div class="tab">
     <div class="text-center"><span><p>Additional Information</p></span></div>
     <div class="form-box">
+
+        @*New changes start*@
+
+        <div class="col-md-12">
+            <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="DE1" value="Yes" checked asp-for="DE" required>
+                    <label class="form-check-label" for="DE1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="DE2" value="No" asp-for="DE" required>
+                    <label class="form-check-label" for="DE2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>United States Disregarded entity (DE) Owner Name</label>
+                <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="Idtype1" value="SSN" checked asp-for="IdType" required>
+                    <label class="form-check-label" for="Idtype1"> SSN </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="Idtype2" value="EIN" asp-for="IdType" required>
+                    <label class="form-check-label" for="Idtype2"> EIN </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="Idtype3" value="ITIN" asp-for="IdType" required>
+                    <label class="form-check-label" for="Idtype3"> ITIN </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Number</label>
+                <input id="IdNumber" asp-for="IdNumber" type="text" class="form-control" required>
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+            <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="RetirementPlan1" value="Yes" checked asp-for="RetirementPlan" required>
+                    <label class="form-check-label" for="RetirementPlan1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="RetirementPlan2" value="No" asp-for="RetirementPlan" required>
+                    <label class="form-check-label" for="RetirementPlan2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <label>Is the entity managed outside the United States?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="ManagedoutUSA1" value="Yes" checked asp-for="EnitityManagendOutSideUSA" required>
+                    <label class="form-check-label" for="ManagedoutUSA1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="ManagedoutUSA2" value="No" asp-for="EnitityManagendOutSideUSA" required>
+                    <label class="form-check-label" for="ManagedoutUSA2"> No </label>
+                </div>
+            </div>
+        </div>
+        @*New changes end*@
+
+
         <div class="col-md-12">
             <label>Are you required to have backup withholding? If No, please select below.</label>
             <div class="form-group">

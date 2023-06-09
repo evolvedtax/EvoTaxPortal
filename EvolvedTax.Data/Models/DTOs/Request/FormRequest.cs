@@ -20,6 +20,16 @@ public class FormRequest
     public string BackupWithHolding { get; set; } = string.Empty;
     public string Payeecode { get; set; } = string.Empty;
     public string Fatca { get; set; } = string.Empty;
+
+    public string? DE { get; set; } = string.Empty;
+
+    public string? DEOwnerName { get; set; } = string.Empty;
+    public string? EnitityManagendOutSideUSA { get; set; } = string.Empty;
+    public string? USPartner { get; set; } = string.Empty;
+    public string? IdType { get; set; }
+    public string? IdNumber { get; set; }
+    public string? RetirementPlan { get; set; }
+
     //-----------W9-------------------//
     public int Id { get; set; }
 

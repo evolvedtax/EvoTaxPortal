@@ -216,6 +216,7 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
         function SelectForm(obj) {
+            
             if (obj.value == '@AppConstants.W8Form') {
                 $('#W8FormDiv').prop('hidden', false);
                 $('#W8BenQuestionareDiv').prop('hidden', false);
@@ -228,6 +229,7 @@
                 $('#Ssnitnein').removeAttr('required');
                 $('input[name="TypeofTaxNumber"]').removeAttr('required');
             } else {
+                alert ('owais');
                 //$('#W8FormDiv').prop('hidden', true);
                 //$('#W8BenQuestionareDiv').prop('hidden', true);
                 //$('#W8ECIQuestionareDiv').prop('hidden', true);

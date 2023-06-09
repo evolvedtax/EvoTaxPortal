@@ -14,3 +14,6 @@
 /EvolvedTax.Data/obj
 /.vs
 /EvolvedTax/appsettings.json
+/.vs/EvolvedTax/DesignTimeBuild/.dtbcache.v2
+/EvolvedTax/appsettings.json
+*.pdf

@@ -33,6 +33,8 @@ namespace EvolvedTax.Controllers
         }
         public async Task<IActionResult> GQEntity()
         {
+           
+
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
             if (_generalQuestionareEntityService.IsClientAlreadyExist(clientEmail))
             {

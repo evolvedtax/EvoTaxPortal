@@ -48,6 +48,7 @@ namespace EvolvedTax.Controllers
 
 
 
+        #region TaxInformation Signup
         public async Task<IActionResult> SignUp()
         {
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
@@ -130,14 +131,6 @@ namespace EvolvedTax.Controllers
 
         }
 
-
-        public IActionResult SignUpSuccessMessage()
-        {
-            string? message = TempData["MessageSignUp"] as string;
-            ViewBag.MessageSignUp = message;
-            return View();
-        }
-
         //[HttpPost]
         //public ActionResult ValidateEmailDomain(string email)
         //{
@@ -180,8 +173,19 @@ namespace EvolvedTax.Controllers
                 return Json(false);
             }
         }
+        #endregion
+
+       
 
 
 
-    }
+
+
+
+
+
+
+
+
+        }
 }

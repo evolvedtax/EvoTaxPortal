@@ -60,4 +60,10 @@ public partial class GeneralQuestionEntity
     public string? EnitityManagendOutSideUsa { get; set; }
 
     public string? BackupWithHolding { get; set; }
+
+    public string? Uspartner { get; set; }
+
+    public string? Idtype { get; set; }
+
+    public string? Idnumber { get; set; }
 }

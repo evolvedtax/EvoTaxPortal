@@ -97,6 +97,8 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<W91> W91s { get; set; }
 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDomain>(entity =>
@@ -118,6 +120,9 @@ public partial class EvolvedtaxContext : DbContext
 
             entity.Property(e => e.ExemptId).HasColumnName("ExemptID");
             entity.Property(e => e.ExemptCode).IsUnicode(false);
+            entity.Property(e => e.ExemptValue)
+                .HasMaxLength(10)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<FatcaCode>(entity =>
@@ -130,6 +135,9 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.FatcaCode1)
                 .IsUnicode(false)
                 .HasColumnName("FATCA_Code");
+            entity.Property(e => e.FatcaValue)
+                .HasMaxLength(10)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<GeneralQuestionEntity>(entity =>
@@ -161,6 +169,14 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("FATCA");
+            entity.Property(e => e.Idnumber)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("IDNumber");
+            entity.Property(e => e.Idtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("IDType");
             entity.Property(e => e.MailingAddress1)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -223,6 +239,10 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Uspartner)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("USPartner");
         });
 
         modelBuilder.Entity<GeneralQuestionIndividual>(entity =>
