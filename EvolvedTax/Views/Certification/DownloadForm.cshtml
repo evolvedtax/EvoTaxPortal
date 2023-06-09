@@ -83,17 +83,17 @@
                 .click(function () {
                     openFile('@ViewBag.FileName');
                 })
-                .text("Please click here to download a copy for your records.")
-                        .css("text-decoration", "underline");
-            var text = "<p><strong>Dear " + '@ViewBag.PrintName' + ",</strong></p>" +
-                "<p><strong>Your completed form " + '@ViewBag.FormName' + " has been submitted to " + '@ViewBag.EntityName' + ".</strong></p> <br/>";
-
-            var disclaimerText = $("<a>")
-                .attr("href", "mailto:" + '@ViewBag.InstituteEmail')
-                .attr("target", "_blank")
-                .text("Please contact " + '@ViewBag.EntityName' + " for any update required, if any.")
+                .text("Download Form " + '@ViewBag.FormName' + "")
                 .css("text-decoration", "underline");
+            var text = "<p><strong>Dear " + '@ViewBag.PrintName' + ",</strong></p>" +
+                "<p><strong>Your completed form " + '@ViewBag.FormName' + " to " + '@ViewBag.EntityName' + ". To ensure you have a copy for your records, please click the link below to download a PDF version of your submitted form:</strong></p> <br/>";
 
+            //var disclaimerText = $("<a>")
+            //    .attr("href", "mailto:" + '@ViewBag.InstituteEmail')
+            //    .attr("target", "_blank")
+            //    .text("Please contact " + '@ViewBag.EntityName' + " for any update required, if any.")
+            //    .css("text-decoration", "underline");
+            var disclaimerText = "If you need to make any changes or have any inquiries regarding your submitted form, please reach out to " + '@ViewBag.EntityName' + " dedicated support team. They will be happy to assist you.<br/> Thank you for your cooperation and prompt submission. We appreciate your attention to detail and adherence to the required procedures.";
             $('#certifyDiv').append(text, link, '<br /><br /><br />', disclaimerText);
         });
 
@@ -105,13 +105,13 @@
             link.click();
             document.body.removeChild(link);
         }
-            // Disable back and forward navigation
-            //window.onbeforeunload = function () {
-            //    return "Are you sure you want to leave this page?";
-            //};
+                                    // Disable back and forward navigation
+                                    //window.onbeforeunload = function () {
+                                    //    return "Are you sure you want to leave this page?";
+                                    //};
 
-            //window.addEventListener("popstate", function (event) {
-            //    history.pushState(null, document.title, location.href);
-            //});
+                                    //window.addEventListener("popstate", function (event) {
+                                    //    history.pushState(null, document.title, location.href);
+                                    //});
     </script>
 }

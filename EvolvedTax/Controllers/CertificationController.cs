@@ -33,7 +33,7 @@ namespace EvolvedTax.Controllers
                 var clientEmail = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
                 if (!string.IsNullOrEmpty(clientEmail))
                 {
-                    return RedirectToAction("DownloadForm", "Home", new { clientEmail = clientEmail });
+                    return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
                 }
                 return RedirectToAction("AccessDenied", "Account", new { statusCode = 401 });
             }
@@ -151,7 +151,7 @@ namespace EvolvedTax.Controllers
             ViewBag.InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
             if (clientData?.FormName?.Trim() == AppConstants.W9Form)
             {
-                ViewBag.PrintName = _w9FormService.GetDataByClientEmailId(clientEmail).W9PrintName;
+                ViewBag.PrintName = _w9FormService.GetPrintNameByClientEmailId(clientEmail);
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8BENForm)
             {

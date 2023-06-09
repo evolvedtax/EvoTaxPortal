@@ -36,11 +36,12 @@ namespace EvolvedTax.Controllers
            
 
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
-            if (_generalQuestionareEntityService.IsClientAlreadyExist(clientEmail))
+            if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
-                HttpContext.Session.SetString("ClientEmail", "");
-                return RedirectToAction("DownloadForm", "Home", new { clientEmail = clientEmail });
+                return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
             }
+            var GQEntitiesResponse = _generalQuestionareEntityService.GetDataByClientEmail(clientEmail);
+
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
@@ -62,34 +63,32 @@ namespace EvolvedTax.Controllers
             ViewBag.PayeeCodeList = _evolvedtaxContext.ExemptPayeeCodes.Select(p => new SelectListItem
             {
                 Text = p.ExemptCode,
-                Value = p.ExemptId.ToString()
+                Value = p.ExemptValue
             });
             ViewBag.FATCACodeList = _evolvedtaxContext.FatcaCodes.Select(p => new SelectListItem
             {
                 Text = p.FatcaCode1,
-                Value = p.FatcaId.ToString()
+                Value = p.FatcaValue
             });
 
             var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
             if (!string.IsNullOrEmpty(formName))
             {
-                var model = new FormRequest();
-                var clientEmmail = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
-                if (!string.IsNullOrEmpty(clientEmmail))
+                if (!string.IsNullOrEmpty(clientEmail))
                 {
                     if (formName == AppConstants.W9Form)
                     {
-                        model = _w9FormService.GetDataByClientEmailId(clientEmmail);
-                        model.FormType = formName;
+                        GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
+                        GQEntitiesResponse.FormType = formName;
                     }
                     else
                     {
                         
                     }
-                    return View(model);
+                    return View(GQEntitiesResponse);
                 }
             }
-            return View();
+            return View(GQEntitiesResponse);
         }
         [HttpPost]
         public IActionResult GQEntity(FormRequest model)
@@ -150,7 +149,7 @@ namespace EvolvedTax.Controllers
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
                     var response = _w9FormService.SaveForEntity(model);
                     //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
-                    HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                    HttpContext.Session.SetString("ClientName", model.GQOrgName);
                     filePathResponse = response;
                 }
                 else if (model.FormType == AppConstants.W8Form)
