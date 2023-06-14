@@ -68,6 +68,14 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 BackupWithHolding = request.BackupWithHolding,
                 Fatca = request.Fatca,
                 Payeecode = request.Payeecode,
+                De=request.DE,
+                DeownerName = request.DEOwnerName,
+                EnitityManagendOutSideUsa=request.EnitityManagendOutSideUSA,
+                Uspartner=request.USPartner,
+                Idtype=request.IdType,
+                Idnumber=request.IdNumber,
+                W8formType=request.W8FormType
+
             };
 
             _evolvedtaxContext.GeneralQuestionEntities.Add(model);

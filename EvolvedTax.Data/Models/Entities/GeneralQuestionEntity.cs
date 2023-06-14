@@ -66,4 +66,6 @@ public partial class GeneralQuestionEntity
     public string? Idtype { get; set; }
 
     public string? Idnumber { get; set; }
+
+    public string? W8formType { get; set; }
 }

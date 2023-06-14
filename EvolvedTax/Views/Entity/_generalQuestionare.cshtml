@@ -11,28 +11,47 @@
                     <label class="form-check-label" for="inlineRadio1"> Yes </label>
                 </div>
                 <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio2" value="" onclick="SelectForm(this)" asp-for="FormType" required>
+                    <input class="form-check-input" type="radio" id="inlineRadio2" value="@AppConstants.W8FromTypes" onclick="SelectForm(this)" asp-for="FormType" required>
                     <label class="form-check-label" for="inlineRadio2"> No </label>
                 </div>
             </div>
         </div>
     </div>
-    <div id="W8FormDiv" class="form-box" hidden>
+    <div id="WFormDiv" class="form-box" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label>Please Select One of the following</label>
+
+            </div>
+        </div>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio3" value="@AppConstants.W8BENForm" onclick="ShowHideW8(this)" asp-for="W8FormType">
-                    <label class="form-check-label" for="inlineRadio3">
-                        An Individual claiming foreign status or claiming treaty benefits for passive income?
-                        (W-8BEN - Certificate of Foreign Status of Beneficial Owner for United States Tax Withholding and Reporting (Individual))
+                    <input class="form-check-input" type="radio" id="inlineRadio1" value="@AppConstants.W8BENEForm" asp-for="W8FormType" name="W8FormTypes">
+                    <label class="form-check-label" for="inlineRadio1">
+                        An entity claiming foreign status or claiming treaty benefits? {W-8BEN-E 'Certificate of Status of Beneficial Owner for United States Tax Withholding and Reporting (Entities)'}
                     </label>
                 </div>
+                <br/>
 
                 <div class="form-check inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio4" value="@AppConstants.W8ECIForm" onclick="ShowHideW8(this)" asp-for="W8FormType">
+                    <input class="form-check-input" type="radio" id="inlineRadio2" value="@AppConstants.W8ECIForm" asp-for="W8FormType" name="W8FormTypes">
+                    <label class="form-check-label" for="inlineRadio2">
+                        A payee or beneficial owner indicating that all the income is effectively connected with the conduct of a trade or business within the United States? {W-8ECI 'Certificate of Foreing Person's Claim That Income is Effectively Connected with the Conduct of a Trade or Business in the United States'}
+                    </label>
+                </div>
+                <br />
+                <div class="form-check inline">
+                    <input class="form-check-input" type="radio" id="inlineRadio3" value="@AppConstants.W8IMYForm" asp-for="W8FormType" name="W8FormTypes">
+                    <label class="form-check-label" for="inlineRadio3">
+                        An intermediary, a withholding foreign partnership, a withholding foreign trust, or flow through entity? {W-8IMY 'Certificate of Foreing Intermediary, Foregin Flow-Through Entity, or certain U.S. Branches for United States Tax Withholding and Reporting'}
+                    </label>
+                </div>
+                  <br/>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="radio" id="inlineRadio4" value="@AppConstants.W8EXPForm" asp-for="W8FormType" name="W8FormTypes">
                     <label class="form-check-label" for="inlineRadio4">
-                        A payee or beneficial owner indicating that all the income is effectively connected with the conduct of a trade or business within the United States?
-                        (W-8ECI Certificate of Foreign Person's Claim That Income is Effectively Connected with the Conduct of a Trade or Business in the United States)
+                        A foreign government, foregin tax-exempt organization, foreign private foundation, government of a U.S. possession, or foreign central bank of issue claiming exemption from tax withholding? {W-8EXP 'Certificate of Foreign Government or Other Foreign Organization for United States Tax Withholding and Reporting'}
                     </label>
                 </div>
             </div>
@@ -49,18 +68,34 @@
                     <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div id="W9Entity" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Type of Entity<span class="text-danger">*</span></label>
-                    <select id="EntityType" asp-for="EntityType" asp-items="ViewBag.EntitiesList" class="select2" required>
+                    <select id="EntityTypeW9" asp-for="EntityType" asp-items="ViewBag.EntitiesList" class="select2" required>
                         <option></option>
                     </select>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div id="W8Entity" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select id="EntityTypeW8" asp-for="EntityType" asp-items="ViewBag.entitiesListW8" class="select3" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div id="W9Country" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Country of Incorporation/Organization<span class="text-danger">*</span></label>
-                    <select id="Ccountry" asp-for="Ccountry" asp-items="ViewBag.CountriesList" class="select2" required>
+                    <select id="CcountryW9" asp-for="Ccountry" asp-items="ViewBag.CountriesList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div id="W8Country" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Country of Incorporation/Organization<span class="text-danger">*</span></label>
+                    <select id="CountryW8" asp-for="Ccountry" asp-items="ViewBag.CountriesListW8" class="select2" required>
                         <option></option>
                     </select>
                 </div>
@@ -71,8 +106,259 @@
                     <input id="Ssnitnein" asp-for="Ssnitnein" type="text" placeholder="00-0000000" class="form-control" required>
                 </div>
             </div>
+            <div id="W8EXPFatcaDiv" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Chapter 4 Status(FATCA). Select Below<span class="text-danger">*</span></label>
+                    <select id="FatcaW8" asp-for="Fatca" asp-items="ViewBag.W8EXPFATCAList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
         </div>
     </div>
+    @* Div for DDL selection for Entity W-8EXP start*@
+    <div class="form-box" id="FrgnGovDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        a) I certify that the entity identified in Part I is a foreign government within the meaning of section 892 and the payments are within the scope of the exemption granted by section 892.
+                        Check box 10b or box 10c, whichever applies
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8ECIForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        b) The entity identified in Part I is an integral part of the government of
+                    </label>
+                    <select id="Ccountry1" asp-for="Ccountry" asp-items="ViewBag.CountriesList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" value="@AppConstants.W8IMYForm">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        c) The entity identified in Part I is a controlled entity of the government of
+                    </label>
+                    <select id="Ccountry2" asp-for="Ccountry" asp-items="ViewBag.CountriesList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="IntOrgDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that: <br />
+                        <ul>
+                            <li>The entity identified in Part I is an international organization within the meaning of section 7701(a)(18),and </li>
+                            <li>The payments are within the scope of the exemption granted by section 892.</li>
+                        </ul>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="FrgnBankDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that:<br />
+                        <ul>
+                            <li>The entity identified in Part I is a foreign central bank of issue, </li>
+                            <li>The entity identified in Part I does not hold obligations or bank deposits to which this form relates for use in connection with the conduct of a commercial banking function or other commercial activity, and</li>
+                            <li>The payments are within the scope of the exemption granted by section 895.</li>
+                        </ul>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="TaxExempt_FrgnPvtFndDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        If any of the income to which this certification relates constitutes income includible under section 512 in computing the entity’s unrelated business taxable income, write a statement identifying the amounts below.
+
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I has been issued a determination letter by the IRS that is currently in effect and that concludes that it is an exempt organization described in section 501(c).
+
+                        Date of the letter recieved by IRS regarding 501(c) status.:
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        I have attached to this form an opinion from U.S. counsel concluding that the entity identified in Part I is described in section 501(c).
+                    </label>
+                </div>
+                <div class="form-check inline">
+
+                    <label class="form-check-label" for="inlinecheckbox">
+                        <b> For section 501(c)(3) organizations only, check box below</b>
+
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox4">
+                        If the determination letter or opinion of counsel concludes that the entity identified in Part I is described in section 501(c)(3), I certify that the organization is not a private foundation described in section 509. I have attached an affidavit of the organization setting forth sufficient facts for the IRS to determine that the organization is not a private foundation because it meets one of the exceptions described in section 509(a)(1), (2), (3), or (4).
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox5">
+                        If the determination letter or opinion of counsel concludes that the entity identified in Part I is described in section 501(c)(3), I certify that the organization is a private foundation described in section 509.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="GovUSPossDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox6" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox6">
+                        I certify that the entity identified in Part I is a government of a possession of the United States, or is a political subdivision thereof, and is claiming the exemption granted by section 115(2).
+
+                    </label>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    @* Div for DDL selection for Entity W-8EXP end*@
+
+    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
+    <div class="form-box" id="FincalInsDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or
+                        organized under the laws of a possession of the United States.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="FrgnGovUSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is the beneficial owner of the payment and is not engaged in commercial financial
+                        activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to thepayments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="RetPlanSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I:
+                        <ul>
+                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
+                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are</li>
+                        </ul>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="501OrgUSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is an entity described in section 501(c) but is not an insurance company described
+                        in section 501(c)(15).
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-box" id="PassNFEDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity
+                        organized in a possession of the United States).
+                    </label>
+                </div>
+        
+                <div class="form-check inline">
+                    <label class="form-check-label" for="inlinecheckbox">
+                        <b> Check box 20b or 20c, whichever applies.</b> 
+                    </label>
+                </div>
+            
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox4">
+                        I further certify that the entity identified in Part I has no substantial U.S. owners, or
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5" value="@AppConstants.W8BENEForm">
+                    <label class="form-check-label" for="inlinecheckbox5">
+                        I further certify that the entity identified in Part I has provided a statement including the name, address, and TIN of each
+                        substantial U.S. owner of the NFFE (see instructions).
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="SponEntity_RirRepNFFEDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+              
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" value="@AppConstants.W8ECIForm">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
+                    </label>
+                    <input id="lastName" asp-for="Fatca" type="text" class="form-control" required>
+                </div>
+
+            
+
+            </div>
+        </div>
+    </div>
+    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP end*@
+
 </div>
 
 <div class="tab">
@@ -186,76 +472,77 @@
     <div class="form-box">
 
         @*New changes start*@
-
-        <div class="col-md-12">
-            <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="DE1" value="Yes" checked asp-for="DE" required>
-                    <label class="form-check-label" for="DE1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="DE2" value="No" asp-for="DE" required>
-                    <label class="form-check-label" for="DE2"> No </label>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>United States Disregarded entity (DE) Owner Name</label>
-                <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control" required>
-            </div>
-        </div>
-
-        <div class="col-md-12">
-            <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="Idtype1" value="SSN" checked asp-for="IdType" required>
-                    <label class="form-check-label" for="Idtype1"> SSN </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="Idtype2" value="EIN" asp-for="IdType" required>
-                    <label class="form-check-label" for="Idtype2"> EIN </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="Idtype3" value="ITIN" asp-for="IdType" required>
-                    <label class="form-check-label" for="Idtype3"> ITIN </label>
+        <div id="QFormDiv" hidden>
+            <div class="col-md-12">
+                <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE1" value="Yes" onclick="SelectDEEntity(this)"  checked asp-for="DE" required>
+                        <label class="form-check-label" for="DE1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE2" value="No" onclick="SelectDEEntity(this)" asp-for="DE" required>
+                        <label class="form-check-label" for="DE2"> No </label>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>Number</label>
-                <input id="IdNumber" asp-for="IdNumber" type="text" class="form-control" required>
-            </div>
-        </div>
-
-
-        <div class="col-md-12">
-            <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="RetirementPlan1" value="Yes" checked asp-for="RetirementPlan" required>
-                    <label class="form-check-label" for="RetirementPlan1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="RetirementPlan2" value="No" asp-for="RetirementPlan" required>
-                    <label class="form-check-label" for="RetirementPlan2"> No </label>
+            <div class="col-md-12" id="DeEntityOwnerNameDiv" hidden>
+                <div class="form-group">
+                    <label>United States Disregarded entity (DE) Owner Name</label>
+                    <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control" required>
                 </div>
             </div>
-        </div>
-        <div class="col-md-12">
-            <label>Is the entity managed outside the United States?</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="ManagedoutUSA1" value="Yes" checked asp-for="EnitityManagendOutSideUSA" required>
-                    <label class="form-check-label" for="ManagedoutUSA1"> Yes </label>
+
+            <div class="col-md-12">
+                <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="Idtype1" value="SSN" checked asp-for="IdType" required>
+                        <label class="form-check-label" for="Idtype1"> SSN </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="Idtype2" value="EIN" asp-for="IdType" required>
+                        <label class="form-check-label" for="Idtype2"> EIN </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="Idtype3" value="ITIN" asp-for="IdType" required>
+                        <label class="form-check-label" for="Idtype3"> ITIN </label>
+                    </div>
                 </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="ManagedoutUSA2" value="No" asp-for="EnitityManagendOutSideUSA" required>
-                    <label class="form-check-label" for="ManagedoutUSA2"> No </label>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Number</label>
+                    <input id="IdNumber" asp-for="IdNumber" type="text" class="form-control" required>
+                </div>
+            </div>
+
+
+            <div class="col-md-12">
+                <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="RetirementPlan1" value="Yes" checked asp-for="RetirementPlan" required>
+                        <label class="form-check-label" for="RetirementPlan1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="RetirementPlan2" value="No" asp-for="RetirementPlan" required>
+                        <label class="form-check-label" for="RetirementPlan2"> No </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label>Is the entity managed outside the United States?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="ManagedoutUSA1" value="Yes" checked asp-for="EnitityManagendOutSideUSA" required>
+                        <label class="form-check-label" for="ManagedoutUSA1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="ManagedoutUSA2" value="No" asp-for="EnitityManagendOutSideUSA" required>
+                        <label class="form-check-label" for="ManagedoutUSA2"> No </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -294,7 +581,11 @@
             </div>
         </div>
     </div>
-    
-</div>
 
+</div>
+<style>
+    .form-check {
+        margin-bottom: 10px; /* Adjust the margin as per your preference */
+    }
+</style>
 

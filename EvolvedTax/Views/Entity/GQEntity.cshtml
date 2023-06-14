@@ -127,7 +127,236 @@
 
     <script type="text/javascript">
 
+        function BindEntityForW8EXPForm() {
+
+            $.ajax({
+                url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
+                type: 'POST',
+
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityType').empty();
+
+
+                        // Add "Please Select" option as the first option
+                        $('#EntityTypeW8').prepend($('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        }));
+
+                        // Iterate over the updated entities and add new options to the dropdown
+                        $.each(result.entitiesListW8, function (index, entity) {
+                            $('#EntityTypeW8').append($('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            }));
+                        });
+
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+
+        }
+
+        function BindEW8EXPFATCA() {
+
+            $.ajax({
+                url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#FatcaW8').empty();
+
+                        // Add "Please Select" option as the first option
+                        $('#FatcaW8').prepend($('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        }));
+
+                        // Iterate over the updated entities and add new options to the dropdown
+                        $.each(result.W8EXPFATCAList, function (index, FATCA) {
+                            $('#FatcaW8').append($('<option>', {
+                                value: FATCA.Value,
+                                text: FATCA.Text
+                            }));
+                        });
+                        
+
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+
+        function BindEntityForW9Form() {
+            /*
+            $.ajax({
+                url: '@Url.Action("BindEntityForW9Form", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityTypeW9').empty();
+                        debugger;
+
+                        // Iterate over the updated entities and add new options to the dropdown
+                        $.each(result.entitiesList, function (index, entity) {
+                            debugger;
+                            $('#EntityTypeW9').append($('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            }));
+                        });
+
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert('Error: ' + textStatus);
+                    console.log('AJAX Error:', errorThrown);
+                }
+            });
+            */
+
+        }
+        function HideDivOnDDLEntitySelection() {
+            $('#FrgnGovDiv').prop('hidden', true);
+            $('#IntOrgDiv').prop('hidden', true);
+            $('#FrgnBankDiv').prop('hidden', true);
+            $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
+            $('#GovUSPossDiv').prop('hidden', true);
+        }
+        function HideDivOnDDLStatusFATCASelection() {
+            $('#FincalInsDiv').prop('hidden', true);
+            $('#FrgnGovUSDiv').prop('hidden', true);
+            $('#RetPlanSDiv').prop('hidden', true);
+            $('#501OrgUSDiv').prop('hidden', true);
+            $('#PassNFEDiv').prop('hidden', true);
+            $('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
+
+        }
+
+
+
         $(document).ready(function () {
+
+     
+
+            $('input[name="W8FormTypes"]').change(function () {
+
+                //re-fill the entity dropdown if the user select the W8EXPEntity radio button
+                if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
+                    $('#W8EXPFatcaDiv').prop('hidden', false);
+                    $('#W8Entity').prop('hidden', false);
+                    $('#W8Country').prop('hidden', false);
+
+                    $('#W9Entity').prop('hidden', true);
+                    $('#W9Country').prop('hidden', true);
+                    
+                    BindEntityForW8EXPForm();
+                    BindEW8EXPFATCA();
+
+
+                }
+                else {
+                   // alert('here in w8 different');
+                    $('#W8EXPFatcaDiv').prop('hidden', true);
+                    $('#W9Entity').prop('hidden', false);
+                    $('#W9Country').prop('hidden', false);
+
+                    $('#W8Country').prop('hidden', true);
+
+                    BindEntityForW9Form();
+                    HideDivOnDDLEntitySelection();
+                    HideDivOnDDLStatusFATCASelection();
+                  
+                }
+            });
+
+            $('#EntityTypeW8').on('change', function () {
+                var selectedValue = $(this).val();
+   
+         
+
+                    //Foreign government
+                    if (selectedValue == 1) {
+                        HideDivOnDDLEntitySelection();
+                        $('#FrgnGovDiv').prop('hidden', false);
+                    }
+                    //Internal organization
+                    if (selectedValue == 2) {
+                        HideDivOnDDLEntitySelection();
+                        $('#IntOrgDiv').prop('hidden', false);
+                    }
+                    //Foreign central bank of issue (not wholly owned by the foreign sovereign)
+                    if (selectedValue == 3) {
+                        HideDivOnDDLEntitySelection();
+                        $('#FrgnBankDiv').prop('hidden', false);
+                    }
+                    //Foreign tax-exempt organization
+                    //Foreign private foundation
+                    if (selectedValue == 4 || selectedValue == 5) {
+                        HideDivOnDDLEntitySelection();
+                        $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', false);
+                    }
+                    if (selectedValue == 6) {
+                        HideDivOnDDLEntitySelection();
+                        $('#GovUSPossDiv').prop('hidden', false);
+                    }
+                
+
+            });
+
+            $('#FatcaW8').on('change', function () {
+                var selectedValue = $(this).val();
+
+                //Territory financial institution. Complete Part III.
+                if (selectedValue == 6) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#FincalInsDiv').prop('hidden', false);
+                }
+                //Foreign government (including a political subdivision), government of a U.S. possession,
+                if (selectedValue == 8) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#FrgnGovUSDiv').prop('hidden', false);
+                }
+                //Exempt retirement plan of foreign government. Complete Part III.
+                if (selectedValue == 9) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#RetPlanSDiv').prop('hidden', false);
+                }
+                //501(c) organization. Complete Part XXI.
+                if (selectedValue == 10) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#501OrgUSDiv').prop('hidden', false);
+                }
+                //Passive NFFE. Complete Part XXVI.
+                if (selectedValue == 11) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#PassNFEDiv').prop('hidden', false);
+                }
+
+
+
+                //Direct reporting NFFE.
+                //Sponsored direct reporting NFFE. Complete Part III.
+                if (selectedValue == 12 || selectedValue == 13) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#SponEntity_RirRepNFFEDiv').prop('hidden', false);
+                }
+
+
+            });
+
             $("select").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select One",
@@ -138,7 +367,7 @@
             // Set the max attribute of the date input
             $('#dateOfBirthW8Ben').attr('max', currentDate);
             $('#dateOfBirthW8ECI').attr('max', currentDate);
-            
+
             //-------------------//
             $('select').change();
             var checkedRadioButton = $("input[type='radio'][name='BackupWithHolding']:checked");
@@ -219,10 +448,19 @@
         }
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
+
+        function SelectDEEntity(obj) {
+            if (obj.value == 'No') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+            }else {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+            }
+        }
+
         function SelectForm(obj) {
-            
             if (obj.value == '@AppConstants.W8Form') {
                 $('#W8FormDiv').prop('hidden', false);
+
                 $('#W8BenQuestionareDiv').prop('hidden', false);
                 $("#Ccountry").find("option[value='United States']").remove();
                 $("#Ccountry").prop('disabled', false).trigger("change");
@@ -232,9 +470,34 @@
                 $('#lbl_TypeofTaxNumber span').remove();
                 $('#Ssnitnein').removeAttr('required');
                 $('input[name="TypeofTaxNumber"]').removeAttr('required');
-            } else {
-                alert ('owais');
-                //$('#W8FormDiv').prop('hidden', true);
+            }
+            else if (obj.value == '@AppConstants.W9Form') {
+                $('#WFormDiv').prop('hidden', true);
+                $('#QFormDiv').prop('hidden', true);
+
+                $('#W8EXPFatcaDiv').prop('hidden', true);
+                $('#W8Entity').prop('hidden', true);
+                $('#W9Entity').prop('hidden', false);
+
+                $('#W8Country').prop('hidden', true);
+                $('#W9Country').prop('hidden', false);
+                // re-fill the enity dropdown if the user by mistake select NO
+                BindEntityForW9Form();
+                HideDivOnDDLEntitySelection();
+                HideDivOnDDLStatusFATCASelection();
+              
+
+            }
+            else {
+            
+                $('#WFormDiv').prop('hidden', false);
+                $('#QFormDiv').prop('hidden', false);
+
+                $('#W8Entity').prop('hidden', false);
+                $('#W9Entity').prop('hidden', true);
+
+                $('#W9Country').prop('hidden', true);
+                $('#W8Country').prop('hidden', false);
                 //$('#W8BenQuestionareDiv').prop('hidden', true);
                 //$('#W8ECIQuestionareDiv').prop('hidden', true);
                 // Check if "United States" already exists in the select list
@@ -263,8 +526,8 @@
         function BackupWithHoldingFunc(obj) {
             if (obj.value == 'Yes') {
                 $('#BackupWithHoldingDiv').prop('hidden', true);
-                         //#('#Payeecode').val('').change();
-                        // #('#Fatca').val('').change();
+                //#('#Payeecode').val('').change();
+                // #('#Fatca').val('').change();
             } else {
                 $('#BackupWithHoldingDiv').prop('hidden', false);
             }
@@ -296,7 +559,20 @@
                         $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
                         document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
                     }
-                } else {
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8ECIForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8ECI  >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8IMYForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8EXPForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8EXP  >>";
+                }
+                else {
                     document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
                 }
             } else {

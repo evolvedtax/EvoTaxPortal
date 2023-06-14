@@ -99,6 +99,7 @@ public partial class EvolvedtaxContext : DbContext
 
 
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDomain>(entity =>
@@ -243,6 +244,10 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("USPartner");
+            entity.Property(e => e.W8formType)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("W8FormType");
         });
 
         modelBuilder.Entity<GeneralQuestionIndividual>(entity =>

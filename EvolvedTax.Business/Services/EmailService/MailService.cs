@@ -59,7 +59,7 @@ namespace EvolvedTax.Business.MailService
             var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
             var Host = "smtp.office365.com";
             var Port = 587;
-            Email = "mr.owaisalibaig@gmail.com";
+           // Email = "mr.owaisalibaig@gmail.com";
             content = AppConstants.EmailToInstitute
                 .Replace("{{Name}}", UserFullName)
                 .Replace("{{link}}", URL);

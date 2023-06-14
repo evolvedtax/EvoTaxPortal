@@ -50,6 +50,15 @@ namespace EvolvedTax.Controllers
                                       Value = p.Country,
                                   });
 
+            ViewBag.CountriesListW8 = items.Where(item => item.Favorite != "5")
+                                 .OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country)
+                                 .Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+
             ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
             {
                 Text = p.StateId,
@@ -127,6 +136,7 @@ namespace EvolvedTax.Controllers
                     //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
                     filePathResponse = response;
                 }
+              
                 else if (model.FormType == AppConstants.W8Form)
                 {
                     
@@ -142,6 +152,8 @@ namespace EvolvedTax.Controllers
             {
                 #region ADD
 
+
+
                 if (model.FormType == AppConstants.W9Form) // For W9 form
                 {
                     model.USCitizen = "1";
@@ -152,7 +164,9 @@ namespace EvolvedTax.Controllers
                     HttpContext.Session.SetString("ClientName", model.GQOrgName);
                     filePathResponse = response;
                 }
-                else if (model.FormType == AppConstants.W8Form)
+
+            
+                else if (model.FormType == AppConstants.W8FromTypes)
                 {
                     model.USCitizen = "0";
                     if (model.W8FormType == AppConstants.W8BENForm)
@@ -185,6 +199,36 @@ namespace EvolvedTax.Controllers
                         }
                         //filePathResponse = _w8ECIFormService.Save(model);
                     }
+                    else if (model.W8FormType == AppConstants.W8IMYForm)
+                    {
+                        model.US1 = "2";
+                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
+                        if (model.W8ECIOnBehalfName)
+                        {
+                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+                        }
+                        else
+                        {
+                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                            model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
+                        }
+                        //filePathResponse = _w8ECIFormService.Save(model);
+                    }
+                    else if (model.W8FormType == AppConstants.W8EXPForm)
+                    {
+                        model.US1 = "2";
+                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPemplateFileName);
+                        if (model.W8ECIOnBehalfName)
+                        {
+                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+                        }
+                        else
+                        {
+                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                            model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
+                        }
+                        //filePathResponse = _w8ECIFormService.Save(model);
+                    }
                     FormName = model.W8FormType;
                 }
                 var responseGQForm = _generalQuestionareEntityService.Save(model);
@@ -202,6 +246,51 @@ namespace EvolvedTax.Controllers
             HttpContext.Session.SetString("FormName", FormName);
             return Json(filePathResponse);
         }
-        
+
+
+        #region Entity Dropdown Dynamic Binding on the basis of selection
+        [HttpPost]
+        public ActionResult BindEntityForW8EXPForm()
+        {
+            var entitiesListW8 = _evolvedtaxContext.W8expentities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
+
+            ViewBag.entitiesListW8 = entitiesListW8;
+
+            return Json(new { success = true, entitiesListW8 });
+        }
+
+        [HttpPost]
+        public ActionResult BindEntityForW9Form()
+        {
+            var entitiesList = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityId.ToString()
+            });
+
+            ViewBag.EntitiesList = entitiesList;
+
+            return Json(new { success = true, entitiesList });
+        }
+
+        [HttpPost]
+        public ActionResult BindEW8EXPFATCA()
+        {
+            var W8EXPFATCAList = _evolvedtaxContext.W8expfatcas.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
+            });
+
+            ViewBag.W8EXPFATCAList = W8EXPFATCAList;
+
+            return Json(new { success = true, W8EXPFATCAList });
+        }
+        #endregion
+
     }
 }
