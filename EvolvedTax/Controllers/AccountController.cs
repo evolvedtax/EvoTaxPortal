@@ -1,12 +1,9 @@
-﻿using Azure;
-using EvolvedTax.Business.Services.GeneralQuestionareService;
-using EvolvedTax.Business.Services.InstituteService;
+﻿using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
-using Microsoft.AspNetCore.Identity;
 
 namespace EvolvedTax.Controllers
 {
@@ -58,13 +55,11 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
-        [SessionTimeout]
         public IActionResult OTP(string clientEmail)
         {
-            HttpContext.Session.SetString("ClientEmail", clientEmail);
+            ViewBag.ClientEmail = clientEmail;
             return View();
         }
-        [SessionTimeout]
         [HttpPost]
         public IActionResult OTP(IFormCollection formVals)
         {
@@ -77,6 +72,7 @@ namespace EvolvedTax.Controllers
                 formVals["Otp6"].ToString());
             if (Otp == "123456")
             {
+                HttpContext.Session.SetString("ClientEmail", formVals["clientEmail"]);
                 return RedirectToAction("Index", "Status");
                 //return RedirectToAction("Entities", "Institute");
             }

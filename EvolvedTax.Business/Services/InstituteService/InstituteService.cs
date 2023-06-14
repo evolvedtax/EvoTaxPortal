@@ -30,8 +30,40 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
         {
-            return _mapper.Map<List<InstituteEntitiesResponse>>(_evolvedtaxContext.InstituteEntities).Where(p => p.InstituteId == InstId).AsQueryable();
+            var query = from p in _evolvedtaxContext.InstituteEntities
+                        where p.InstituteId == InstId
+                        select new InstituteEntitiesResponse
+                        {
+                            Address1 = p.Address1,
+                            Address2 = p.Address2,
+                            City = p.City,
+                            Country = p.Country,
+                            Ein = p.Ein,
+                            EntityId = p.EntityId,
+                            EntityName = p.EntityName,
+                            EntityRegistrationDate = p.EntityRegistrationDate,
+                            InstituteId = p.InstituteId,
+                            InstituteName = p.InstituteName,
+                            LastUpdatedDate = p.LastUpdatedDate,
+                            Province = p.Province,
+                            State = p.State,
+                            Zip = p.Zip
+                        };
 
+            var result = query.ToList();
+            var entityIds = result.Select(r => r.EntityId).ToList();
+
+            var isLockedEntities = _evolvedtaxContext.InstitutesClients
+                .Where(ic => entityIds.Contains(ic.EntityId))
+                .Select(ic => ic.EntityId)
+                .ToList();
+
+            foreach (var entity in result)
+            {
+                entity.IsLocked = isLockedEntities.Contains(entity.EntityId);
+            }
+
+            return result.AsQueryable();
         }
 
         public IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId)
@@ -75,7 +107,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                          select new InstituteClientResponse
                          {
                              ClientEmailId = ic.ClientEmailId,
-                             InstituteUserName = ic.PartnerName1 + " " + ic.PartnerName1 ?? "",
+                             InstituteUserName = ic.PartnerName1 + " " + ic.PartnerName2 ?? "",
                              InstituteName = ie.EntityName ?? "",
                          };
 
@@ -85,7 +117,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public async Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName)
         {
             bool Status = false;
-            var response = new List<int>();
+            var response = new List<InstituteEntity>();
             var entityList = new List<InstituteEntity>();
             using (var stream = file.OpenReadStream())
             {
@@ -116,7 +148,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         p.Ein == entity.Ein &&
                         p.InstituteId == entity.InstituteId))
                     {
-                        response.Add(row);
+                        response.Add(entity);
                         Status = true;
                     }
                     else
@@ -127,12 +159,12 @@ namespace EvolvedTax.Business.Services.InstituteService
                 await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
-            return new MessageResponseModel { Status = Status, Message = response };
+            return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
         }
         public async Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId)
         {
             bool Status = false;
-            var response = new List<int>();
+            var response = new List<InstitutesClient>();
             var clientList = new List<InstitutesClient>();
             using (var stream = file.OpenReadStream())
             {
@@ -169,7 +201,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         p.InstituteId == client.InstituteId &&
                         p.EntityId == client.EntityId))
                     {
-                        response.Add(row);
+                        response.Add(client);
                         Status = true;
                     }
                     else
@@ -181,7 +213,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 await _evolvedtaxContext.InstitutesClients.AddRangeAsync(clientList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
-            return new MessageResponseModel { Status = Status, Message = response };
+            return new MessageResponseModel { Status = Status, Message = response, Param = "Client"};
 
         }
         public async Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request)

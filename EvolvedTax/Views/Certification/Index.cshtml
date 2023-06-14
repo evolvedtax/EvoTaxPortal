@@ -180,8 +180,7 @@
         </div>
         <div style="overflow:auto;">
             <div style="float:right;">
-                <button type="button" onclick="location.href='@Url.Action("GQIndividual","Home")'" id="prevBtn" class="btn btn-md btn-default"> << Edit</button>
-                <button type="button" id="nextBtn" class="btn btn-md btn-primary">Next Page >></button>
+                <button type="button" onclick="location.href='@Url.Action("GQIndividual","Individual")'" id="prevBtn" class="btn btn-md btn-dark"> << Edit</button>
                 <button type="button" id="certify-submit" class="btn btn-md btn-primary" hidden>Submit and Download >></button>
             </div>
         </div>
@@ -298,7 +297,7 @@
             var entityName = response.entityName;
             var instituteEmail = response.InstituteEmail;
 
-            var link = $("<a>")
+            var link1 = $("<a>")
                 .attr("href", "javascript:void(0)")
                 .click(function () {
                     openFile(response.fileName);
@@ -306,12 +305,16 @@
                 .text("Please click here to download a copy for your records.").css("text-decoration", "underline");
 
             var text = "<p><strong>Dear " + name + ",</strong></p>" +
-                "<p><strong>Your completed form " + formName + " to " + entityName + ". To ensure you have a copy for your records, please click the link below to download a PDF version of your submitted form:</strong></p> <br/>";
+                "<p><strong>Your completed form " + formName + " has been submitted to " + entityName + ".</strong></p>";
+            var linkText = $('<p><strong></strong></p>').append(link1).append('<strong> </strong>');
 
-            var disclaimerText = "If you need to make any changes or have any inquiries regarding your submitted form, please reach out to " + entityName + " dedicated support team. They will be happy to assist you.<br/> Thank you for your cooperation and prompt submission. We appreciate your attention to detail and adherence to the required procedures.";
+            var disclaimerText = $("<a>")
+                .attr("href", "mailto:" + instituteEmail)
+                .attr("target", "_blank")
+                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team.")
+                .css("text-decoration", "underline");
 
-
-            $('#certifyDiv').append(text, link, '<br /><br /><br />', disclaimerText);
+            $('#certifyDiv').append(text, linkText, disclaimerText);
         }
 
         function openFile(fileName) {
@@ -323,14 +326,14 @@
             document.body.removeChild(link);
         }
 
-        // Disable back and forward navigation
-        //window.onbeforeunload = function () {
-        //    return "Are you sure you want to leave this page?";
-        //};
+                        // Disable back and forward navigation
+                        //window.onbeforeunload = function () {
+                        //    return "Are you sure you want to leave this page?";
+                        //};
 
-        //window.addEventListener("popstate", function (event) {
-        //    history.pushState(null, document.title, location.href);
-        //});
+                        //window.addEventListener("popstate", function (event) {
+                        //    history.pushState(null, document.title, location.href);
+                        //});
 
     </script>
 }

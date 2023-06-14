@@ -23,11 +23,11 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>
+                    @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                             <tr>
-                                <th>Entity Names</th>
+                                <th>Entity Name</th>
                                 <th>EIN</th>
                                 <th>Entity Registration Date</th>
                                 <th>Address</th>
@@ -36,6 +36,7 @@
                                 <th>Province (If Applicable)</th>
                                 <th>Zip</th>
                                 <th>Country of Incorporation</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,9 +54,49 @@
                                         <td>@item.Province</td>
                                         <td>@item.Zip</td>
                                         <td>@item.Country</td>
+                                        <td class="text-center">@if (item.IsLocked)
+                                            {
+                                                <span class="fa fa-lock"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="fa fa-unlock"></span>
+                                            }</td>
                                     </tr>
                                 }
                             }
+                        </tbody>
+                    </table>
+
+                </div>
+                <div id="dupplication-ibox" class="ibox-content" hidden>
+                    @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Entity Name</th>
+                                <th>EIN</th>
+                                <th>Entity Registration Date</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Province (If Applicable)</th>
+                                <th>Zip</th>
+                                <th>Country of Incorporation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
 
@@ -77,18 +118,30 @@
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
-                        text: 'Download Entity Template',
+                        text: 'Download New Entity Template',
                         className: 'btn-template',
                         action: function (e, dt, button, config) {
                             let url = 'DownloadExcel';
-                            let params = { fileType:'@AppConstants.Entity'}
-                            COMMON.doAjaxToDownloadFile(url,params,'@AppConstants.InstituteEntityTemplate')
+                            let params = { fileType: '@AppConstants.Entity' }
+                            COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
                         }
                     },
                     { extend: 'excel', title: 'ExampleFile', text: 'Export to Excel', className: 'btn-excel' },
-                    { extend: 'pdf', title: 'ExampleFile', text: 'Export to PDF', className: 'btn-pdf' },
-
+                    {
+                        text: 'Import Entity Data',
+                        className: 'btn-imp-data',
+                        action: function (e, dt, button, config) {
+                            $('#uploadDataDiv').prop('hidden', false);
+                        }
+                    }
                 ],
+                initComplete: function () {
+                    $('.dataTables_length').hide(); // Hide the original page length dropdown
+                }
+            });
+
+            $('#entity-table-dupplication').DataTable({
+               
                 initComplete: function () {
                     $('.dataTables_length').hide(); // Hide the original page length dropdown
                 }

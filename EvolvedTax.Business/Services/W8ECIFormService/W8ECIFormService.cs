@@ -450,7 +450,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             over2.AddImage(image2);
             #endregion
             PdfAnnotation annotation;
-            annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Home", "Certification")));
+            annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation, 1);
 
             pdfStamper.Close();

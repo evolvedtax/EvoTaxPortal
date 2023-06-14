@@ -29,6 +29,7 @@ public class FormRequest
     public string? IdType { get; set; }
     public string? IdNumber { get; set; }
     public string? RetirementPlan { get; set; }
+    public string AuthSignatoryName { get; set; } = string.Empty;
 
     //-----------W9-------------------//
     public int Id { get; set; }

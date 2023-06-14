@@ -18,14 +18,14 @@
                     <img src="~/images/evolved_tax_mark_logo.png" width="50px"/>
                 </div>
             </li>
-            <li class="@Html.IsSelected(controller: "Home")">
-                <a href="@Url.Action("GQIndividual", "Home")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Home", cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Home")">GQ Individual</a></li>
+            <li class="@Html.IsSelected(controller: "Individual")">
+                <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
+                    <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Individual")">GQ Individual</a></li>
                 </ul>
             </li>
             <li class="@Html.IsSelected(controller: "Institute")">
-                <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institute</span> <span class="fa arrow"></span></a>
+                <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
                     @*<li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>*@
                     <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>

@@ -106,8 +106,8 @@
 <div class="footer fixed" style="height:25%">
     <div style="overflow:auto;">
         <div style="float:right;">
-            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-default" hidden> << Edit</button>
-            <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
+            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
         </div>
     </div>
@@ -233,7 +233,7 @@
                 $('#Ssnitnein').removeAttr('required');
                 $('input[name="TypeofTaxNumber"]').removeAttr('required');
             } else {
-                alert ('owais');
+                //alert ('owais');
                 //$('#W8FormDiv').prop('hidden', true);
                 //$('#W8BenQuestionareDiv').prop('hidden', true);
                 //$('#W8ECIQuestionareDiv').prop('hidden', true);

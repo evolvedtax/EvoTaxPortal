@@ -76,7 +76,7 @@
               data-ajax-failure="COMMON.ajaxfailure"
               data-ajax-loading="#ajax-loader"
               data-ajax-success="ajaxsuccess"
-              data-ajax-url="@Url.Action("GQIndividual","Home")">
+              data-ajax-url="@Url.Action("GQIndividual","Individual")">
 
             <!-- One "tab" for each step in the form: -->
             <div>
@@ -106,8 +106,8 @@
 <div class="footer fixed" style="height:25%">
     <div style="overflow:auto;">
         <div style="float:right;">
-            <button type="button" onclick="location.href='@Url.Action("GQIndividual","Home")'" id="editBtn" class="btn btn-md btn-default" hidden> << Edit</button>
-            <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
+            <button type="button" onclick="location.href='@Url.Action("GQIndividual","Individual")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
         </div>
     </div>
@@ -176,8 +176,8 @@
             $('#contentContainer').empty();
             // Append the object element to the container
             $('#contentContainer').append($pdfObject);
-            $('#editBtn').prop('hidden',false);
-            $('#prevBtn').prop('hidden',true);
+            $('#editBtn').prop('hidden', false);
+            $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
         }
         function ShowHideProvince(obj) {
@@ -263,7 +263,7 @@
                     $('#Ssnitnein').mask('000-00-0000', { reverse: true });
                 }
                 // Add span and required attributes
-                $('#lbl_TypeofTaxNumber').append('<span class="text-danger">*</span>');
+                //$('#lbl_TypeofTaxNumber').append('<span class="text-danger">*</span>');
                 $('#Ssnitnein').attr('required', 'required');
                 $('input[name="TypeofTaxNumber"]').attr('required', 'required');
             }
@@ -292,15 +292,15 @@
             showTab(currentTab);
         }
         function W8BENOnBehalfNameFunc(obj) {
-            if (obj.value == 'true') {
+            if (obj.value == 'True') {
                 $('#W8BENOnBehalfNameQuesDiv').prop('hidden', false);
             } else {
                 $('#W8BENOnBehalfNameQuesDiv').prop('hidden', true);
                 $('#PrintNameOfSigner').val('');
             }
         }
-        function W8ECIOnBehalfNameFunc() {
-            if ($('#W8ECIOnBehalfName').prop('checked')) {
+        function W8ECIOnBehalfNameFunc(obj) {
+            if (obj.value == 'True') {
                 $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', false);
             } else {
                 $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', true);

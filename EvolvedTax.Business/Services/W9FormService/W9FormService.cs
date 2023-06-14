@@ -122,7 +122,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].SSN[0].f1_13[0]", request?.Ssnitnein?.Substring(7, 4));
                 }
                 // following seven boxes.
-                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");

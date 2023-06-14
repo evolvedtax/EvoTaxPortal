@@ -8,11 +8,14 @@ using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
+    [UserSession]
     public class EntityController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -95,7 +98,6 @@ namespace EvolvedTax.Controllers
         {
             string FormName = string.Empty;
             string filePathResponse = string.Empty;
-
             model.IndividualOrEntityStatus = AppConstants.EntityStatus;
             model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
@@ -149,7 +151,8 @@ namespace EvolvedTax.Controllers
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
                     var response = _w9FormService.SaveForEntity(model);
                     //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
-                    HttpContext.Session.SetString("ClientName", model.GQOrgName);
+                    var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+                    HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
                     filePathResponse = response;
                 }
                 else if (model.FormType == AppConstants.W8Form)
@@ -187,11 +190,11 @@ namespace EvolvedTax.Controllers
                     }
                     FormName = model.W8FormType;
                 }
-                var responseGQForm = _generalQuestionareEntityService.Save(model);
-                if (responseGQForm == 0)
-                {
-                    return View(model);
-                }
+                //var responseGQForm = _generalQuestionareEntityService.Save(model);
+                //if (responseGQForm == 0)
+                //{
+                //    return View(model);
+                //}
                 #endregion
             }
             //byte[] pdfBytes = System.IO.File.ReadAllBytes(filePathResponse);

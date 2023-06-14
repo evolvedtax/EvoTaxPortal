@@ -62,6 +62,10 @@ namespace EvolvedTax.Business.Services.W8BenFormService
                 model.EligibleForTheRateOfWithholding = "0";
                 request.EligibleForTheRateOfWithholding = "0";
             }
+            if (_evolvedtaxContext.TblW8benforms.Any(p => p.W8benemailAddress == request.EmailId))
+            {
+                return Update(request);
+            }
             _evolvedtaxContext.TblW8benforms.Add(model);
             _evolvedtaxContext.SaveChanges();
             return W8BenCreation(request);
@@ -69,7 +73,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
         protected static string W8BenCreation(FormRequest request)
         {
             string templatefile = request.TemplateFilePath;
-            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_",AppConstants.W8BENForm, "_", Guid.NewGuid(), "_temp.pdf");
+            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_", AppConstants.W8BENForm, "_", Guid.NewGuid(), "_temp.pdf");
             string newFile = Path.Combine(request.BasePath, fileName);
             PdfReader pdfReader = new PdfReader(templatefile);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
@@ -86,7 +90,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_8[0]", request.MCountry);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_9[0]", request.Ssnitnein ?? "");
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_10[0]", request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", ""));
-            if (request.CheckIfFtinNotLegallyRequiredYN != true)
+            if (request.CheckIfFtinNotLegallyRequiredYN == true)
             {
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_01[0]", "0");
             }
@@ -167,7 +171,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             over2.AddImage(image2);
             #endregion
             PdfAnnotation annotation;
-            annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Home", "Certification")));
+            annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation, 1);
 
             pdfStamper.Close();
@@ -214,46 +218,42 @@ namespace EvolvedTax.Business.Services.W8BenFormService
         public string Update(FormRequest request)
         {
             var response = _evolvedtaxContext.TblW8benforms.First(p => p.W8benemailAddress == request.EmailId);
-            if (response == null)
-            {
-                response.NameOfIndividual = request.NameOfIndividual;
-                response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
-                response.ArticleAndParagraph = request.ArticleAndParagraph;
-                response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN;
-                response.Country = request.PCountry;
-                response.CountryOfCitizenship = request.CountryOfCitizenship;
-                response.DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyy;
-                response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", "");
-                response.MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2);
-                response.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
-                response.MCountry = request.MCountry;
-                response.PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2);
-                response.Rate = request.Rate;
-                response.PrintNameOfSigner = request.PrintNameOfSigner;
-                response.ReferenceNumberS = request.ReferenceNumberS;
-                response.ResidentCertification = request.Country;
-                response.SignatureDateMmDdYyyy = DateTime.Now.ToString("MM-dd-yyyy");
-                response.SpecifyTypeOfIncome = request.SpecifyTypeOfIncome;
-                response.SsnOrItin = request.Ssnitnein;
-                response.Status = "1";
-                response.W8benemailAddress = request.EmailId;
-                response.W8benonBehalfName = request.W8BENOnBehalfName;
+            response.NameOfIndividual = request.NameOfIndividual;
+            response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
+            response.ArticleAndParagraph = request.ArticleAndParagraph;
+            response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN;
+            response.Country = request.PCountry;
+            response.CountryOfCitizenship = request.CountryOfCitizenship;
+            response.DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyy;
+            response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", "");
+            response.MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2);
+            response.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
+            response.MCountry = request.MCountry;
+            response.PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2);
+            response.Rate = request.Rate;
+            response.PrintNameOfSigner = request.PrintNameOfSigner;
+            response.ReferenceNumberS = request.ReferenceNumberS;
+            response.ResidentCertification = request.Country;
+            response.SignatureDateMmDdYyyy = DateTime.Now.ToString("MM-dd-yyyy");
+            response.SpecifyTypeOfIncome = request.SpecifyTypeOfIncome;
+            response.SsnOrItin = request.Ssnitnein;
+            response.Status = "1";
+            response.W8benemailAddress = request.EmailId;
+            response.W8benonBehalfName = request.W8BENOnBehalfName;
 
-                if (request.EligibleForTheRateOfWithholding != "")
-                {
-                    response.EligibleForTheRateOfWithholding = "1";
-                    request.EligibleForTheRateOfWithholding = "1";
-                }
-                else
-                {
-                    response.EligibleForTheRateOfWithholding = "0";
-                    request.EligibleForTheRateOfWithholding = "0";
-                }
-                _evolvedtaxContext.TblW8benforms.Update(response);
-                _evolvedtaxContext.SaveChanges();
-                return W8BenCreation(request);
+            if (request.EligibleForTheRateOfWithholding != "")
+            {
+                response.EligibleForTheRateOfWithholding = "1";
+                request.EligibleForTheRateOfWithholding = "1";
             }
-            return Save(request);
+            else
+            {
+                response.EligibleForTheRateOfWithholding = "0";
+                request.EligibleForTheRateOfWithholding = "0";
+            }
+            _evolvedtaxContext.TblW8benforms.Update(response);
+            _evolvedtaxContext.SaveChanges();
+            return W8BenCreation(request);
         }
     }
 }
