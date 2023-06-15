@@ -74,7 +74,8 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 Uspartner=request.USPartner,
                 Idtype=request.IdType,
                 Idnumber=request.IdNumber,
-                W8formType=request.W8FormType
+                W8formType=request.W8FormType,
+                W8expId=request.W8ExpId
 
             };
 

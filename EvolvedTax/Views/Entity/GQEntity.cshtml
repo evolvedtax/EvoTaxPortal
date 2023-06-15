@@ -244,14 +244,32 @@
             $('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
 
         }
+        function ChangeMasking(obj) {
+
+            if (obj.value == 'S') {
+                $('#IdNumber').attr('placeholder', '000-00-0000');
+                $('#IdNumber').mask('000-00-0000', { reverse: true });
+            } else if (obj.value == 'E') {
+                $('#IdNumber').attr('placeholder', '00-0000000');
+                $('#IdNumber').mask('00-0000000', { reverse: true });
+            } else {
+                $('#IdNumber').attr('placeholder', '000-00-0000');
+                $('#IdNumber').mask('000-00-0000', { reverse: true });
+            }
+        }
 
 
 
         $(document).ready(function () {
 
-     
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
 
-            $('input[name="W8FormTypes"]').change(function () {
+
+            $('input[name="W8FormType"]').change(function () {
 
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
                 if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
@@ -357,11 +375,7 @@
 
             });
 
-            $("select").select2({
-                theme: 'bootstrap4',
-                placeholder: "Select One",
-                //allowClear: true
-            });
+        
             // Get the current date
             var currentDate = new Date().toISOString().split('T')[0];
             // Set the max attribute of the date input

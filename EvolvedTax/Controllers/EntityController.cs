@@ -4,6 +4,7 @@ using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
+using EvolvedTax.Business.Services.W8EXPFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
@@ -21,8 +22,10 @@ namespace EvolvedTax.Controllers
         private readonly ICommonService _commonService;
         private readonly IInstituteService _instituteService;
         private readonly IGeneralQuestionareEntityService _generalQuestionareEntityService;
+        private readonly IW8EXPFormService _w8EXPFormService;
         public EntityController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
-            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, IGeneralQuestionareEntityService generalQuestionareEntityService)
+            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
+                            IGeneralQuestionareEntityService generalQuestionareEntityService, IW8EXPFormService W8EXPFormService)
         {
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
@@ -30,6 +33,8 @@ namespace EvolvedTax.Controllers
             _commonService = commonService;
             _instituteService = instituteService;
             _generalQuestionareEntityService = generalQuestionareEntityService;
+            _w8EXPFormService = W8EXPFormService;
+
         }
         public async Task<IActionResult> GQEntity()
         {
@@ -116,7 +121,21 @@ namespace EvolvedTax.Controllers
             model.Host = fullUrl;
 
             FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
-            if (!string.IsNullOrEmpty(FormName))
+
+            #region W8EXPForm save logic
+            if (model.FormType == AppConstants.W8FromTypes &&  model.W8FormType == AppConstants.W8EXPForm)
+            {
+                var responsew8EXPForm = _w8EXPFormService.Save(model);
+                model.W8ExpId = responsew8EXPForm;
+                if (responsew8EXPForm == 0)
+                {
+                    return View(model);
+                }
+
+            }
+                #endregion
+
+                if (!string.IsNullOrEmpty(FormName))
             {
                 #region Edit
                 // Removing old form data
@@ -214,21 +233,7 @@ namespace EvolvedTax.Controllers
                         }
                         //filePathResponse = _w8ECIFormService.Save(model);
                     }
-                    else if (model.W8FormType == AppConstants.W8EXPForm)
-                    {
-                        model.US1 = "2";
-                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPemplateFileName);
-                        if (model.W8ECIOnBehalfName)
-                        {
-                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
-                        }
-                        else
-                        {
-                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
-                            model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
-                        }
-                        //filePathResponse = _w8ECIFormService.Save(model);
-                    }
+              
                     FormName = model.W8FormType;
                 }
                 var responseGQForm = _generalQuestionareEntityService.Save(model);

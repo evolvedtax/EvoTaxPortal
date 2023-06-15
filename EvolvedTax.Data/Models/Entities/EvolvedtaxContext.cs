@@ -99,7 +99,6 @@ public partial class EvolvedtaxContext : DbContext
 
 
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDomain>(entity =>
@@ -244,6 +243,7 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("USPartner");
+            entity.Property(e => e.W8expId).HasColumnName("W8ExpId");
             entity.Property(e => e.W8formType)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -1328,48 +1328,26 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(500)
                 .IsUnicode(false)
                 .HasColumnName("Uploaded_File");
-            entity.Property(e => e._10a)
-                .IsUnicode(false)
-                .HasColumnName("10a");
-            entity.Property(e => e._10b)
-                .IsUnicode(false)
-                .HasColumnName("10b");
+            entity.Property(e => e._10a).HasColumnName("10a");
+            entity.Property(e => e._10b).HasColumnName("10b");
             entity.Property(e => e._10bText)
                 .IsUnicode(false)
                 .HasColumnName("10b_Text");
-            entity.Property(e => e._10c)
-                .IsUnicode(false)
-                .HasColumnName("10c");
+            entity.Property(e => e._10c).HasColumnName("10c");
             entity.Property(e => e._10cText)
                 .IsUnicode(false)
                 .HasColumnName("10c_Text");
-            entity.Property(e => e._11)
-                .IsUnicode(false)
-                .HasColumnName("11");
-            entity.Property(e => e._12)
-                .IsUnicode(false)
-                .HasColumnName("12");
-            entity.Property(e => e._13a)
-                .IsUnicode(false)
-                .HasColumnName("13a");
+            entity.Property(e => e._11).HasColumnName("11");
+            entity.Property(e => e._12).HasColumnName("12");
+            entity.Property(e => e._13a).HasColumnName("13a");
             entity.Property(e => e._13aText)
                 .IsUnicode(false)
                 .HasColumnName("13a_Text");
-            entity.Property(e => e._13b)
-                .IsUnicode(false)
-                .HasColumnName("13b");
-            entity.Property(e => e._13c)
-                .IsUnicode(false)
-                .HasColumnName("13c");
-            entity.Property(e => e._13d)
-                .IsUnicode(false)
-                .HasColumnName("13d");
-            entity.Property(e => e._14)
-                .IsUnicode(false)
-                .HasColumnName("14");
-            entity.Property(e => e._15)
-                .IsUnicode(false)
-                .HasColumnName("15");
+            entity.Property(e => e._13b).HasColumnName("13b");
+            entity.Property(e => e._13c).HasColumnName("13c");
+            entity.Property(e => e._13d).HasColumnName("13d");
+            entity.Property(e => e._14).HasColumnName("14");
+            entity.Property(e => e._15).HasColumnName("15");
             entity.Property(e => e._15Text1)
                 .IsUnicode(false)
                 .HasColumnName("15_Text1");
@@ -1379,30 +1357,14 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e._15Text3)
                 .IsUnicode(false)
                 .HasColumnName("15_Text3");
-            entity.Property(e => e._16)
-                .IsUnicode(false)
-                .HasColumnName("16");
-            entity.Property(e => e._17)
-                .IsUnicode(false)
-                .HasColumnName("17");
-            entity.Property(e => e._18)
-                .IsUnicode(false)
-                .HasColumnName("18");
-            entity.Property(e => e._19)
-                .IsUnicode(false)
-                .HasColumnName("19");
-            entity.Property(e => e._20a)
-                .IsUnicode(false)
-                .HasColumnName("20a");
-            entity.Property(e => e._20b)
-                .IsUnicode(false)
-                .HasColumnName("20b");
-            entity.Property(e => e._20c)
-                .IsUnicode(false)
-                .HasColumnName("20c");
-            entity.Property(e => e._21)
-                .IsUnicode(false)
-                .HasColumnName("21");
+            entity.Property(e => e._16).HasColumnName("16");
+            entity.Property(e => e._17).HasColumnName("17");
+            entity.Property(e => e._18).HasColumnName("18");
+            entity.Property(e => e._19).HasColumnName("19");
+            entity.Property(e => e._20a).HasColumnName("20a");
+            entity.Property(e => e._20b).HasColumnName("20b");
+            entity.Property(e => e._20c).HasColumnName("20c");
+            entity.Property(e => e._21).HasColumnName("21");
             entity.Property(e => e._21Text)
                 .IsUnicode(false)
                 .HasColumnName("21_Text");

@@ -7,6 +7,7 @@ using EvolvedTax.Business.Services.SignupService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
+using EvolvedTax.Business.Services.W8EXPFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Data.EFRepository;
 using EvolvedTax.Data.Models.Entities;
@@ -67,6 +68,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IInstituteService, InstituteService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<ISignupQuestionareService, SignupQuestionareService>();
+            services.AddScoped<IW8EXPFormService, W8EXPFormService>();
             #endregion
 
             #region @@@[------Repository]

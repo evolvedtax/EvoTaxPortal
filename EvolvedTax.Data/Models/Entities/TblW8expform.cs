@@ -35,33 +35,33 @@ public partial class TblW8expform
 
     public string? ReferenceNumberS { get; set; }
 
-    public string? _10a { get; set; }
+    public bool? _10a { get; set; }
 
-    public string? _10b { get; set; }
+    public bool? _10b { get; set; }
 
     public string? _10bText { get; set; }
 
-    public string? _10c { get; set; }
+    public bool? _10c { get; set; }
 
     public string? _10cText { get; set; }
 
-    public string? _11 { get; set; }
+    public bool? _11 { get; set; }
 
-    public string? _12 { get; set; }
+    public bool? _12 { get; set; }
 
-    public string? _13a { get; set; }
+    public bool? _13a { get; set; }
 
     public string? _13aText { get; set; }
 
-    public string? _13b { get; set; }
+    public bool? _13b { get; set; }
 
-    public string? _13c { get; set; }
+    public bool? _13c { get; set; }
 
-    public string? _13d { get; set; }
+    public bool? _13d { get; set; }
 
-    public string? _14 { get; set; }
+    public bool? _14 { get; set; }
 
-    public string? _15 { get; set; }
+    public bool? _15 { get; set; }
 
     public string? _15Text1 { get; set; }
 
@@ -69,23 +69,23 @@ public partial class TblW8expform
 
     public string? _15Text3 { get; set; }
 
-    public string? _16 { get; set; }
+    public bool? _16 { get; set; }
 
-    public string? _17 { get; set; }
+    public bool? _17 { get; set; }
 
-    public string? _18 { get; set; }
+    public bool? _18 { get; set; }
 
-    public string? _19 { get; set; }
+    public bool? _19 { get; set; }
 
-    public string? _20a { get; set; }
+    public bool? _20a { get; set; }
 
-    public string? _20b { get; set; }
+    public bool? _20b { get; set; }
 
-    public string? _20c { get; set; }
+    public bool? _20c { get; set; }
 
     public string? _21Text { get; set; }
 
-    public string? _21 { get; set; }
+    public bool? _21 { get; set; }
 
     public string? PrintNameOfSigner { get; set; }
 
