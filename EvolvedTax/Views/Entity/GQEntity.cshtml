@@ -106,8 +106,8 @@
 <div class="footer fixed" style="height:25%">
     <div style="overflow:auto;">
         <div style="float:right;">
-            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-default" hidden> << Edit</button>
-            <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
+            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
         </div>
     </div>
@@ -381,7 +381,7 @@
             // Set the max attribute of the date input
             $('#dateOfBirthW8Ben').attr('max', currentDate);
             $('#dateOfBirthW8ECI').attr('max', currentDate);
-
+            
             //-------------------//
             $('select').change();
             var checkedRadioButton = $("input[type='radio'][name='BackupWithHolding']:checked");
@@ -472,18 +472,15 @@
         }
 
         function SelectForm(obj) {
-            if (obj.value == '@AppConstants.W8Form') {
-                $('#W8FormDiv').prop('hidden', false);
+            if (obj.value == '@AppConstants.W8FromTypes') {
+                $('#WFormDiv').prop('hidden', false);
+                $('#QFormDiv').prop('hidden', false);
 
-                $('#W8BenQuestionareDiv').prop('hidden', false);
-                $("#Ccountry").find("option[value='United States']").remove();
-                $("#Ccountry").prop('disabled', false).trigger("change");
-                // Uncheck all radio buttons within the group
-                $("input[type='radio'][name='W8FormType']").prop('checked', false);
-                // Remove span and required attributes
-                $('#lbl_TypeofTaxNumber span').remove();
-                $('#Ssnitnein').removeAttr('required');
-                $('input[name="TypeofTaxNumber"]').removeAttr('required');
+                $('#W8Entity').prop('hidden', false);
+                $('#W9Entity').prop('hidden', true);
+
+                $('#W9Country').prop('hidden', true);
+                $('#W8Country').prop('hidden', false);
             }
             else if (obj.value == '@AppConstants.W9Form') {
                 $('#WFormDiv').prop('hidden', true);
@@ -495,46 +492,14 @@
 
                 $('#W8Country').prop('hidden', true);
                 $('#W9Country').prop('hidden', false);
+                //Masking
+                $('#Ssnitnein').attr('placeholder', '00-0000000');
+                $('#Ssnitnein').mask('00-0000000', { reverse: true });
                 // re-fill the enity dropdown if the user by mistake select NO
                 BindEntityForW9Form();
                 HideDivOnDDLEntitySelection();
                 HideDivOnDDLStatusFATCASelection();
-              
-
-            }
-            else {
-            
-                $('#WFormDiv').prop('hidden', false);
-                $('#QFormDiv').prop('hidden', false);
-
-                $('#W8Entity').prop('hidden', false);
-                $('#W9Entity').prop('hidden', true);
-
-                $('#W9Country').prop('hidden', true);
-                $('#W8Country').prop('hidden', false);
-                //$('#W8BenQuestionareDiv').prop('hidden', true);
-                //$('#W8ECIQuestionareDiv').prop('hidden', true);
-                // Check if "United States" already exists in the select list
-                if ($("#Ccountry option[value='United States']").length === 0) {
-                    var newOption = $("<option>").val("United States").text("United States");
-                    $("#Ccountry").prepend(newOption).trigger("change");
-                }
-                $("#Ccountry").val('United States').trigger('change');
-                //Masking
-                $('#Ssnitnein').attr('placeholder', '00-0000000');
-                $('#Ssnitnein').mask('00-0000000', { reverse: true });
-                //$('#inlineRadio5').prop('checked', true);
-                //if ($('#inlineRadio5').is(':checked')) {
-                //    // Disable the other radio buttons
-                //    //$('#inlineRadio6, #inlineRadio7').prop('disabled', true);
-                //    $('#Ssnitnein').attr('placeholder', '000-00-0000');
-                //    $('#Ssnitnein').mask('000-00-0000', { reverse: true });
-                //}
-                //// Add span and required attributes
-                //$('#lbl_TypeofTaxNumber').append('<span class="text-danger">*</span>');
-                //$('#Ssnitnein').attr('required', 'required');
-                //$('input[name="TypeofTaxNumber"]').attr('required', 'required');
-            }
+            } 
             showTab(currentTab);
         }
         function BackupWithHoldingFunc(obj) {

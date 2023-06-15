@@ -109,7 +109,7 @@
             <div id="W8EXPFatcaDiv" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Chapter 4 Status(FATCA). Select Below<span class="text-danger">*</span></label>
-                    <select id="FatcaW8" asp-for="Fatca" asp-items="ViewBag.W8EXPFATCAList"  required>
+                    <select id="FatcaW8" asp-for="W8EXPFatca" asp-items="ViewBag.W8EXPFATCAList"  required>
                         <option></option>
                     </select>
                 </div>
@@ -545,6 +545,12 @@
         @*New changes end*@
 
 
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+                <input asp-for="AuthSignatoryName" class="form-control" required />
+            </div>
+        </div>
         <div class="col-md-12">
             <label>Are you required to have backup withholding? If No, please select below.</label>
             <div class="form-group">
@@ -570,7 +576,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
-                    <select id="Fatca" asp-for="Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
+                    <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
                         <option></option>
                     </select>
                 </div>

@@ -13,6 +13,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string Text { get; set; } = string.Empty;
         public string? BaseUrl { get; set; }
         public string FormName { get; set; } = string.Empty;
+        public string EntityStatus { get; set; } = string.Empty;
         public DateTime? EntryDate { get; set; }
         public string PrintName { get; set; } = string.Empty;
         public string NameOfIndividual { get; set; } = string.Empty;

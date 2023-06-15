@@ -1,15 +1,19 @@
 ﻿using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.InstituteService;
+using EvolvedTax.Business.Services.W8BenFormService;
+using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
+    [UserSession]
     public class CertificationController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -17,14 +21,19 @@ namespace EvolvedTax.Controllers
         private readonly IW9FormService _w9FormService;
         private readonly ICommonService _commonService;
         private readonly IInstituteService _instituteService;
+        private readonly IW8BenFormService _w8BenFormService;
+        private readonly IW8ECIFormService _w8ECIFormService;
+
         public CertificationController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
-            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService)
+            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService)
         {
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
             _instituteService = instituteService;
+            _w8BenFormService = w8BenFormService;
+            _w8ECIFormService = w8ECIFormService;
         }
         public IActionResult Index()
         {
@@ -60,7 +69,7 @@ namespace EvolvedTax.Controllers
                 var clientEmail = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
                 if (!string.IsNullOrEmpty(clientEmail))
                 {
-                    return RedirectToAction("DownloadForm", "Home", new { clientEmail = clientEmail });
+                    return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
                 }
                 return RedirectToAction("AccessDenied", "Account", new { statusCode = 401 });
             }
@@ -97,7 +106,8 @@ namespace EvolvedTax.Controllers
             }
             buttonRequest.IsSignaturePasted = true;
             buttonRequest.BaseUrl = HttpContext.Session.GetString("BaseURL") ?? string.Empty;
-            buttonRequest.FormName = HttpContext.Session.GetString("FormName") ?? string.Empty; ;
+            buttonRequest.FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            buttonRequest.EntityStatus = HttpContext.Session.GetString("EntityStatus") ?? string.Empty;
             buttonRequest.EntryDate = request.EntryDate;
             buttonRequest.FileName = _commonService.AssignSignature(buttonRequest, request.FileName);
             return View(buttonRequest);
@@ -139,6 +149,15 @@ namespace EvolvedTax.Controllers
             var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
             var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
             HttpContext.Session.SetString("FormName", string.Empty);
+            var sd = HttpContext.Session.GetString("ClientNameSig");
+            if (string.IsNullOrEmpty(sd))
+            {
+
+            }
+            else
+            {
+                request.PrintName = sd;
+            }
             return Json(new { fileName = request.FileName, staus = true, entityName = EntityName, printName = request.PrintName, formName = request.FormName, InstituteEmail = InstituteEmail }); ;
         }
         public IActionResult DownloadForm(string clientEmail)
@@ -155,11 +174,11 @@ namespace EvolvedTax.Controllers
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8BENForm)
             {
-                // ViewBag.PrintName = _w8BenFormService.GetDataByClientEmailId(clientEmail).NameOfIndividual;
+                ViewBag.PrintName = _w8BenFormService.GetDataByClientEmailId(clientEmail).NameOfIndividual;
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8ECIForm)
             {
-                // ViewBag.PrintName = _w8ECIFormService.GetDataByClientEmailId(clientEmail).NameOfIndividual;
+                ViewBag.PrintName = _w8ECIFormService.GetDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
             }
             return View();
         }

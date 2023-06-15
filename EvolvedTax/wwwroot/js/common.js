@@ -249,14 +249,96 @@ var COMMON = (function () {
         };
 
         xhr.onload = function () {
-            debugger
             if (xhr.status === 200) {
                 // File upload successful
                 console.log('File uploaded successfully');
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
                 if (response.Status) {
-                    COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
+                    if (response.Param == "Client" && response.Message.length > 0) {
+                        $('#dupplication-ibox').prop('hidden', false);
+                        //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
+                        // Clear the existing table rows
+                        let dataTable = $('#entity-table-dupplication').DataTable();
+                        dataTable.clear().draw();
+
+                        // Iterate over the response data and populate the table
+                        $.each(response.Message, function (index, item) {
+                            let ClientStatus = '';
+                            if (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') {
+                                ClientStatus = 'disabled';
+                            }
+                            let status = '';
+                            if (item.ClientStatus == '@AppConstants.ClientStatusActive') {
+                                status = '<span class="fa fa-unlock"></span>';
+                            } else {
+                                status = '<span class="fa fa-lock"></span>';
+                            }
+                            let row = [
+                                '<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '"' + ClientStatus + '>',
+                                item.PartnerName1 + ' ' + item.PartnerName2,
+                                item.Address1 + ' ' + item.Address2,
+                                item.City,
+                                item.State,
+                                item.Province,
+                                item.Zip,
+                                item.Country,
+                                item.PhoneNumber,
+                                item.ClientEmailId,
+                                item.StatusName,
+                                COMMON.GetDateMMddyyyFormat(item.ClientStatusDate),
+                                'Form' + ' ' + item.FormName,
+                                '<a href="~/' + item.FileName + '">' + item.FileName + '</a>',
+                                status
+                            ];
+                            dataTable.rows.add([row]);
+                        });
+
+                        // Draw the updated DataTable
+                        dataTable.draw();
+                    }
+                    if (response.Param == "Entity" && response.Message.length > 0) {
+                        $('#dupplication-ibox').prop('hidden', false);
+                        //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
+                        // Clear the existing table rows
+                        let dataTable = $('#entity-table-dupplication').DataTable();
+                        dataTable.clear().draw();
+
+                        // Iterate over the response data and populate the table
+                        $.each(response.Message, function (index, item) {
+                            let ClientStatus = '';
+                            if (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') {
+                                ClientStatus = 'disabled';
+                            }
+                            let status = '';
+                            if (item.ClientStatus == '@AppConstants.ClientStatusActive') {
+                                status = '<span class="fa fa-unlock"></span>';
+                            } else {
+                                status = '<span class="fa fa-lock"></span>';
+                            }
+                            let row = [
+                                '<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '"' + ClientStatus + '>',
+                                item.PartnerName1 + ' ' + item.PartnerName2,
+                                item.Address1 + ' ' + item.Address2,
+                                item.City,
+                                item.State,
+                                item.Province,
+                                item.Zip,
+                                item.Country,
+                                item.PhoneNumber,
+                                item.ClientEmailId,
+                                item.StatusName,
+                                COMMON.GetDateMMddyyyFormat(item.ClientStatusDate),
+                                'Form' + ' ' + item.FormName,
+                                '<a href="~/' + item.FileName + '">' + item.FileName + '</a>',
+                                status
+                            ];
+                            dataTable.rows.add([row]);
+                        });
+
+                        // Draw the updated DataTable
+                        dataTable.draw();
+                    }
                     console.log('Upload completed successfully');
                 } else {
                     // Continue showing the progress bar until completion record is received

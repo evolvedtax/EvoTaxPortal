@@ -17,7 +17,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
             return _evolvedtaxContext.GeneralQuestionEntities.Where(p => p.UserName == ClientEmail).Select(p => new FormRequest
             {
                 GQOrgName = p.OrgName ?? string.Empty,
-                EntityType = p.EntityType?? string.Empty,
+                EntityType = p.EntityType ?? string.Empty,
                 Ccountry = p.Ccountry ?? string.Empty,
                 MAddress1 = p.MailingAddress1 ?? string.Empty,
                 MAddress2 = p.MailingAddress2 ?? string.Empty,
@@ -36,7 +36,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 TypeofTaxNumber = p.TypeofTaxNumber ?? string.Empty,
                 UserName = p.UserName ?? string.Empty,
                 Payeecode = p.Payeecode ?? string.Empty,
-                Fatca = p.Fatca ?? string.Empty,
+                W9Fatca = p.Fatca ?? string.Empty,
                 BackupWithHolding = p.BackupWithHolding ?? string.Empty,
                 Ssnitnein = p.Number
             }).FirstOrDefault();
@@ -49,6 +49,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 OrgName = request.GQOrgName,
                 EntityType = request.EntityType,
                 Ccountry = request.Ccountry,
+                Number = request.Ssnitnein,
                 MailingAddress1 = request.MAddress1,
                 MailingAddress2 = request.MAddress2,
                 MailingCity = request.MCity,
@@ -66,19 +67,22 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 TypeofTaxNumber = request.TypeofTaxNumber,
                 UserName = request.UserName,
                 BackupWithHolding = request.BackupWithHolding,
-                Fatca = request.Fatca,
+                Fatca = request.W9Fatca,
                 Payeecode = request.Payeecode,
-                De=request.DE,
+                De = request.DE,
                 DeownerName = request.DEOwnerName,
-                EnitityManagendOutSideUsa=request.EnitityManagendOutSideUSA,
-                Uspartner=request.USPartner,
-                Idtype=request.IdType,
-                Idnumber=request.IdNumber,
-                W8formType=request.W8FormType,
-                W8expId=request.W8ExpId
+                EnitityManagendOutSideUsa = request.EnitityManagendOutSideUSA,
+                Uspartner = request.USPartner,
+                Idtype = request.IdType,
+                Idnumber = request.IdNumber,
+                W8formType = request.W8FormType,
+                W8expId = request.W8ExpId
 
             };
-
+            if (_evolvedtaxContext.GeneralQuestionEntities.Any(p => p.UserName == model.UserName))
+            {
+                return Update(request);
+            }
             _evolvedtaxContext.GeneralQuestionEntities.Add(model);
             _evolvedtaxContext.SaveChanges();
             return model.Id;
@@ -89,6 +93,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
             response.OrgName = model.GQOrgName;
             response.EntityType = model.EntityType;
             response.Ccountry = model.Ccountry;
+            response.Number = model.Ssnitnein;
             response.MailingAddress1 = model.MAddress1;
             response.MailingAddress2 = model.MAddress2;
             response.MailingCity = model.MCity;
@@ -105,8 +110,16 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
             response.PermanentZip = model.PZipCode;
             response.TypeofTaxNumber = model.TypeofTaxNumber;
             response.BackupWithHolding = model.BackupWithHolding;
-            response.Fatca = model.Fatca;
+            response.Fatca = model.W9Fatca;
             response.Payeecode = model.Payeecode;
+            response.De = model.DE;
+            response.DeownerName = model.DEOwnerName;
+            response.EnitityManagendOutSideUsa = model.EnitityManagendOutSideUSA;
+            response.Uspartner = model.USPartner;
+            response.Idtype = model.IdType;
+            response.Idnumber = model.IdNumber;
+            response.W8formType = model.W8FormType;
+            response.W8expId = model.W8ExpId;
             _evolvedtaxContext.GeneralQuestionEntities.Update(response);
             return _evolvedtaxContext.SaveChanges();
         }

@@ -9,11 +9,14 @@ using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
+    [UserSession]
     public class EntityController : Controller
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -38,8 +41,6 @@ namespace EvolvedTax.Controllers
         }
         public async Task<IActionResult> GQEntity()
         {
-           
-
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
@@ -97,7 +98,7 @@ namespace EvolvedTax.Controllers
                     }
                     else
                     {
-                        
+
                     }
                     return View(GQEntitiesResponse);
                 }
@@ -109,7 +110,6 @@ namespace EvolvedTax.Controllers
         {
             string FormName = string.Empty;
             string filePathResponse = string.Empty;
-
             model.IndividualOrEntityStatus = AppConstants.EntityStatus;
             model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
@@ -123,7 +123,7 @@ namespace EvolvedTax.Controllers
             FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
 
             #region W8EXPForm save logic
-            if (model.FormType == AppConstants.W8FromTypes &&  model.W8FormType == AppConstants.W8EXPForm)
+            if (model.FormType == AppConstants.W8FromTypes && model.W8FormType == AppConstants.W8EXPForm)
             {
                 var responsew8EXPForm = _w8EXPFormService.Save(model);
                 model.W8ExpId = responsew8EXPForm;
@@ -133,122 +133,80 @@ namespace EvolvedTax.Controllers
                 }
 
             }
-                #endregion
-
-                if (!string.IsNullOrEmpty(FormName))
+            #endregion
+            #region ADD
+            if (model.FormType == AppConstants.W9Form) // For W9 form
             {
-                #region Edit
-                // Removing old form data
-                if (FormName != model.FormType)
-                {
-                    //if (FormName !) { 
-
-                    //}
-                }
-
-                if (model.FormType == AppConstants.W9Form) // For W9 form
-                {
-                    model.USCitizen = "1";
-                    FormName = model.FormType;
-                    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
-                    var response = _w9FormService.UpdateForEntity(model);
-                    //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
-                    filePathResponse = response;
-                }
-              
-                else if (model.FormType == AppConstants.W8Form)
-                {
-                    
-                }
-                var responseGQForm = _generalQuestionareEntityService.Update(model);
-                if (responseGQForm == 0)
-                {
-                    return View(model);
-                }
-                #endregion
+                model.USCitizen = "1";
+                FormName = model.FormType;
+                model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
+                var response = _w9FormService.SaveForEntity(model);
+                //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
+                var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
+                filePathResponse = response;
             }
-            else
+            else if (model.FormType == AppConstants.W8FromTypes)
             {
-                #region ADD
-
-
-
-                if (model.FormType == AppConstants.W9Form) // For W9 form
+                model.USCitizen = "0";
+                if (model.W8FormType == AppConstants.W8BENForm)
                 {
-                    model.USCitizen = "1";
-                    FormName = model.FormType;
-                    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
-                    var response = _w9FormService.SaveForEntity(model);
-                    //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
-                    HttpContext.Session.SetString("ClientName", model.GQOrgName);
-                    filePathResponse = response;
+                    model.US1 = "1";
+                    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8BENTemplateFileName);
+                    if (model.W8BENOnBehalfName)
+                    {
+                        HttpContext.Session.SetString("ClientName", model.PrintNameOfSigner ?? string.Empty);
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                        model.PrintNameOfSigner = string.Concat(model.GQFirstName, " ", model.GQLastName);
+                    }
+                    //filePathResponse = _w8BenFormService.Save(model);
+                }
+                else if (model.W8FormType == AppConstants.W8ECIForm)
+                {
+                    model.US1 = "2";
+                    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
+                    if (model.W8ECIOnBehalfName)
+                    {
+                        HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                        model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
+                    }
+                    //filePathResponse = _w8ECIFormService.Save(model);
+                }
+                else if (model.W8FormType == AppConstants.W8IMYForm)
+                {
+                    model.US1 = "2";
+                    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
+                    if (model.W8ECIOnBehalfName)
+                    {
+                        HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
+                        model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
+                    }
+                    //filePathResponse = _w8ECIFormService.Save(model);
                 }
 
-            
-                else if (model.FormType == AppConstants.W8FromTypes)
-                {
-                    model.USCitizen = "0";
-                    if (model.W8FormType == AppConstants.W8BENForm)
-                    {
-                        model.US1 = "1";
-                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8BENTemplateFileName);
-                        if (model.W8BENOnBehalfName)
-                        {
-                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSigner ?? string.Empty);
-                        }
-                        else
-                        {
-                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
-                            model.PrintNameOfSigner = string.Concat(model.GQFirstName, " ", model.GQLastName);
-                        }
-                        //filePathResponse = _w8BenFormService.Save(model);
-                    }
-                    else if (model.W8FormType == AppConstants.W8ECIForm)
-                    {
-                        model.US1 = "2";
-                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                        if (model.W8ECIOnBehalfName)
-                        {
-                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
-                        }
-                        else
-                        {
-                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
-                            model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
-                        }
-                        //filePathResponse = _w8ECIFormService.Save(model);
-                    }
-                    else if (model.W8FormType == AppConstants.W8IMYForm)
-                    {
-                        model.US1 = "2";
-                        model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
-                        if (model.W8ECIOnBehalfName)
-                        {
-                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
-                        }
-                        else
-                        {
-                            HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
-                            model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
-                        }
-                        //filePathResponse = _w8ECIFormService.Save(model);
-                    }
-              
-                    FormName = model.W8FormType;
-                }
-                var responseGQForm = _generalQuestionareEntityService.Save(model);
-                if (responseGQForm == 0)
-                {
-                    return View(model);
-                }
-                #endregion
+                FormName = model.W8FormType;
             }
-            //byte[] pdfBytes = System.IO.File.ReadAllBytes(filePathResponse);
-            //MemoryStream memoryStream = new MemoryStream(pdfBytes);
-            //return new FileStreamResult(memoryStream, "application/pdf");
+            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            if (responseGQForm == 0)
+            {
+                return View(model);
+            }
+            #endregion
             HttpContext.Session.SetString("PdfdFileName", filePathResponse);
             HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
             HttpContext.Session.SetString("FormName", FormName);
+            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
             return Json(filePathResponse);
         }
 

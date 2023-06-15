@@ -81,7 +81,7 @@
           data-ajax-failure="COMMON.ajaxfailure"
           data-ajax-loading="#ajax-loader"
           data-ajax-success="ajaxsuccess"
-          data-ajax-url="@Url.Action("Certify","Home")">
+          data-ajax-url="@Url.Action("Certify","Certification")">
         <div id="certifyDiv" hidden>
             <div class="form-check abc-radio abc-radio-info form-check-inline">
                 <input class="form-check-input" type="checkbox" asp-for=Agreement1 id="agreement1">
@@ -180,7 +180,7 @@
         </div>
         <div style="overflow:auto;">
             <div style="float:right;">
-                <button type="button" onclick="location.href='@Url.Action("GQIndividual","Home")'" id="prevBtn" class="btn btn-md btn-default"> << Edit</button>
+                <button type="button" onclick="location.href='@Url.Action("GQIndividual","Individual")'" id="prevBtn" class="btn btn-md btn-default"> << Edit</button>
                 <button type="button" id="nextBtn" class="btn btn-md btn-primary">Next Page >></button>
                 <button type="button" id="certify-submit" class="btn btn-md btn-primary" hidden>Submit and Download >></button>
             </div>

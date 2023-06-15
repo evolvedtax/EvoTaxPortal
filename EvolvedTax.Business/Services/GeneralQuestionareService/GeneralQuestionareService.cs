@@ -44,6 +44,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
                 TypeofTaxNumber = p.TypeofTaxNumber ?? string.Empty,
                 UserName = p.UserName ?? string.Empty,
                 USCitizen = p.Uscitizen ?? string.Empty,
+                Ssnitnein = p.SocialSecurityNumber,
                 US1 = p.Us1 ?? string.Empty,
             }).FirstOrDefault();
         }
@@ -70,11 +71,15 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
                 PermanentState = request.PState,
                 PermanentZip = request.PZipCode,
                 TypeofTaxNumber = request.TypeofTaxNumber,
+                SocialSecurityNumber = request.Ssnitnein,
                 UserName = request.UserName,
                 Uscitizen = request.USCitizen,
                 Us1 = request.US1
             };
-
+            if (_evolvedtaxContext.GeneralQuestionIndividuals.Any(p => p.UserName == model.UserName))
+            {
+                return Update(request);
+            }
             _evolvedtaxContext.GeneralQuestionIndividuals.Add(model);
             _evolvedtaxContext.SaveChanges();
             return model.Id;
@@ -100,6 +105,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
             response.PermanentState = model.PState;
             response.PermanentZip = model.PZipCode;
             response.TypeofTaxNumber = model.TypeofTaxNumber;
+            response.SocialSecurityNumber = model.Ssnitnein;
             response.Uscitizen = model.USCitizen;
             response.Us1 = model.US1;
             _evolvedtaxContext.Update(response);
@@ -107,7 +113,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
         }
         public bool IsClientAlreadyExist(string ClientEmailId)
         {
-            return _evolvedtaxContext.GeneralQuestionIndividuals.Any(p=>p.UserName == ClientEmailId);
+            return _evolvedtaxContext.GeneralQuestionIndividuals.Any(p => p.UserName == ClientEmailId);
         }
     }
 }

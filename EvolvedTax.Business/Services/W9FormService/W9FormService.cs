@@ -77,7 +77,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                 Country1 = request.PCountry,
                 ListofAccounts = " ",
                 Exemptions = request.Payeecode,
-                Fatca = request.Fatca,
+                Fatca = request.W9Fatca,
                 SsnTin = request.Ssnitnein,
                 W9emailAddress = request.EmailId,
                 W9entryDate = DateTime.Now,
@@ -122,7 +122,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].SSN[0].f1_13[0]", request?.Ssnitnein?.Substring(7, 4));
                 }
                 // following seven boxes.
-                pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
+                //pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[0]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[1]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[2]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].c1_1[3]", "0");
@@ -141,7 +141,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                 // Exempt payee code (if any)
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_5[0]", request.Payeecode);
                 // Exemption From FATCA reporting code(If any)
-                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_6[0]", request.Fatca);
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_6[0]", request.W9Fatca);
 
                 // 3. Check appropriate box for federal tax classification of the person whose name is entered on line 1. Check only one of the 
                 switch (request?.EntityType)
@@ -385,8 +385,8 @@ namespace EvolvedTax.Business.Services.W9FormService
                 response.Country1 = request.PCountry;
                 response.ListofAccounts = "";
                 response.Exemptions = request.Payeecode;
-                response.Fatca = request.Fatca;
-                response.SsnTin = request.TypeofTaxNumber;
+                response.Fatca = request.W9Fatca;
+                response.SsnTin = request.Ssnitnein;
                 response.W9emailAddress = request.EmailId;
                 _evolvedtaxContext.TblW9forms.Update(response);
                 _evolvedtaxContext.SaveChanges();

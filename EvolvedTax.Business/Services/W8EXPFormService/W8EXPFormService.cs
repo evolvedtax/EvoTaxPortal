@@ -28,7 +28,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 NameOfOrganization =  request.GQOrgName,
                 TypeOfEntity = request.TypeOfEntity,
                 CountryOfIncorporation = request.CountryOfIncorporation,
-                FatcaStatus = request.Fatca,
+                FatcaStatus = request.W8EXPFatca,
                 _10a = request._10a,
                 _10b = request._10b,
                 _10bText=request._10b_Text,
@@ -111,7 +111,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 // Exempt payee code (if any)
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_5[0]", request.Payeecode);
                 // Exemption From FATCA reporting code(If any)
-                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_6[0]", request.Fatca);
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].Exemptions[0].f1_6[0]", request.W8EXPFatca);
 
                 // 3. Check appropriate box for federal tax classification of the person whose name is entered on line 1. Check only one of the 
                 switch (request?.EntityType)

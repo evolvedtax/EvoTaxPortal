@@ -59,7 +59,7 @@
                 <div id="FTINW8ECIDiv" class="col-md-6">
                     <div class="form-group">
                         <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
-                        <input id="FTINW8ECI" type="text" asp-for=ReferenceNumberSW8ECI title="refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                        <input id="FTINW8ECI" type="text" asp-for=ReferenceNumberSW8ECI title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
                     </div>
                 </div>
             </div>
@@ -87,11 +87,11 @@
             <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
             <div class="form-group">
                 <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="true" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required>
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="True" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required>
                     <label class="form-check-label" for="W8ECIOnBehalfName1"> Yes </label>
                 </div>
                 <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="false" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required>
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="False" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required>
                     <label class="form-check-label" for="W8ECIOnBehalfName2"> No </label>
                 </div>
             </div>
@@ -99,7 +99,7 @@
         <div id="W8ECIOnBehalfNameQuesDiv" class="row" hidden>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Name <span class="text-danger">*</span></label>
+                    <label>Please enter the name of the authorized signatory<span class="text-danger">*</span></label>
                     <input asp-for="PrintNameOfSignerW8ECI" class="form-control" required />
                 </div>
             </div>

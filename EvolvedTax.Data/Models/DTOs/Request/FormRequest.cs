@@ -20,7 +20,7 @@ public class FormRequest
     public string Ccountry { get; set; } = string.Empty;
     public string BackupWithHolding { get; set; } = string.Empty;
     public string Payeecode { get; set; } = string.Empty;
-    public string Fatca { get; set; } = string.Empty;
+    public string W9Fatca { get; set; } = string.Empty;
 
     public string? DE { get; set; } = string.Empty;
 
@@ -30,6 +30,7 @@ public class FormRequest
     public string? IdType { get; set; }
     public string? IdNumber { get; set; }
     public string? RetirementPlan { get; set; }
+    public string AuthSignatoryName { get; set; } = string.Empty;
 
 
     //-----------W8EXPForm Fields Start-------------------//
@@ -63,12 +64,7 @@ public class FormRequest
     public bool _21 { get; set; } = false;
     public string? _21_Text { get; set; } = string.Empty;
     public int W8ExpId { get; set; } = 0;
-
-
-
-
-
-
+    public string W8EXPFatca { get; set; } = string.Empty;
 
 
     //-----------W8EXPForm Fields End-------------------//
