@@ -3,6 +3,18 @@
     ViewData["Title"] = "Client";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .dropdown-menu-horizontal {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+        .dropdown-menu-horizontal .dropdown-item {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+</style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -48,6 +60,7 @@
                                 <th>Form Name</th>
                                 <th>Form Completed</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,6 +94,22 @@
                                             {
                                                 <span class="fa fa-lock"></span>
                                             }
+                                        </td>
+                                        <td class="actions">
+                                            <div class="dropdown">
+                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="fa fa-bars"></span>
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <div class="dropdown-menu-horizontal">
+                                                        <a class="dropdown-item" href="#">Edit</a>
+                                                        <a class="dropdown-item" href="#">Delete</a>
+                                                        <a class="dropdown-item" href="#">Send Email</a>
+                                                        <a class="dropdown-item" href="#">Lock</a>
+                                                        <a class="dropdown-item" href="#">Unlock</a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
