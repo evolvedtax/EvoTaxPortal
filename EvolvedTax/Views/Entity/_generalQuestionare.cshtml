@@ -65,7 +65,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Name of Organization<span class="text-danger">*</span></label>
-                    <input id="firstName" asp-for="GQOrgName" type="text" class="form-control"  required>
+                    <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
                 </div>
             </div>
             <div id="W9Entity" class="col-md-6" hidden>
@@ -109,7 +109,7 @@
             <div id="W8EXPFatcaDiv" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Chapter 4 Status(FATCA). Select Below<span class="text-danger">*</span></label>
-                    <select id="FatcaW8" asp-for="W8EXPFatca" asp-items="ViewBag.W8EXPFATCAList"  required>
+                    <select id="FatcaW8" asp-for="W8EXPFatca" asp-items="ViewBag.W8EXPFATCAList" required>
                         <option></option>
                     </select>
                 </div>
@@ -156,7 +156,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1"  asp-for="_11">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_11">
                     <label class="form-check-label" for="inlinecheckbox1">
                         I certify that: <br />
                         <ul>
@@ -200,11 +200,11 @@
                     <label class="form-check-label" for="inlinecheckbox2">
                         I certify that the entity identified in Part I has been issued a determination letter by the IRS that is currently in effect and that concludes that it is an exempt organization described in section 501(c).
 
-                        Date of the letter recieved by IRS regarding 501(c) status.: 
+                        Date of the letter recieved by IRS regarding 501(c) status.:
                     </label>
                 </div>
                 <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3"  asp-for="_13b">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
                     <label class="form-check-label" for="inlinecheckbox3">
                         I have attached to this form an opinion from U.S. counsel concluding that the entity identified in Part I is described in section 501(c).
                     </label>
@@ -217,13 +217,13 @@
                     </label>
                 </div>
                 <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4"  asp-for="_13c">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4" asp-for="_13c">
                     <label class="form-check-label" for="inlinecheckbox4">
                         If the determination letter or opinion of counsel concludes that the entity identified in Part I is described in section 501(c)(3), I certify that the organization is not a private foundation described in section 509. I have attached an affidavit of the organization setting forth sufficient facts for the IRS to determine that the organization is not a private foundation because it meets one of the exceptions described in section 509(a)(1), (2), (3), or (4).
                     </label>
                 </div>
                 <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5"  asp-for="_13d">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5" asp-for="_13d">
                     <label class="form-check-label" for="inlinecheckbox5">
                         If the determination letter or opinion of counsel concludes that the entity identified in Part I is described in section 501(c)(3), I certify that the organization is a private foundation described in section 509.
                     </label>
@@ -235,7 +235,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox6"  asp-for="_14">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox6" asp-for="_14">
                     <label class="form-check-label" for="inlinecheckbox6">
                         I certify that the entity identified in Part I is a government of a possession of the United States, or is a political subdivision thereof, and is claiming the exemption granted by section 115(2).
 
@@ -349,7 +349,7 @@
                     <label class="form-check-label" for="inlinecheckbox2">
                         I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
                     </label>
-                    <input id="lastName"  type="text" class="form-control" required asp-for="_21_Text">
+                    <input id="lastName" type="text" class="form-control" required asp-for="_21_Text">
                 </div>
 
 
@@ -472,7 +472,7 @@
     <div class="form-box">
 
         @*New changes start*@
-       <div id="QFormDiv" hidden>
+        <div id="QFormDiv" hidden>
             <div class="col-md-12">
                 <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
                 <div class="form-group">
@@ -498,18 +498,18 @@
                 <div class="form-group">
                     <label id="lbl_TypeofTaxNumber">
                         <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="IdType" required>
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="IdType">
                             <label class="form-check-label" for="inlineRadio5">SSN</label>
                         </div>
                         <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="IdType" required>
+                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="IdType">
                             <label class="form-check-label" for="inlineRadio6">ITIN</label>
                         </div>
                         <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="IdType" required>
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="IdType">
                             <label class="form-check-label" for="inlineRadio7">EIN</label>
                         </div>
-                        <span class="text-danger">*</span>
+
                     </label>
                     <input id="IdNumber" asp-for="IdNumber" type="text" class="form-control" required>
                 </div>
@@ -541,6 +541,40 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>GIIN Number </label>
+                    <input id="GIN" asp-for="GIN" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <label>Is a foreign Tax Identification Number(FTIN) legally required for you?</label>
+                    <div class="form-group">
+                        <div class="form-check abc-radio abc-radio-info form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio21" value="true" onclick="ShowHideFTIN(this)" asp-for="CheckIfFtinNotLegallyRequiredYN" >
+                            <label class="form-check-label" for="inlineRadio1"> Yes </label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio22" value="false" onclick="ShowHideFTIN(this)" asp-for="CheckIfFtinNotLegallyRequiredYN" checked="checked">
+                            <label class="form-check-label" for="inlineRadio2"> No </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="FTINDiv" class="col-md-6">
+                    <div class="form-group">
+                        <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                        <input id="FTIN" type="text" asp-for=ForeigntaxIdentifyingNumber class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Reference Number</label>
+                    <input type="text" asp-for=Referencenumber title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                </div>
+            </div>
         </div>
         @*New changes end*@
 
@@ -551,7 +585,7 @@
                 <input asp-for="AuthSignatoryName" class="form-control" required />
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
             <label>Are you required to have backup withholding? If No, please select below.</label>
             <div class="form-group">
                 <div class="form-check abc-radio abc-radio-info form-check-inline">

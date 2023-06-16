@@ -64,7 +64,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 PermanentProvince = request.PProvince,
                 PermanentState = request.PState,
                 PermanentZip = request.PZipCode,
-                TypeofTaxNumber = request.TypeofTaxNumber,
+                TypeofTaxNumber = request.IdType,
                 UserName = request.UserName,
                 BackupWithHolding = request.BackupWithHolding,
                 Fatca = request.W9Fatca,
@@ -73,7 +73,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 DeownerName = request.DEOwnerName,
                 EnitityManagendOutSideUsa = request.EnitityManagendOutSideUSA,
                 Uspartner = request.USPartner,
-                Idtype = request.IdType,
+               // Idtype = request.IdType,
                 Idnumber = request.IdNumber,
                 W8formType = request.W8FormType,
                 W8expId = request.W8ExpId

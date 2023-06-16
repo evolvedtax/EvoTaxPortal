@@ -87,6 +87,7 @@ namespace EvolvedTax.Business.Services.CommonService
 
             using (PdfReader pdfReader = new PdfReader(newFile))
             {
+                int numberOfPages = pdfReader.NumberOfPages;
                 using (PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(Path.Combine(request.BaseUrl, fileName), FileMode.Create)))
                 {
                     AcroFields pdfFormFields = pdfStamper.AcroFields;
@@ -126,12 +127,20 @@ namespace EvolvedTax.Business.Services.CommonService
                             image2.SetAbsolutePosition(430, 230);
                         }
                     }
+                    else if (AppConstants.W8EXPForm == request.FormName)
+                        {
+                        image1.SetAbsolutePosition(72, 530);
+                        if (request.EntryDate != null)
+                        {
+                            image2.SetAbsolutePosition(450, 530);
+                        }
+                    }
 
-                    PdfContentByte over1 = pdfStamper.GetOverContent(1);
+                    PdfContentByte over1 = pdfStamper.GetOverContent(numberOfPages);
                     over1.AddImage(image1);
                     if (request.EntryDate != null)
                     {
-                        PdfContentByte over2 = pdfStamper.GetOverContent(1);
+                        PdfContentByte over2 = pdfStamper.GetOverContent(numberOfPages);
                         over1.AddImage(image2);
                     }
                     // Flatten the form fields to apply the changes

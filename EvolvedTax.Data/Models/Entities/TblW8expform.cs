@@ -33,6 +33,8 @@ public partial class TblW8expform
 
     public string? ForeignTaxIdentifyingNumber { get; set; }
 
+    public bool? CheckIfFtinNotLegallyRequiredYN { get; set; }
+
     public string? ReferenceNumberS { get; set; }
 
     public bool? _10a { get; set; }
@@ -94,4 +96,10 @@ public partial class TblW8expform
     public string? UploadedFile { get; set; }
 
     public string? Status { get; set; }
+
+    public string? EmailAddress { get; set; }
+
+    public int? PrintSize { get; set; }
+
+    public string? FontName { get; set; }
 }
