@@ -96,6 +96,11 @@ namespace EvolvedTax.Controllers
                         GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
                         GQEntitiesResponse.FormType = formName;
                     }
+                    else if (formName == AppConstants.W8EXPForm)
+                    {
+                        GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+                        GQEntitiesResponse.FormType = formName;
+                    }
                     else
                     {
 
@@ -125,12 +130,17 @@ namespace EvolvedTax.Controllers
             #region W8EXPForm save logic
             if (model.FormType == AppConstants.W8FromTypes && model.W8FormType == AppConstants.W8EXPForm)
             {
+
+                FormName = model.W8FormType;
+                model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
+
                 var responsew8EXPForm = _w8EXPFormService.Save(model);
-                model.W8ExpId = responsew8EXPForm;
-                if (responsew8EXPForm == 0)
-                {
-                    return View(model);
-                }
+               // int SaveID = Convert.ToInt32(responsew8EXPForm[0].ToString());
+               // string FilePath = responsew8EXPForm[1].ToString();
+                //model.W8ExpId = SaveID;
+                var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
+                filePathResponse = responsew8EXPForm;
 
             }
             #endregion

@@ -30,7 +30,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8BENTemplateFileName = @"Form_W8Ben.pdf";
         public const string W8ECITemplateFileName = @"Form_W8ECI.pdf";
         public const string W8IMYTemplateFileName = @"Form_W8IMY.pdf";
-        public const string W8EXPemplateFileName = @"Form_W8EXP.pdf";
+        public const string W8EXPTemplateFileName = @"Form_W-8EXP.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
         //-----------BUTTON CONSTANTS--------------------//
