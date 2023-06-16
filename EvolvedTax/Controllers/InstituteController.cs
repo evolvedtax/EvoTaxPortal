@@ -166,5 +166,34 @@ namespace EvolvedTax.Controllers
             var response = await _instituteService.LockUnlockEntity(entityId ,isLocked);
             return Json(response);
         }
+        [Route("institute/UpdateClient")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateClient(InstituteClientRequest request)
+        {
+            if (request.EntityId == 0)
+            {
+                return Json(false);
+            }
+            //var response = await _instituteService.UpdateEntity(request);
+            return Json(true/*response*/);
+        }
+        [Route("institute/DeleteClient")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteClient(int id)
+        {
+            if (id == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.DeleteEntity(id);
+            return Json(response);
+        }
+        [Route("institute/LockUnlockClient")]
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockClient(int entityId, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(entityId ,isLocked);
+            return Json(response);
+        }
     }
 }
