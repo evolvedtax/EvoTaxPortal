@@ -187,7 +187,7 @@
                                 text: FATCA.Text
                             }));
                         });
-                        
+
 
                     }
                 },
@@ -259,13 +259,37 @@
         }
 
 
+        function ShowHideFTIN(obj) {
+            if (obj.value == 'true') {
+                $('#FTINDiv').prop('hidden', false);
+            } else {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            }
+        }
 
         $(document).ready(function () {
 
-            $("select").select2({
-                theme: 'bootstrap4',
-                placeholder: "Select One",
-                //allowClear: true
+            //$("select").select2({
+            //    theme: 'bootstrap4',
+            //    placeholder: "Select One",
+            //    //allowClear: true
+            //});
+
+
+
+            var ssnitneinValue = $('#Ssnitnein').val();
+            if (ssnitneinValue !== '') {
+                $('#inlineRadio7').prop('checked', true);
+                $('#IdNumber').val(ssnitneinValue);
+            }
+
+            $('#Ssnitnein').on('input', function () {
+                var inputValue = $(this).val();
+                if (inputValue !== '') {
+                    $('#inlineRadio7').prop('checked', true);
+                    $('#IdNumber').val(inputValue);
+                }
             });
 
 
@@ -279,14 +303,14 @@
 
                     $('#W9Entity').prop('hidden', true);
                     $('#W9Country').prop('hidden', true);
-                    
+
                     BindEntityForW8EXPForm();
                     BindEW8EXPFATCA();
 
 
                 }
                 else {
-                   // alert('here in w8 different');
+                    // alert('here in w8 different');
                     $('#W8EXPFatcaDiv').prop('hidden', true);
                     $('#W9Entity').prop('hidden', false);
                     $('#W9Country').prop('hidden', false);
@@ -296,41 +320,41 @@
                     BindEntityForW9Form();
                     HideDivOnDDLEntitySelection();
                     HideDivOnDDLStatusFATCASelection();
-                  
+
                 }
             });
 
             $('#EntityTypeW8').on('change', function () {
                 var selectedValue = $(this).val();
-   
-         
 
-                    //Foreign government
-                    if (selectedValue == 1) {
-                        HideDivOnDDLEntitySelection();
-                        $('#FrgnGovDiv').prop('hidden', false);
-                    }
-                    //Internal organization
-                    if (selectedValue == 2) {
-                        HideDivOnDDLEntitySelection();
-                        $('#IntOrgDiv').prop('hidden', false);
-                    }
-                    //Foreign central bank of issue (not wholly owned by the foreign sovereign)
-                    if (selectedValue == 3) {
-                        HideDivOnDDLEntitySelection();
-                        $('#FrgnBankDiv').prop('hidden', false);
-                    }
-                    //Foreign tax-exempt organization
-                    //Foreign private foundation
-                    if (selectedValue == 4 || selectedValue == 5) {
-                        HideDivOnDDLEntitySelection();
-                        $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', false);
-                    }
-                    if (selectedValue == 6) {
-                        HideDivOnDDLEntitySelection();
-                        $('#GovUSPossDiv').prop('hidden', false);
-                    }
-                
+
+
+                //Foreign government
+                if (selectedValue == 1) {
+                    HideDivOnDDLEntitySelection();
+                    $('#FrgnGovDiv').prop('hidden', false);
+                }
+                //Internal organization
+                if (selectedValue == 2) {
+                    HideDivOnDDLEntitySelection();
+                    $('#IntOrgDiv').prop('hidden', false);
+                }
+                //Foreign central bank of issue (not wholly owned by the foreign sovereign)
+                if (selectedValue == 3) {
+                    HideDivOnDDLEntitySelection();
+                    $('#FrgnBankDiv').prop('hidden', false);
+                }
+                //Foreign tax-exempt organization
+                //Foreign private foundation
+                if (selectedValue == 4 || selectedValue == 5) {
+                    HideDivOnDDLEntitySelection();
+                    $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', false);
+                }
+                if (selectedValue == 6) {
+                    HideDivOnDDLEntitySelection();
+                    $('#GovUSPossDiv').prop('hidden', false);
+                }
+
 
             });
 
@@ -375,13 +399,13 @@
 
             });
 
-        
+
             // Get the current date
             var currentDate = new Date().toISOString().split('T')[0];
             // Set the max attribute of the date input
             $('#dateOfBirthW8Ben').attr('max', currentDate);
             $('#dateOfBirthW8ECI').attr('max', currentDate);
-            
+
             //-------------------//
             $('select').change();
             var checkedRadioButton = $("input[type='radio'][name='BackupWithHolding']:checked");
@@ -466,7 +490,7 @@
         function SelectDEEntity(obj) {
             if (obj.value == 'No') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
-            }else {
+            } else {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
             }
         }
@@ -475,6 +499,7 @@
             if (obj.value == '@AppConstants.W8FromTypes') {
                 $('#WFormDiv').prop('hidden', false);
                 $('#QFormDiv').prop('hidden', false);
+                $('#BackupWithHoldingMainDiv').prop('hidden', true);
 
                 $('#W8Entity').prop('hidden', false);
                 $('#W9Entity').prop('hidden', true);
@@ -492,6 +517,7 @@
 
                 $('#W8Country').prop('hidden', true);
                 $('#W9Country').prop('hidden', false);
+                $('#BackupWithHoldingMainDiv').prop('hidden', false);
                 //Masking
                 $('#Ssnitnein').attr('placeholder', '00-0000000');
                 $('#Ssnitnein').mask('00-0000000', { reverse: true });
@@ -499,7 +525,7 @@
                 BindEntityForW9Form();
                 HideDivOnDDLEntitySelection();
                 HideDivOnDDLStatusFATCASelection();
-            } 
+            }
             showTab(currentTab);
         }
         function BackupWithHoldingFunc(obj) {

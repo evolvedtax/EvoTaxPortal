@@ -3,6 +3,7 @@ using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
+using EvolvedTax.Business.Services.W8EXPFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
@@ -19,15 +20,18 @@ namespace EvolvedTax.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly EvolvedtaxContext _evolvedtaxContext;
         private readonly IW9FormService _w9FormService;
+        private readonly IW8EXPFormService _w8ExpFormService;
         private readonly ICommonService _commonService;
         private readonly IInstituteService _instituteService;
         private readonly IW8BenFormService _w8BenFormService;
         private readonly IW8ECIFormService _w8ECIFormService;
 
         public CertificationController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
-            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService)
+            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, 
+            IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, IW8EXPFormService w8ExpFormService)
         {
             _w9FormService = w9FormService;
+            _w8ExpFormService = w8ExpFormService;
             _evolvedtaxContext = evolvedtaxContext;
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
@@ -127,6 +131,11 @@ namespace EvolvedTax.Controllers
                 await _w9FormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
+            if (request.FormName == AppConstants.W8EXPForm)
+            {
+                await _w8ExpFormService.UpdateByClientEmailId(clientEmail, request);
+            }
+
             else if (request.FormName == AppConstants.W8BENForm)
             {
                 // await _w8BenFormService.UpdateByClientEmailId(clientEmail, request);

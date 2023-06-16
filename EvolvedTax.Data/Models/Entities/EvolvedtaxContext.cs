@@ -97,8 +97,7 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<W91> W91s { get; set; }
 
-
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<EmailDomain>(entity =>
@@ -1275,14 +1274,21 @@ public partial class EvolvedtaxContext : DbContext
             entity.ToTable("tblW8EXPForm");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CheckIfFtinNotLegallyRequiredYN).HasColumnName("Check if FTIN not legally required (Y/N)");
             entity.Property(e => e.City).IsUnicode(false);
             entity.Property(e => e.Country).IsUnicode(false);
             entity.Property(e => e.CountryOfIncorporation)
                 .IsUnicode(false)
                 .HasColumnName("Country of incorporation");
+            entity.Property(e => e.EmailAddress)
+                .HasMaxLength(250)
+                .IsUnicode(false);
             entity.Property(e => e.FatcaStatus)
                 .IsUnicode(false)
                 .HasColumnName("FATCA Status");
+            entity.Property(e => e.FontName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.ForeignTaxIdentifyingNumber)
                 .IsUnicode(false)
                 .HasColumnName("Foreign tax identifying number");

@@ -7,6 +7,8 @@ using static System.Net.Mime.MediaTypeNames;
 namespace EvolvedTax.Data.Models.Entities;
 public class FormRequest
 {
+    public string? _21Text;
+
     public string UserName { get; set; } = string.Empty;
     public string BasePath { get; set; } = string.Empty;
     public string Host { get; set; } = string.Empty;
@@ -65,6 +67,9 @@ public class FormRequest
     public string? _21_Text { get; set; } = string.Empty;
     public int W8ExpId { get; set; } = 0;
     public string W8EXPFatca { get; set; } = string.Empty;
+    public string? GIN { get; set; } = string.Empty;
+    public string? ForeigntaxIdentifyingNumber { get; set; } = string.Empty;
+    public string? Referencenumber { get; set; } = string.Empty;
 
 
     //-----------W8EXPForm Fields End-------------------//
