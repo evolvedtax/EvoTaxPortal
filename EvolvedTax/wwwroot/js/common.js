@@ -180,17 +180,23 @@ var COMMON = (function () {
         return false;
     };
     COMMON.doAjaxPostWithJSONResponse = function (url, params) {
-        var jsonResponse = null;
         debugger
+        var data = params;
+        var data = {
+            entityId: params.entityId,
+            isLocked: params.isLocked
+        };
+        var jsonResponse = null;
         $.ajax({
             type: "POST",
             url: url,
             data: params,
-            //async: false,
+            async: false,
             success: function (response) {
                 $('.loading').hide();
                 COMMON.notification(response.type, response.message);
                 $('#changeEntity').change();
+                jsonResponse = response;
             },
             error: function (xhr, status, error) {
                 COMMON.displayError(xhr.responseText, xhr.status);
@@ -200,6 +206,7 @@ var COMMON = (function () {
                 jsonResponse = null;
             }
         });
+        return jsonResponse;
     };
     COMMON.doAjaxGetWithJSONResponse = function (url, params) {
         var response = null;
@@ -533,15 +540,17 @@ var COMMON = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
+                    debugger
+                    $('.loading').show();
                     var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
-                    if (jsonResponse.deleteResponse.IsSuccessful === true) {
-                        COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
+                    if (jsonResponse.Status === true) {
+                        COMMON.notification(1, "Record deleted")
                         //COMMON.dataTableInitialized();
                         setTimeout(function () {
                             window.location.reload();
                         }, 5000);
-                    } else if (jsonResponse.deleteResponse.Response !== null) {
-                        COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
+                    } else if (jsonResponse.Status !== null) {
+                        COMMON.notification(2, "Something went wrong")
                     }
                     confirmed = true;
                 } else {
@@ -553,31 +562,27 @@ var COMMON = (function () {
     };
     COMMON.confirmAlertActive = function (message, url, params, gridId) {
         var confirmed = false;
-        let status = '';
-        if (message == 'True') {
-            status = 'Inactive';
-        } else {
-            status = 'Active';
-        }
+        
         swal({
             title: "Are you sure to " + message + " this record?",
-            text: "Please check before updating the record!",
+            text: "",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: status,
+            confirmButtonText: message,
             cancelButtonText: "Cancel"
         },
             function (isConfirm) {
                 if (isConfirm) {
+                    debugger
                     var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
-                    if (jsonResponse.deleteResponse.IsSuccessful === true) {
-                        COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
+                    if (jsonResponse.Status === true) {
+                        COMMON.notification(1, jsonResponse.Message)
                         //COMMON.dataTableInitialized();
-                        //setTimeout(function () {
-                        //    window.location.reload();
-                        //}, 5000);
-                    } else if (jsonResponse.deleteResponse.Response !== null) {
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 5000);
+                    } else if (jsonResponse.Status !== null) {
                         COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
                     }
                     confirmed = true;

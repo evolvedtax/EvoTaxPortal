@@ -3,6 +3,8 @@ using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using Newtonsoft.Json.Converters;
 
@@ -15,8 +17,10 @@ namespace EvolvedTax.Controllers
         readonly private IWebHostEnvironment _webHostEnvironment;
         readonly private IMailService _emailService;
         readonly ICommonService _commonService;
-        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService)
+        readonly EvolvedtaxContext _evolvedtaxContext;
+        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext)
         {
+            _evolvedtaxContext = evolvedtaxContext;
             _commonService = commonService;
             _instituteService = instituteService;
             _emailService = emailService;
@@ -33,6 +37,19 @@ namespace EvolvedTax.Controllers
         }
         public IActionResult Entities()
         {
+            var items =  _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             return View(_instituteService.GetEntitiesByInstId(InstId));
         }
@@ -88,6 +105,7 @@ namespace EvolvedTax.Controllers
             var response = await _instituteService.UploadClientData(file, instId, EntityId);
             return Json(response);
         }
+
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
         {
@@ -106,7 +124,7 @@ namespace EvolvedTax.Controllers
                     return NotFound();
             }
 
-            filePath = Path.Combine(_webHostEnvironment.WebRootPath,"Templates", fileName);
+            filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Templates", fileName);
 
             if (System.IO.File.Exists(filePath))
             {
@@ -118,6 +136,35 @@ namespace EvolvedTax.Controllers
                 return NotFound();
             }
 
+        }
+        [Route("institute/UpdateEntity")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntity(InstituteEntityRequest request)
+        {
+            if (request.EntityId == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.UpdateEntity(request);
+            return Json(response);
+        }
+        [Route("institute/DeleteEntity")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteEntity(int id)
+        {
+            if (id == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.DeleteEntity(id);
+            return Json(response);
+        }
+        [Route("institute/LockUnlockEntity")]
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockEntity(int entityId, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(entityId ,isLocked);
+            return Json(response);
         }
     }
 }

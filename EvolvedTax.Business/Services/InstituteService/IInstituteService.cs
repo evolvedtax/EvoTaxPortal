@@ -24,5 +24,8 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
         InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId);
         InstituteEntity GetEntityDataByClientEmailId(string clientEmail);
+        Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request);
+        Task<MessageResponseModel> DeleteEntity(int id);
+        Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked);
     }
 }

@@ -7,7 +7,7 @@ using NPOI.SS.UserModel;
 using EvolvedTax.Data.Models.DTOs.Request;
 using Microsoft.EntityFrameworkCore;
 using EvolvedTax.Data.Models.DTOs;
-using Azure;
+using EvolvedTax.Common.Constants;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -31,7 +31,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
         {
             var query = from p in _evolvedtaxContext.InstituteEntities
-                        where p.InstituteId == InstId
+                        where p.InstituteId == InstId && p.IsActive != false
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -47,22 +47,12 @@ namespace EvolvedTax.Business.Services.InstituteService
                             LastUpdatedDate = p.LastUpdatedDate,
                             Province = p.Province,
                             State = p.State,
-                            Zip = p.Zip
+                            Zip = p.Zip,
+                            IsActive = p.IsActive,
+                            IsLocked = p.IsLocked
                         };
 
             var result = query.ToList();
-            var entityIds = result.Select(r => r.EntityId).ToList();
-
-            var isLockedEntities = _evolvedtaxContext.InstitutesClients
-                .Where(ic => entityIds.Contains(ic.EntityId))
-                .Select(ic => ic.EntityId)
-                .ToList();
-
-            foreach (var entity in result)
-            {
-                entity.IsLocked = isLockedEntities.Contains(entity.EntityId);
-            }
-
             return result.AsQueryable();
         }
 
@@ -72,7 +62,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == EntityId)
+                .Where(p => p.EntityId == EntityId && p.IsActive != false)
                 .Select(p => new InstituteClientResponse
                 {
                     Address1 = p.Address1,
@@ -94,6 +84,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                     State = p.State,
                     FormName = p.FormName,
                     Zip = p.Zip,
+                    IsActive = p.IsActive,
+                    IsLocked = p.IsLocked,
                     StatusName = clientStatuses[(short)p.ClientStatus].StatusName ?? ""
                 });
             return response;
@@ -142,6 +134,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                         Country = excelRow.GetCell(9)?.ToString(),
                         InstituteId = InstId,
                         InstituteName = InstituteName,
+                        IsActive = true,
+                        IsLocked = false,
                     };
                     // Check for duplicate records based on ClientEmailId in the database
                     if (await _evolvedtaxContext.InstituteEntities.AnyAsync(p =>
@@ -193,6 +187,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                         FileName = "",
                         InstituteId = (short)InstId,
                         EntityId = EntityId,
+                        IsActive = true,
+                        IsLocked = false,
                     };
 
                     // Check for duplicate records based on ClientEmailId in the database
@@ -211,9 +207,16 @@ namespace EvolvedTax.Business.Services.InstituteService
                 }
 
                 await _evolvedtaxContext.InstitutesClients.AddRangeAsync(clientList);
+                // Locking record of Entity
+                var entityResponse = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == EntityId);
+                if (entityResponse != null)
+                {
+                    entityResponse.IsLocked = true;
+                    _evolvedtaxContext.InstituteEntities.Update(entityResponse);
+                }
                 await _evolvedtaxContext.SaveChangesAsync();
             }
-            return new MessageResponseModel { Status = Status, Message = response, Param = "Client"};
+            return new MessageResponseModel { Status = Status, Message = response, Param = "Client" };
 
         }
         public async Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request)
@@ -221,7 +224,8 @@ namespace EvolvedTax.Business.Services.InstituteService
             var response = _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == ClientEmail).FirstOrDefault();
             response.FileName = request.FileName;
             response.ClientStatusDate = request.EntryDate;
-            response.ClientStatus = 3;
+            response.ClientStatus = AppConstants.ClientStatusFormSubmitted;
+            response.IsLocked = true;
             response.FormName = request.FormName;
             _evolvedtaxContext.InstitutesClients.Update(response);
             await _evolvedtaxContext.SaveChangesAsync();
@@ -231,6 +235,10 @@ namespace EvolvedTax.Business.Services.InstituteService
         {
             var response = _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == ClientEmail).FirstOrDefault();
             response.ClientStatus = status;
+            if (status == AppConstants.ClientStatusFormSubmitted)
+            {
+                response.IsLocked = true;
+            }
             _evolvedtaxContext.InstitutesClients.Update(response);
             await _evolvedtaxContext.SaveChangesAsync();
             return true;
@@ -259,6 +267,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 Province = p.Province,
                 State = p.State,
                 Zip = p.Zip,
+                IsActive = p.IsActive,
+                IsLocked = p.IsLocked,
             }).FirstOrDefault();
         }
 
@@ -283,6 +293,58 @@ namespace EvolvedTax.Business.Services.InstituteService
                 : null;
 
             return entityName;
+        }
+        public async Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC UpdateInstituteEntity
+            {request.EntityId},
+            {request.EntityName},
+            {request.Ein},
+            {request.EntityRegistrationDate},
+            {request.Address1},
+            {request.Address2},
+            {request.City},
+            {request.State},
+            {request.Province},
+            {request.Zip},
+            {request.Country}");
+            if (result > 0)
+            {
+                return new MessageResponseModel { Status = true };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> DeleteEntity(int EntityId)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId}");
+            if (result > 0)
+            {
+                return new MessageResponseModel { Status = true };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC LockUnlockEntity
+            {EntityId},
+            {isLocked}");
+            if (result > 0)
+            {
+                var respModel = new MessageResponseModel();
+                respModel.Status = true;
+                if (isLocked)
+                {
+                    respModel.Message = "Record is Locked";
+                }
+                else
+                {
+                    respModel.Message = "Record is Unlocked";
+                }
+                return respModel;
+            }
+            return new MessageResponseModel { Status = false };
         }
     }
 }
