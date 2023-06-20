@@ -38,7 +38,9 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 Payeecode = p.Payeecode ?? string.Empty,
                 W9Fatca = p.Fatca ?? string.Empty,
                 BackupWithHolding = p.BackupWithHolding ?? string.Empty,
-                Ssnitnein = p.Number
+                Ssnitnein = p.Number,
+                FormType=p.FormType ?? string.Empty,
+                W8FormType = p.FormType ?? string.Empty,
             }).FirstOrDefault();
         }
 
@@ -64,7 +66,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 PermanentProvince = request.PProvince,
                 PermanentState = request.PState,
                 PermanentZip = request.PZipCode,
-                TypeofTaxNumber = request.IdType,
+                TypeofTaxNumber = request.TypeofTaxNumber,
                 UserName = request.UserName,
                 BackupWithHolding = request.BackupWithHolding,
                 Fatca = request.W9Fatca,
@@ -76,7 +78,9 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                // Idtype = request.IdType,
                 Idnumber = request.IdNumber,
                 W8formType = request.W8FormType,
-                W8expId = request.W8ExpId
+                W8expId = request.W8ExpId,
+                RetirementPlan=request.RetirementPlan,
+                FormType=request.FormType
 
             };
             if (_evolvedtaxContext.GeneralQuestionEntities.Any(p => p.UserName == model.UserName))
@@ -120,6 +124,8 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
             response.Idnumber = model.IdNumber;
             response.W8formType = model.W8FormType;
             response.W8expId = model.W8ExpId;
+            response.RetirementPlan = model.RetirementPlan;
+            response.FormType=model.FormType;
             _evolvedtaxContext.GeneralQuestionEntities.Update(response);
             return _evolvedtaxContext.SaveChanges();
         }

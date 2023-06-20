@@ -24,14 +24,14 @@ public class FormRequest
     public string Payeecode { get; set; } = string.Empty;
     public string W9Fatca { get; set; } = string.Empty;
 
-    public string? DE { get; set; } = string.Empty;
+    public bool ? DE { get; set; } = false;
 
     public string? DEOwnerName { get; set; } = string.Empty;
-    public string? EnitityManagendOutSideUSA { get; set; } = string.Empty;
+    public bool ? EnitityManagendOutSideUSA { get; set; } = false;
     public string? USPartner { get; set; } = string.Empty;
     public string? IdType { get; set; }
     public string? IdNumber { get; set; }
-    public string? RetirementPlan { get; set; }
+    public bool RetirementPlan { get; set; } = false;
     public string AuthSignatoryName { get; set; } = string.Empty;
 
 
@@ -123,7 +123,8 @@ public string? SsnOrItin { get; set; }
 
 public string? ForeignTaxIdentifyingNumber { get; set; }
 
-public bool? CheckIfFtinNotLegallyRequiredYN { get; set; }
+    public bool? CheckIfFtinNotLegallyRequiredYN { get; set; } = false;
+    public bool? LegallyRequired{ get; set; } = false;
 
 public string? ReferenceNumberS { get; set; }
 [BindProperty, DataType(DataType.Date)]

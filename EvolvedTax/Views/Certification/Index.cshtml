@@ -4,6 +4,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
+
+    [type="checkbox"] {
+        vertical-align: middle;
+    }
+
+    .form-check.abc-radio .form-check-input {
+        vertical-align: middle;
+    }
+
+    .form-check.abc-radio .form-check-label {
+        display: inline;
+        vertical-align: middle;
+    }
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
         background-color: #ffdddd;
@@ -83,25 +96,30 @@
           data-ajax-success="ajaxsuccess"
           data-ajax-url="@Url.Action("Certify","Certification")">
         <div id="certifyDiv" hidden>
-            <div class="form-check abc-radio abc-radio-info form-check-inline">
+            <div class="form-check abc-radio abc-radio-info">
                 <input class="form-check-input" type="checkbox" asp-for=Agreement1 id="agreement1">
                 <label class="form-check-label" for="agreement1">
                     <strong class="w9Certification" hidden>Under penalties of perjury, I certify that:</strong>
-                    <strong class="w8ExpCertification" hidden> Under penalties of perjury, I declare that:</strong>
+                    <strong class="w8ExpCertification" hidden>
+
+                        Under penalties of perjury, I declare that I have examined the information on this form and to the best of my knowledge and
+                        belief it is true, correct, and complete. I further certify under penalties of perjury that:
+                    </strong>
                     <strong class="w8BenCertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
                         knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
                     </strong>
+
+
                     <strong class="w8ECICertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
                         knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
                     </strong>
                 </label>
             </div>
-     
+
             <div class="w8ExpCertification" hidden>
-                 I have examined the information on this form and to the best of my knowledge and
-                belief it is true, correct, and complete. I further certify under penalties of perjury that:
+
                 <ol>
                     <li>The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
                     <li>The beneficial owner is not a U.S. person,</li>
@@ -257,6 +275,7 @@
         </div>
     </div>
 </div>
+
 @section Scripts {
 
     <script type="text/javascript">
@@ -269,6 +288,15 @@
         }
 
         $(document).ready(function () {
+
+            $('#formDate').on('change', function () {
+                if ($('#signature').val()) {
+                    // Submit the form
+                    $('#fontFamily').val($(this).css('font-family').replace(/"/g, ""));
+                    $('#form').submit();
+                }
+       
+            });
             if ('@Model?.IsSignaturePasted' == 'False') {
                 // Open the modal
                 $('#modal-form').modal('show');
@@ -313,6 +341,9 @@
                 form.submit();
             }
         }
+
+
+
         $('#certify-submit').click(function () {
             if ($('#agreement1').prop('checked') && $('#agreement2').prop('checked')) {
                 let formCertify = $('#certify-form');
@@ -327,6 +358,7 @@
                 COMMON.notification(2, "There's some technical issue");
                 return;
             }
+            //$('.ibox').prop('hidden', true);
             $('.prevBtn').prop('hidden', true);
             $('#certifyDiv').empty();
             $('#certify-submit').prop('hidden', true);
@@ -364,14 +396,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                // Disable back and forward navigation
-                                                                                //window.onbeforeunload = function () {
-                                                                                //    return "Are you sure you want to leave this page?";
-                                                                                //};
+                                                                                                        // Disable back and forward navigation
+                                                                                                        //window.onbeforeunload = function () {
+                                                                                                        //    return "Are you sure you want to leave this page?";
+                                                                                                        //};
 
-                                                                                //window.addEventListener("popstate", function (event) {
-                                                                                //    history.pushState(null, document.title, location.href);
-                                                                                //});
+                                                                                                        //window.addEventListener("popstate", function (event) {
+                                                                                                        //    history.pushState(null, document.title, location.href);
+                                                                                                        //});
 
     </script>
 }

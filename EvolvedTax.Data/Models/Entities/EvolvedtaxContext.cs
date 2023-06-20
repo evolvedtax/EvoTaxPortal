@@ -22,6 +22,8 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<FatcaCode> FatcaCodes { get; set; }
 
+    public virtual DbSet<GeneralQuestionEntitiesBckup> GeneralQuestionEntitiesBckups { get; set; }
+
     public virtual DbSet<GeneralQuestionEntity> GeneralQuestionEntities { get; set; }
 
     public virtual DbSet<GeneralQuestionIndividual> GeneralQuestionIndividuals { get; set; }
@@ -99,7 +101,8 @@ public partial class EvolvedtaxContext : DbContext
     public virtual DbSet<W91> W91s { get; set; }
     public virtual DbSet<TaxPayerInfo> TaxPayerInfo { get; set; }
 
-    
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TaxPayerInfo>().HasNoKey();
@@ -142,9 +145,12 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
         });
 
-        modelBuilder.Entity<GeneralQuestionEntity>(entity =>
+        modelBuilder.Entity<GeneralQuestionEntitiesBckup>(entity =>
         {
-            entity.Property(e => e.Id).HasColumnName("ID");
+            entity
+                .HasNoKey()
+                .ToTable("GeneralQuestionEntities_bckup");
+
             entity.Property(e => e.BackupWithHolding)
                 .HasMaxLength(10)
                 .IsUnicode(false);
@@ -171,6 +177,9 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("FATCA");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
             entity.Property(e => e.Idnumber)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -232,6 +241,110 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.RetirementPlan)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.TypeofTaxNumber)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Uspartner)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("USPartner");
+            entity.Property(e => e.W8expId).HasColumnName("W8ExpId");
+            entity.Property(e => e.W8formType)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("W8FormType");
+        });
+
+        modelBuilder.Entity<GeneralQuestionEntity>(entity =>
+        {
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.BackupWithHolding)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Ccountry)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("CCountry");
+            entity.Property(e => e.De).HasColumnName("DE");
+            entity.Property(e => e.DeownerName)
+                .HasMaxLength(300)
+                .IsUnicode(false)
+                .HasColumnName("DEOwnerName");
+            entity.Property(e => e.EnitityManagendOutSideUsa).HasColumnName("EnitityManagendOutSideUSA");
+            entity.Property(e => e.EntityType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Fatca)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("FATCA");
+            entity.Property(e => e.FormType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Idnumber)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("IDNumber");
+            entity.Property(e => e.Idtype)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("IDType");
+            entity.Property(e => e.MailingAddress1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingAddress2)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingCity)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingCountry)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingProvince)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingState)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MailingZip)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Number)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.OrgName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Payeecode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("PAYEECODE");
+            entity.Property(e => e.PermanentAddress1)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentAddress2)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentCity)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentCountry)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentProvince)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentState)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.PermanentZip)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.TypeofTaxNumber)
@@ -351,6 +464,7 @@ public partial class EvolvedtaxContext : DbContext
                 .HasColumnName("EIN");
             entity.Property(e => e.EntityName).IsUnicode(false);
             entity.Property(e => e.EntityRegistrationDate).HasColumnType("date");
+            entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteName)
                 .IsUnicode(false)
                 .HasColumnName("Institute_Name");
@@ -468,6 +582,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.FormName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
             entity.Property(e => e.PartnerName1)
                 .IsUnicode(false)

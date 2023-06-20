@@ -40,8 +40,8 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                     FatcaStatus = request.W8EXPFatca,
                     PrintNameOfSigner = request.AuthSignatoryName,
                     Gin=request.GIN,
-                    SsnOrItin= request.IdNumber,
-                    CheckIfFtinNotLegallyRequiredYN=request.CheckIfFtinNotLegallyRequiredYN,
+                    SsnOrItin= request.SsnOrItin,
+                    CheckIfFtinNotLegallyRequiredYN=request.LegallyRequired,
                     ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber,
                     ReferenceNumberS=request.Referencenumber,
                     _10a = request._10a,
@@ -95,8 +95,8 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 response.FatcaStatus = request.W8EXPFatca;
                 response.PrintNameOfSigner = request.AuthSignatoryName;
                 response.Gin = request.GIN;
-                response.SsnOrItin = request.IdNumber;
-                response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN;
+                response.SsnOrItin = request.SsnOrItin;
+                response.CheckIfFtinNotLegallyRequiredYN = request.LegallyRequired;
                 response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber;
                 response.ReferenceNumberS = request.Referencenumber;
                 response._10a = request._10a;
@@ -415,7 +415,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_06[0]", request.MAddress1);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_07[0]", request.MCity);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_08[0]", request.MCountry);
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_09[0]", request.IdNumber);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_09[0]", request.Ssnitnein);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_10[0]", request.GIN);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_11[0]", request.ForeignTaxIdentifyingNumber);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_12[0]", request.Referencenumber);
@@ -541,6 +541,12 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
 
+            //for date
+            PdfContentByte overContent1 = pdfStamper.GetOverContent(numberOfPages);
+            iTextSharp.text.Rectangle rectangle1 = new iTextSharp.text.Rectangle(450, 530, 610, 550, 0);
+            rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
+            overContent1.Rectangle(rectangle1);
+
             // For pasting image of signature
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");
             iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(src1);
@@ -599,6 +605,10 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation, numberOfPages);
 
+            PdfAnnotation annotation1;
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            pdfStamper.AddAnnotation(annotation1, numberOfPages);
+
 
             pdfStamper.Close();
             pdfReader.Close();
@@ -650,19 +660,25 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                             W9Fatca = gq.Fatca ?? string.Empty,
                             BackupWithHolding = gq.BackupWithHolding ?? string.Empty,
                             Ssnitnein = gq.Number,
-                           
+                            DE= (bool)gq.De,
+                            EnitityManagendOutSideUSA= (bool)gq.EnitityManagendOutSideUsa,
+                            DEOwnerName=gq.DeownerName ?? string.Empty,
+                            RetirementPlan = (bool)gq.RetirementPlan,
+                            FormType = gq.FormType ?? string.Empty,
+                            W8FormType=gq.W8formType ?? string.Empty,
+
 
                             // Add the fields from TblW8expforms
-          
+
                             TypeOfEntity = w8.TypeOfEntity,
                             CountryOfIncorporation = w8.CountryOfIncorporation,
                             W8EXPFatca = w8.FatcaStatus,
-                            PrintNameOfSigner = w8.PrintNameOfSigner,
+                            AuthSignatoryName = w8.PrintNameOfSigner,
                             GIN = w8.Gin,
                             SsnOrItin = w8.SsnOrItin,
-                            CheckIfFtinNotLegallyRequiredYN = w8.CheckIfFtinNotLegallyRequiredYN,
+                            LegallyRequired = (bool)w8.CheckIfFtinNotLegallyRequiredYN,
                             ForeignTaxIdentifyingNumber = w8.ForeignTaxIdentifyingNumber,
-                            ReferenceNumberS = w8.ReferenceNumberS,
+                            Referencenumber = w8.ReferenceNumberS,
                             _10a = (bool)w8._10a,
                             _10b = (bool)w8._10b,
                             _10b_Text = w8._10bText,
@@ -685,7 +701,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                             _21 = (bool)w8._21,
                             _21_Text = w8._21Text,
                             EmailId = w8.EmailAddress,
-                            
+
                         };
 
             return query.FirstOrDefault();
