@@ -58,12 +58,14 @@ namespace EvolvedTax.Helpers
             services.AddAutoMapper(typeof(AutoMapperProfileConfig));
 
             #region @@@[------Services]
+          
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGeneralQuestionareService, GeneralQuestionareService>();
             services.AddScoped<IGeneralQuestionareEntityService, GeneralQuestionareEntityService>();
             services.AddScoped<IW9FormService, W9FormService>();
             services.AddScoped<IW8BenFormService, W8BenFormService>();
             services.AddScoped<IW8ECIFormService, W8ECIFormService>();
+            services.AddHttpContextAccessor();
             services.AddScoped<ICommonService, CommonService>();
             services.AddScoped<IInstituteService, InstituteService>();
             services.AddScoped<IMailService, MailService>();

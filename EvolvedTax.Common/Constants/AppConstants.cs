@@ -13,7 +13,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8BENEForm = @"W-8BEN-E";
         public const string W8IMYForm = @"W-8IMY";
         public const string W8EXPForm = @"W-8EXP";
-        public const string W8FromTypes= @"W8FromTypes";
+        public const string W8FormTypes= @"W8FormType";
 
         public const string Entity = "Entity";
         public const string Client = "Client";

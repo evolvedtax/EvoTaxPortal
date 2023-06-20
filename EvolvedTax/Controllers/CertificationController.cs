@@ -65,6 +65,7 @@ namespace EvolvedTax.Controllers
             request.IsSignaturePasted = false;
             return View(request);
         }
+
         [HttpPost]
         public IActionResult Index(PdfFormDetailsRequest request)
         {
@@ -155,6 +156,7 @@ namespace EvolvedTax.Controllers
             {
                 System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
             }
+           // _commonService.RemoveAnnotations(request,request.FileName);
             var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
             var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
             HttpContext.Session.SetString("FormName", string.Empty);

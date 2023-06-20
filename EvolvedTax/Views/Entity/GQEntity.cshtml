@@ -126,45 +126,59 @@
 @section Scripts {
 
     <script type="text/javascript">
-
         function BindEntityForW8EXPForm() {
-
             $.ajax({
                 url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
                 type: 'POST',
-
                 success: function (result) {
                     // Check if the action was successful
                     if (result.success) {
                         // Clear existing options from the dropdown
-                        $('#EntityType').empty();
-
+                        $('#EntityTypeW8').empty();
 
                         // Add "Please Select" option as the first option
-                        $('#EntityTypeW8').prepend($('<option>', {
+                        var pleaseSelectOption = $('<option>', {
                             value: '',
                             text: 'Please Select'
-                        }));
+                        });
+                        $('#EntityTypeW8').append(pleaseSelectOption);
 
-                        // Iterate over the updated entities and add new options to the dropdown
+                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
+
+                   
                         $.each(result.entitiesListW8, function (index, entity) {
-                            $('#EntityTypeW8').append($('<option>', {
+                            var option = $('<option>', {
                                 value: entity.Value,
                                 text: entity.Text
-                            }));
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (!selectedValue || entity.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+                            $('#EntityTypeW8').append(option);
                         });
 
+                        // Trigger the change event if selectedValue is empty
+                        if (!selectedValue) {
+                            $('#EntityTypeW8').val('').trigger('change');
+                        } else {
+                            // Trigger the change event after a small delay
+                            setTimeout(function () {
+                                $('#EntityTypeW8').trigger('change');
+                            }, 10);
+                        }
                     }
                 },
                 error: function () {
                     console.log('Error occurred.');
                 }
             });
-
         }
 
-        function BindEW8EXPFATCA() {
 
+
+        function BindEW8EXPFATCA() {
             $.ajax({
                 url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
                 type: 'POST',
@@ -180,15 +194,33 @@
                             text: 'Please Select'
                         }));
 
+                        // Retrieve the value from the hidden field
+                        var selectedValue = $('#W8EXPFatca').val();
+
                         // Iterate over the updated entities and add new options to the dropdown
                         $.each(result.W8EXPFATCAList, function (index, FATCA) {
-                            $('#FatcaW8').append($('<option>', {
+                            var option = $('<option>', {
                                 value: FATCA.Value,
                                 text: FATCA.Text
-                            }));
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (FATCA.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+
+                            $('#FatcaW8').append(option);
                         });
 
+                        // Check if selectedValue is not set
+                        if (!selectedValue) {
+                            $('#FatcaW8').val(''); // Clear the selected value
+                        }
 
+                        // Trigger the change event after a small delay
+                        setTimeout(function () {
+                            $('#FatcaW8').trigger('change');
+                        }, 10);
                     }
                 },
                 error: function () {
@@ -228,6 +260,20 @@
             */
 
         }
+
+        function ChekboxValidationForDropdowns() {
+            // Handle checkbox change event
+            $('.chkbox-toggle').change(function () {
+                var checkbox = $(this);
+                var control = checkbox.closest('.form-check').find('.required-control-valid');
+
+                if (checkbox.is(':checked')) {
+                    control.prop('required', true); // Add "required" attribute
+                } else {
+                    control.prop('required', false); // Remove "required" attribute
+                }
+            });
+        }
         function HideDivOnDDLEntitySelection() {
             $('#FrgnGovDiv').prop('hidden', true);
             $('#IntOrgDiv').prop('hidden', true);
@@ -257,32 +303,47 @@
                 $('#IdNumber').mask('000-00-0000', { reverse: true });
             }
         }
-
-
         function ShowHideFTIN(obj) {
-            if (obj.value == 'true') {
+
+            if (obj.value === 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
                 $('#FTINDiv').prop('hidden', false);
-            } else {
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#FTINDiv').prop('hidden', false);
+            }
+            else if (obj.value === undefined) {
                 $('#FTINDiv').prop('hidden', true);
                 $('#FTIN').val('');
             }
         }
 
+
         $(document).ready(function () {
 
-            //$("select").select2({
-            //    theme: 'bootstrap4',
-            //    placeholder: "Select One",
-            //    //allowClear: true
-            //});
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
 
 
+            ChekboxValidationForDropdowns();
+            if ($('#IdNumber').val() == '') {
 
-            var ssnitneinValue = $('#Ssnitnein').val();
-            if (ssnitneinValue !== '') {
-                $('#inlineRadio7').prop('checked', true);
-                $('#IdNumber').val(ssnitneinValue);
+                var ssnitneinValue = $('#Ssnitnein').val();
+                if (ssnitneinValue !== '') {
+                    $('#inlineRadio7').prop('checked', true);
+                    $('#IdNumber').val(ssnitneinValue);
+                }
             }
+
+        
 
             $('#Ssnitnein').on('input', function () {
                 var inputValue = $(this).val();
@@ -326,8 +387,6 @@
 
             $('#EntityTypeW8').on('change', function () {
                 var selectedValue = $(this).val();
-
-
 
                 //Foreign government
                 if (selectedValue == 1) {
@@ -427,10 +486,29 @@
             if (checkedRadioButton.length > 0) {
                 checkedRadioButton.trigger("click");
             }
-            var checkedRadioButtonW8From = $("input[type='radio'][name='W8FormType']:checked");
-            if (checkedRadioButtonW8From.length > 0) {
-                checkedRadioButtonW8From.trigger("click");
+
+
+            var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
+            if (W8FormTypecheckedRadioButton.length > 0) {
+                W8FormTypecheckedRadioButton.trigger("change");
             }
+            ChekboxValidationForDropdowns();
+
+            //  code for w8-EXP of Are you a disregarded entity (DE) for U.S. tax purposes?
+            var obj = $('#DEValue').val();
+            if (obj) {
+                SelectDEEntity(obj);
+            }
+            //end
+
+            //  code for w8-EXP of Is a foreign Tax Identification Number (FTIN) legally required for you?
+            var objLegallyRequired = $('#LegallyRequired').val();
+            if (objLegallyRequired) {
+                ShowHideFTIN(objLegallyRequired);
+            }
+            //end
+            
+
         });
         function ajaxsuccess(response) {
             document.getElementById("stepsDiv").style.display = "none";
@@ -488,18 +566,32 @@
         showTab(currentTab); // Display the current tab
 
         function SelectDEEntity(obj) {
-            if (obj.value == 'No') {
+            //console.log(typeof obj, obj);
+            //console.log(typeof obj.value, obj.value);
+            if (obj.value === 'false' || obj.value === 'False') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
-            } else {
+                $('#DEOwnerName').val('');
+            }else if (obj == 'false' || obj.value === 'False') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
             }
+            else if (obj == 'true' || obj == 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+            }
+            else if (obj.value === undefined) {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } 
         }
 
         function SelectForm(obj) {
-            if (obj.value == '@AppConstants.W8FromTypes') {
+            if (obj.value == '@AppConstants.W8FormTypes') {
                 $('#WFormDiv').prop('hidden', false);
                 $('#QFormDiv').prop('hidden', false);
                 $('#BackupWithHoldingMainDiv').prop('hidden', true);
+                $('#BackupWithHoldingDiv').prop('hidden', true);
 
                 $('#W8Entity').prop('hidden', false);
                 $('#W9Entity').prop('hidden', true);
@@ -529,7 +621,7 @@
             showTab(currentTab);
         }
         function BackupWithHoldingFunc(obj) {
-            if (obj.value == 'Yes') {
+            if (obj.value == 'false') {
                 $('#BackupWithHoldingDiv').prop('hidden', true);
                 //#('#Payeecode').val('').change();
                 // #('#Fatca').val('').change();

@@ -4,15 +4,20 @@ using iTextSharp.text;
 using EvolvedTax.Data.Models.DTOs.Request;
 using SkiaSharp;
 using EvolvedTax.Common.Constants;
+using Microsoft.AspNetCore.Http;
 
 namespace EvolvedTax.Business.Services.CommonService
 {
     public class CommonService : ICommonService
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
-        public CommonService(EvolvedtaxContext evolvedtaxContext)
+        private string BaseUrl;
+        private readonly HttpContext _httpContext;
+        public CommonService(EvolvedtaxContext evolvedtaxContext, IHttpContextAccessor httpContextAccessor)
         {
             _evolvedtaxContext = evolvedtaxContext;
+            _httpContext = httpContextAccessor.HttpContext;
+            BaseUrl = _httpContext.Session.GetString("BaseURL") ?? string.Empty;
         }
         public string AssignSignature(PdfFormDetailsRequest request, string filePath)
         {
@@ -88,6 +93,7 @@ namespace EvolvedTax.Business.Services.CommonService
             using (PdfReader pdfReader = new PdfReader(newFile))
             {
                 int numberOfPages = pdfReader.NumberOfPages;
+        
                 using (PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(Path.Combine(request.BaseUrl, fileName), FileMode.Create)))
                 {
                     AcroFields pdfFormFields = pdfStamper.AcroFields;
@@ -153,6 +159,61 @@ namespace EvolvedTax.Business.Services.CommonService
             }
             return fileName;
         }
+
+        public void RemoveAnnotations(PdfFormDetailsRequest request, string filePath)
+        {
+      
+            string FilePath = Path.Combine(BaseUrl, filePath);
+            // Load the PDF document
+            using (PdfReader reader = new PdfReader(FilePath))
+            {
+                // Iterate through each page of the document
+                for (int pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
+                {
+                    // Get the page dictionary
+                    PdfDictionary pageDict = reader.GetPageN(pageNum);
+
+                    // Remove the annotations from the page
+                    pageDict.Remove(PdfName.ANNOTS);
+                }
+
+                // Save the modified PDF document without annotations
+                string outputFilePath = Path.Combine(Path.GetDirectoryName(FilePath), "output.pdf");
+                using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
+                {
+                    using (PdfStamper stamper = new PdfStamper(reader, outputStream))
+                    {
+                        // No need to flatten the form fields since we are only removing annotations
+                    }
+                }
+
+                    /*
+                    using (FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+                    {
+                        // Forcefully close the file
+                        fileStream.Close();
+                    }
+
+                    // Overwrite the original PDF file with the modified PDF without annotations
+                    try
+                    {
+                        using (FileStream outputStream = new FileStream(FilePath, FileMode.Create))
+                        {
+                            using (PdfStamper stamper = new PdfStamper(reader, outputStream))
+                            {
+                                // No need to flatten the form fields since we are only removing annotations
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log or handle the exception
+                        Console.WriteLine($"An error occurred while removing annotations: {ex.Message}");
+                    }
+
+                    */
+                }
+            }
         public MemoryStream DownloadFile(string filePath)
         {
             var memoryStream = new MemoryStream();

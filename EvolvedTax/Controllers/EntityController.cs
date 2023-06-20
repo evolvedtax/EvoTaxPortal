@@ -94,12 +94,12 @@ namespace EvolvedTax.Controllers
                     if (formName == AppConstants.W9Form)
                     {
                         GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
-                        GQEntitiesResponse.FormType = formName;
+                        //GQEntitiesResponse.FormType = formName;
                     }
                     else if (formName == AppConstants.W8EXPForm)
                     {
                         GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
-                        GQEntitiesResponse.FormType = formName;
+                        //GQEntitiesResponse.FormType = formName;
                     }
                     else
                     {
@@ -128,7 +128,7 @@ namespace EvolvedTax.Controllers
             FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
 
             #region W8EXPForm save logic
-            if (model.FormType == AppConstants.W8FromTypes && model.W8FormType == AppConstants.W8EXPForm)
+            if (model.FormType == AppConstants.W8FormTypes && model.W8FormType == AppConstants.W8EXPForm)
             {
 
                 FormName = model.W8FormType;
@@ -156,7 +156,7 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
                 filePathResponse = response;
             }
-            else if (model.FormType == AppConstants.W8FromTypes)
+            else if (model.FormType == AppConstants.W8FormTypes)
             {
                 model.USCitizen = "0";
                 if (model.W8FormType == AppConstants.W8BENForm)
