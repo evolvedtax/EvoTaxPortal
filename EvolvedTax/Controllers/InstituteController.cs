@@ -53,8 +53,39 @@ namespace EvolvedTax.Controllers
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             return View(_instituteService.GetEntitiesByInstId(InstId));
         }
+        public IActionResult EntitiesRecyleBin()
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            return View(_instituteService.GetRecyleBinEntitiesByInstId(InstId));
+        }
+        public IActionResult RestoreEntity(int[] selectedValues)
+        {
+            return Json(_instituteService.RestoreEntities(selectedValues));
+        }
+        public IActionResult ClientsRecyleBin(int entityId)
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            return View(_instituteService.GetRecyleBinClientsByEntityId(InstId, entityId));
+        }
+        public IActionResult RestoreClient(int[] selectedValues)
+        {
+            return Json(_instituteService.RestoreClients(selectedValues));
+        }
         public IActionResult Client(int EntityId)
         {
+            var items = _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(InstId).Select(p => new SelectListItem
             {
@@ -170,12 +201,12 @@ namespace EvolvedTax.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateClient(InstituteClientRequest request)
         {
-            if (request.EntityId == 0)
+            if (request.ClientId == 0)
             {
                 return Json(false);
             }
-            //var response = await _instituteService.UpdateEntity(request);
-            return Json(true/*response*/);
+            var response = await _instituteService.UpdateClient(request);
+            return Json(response);
         }
         [Route("institute/DeleteClient")]
         [HttpPost]
@@ -185,14 +216,14 @@ namespace EvolvedTax.Controllers
             {
                 return Json(false);
             }
-            var response = await _instituteService.DeleteEntity(id);
+            var response = await _instituteService.DeleteClient(id);
             return Json(response);
         }
         [Route("institute/LockUnlockClient")]
         [HttpPost]
-        public async Task<IActionResult> LockUnlockClient(int entityId, bool isLocked)
+        public async Task<IActionResult> LockUnlockClient(int clientId, bool isLocked)
         {
-            var response = await _instituteService.LockUnlockEntity(entityId ,isLocked);
+            var response = await _instituteService.LockUnlockClient(clientId, isLocked);
             return Json(response);
         }
     }

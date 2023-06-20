@@ -50,7 +50,8 @@ namespace EvolvedTax.Controllers
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
             }
             var GQIndividulResponse = _generalQuestionareService.GetDataByClientEmail(clientEmail);
-            if (GQIndividulResponse == null) {
+            if (GQIndividulResponse == null)
+            {
                 var clientData = _instituteService.GetClientDataByClientEmailId(clientEmail);
                 if (clientData != null)
                 {
@@ -212,7 +213,7 @@ namespace EvolvedTax.Controllers
                         model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
                         if (model.W8ECIOnBehalfName)
                         {
-                             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+                            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
                             HttpContext.Session.SetString("ClientNameSig", string.Concat(model.GQFirstName, " ", model.GQLastName));
                             //HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
                         }

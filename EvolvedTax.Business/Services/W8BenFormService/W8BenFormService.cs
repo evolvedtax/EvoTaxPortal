@@ -118,6 +118,14 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             Rectangle rectangle = new Rectangle(130, 75, 380, 97, 0);
             rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
+            //for date
+            PdfContentByte overContent1 = pdfStamper.GetOverContent(1);
+            iTextSharp.text.Rectangle rectangle1 = new iTextSharp.text.Rectangle(460, 75, 510, 90, 0);
+            rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
+            overContent1.Rectangle(rectangle1);
+            PdfAnnotation annotation1;
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            pdfStamper.AddAnnotation(annotation1, 1);
 
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");
             Image image1 = Image.GetInstance(src1);

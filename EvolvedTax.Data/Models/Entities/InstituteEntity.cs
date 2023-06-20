@@ -36,5 +36,6 @@ public partial class InstituteEntity
 
     public string? InstituteName { get; set; }
     public bool? IsActive { get; set; }
+    public DateTime? InActiveDate { get; set; }
     public bool? IsLocked { get; set; }
 }

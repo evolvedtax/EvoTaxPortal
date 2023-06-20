@@ -47,4 +47,5 @@ public partial class InstitutesClient
     public string? FormName { get; set; }
     public bool? IsLocked { get; set; }
     public bool? IsActive { get; set;}
+    public DateTime? InActiveDate { get; set;}
 }

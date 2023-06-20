@@ -48,6 +48,10 @@
                                 <th><input type="checkbox" id="selectAll"></th>
                                 <th>Partner Name</th>
                                 <th>Address</th>
+                                <th hidden></th>
+                                <th hidden></th>
+                                <th hidden></th>
+                                <th hidden></th>
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Province (If Applicable)</th>
@@ -70,8 +74,12 @@
                                 {
                                     string status = string.Empty;
                                     @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = "disabled"; }
-                                    <tr>
+                                    <tr id="@item.ClientId">
                                         <td><input type="checkbox" class="rowCheckbox" value="@item.ClientId" @status></td>
+                                        <td hidden>@item.PartnerName1</td>
+                                        <td hidden>@item.PartnerName2</td>
+                                        <td hidden>@item.Address1</td>
+                                        <td hidden>@item.Address2</td>
                                         <td>@string.Concat(item.PartnerName1," ", item.PartnerName2)</td>
                                         <td>@string.Concat(item.Address1," ", item.Address2)</td>
                                         <td>@item.City</td>
@@ -110,9 +118,9 @@
                                                         {
                                                             <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
                                                             <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{clientId:'@item?.ClientId',isLocked:'false'})">Lock</a>
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{clientId:'@item?.ClientId',isLocked:'true'})">Lock</a>
                                                         }
-                                                        <a class="dropdown-item" href="javascript:void()">Send Email</a>
+                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -145,22 +153,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                           <tr>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                               <td></td>
-                           </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -178,7 +186,7 @@
             </div>
             <div class="modal-body">
                 <!-- Form for editing row data -->
-                @*<form id="regForm"
+                <form id="regForm"
                       method="post"
                       data-ajax="true"
                       data-ajax-method="post"
@@ -188,26 +196,21 @@
                       data-ajax-success="ajaxsuccess"
                       data-ajax-url="@Url.Action("UpdateClient","Institute")">
                     <!-- Add input fields here for each column you want to edit -->
-                    <input id="entityId" name="EntityId" hidden />
+                    <input id="clientId" name="ClientId" hidden />
                     <div class="row col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="enitytName">Entity Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="enitytName" name="EntityName" required>
+                                <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="partnerName1" name="PartnerName1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="ein">EIN<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ein" name="Ein" required>
+                                <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="partnerName2" name="PartnerName2" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="entityRegistrationDate" name="EntityRegistrationDate" required>
-                            </div>
-                        </div>
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="country">Country<span class="text-danger">*</span></label>
@@ -218,14 +221,14 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address1">Address 1<span class="text-danger">*</span></label>
+                                <label for="address1">Address Line 1<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="address1" name="Address1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address2">Address 2</label>
-                                <input type="text" class="form-control" id="address2" name="Address2">
+                                <label for="address2">Address Line 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="address2" name="Address2" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -254,8 +257,14 @@
                                 <input type="text" class="form-control" id="zip" name="Zip" required>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber">PhoneNumber</label>
+                                <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber" required>
+                            </div>
+                        </div>
                     </div>
-                </form>*@
+                </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
@@ -275,6 +284,50 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+            $('.edit-row').click(function () {
+                debugger
+                // Get the row ID from the data attribute
+                var rowId = $(this).data('row-id');
+
+                // Retrieve the row data based on the ID
+                var rowData = getRowData(rowId); // Implement your own function to retrieve the row data
+
+                // Populate the form fields with the row data
+                populateModalFields(rowData);
+            });
+
+            function getRowData(rowId) {
+                var row = $("#" + rowId); // Select the row by its ID
+                var rowData = {
+                    ClientId: rowId,
+                    PartnerName1: row.find("td:nth-child(2)").text(),
+                    PartnerName2: row.find("td:nth-child(3)").text(),
+                    Address1: row.find("td:nth-child(4)").text(),
+                    Address2: row.find("td:nth-child(5)").text(),
+                    City: row.find("td:nth-child(8)").text(),
+                    State: row.find("td:nth-child(9)").text(),
+                    Province: row.find("td:nth-child(10)").text(),
+                    Zip: row.find("td:nth-child(11)").text(),
+                    Country: row.find("td:nth-child(12)").text(),
+                    PhoneNumber: row.find("td:nth-child(13)").text(),
+                };
+
+                return rowData;
+            }
+            // Function to populate modal input fields with row data
+            function populateModalFields(rowData) {
+                $('#clientId').val(rowData.ClientId);
+                $('#partnerName1').val(rowData.PartnerName1);
+                $('#partnerName2').val(rowData.PartnerName2);
+                $('#address1').val(rowData.Address1);
+                $('#address2').val(rowData.Address2);
+                $('#city').val(rowData.City);
+                $('#state').val(rowData.State).change();
+                $('#province').val(rowData.Province);
+                $('#zip').val(rowData.Zip);
+                $('#country').val(rowData.Country).change();
+                $('#phoneNumber').val(rowData.PhoneNumber);
+            }
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
@@ -299,7 +352,15 @@
                         action: function (e, dt, button, config) {
                             $('#uploadDataDiv').prop('hidden', false);
                         }
-                    }, {
+                    },
+                    {
+                        text: 'Recycle Bin',
+                        className: 'btn-recycle-bin',
+                        action: function (e, dt, button, config) {
+                            window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                        }
+                    },
+                    {
                         text: 'Send Email',
                         className: 'email-btn',
                         action: function (e, dt, button, config) {
@@ -313,12 +374,12 @@
                                 return;
                             }
 
-                            $('.loading').show();
+                            //$('.loading').show();
                             // Send the selectedValues to the controller using AJAX or a form submission
                             let params = { selectedValues: selectedValues }
-                            COMMON.doAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
                         }
-                    },
+                    }
                 ],
                 initComplete: function () {
                     $('.dataTables_length').hide(); // Hide the original page length dropdown
@@ -397,24 +458,47 @@
                     } else {
                         status = '<span class="fa fa-lock"></span>';
                     }
-                    let row = [
-                        '<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '"' + ClientStatus + '>',
-                        item.PartnerName1 + ' ' + item.PartnerName2,
-                        item.Address1 + ' ' + item.Address2,
-                        item.City,
-                        item.State,
-                        item.Province,
-                        item.Zip,
-                        item.Country,
-                        item.PhoneNumber,
-                        item.ClientEmailId,
-                        item.StatusName,
-                        COMMON.GetDateMMddyyyFormat(item.ClientStatusDate),
-                        'Form' + ' ' + item.FormName,
-                        '<a href="~/' + item.FileName + '">' + item.FileName + '</a>',
-                        status
-                    ];
-                    dataTable.rows.add([row]);
+                    let newRow = $('<tr id="' + item.ClientId + '">').append(
+                        $('<td>').html('<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '" ' + ClientStatus + '>'),
+                        $('<td hidden>').text(item.PartnerName1),
+                        $('<td hidden>').text(item.PartnerName2),
+                        $('<td hidden>').text(item.Address1),
+                        $('<td hidden>').text(item.Address2),
+                        $('<td>').text(item.PartnerName1 + ' ' + item.PartnerName2),
+                        $('<td>').text(item.Address1 + ' ' + item.Address2),
+                        $('<td>').text(item.City),
+                        $('<td>').text(item.State),
+                        $('<td>').text(item.Province),
+                        $('<td>').text(item.Zip),
+                        $('<td>').text(item.Country),
+                        $('<td>').text(item.PhoneNumber),
+                        $('<td>').text(item.ClientEmailId),
+                        $('<td>').text(item.StatusName),
+                        $('<td>').text(item.ClientStatusDate ? COMMON.GetDateMMddyyyFormat(item.ClientStatusDate) : ''),
+                        $('<td>').text('Form ' + item.FormName),
+                        $('<td>').html('<a href="~/' + item.FileName + '">' + item.FileName + '</a>'),
+                        $('<td class="text-center">').append(item.IsLocked ? '<span class="fa fa-lock"></span>' : '<span class="fa fa-unlock"></span>'),
+                        $('<td class="actions">').append(
+                            $('<div class="dropdown">').append(
+                                $('<button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">').html('<span class="fa fa-bars"></span>'),
+                                $('<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">').append(
+                                    $('<div class="dropdown-menu-horizontal">').append(
+                                        (item?.IsLocked ?? false) ?
+                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive(\'Unlock\',\'LockUnlockClient\',{clientId:\'' + item?.ClientId + '\',isLocked:\'false\'})">').text('Unlock') :
+                                            $('<a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="' + item?.ClientId + '">').text('Edit'),
+                                        (item?.IsLocked ?? false) ?
+                                            '' :
+                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteClient\',\'id=' + item?.ClientId + '\',\'\')">').text('Delete'),
+                                        (item?.IsLocked ?? false) ?
+                                            '' :
+                                            $('<a class="dropdown-item" href="javascript:void()">').text('Lock'),
+                                        $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId +'\'})">').text('Send Email')
+                                    )
+                                )
+                            )
+                        )
+                    );
+                    dataTable.row.add(newRow);
                 });
 
                 // Draw the updated DataTable
@@ -432,5 +516,34 @@
             }
             bsCustomFileInput.init();
         });
+        $('#saveBtn').click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccess(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Data is updated");
+            } else {
+                COMMON.notification(2, "");
+            }
+            $("#editModal").modal("hide");
+            window.location.reload();
+        }
+        function ShowHideProvince(obj) {
+            if (obj.value == 'United States') {
+                $('#provinceDiv').prop('hidden', true);
+                $('#province').val('');
+                $('#stateDiv').prop('hidden', false);
+                $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provinceDiv').prop('hidden', false);
+                $('#stateDiv').prop('hidden', true);
+                $('#state').val(1);
+                $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
     </script>
 }

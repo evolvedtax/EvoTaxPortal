@@ -52,8 +52,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             IsLocked = p.IsLocked
                         };
 
-            var result = query.ToList();
-            return result.AsQueryable();
+            return query;
         }
 
         public IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId)
@@ -94,7 +93,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId)
         {
             var result = from ic in _evolvedtaxContext.InstitutesClients
-                         join ie in _evolvedtaxContext.InstituteEntities on ic.InstituteId equals ie.InstituteId
+                         join ie in _evolvedtaxContext.InstituteEntities on ic.EntityId equals ie.EntityId
                          where ClientId.Contains(ic.ClientId)
                          select new InstituteClientResponse
                          {
@@ -317,7 +316,11 @@ namespace EvolvedTax.Business.Services.InstituteService
         }
         public async Task<MessageResponseModel> DeleteEntity(int EntityId)
         {
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId}");
+            if (_evolvedtaxContext.InstitutesClients.Any(p => p.EntityId == EntityId))
+            {
+                return new MessageResponseModel { Status = false, Message = "Please delete child records first associated with this record." };
+            }
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{DateTime.Now.Date}");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -329,6 +332,143 @@ namespace EvolvedTax.Business.Services.InstituteService
             var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC LockUnlockEntity
             {EntityId},
+            {isLocked}");
+            if (result > 0)
+            {
+                var respModel = new MessageResponseModel();
+                respModel.Status = true;
+                if (isLocked)
+                {
+                    respModel.Message = "Record is Locked";
+                }
+                else
+                {
+                    respModel.Message = "Record is Unlocked";
+                }
+                return respModel;
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId)
+        {
+            var query = from p in _evolvedtaxContext.InstituteEntities
+                        where p.InstituteId == instId && p.IsActive == false && p.InActiveDate <= DateTime.Now.Date.AddMonths(1)
+                        select new InstituteEntitiesResponse
+                        {
+                            Address1 = p.Address1,
+                            Address2 = p.Address2,
+                            City = p.City,
+                            Country = p.Country,
+                            Ein = p.Ein,
+                            EntityId = p.EntityId,
+                            EntityName = p.EntityName,
+                            EntityRegistrationDate = p.EntityRegistrationDate,
+                            InstituteId = p.InstituteId,
+                            InstituteName = p.InstituteName,
+                            LastUpdatedDate = p.LastUpdatedDate,
+                            Province = p.Province,
+                            State = p.State,
+                            Zip = p.Zip,
+                            IsActive = p.IsActive,
+                            IsLocked = p.IsLocked
+                        };
+            return query;
+        }
+        public MessageResponseModel RestoreEntities(int[] selectedValues)
+        {
+            var response = new List<InstituteEntity>();
+            foreach (var item in selectedValues)
+            {
+                var result = _evolvedtaxContext.InstituteEntities.First(p => p.EntityId == item);
+                result.IsActive = true;
+                response.Add(result);
+            }
+            _evolvedtaxContext.UpdateRange(response);
+            _evolvedtaxContext.SaveChanges();
+            return new MessageResponseModel { Status = true, Message = "Records restored." };
+        }
+        public IQueryable<InstituteClientResponse> GetRecyleBinClientsByEntityId(int instId, int entityId)
+        {
+            // Fetch all MasterClientStatus records
+            var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
+
+            var response = _evolvedtaxContext.InstitutesClients
+                .Where(p => p.EntityId == entityId && p.IsActive == false && p.InActiveDate <= DateTime.Now.Date.AddMonths(1))
+                .Select(p => new InstituteClientResponse
+                {
+                    Address1 = p.Address1,
+                    Address2 = p.Address2,
+                    City = p.City,
+                    ClientId = p.ClientId,
+                    ClientEmailId = p.ClientEmailId,
+                    ClientStatusDate = p.ClientStatusDate,
+                    ClientStatus = p.ClientStatus,
+                    Country = p.Country,
+                    EntityId = entityId,
+                    EntityName = p.EntityName,
+                    FileName = p.FileName,
+                    InstituteId = p.InstituteId,
+                    PartnerName1 = p.PartnerName1,
+                    PartnerName2 = p.PartnerName2,
+                    PhoneNumber = p.PhoneNumber,
+                    Province = p.Province,
+                    State = p.State,
+                    FormName = p.FormName,
+                    Zip = p.Zip,
+                    IsActive = p.IsActive,
+                    IsLocked = p.IsLocked,
+                    StatusName = clientStatuses[(short)p.ClientStatus].StatusName ?? ""
+                });
+            return response;
+        }
+        public MessageResponseModel RestoreClients(int[] selectedValues)
+        {
+            var response = new List<InstitutesClient>();
+            foreach (var item in selectedValues)
+            {
+                var result = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId == item);
+                result.IsActive = true;
+                response.Add(result);
+            }
+            _evolvedtaxContext.UpdateRange(response);
+            _evolvedtaxContext.SaveChanges();
+            return new MessageResponseModel { Status = true, Message = "Records restored." };
+        }
+        public async Task<MessageResponseModel> DeleteClient(int id)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteClient {id},{DateTime.Now.Date}");
+            if (result > 0)
+            {
+                return new MessageResponseModel { Status = true };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> UpdateClient(InstituteClientRequest request)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC UpdateInstituteClient
+            {request.ClientId},
+            {request.PartnerName1},
+            {request.PartnerName2},
+            {request.Address1},
+            {request.Address2},
+            {request.City},
+            {request.State},
+            {request.Province},
+            {request.Zip},
+            {request.Country},
+            {request.PhoneNumber}");
+            if (result > 0)
+            {
+                return new MessageResponseModel { Status = true };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> LockUnlockClient(int clientId, bool isLocked)
+        {
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+                EXEC LockUnlockClient
+            {clientId},
             {isLocked}");
             if (result > 0)
             {

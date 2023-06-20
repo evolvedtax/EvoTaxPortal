@@ -182,7 +182,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="entityRegistrationDate" name="EntityRegistrationDate" required>
+                                <input type="date" class="form-control" id="entityRegistrationDate" name="EntityRegistrationDate" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -253,7 +253,9 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
-
+            //Masking
+            $('#ein').attr('placeholder', '00-0000000');
+            $('#ein').mask('00-0000000', { reverse: true });
             // Handle Edit button click event
             $('.edit-row').click(function () {
                 debugger
@@ -318,6 +320,13 @@
                         className: 'btn-imp-data',
                         action: function (e, dt, button, config) {
                             $('#uploadDataDiv').prop('hidden', false);
+                        }
+                    },
+                    {
+                        text: 'Recycle Bin',
+                        className: 'btn-recycle-bin',
+                        action: function (e, dt, button, config) {
+                            window.location.href = '/Institute/EntitiesRecyleBin';
                         }
                     }
                 ],

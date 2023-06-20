@@ -180,7 +180,6 @@ var COMMON = (function () {
         return false;
     };
     COMMON.doAjaxPostWithJSONResponse = function (url, params) {
-        debugger
         var data = params;
         var data = {
             entityId: params.entityId,
@@ -196,6 +195,29 @@ var COMMON = (function () {
                 $('.loading').hide();
                 COMMON.notification(response.type, response.message);
                 $('#changeEntity').change();
+                jsonResponse = response;
+            },
+            error: function (xhr, status, error) {
+                COMMON.displayError(xhr.responseText, xhr.status);
+                $('.loading').hide();
+
+                COMMON.notification(2, "There's some technical error.");
+                jsonResponse = null;
+            }
+        });
+        return jsonResponse;
+    };
+    COMMON.doSendEmailAjaxPostWithJSONResponse = function (url, params) {
+        $('.loading').show();
+        var jsonResponse = null;
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: params,
+            async: true,
+            success: function (response) {
+                $('.loading').hide();
+                COMMON.notification(response.type, response.message);
                 jsonResponse = response;
             },
             error: function (xhr, status, error) {
@@ -508,7 +530,7 @@ var COMMON = (function () {
             text: confirmMessage, // "Please check before deleting the record!",
             type: confirmType, //"warning",
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
+            confirmButtonColor: "#1ab394",
             confirmButtonText: confirmBtnText,
             cancelButtonText: "Cancel"
         },
@@ -530,11 +552,11 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure to delete this record?",
+            title: "Are you sure you want to delete this record?",
             text: "Please check before deleting the record!",
             type: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
+            confirmButtonColor: "#1ab394",
             confirmButtonText: "Delete",
             cancelButtonText: "Cancel"
         },
@@ -549,8 +571,10 @@ var COMMON = (function () {
                         setTimeout(function () {
                             window.location.reload();
                         }, 5000);
-                    } else if (jsonResponse.Status !== null) {
-                        COMMON.notification(2, "Something went wrong")
+                    } else if (jsonResponse.Status === false) {
+                        //COMMON.notification(2, "Something went wrong")
+                        //COMMON.AlertSuccessMessage(jsonResponse.Message,'Warning','warning');
+                        COMMON.notification(3, jsonResponse.Message);
                     }
                     confirmed = true;
                 } else {
@@ -564,11 +588,11 @@ var COMMON = (function () {
         var confirmed = false;
         
         swal({
-            title: "Are you sure to " + message + " this record?",
+            title: "Are you sure you want to " + message + " this record?",
             text: "",
             type: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
+            confirmButtonColor: "#1ab394",
             confirmButtonText: message,
             cancelButtonText: "Cancel"
         },
@@ -581,7 +605,7 @@ var COMMON = (function () {
                         //COMMON.dataTableInitialized();
                         setTimeout(function () {
                             window.location.reload();
-                        }, 5000);
+                        }, 3000);
                     } else if (jsonResponse.Status !== null) {
                         COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
                     }

@@ -27,5 +27,12 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request);
         Task<MessageResponseModel> DeleteEntity(int id);
         Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked);
+        IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId);
+        MessageResponseModel RestoreEntities(int[] selectedValues);
+        IQueryable<InstituteClientResponse> GetRecyleBinClientsByEntityId(int instId, int entityId);
+        MessageResponseModel RestoreClients(int[] selectedValues);
+        Task<MessageResponseModel> DeleteClient(int id);
+        Task<MessageResponseModel> UpdateClient(InstituteClientRequest request);
+        Task<MessageResponseModel> LockUnlockClient(int clientId, bool isLocked);
     }
 }
