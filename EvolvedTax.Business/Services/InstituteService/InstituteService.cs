@@ -288,14 +288,23 @@ namespace EvolvedTax.Business.Services.InstituteService
         }
         public InstituteEntity GetEntityDataByClientEmailId(string clientEmail)
         {
-            var entity = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == clientEmail);
+            try
+            {
+                var entity = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == clientEmail);
 
-            var entityName = entity != null
-                ? _evolvedtaxContext.InstituteEntities
-                    .FirstOrDefault(p => p.EntityId == entity.EntityId)
-                : null;
+                var entityName = entity != null
+                    ? _evolvedtaxContext.InstituteEntities
+                        .FirstOrDefault(p => p.EntityId == entity.EntityId)
+                    : null;
 
-            return entityName;
+                return entityName;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("An error occurred: " + ex.Message);
+                return null;
+            }
         }
         public async Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request)
         {

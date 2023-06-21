@@ -160,7 +160,7 @@ namespace EvolvedTax.Business.Services.CommonService
             return fileName;
         }
 
-        public void RemoveAnnotations(PdfFormDetailsRequest request, string filePath)
+        public string RemoveAnnotations (string filePath)
         {
       
             string FilePath = Path.Combine(BaseUrl, filePath);
@@ -186,6 +186,7 @@ namespace EvolvedTax.Business.Services.CommonService
                         // No need to flatten the form fields since we are only removing annotations
                     }
                 }
+                return outputFilePath;
 
                     /*
                     using (FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))

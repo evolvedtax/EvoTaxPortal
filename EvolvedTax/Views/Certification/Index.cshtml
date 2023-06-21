@@ -107,7 +107,8 @@
                     </strong>
                     <strong class="w8BenCertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
-                        knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
+                        knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that: 
+                    
                     </strong>
 
 
@@ -117,11 +118,10 @@
                     </strong>
                 </label>
             </div>
-
-            <div class="w8ExpCertification" hidden>
-
-                <ol>
-                    <li>The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
+            <br />
+            <div class="w8ExpCertification">
+                <ol >
+                    <li >The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
                     <li>The beneficial owner is not a U.S. person,</li>
                     <li>
                         For a beneficial owner that is a controlled entity of a foreign sovereign (other than a central bank of issue wholly owned by a
@@ -205,13 +205,12 @@
                 </p>
                 <p>I agree that I will submit a new form within 30 days if any certification made on this form becomes incorrect.</p>
             </div>
-            <div class="form-check abc-radio abc-radio-info form-check-inline">
+            <div class="form-check abc-radio abc-radio-info">
                 <input class="form-check-input" type="checkbox" asp-for=Agreement2 id="agreement2">
                 <label class="form-check-label" for="agreement2">
                     <strong>By checking this box you:</strong>
                 </label>
             </div>
-            <br />
             <br />
             Agree to use electronic records and signatures and confirm you have read the Electronic Record and Signature Disclosure Agree to <a href="@Url.Action("Index","TermsToUse")" target="_blank">Terms of Service</a> and confirm you have read <a href="@Url.Action("Index","PrivacyPolicy")" target="_blank">Privacy Policy</a>.
         </div>
@@ -295,7 +294,7 @@
                     $('#fontFamily').val($(this).css('font-family').replace(/"/g, ""));
                     $('#form').submit();
                 }
-       
+
             });
             if ('@Model?.IsSignaturePasted' == 'False') {
                 // Open the modal
@@ -354,6 +353,7 @@
             }
         });
         function ajaxsuccess(response) {
+            debugger;
             if (response.status == false) {
                 COMMON.notification(2, "There's some technical issue");
                 return;
@@ -378,13 +378,17 @@
                 "<p><strong>Your completed form " + formName + " has been submitted to " + entityName + ".</strong></p>";
             var linkText = $('<p><strong></strong></p>').append(link1).append('<strong> </strong>');
 
-            var disclaimerText = $("<a>")
+            var disclaimerText = $("<span>")
+                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team at ")
+ 
+
+            var emailLink = $("<a>")
                 .attr("href", "mailto:" + instituteEmail)
                 .attr("target", "_blank")
-                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team.")
-                .css("text-decoration", "underline");
+                .text(instituteEmail);
 
-            $('#certifyDiv').append(text, linkText, disclaimerText);
+            $('#certifyDiv').append(text, linkText, disclaimerText, emailLink);
+          
         }
 
         function openFile(fileName) {
@@ -396,14 +400,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                                        // Disable back and forward navigation
-                                                                                                        //window.onbeforeunload = function () {
-                                                                                                        //    return "Are you sure you want to leave this page?";
-                                                                                                        //};
+                                                                                                                        // Disable back and forward navigation
+                                                                                                                        //window.onbeforeunload = function () {
+                                                                                                                        //    return "Are you sure you want to leave this page?";
+                                                                                                                        //};
 
-                                                                                                        //window.addEventListener("popstate", function (event) {
-                                                                                                        //    history.pushState(null, document.title, location.href);
-                                                                                                        //});
+                                                                                                                        //window.addEventListener("popstate", function (event) {
+                                                                                                                        //    history.pushState(null, document.title, location.href);
+                                                                                                                        //});
 
     </script>
 }
