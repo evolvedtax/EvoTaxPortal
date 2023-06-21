@@ -81,6 +81,7 @@
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <div class="dropdown-menu-horizontal">
                                                         <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Restore','RestoreClient',{selectedValues:'@item?.ClientId'})">Restore</a>
+                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Delete Permanently','EmptyRecycleBinClient',{selectedValues:'@item?.ClientId'})">Delete permanently</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,9 +108,14 @@
                 pageLength: 25,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    { extend: 'excel', title: 'ExampleFile', text: 'Export to Excel', className: 'btn-excel' },
                     {
-                        text: 'Restore',
+                        extend: 'excel',
+                        title: 'ExampleFile',
+                        text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                        className: 'btn-excel'
+                    },
+                    {
+                        text: '<i class="fa fa-undo"></i> Restore',
                         className: 'btn-recycle-bin',
                         action: function (e, dt, button, config) {
                             var selectedValues = [];
@@ -125,6 +131,25 @@
                             $('.loading').show();
                             // Send the selectedValues to the controller using AJAX or a form submission
                             COMMON.confirmAlertActive('Restore', 'RestoreClient', { selectedValues: selectedValues });
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-trash"></i> Empty Recycle Bin',
+                        className: 'btn-empty-recycle-bin',
+                        action: function (e, dt, button, config) {
+                            var selectedValues = [];
+                            $('.rowCheckbox:checked').each(function () {
+                                selectedValues.push($(this).val());
+                            });
+
+                            if (selectedValues.length === 0) {
+                                COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                return;
+                            }
+
+                            $('.loading').show();
+                            // Send the selectedValues to the controller using AJAX or a form submission
+                            COMMON.confirmAlertActive('Empty', 'EmptyRecycleBinClient', { selectedValues: selectedValues });
                         }
                     }
                 ],

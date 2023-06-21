@@ -62,6 +62,17 @@
             </div>
         </div>
     }
+    else if ((short)ViewBag.StatusCode == 400 || (short)ViewBag.StatusCode == 0)
+    {
+        <div class="middle-box text-center animated fadeInDown">
+            <h1>400</h1>
+            <h3 class="font-bold">Bad Request</h3>
+
+            @*<div class="error-desc">
+                Bad Request.
+            </div>*@
+        </div>
+    }
     <!-- Mainly scripts -->
     <script src="~/js/jquery-3.1.1.min.js"></script>
     <script src="~/js/popper.min.js"></script>

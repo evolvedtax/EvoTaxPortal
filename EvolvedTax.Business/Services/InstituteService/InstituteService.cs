@@ -8,6 +8,10 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using Microsoft.EntityFrameworkCore;
 using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Enums;
+using Microsoft.Data.SqlClient;
+using SkiaSharp;
+using System.Data;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -31,7 +35,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
         {
             var query = from p in _evolvedtaxContext.InstituteEntities
-                        where p.InstituteId == InstId && p.IsActive != false
+                        where p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -61,7 +65,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == EntityId && p.IsActive != false)
+                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active)
                 .Select(p => new InstituteClientResponse
                 {
                     Address1 = p.Address1,
@@ -133,7 +137,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         Country = excelRow.GetCell(9)?.ToString(),
                         InstituteId = InstId,
                         InstituteName = InstituteName,
-                        IsActive = true,
+                        IsActive = RecordStatusEnum.Active,
                         IsLocked = false,
                     };
                     // Check for duplicate records based on ClientEmailId in the database
@@ -186,7 +190,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         FileName = "",
                         InstituteId = (short)InstId,
                         EntityId = EntityId,
-                        IsActive = true,
+                        IsActive = RecordStatusEnum.Active,
                         IsLocked = false,
                     };
 
@@ -314,13 +318,13 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
-        public async Task<MessageResponseModel> DeleteEntity(int EntityId)
+        public async Task<MessageResponseModel> DeleteEntity(int EntityId, RecordStatusEnum RecordStatus)
         {
-            if (_evolvedtaxContext.InstitutesClients.Any(p => p.EntityId == EntityId))
-            {
-                return new MessageResponseModel { Status = false, Message = "Please delete child records first associated with this record." };
-            }
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{DateTime.Now.Date}");
+            //if (_evolvedtaxContext.InstitutesClients.Any(p => p.EntityId == EntityId))
+            //{
+            //    return new MessageResponseModel { Status = false, Message = "Please delete child records first associated with this record." };
+            //}
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{RecordStatus},{DateTime.Now.Date}");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -352,7 +356,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId)
         {
             var query = from p in _evolvedtaxContext.InstituteEntities
-                        where p.InstituteId == instId && p.IsActive == false && p.InActiveDate <= DateTime.Now.Date.AddMonths(1)
+                        where p.InstituteId == instId && p.IsActive == RecordStatusEnum.Trash && p.InActiveDate <= DateTime.Now.Date.AddMonths(1)
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -380,7 +384,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             foreach (var item in selectedValues)
             {
                 var result = _evolvedtaxContext.InstituteEntities.First(p => p.EntityId == item);
-                result.IsActive = true;
+                result.IsActive = RecordStatusEnum.Active;
                 response.Add(result);
             }
             _evolvedtaxContext.UpdateRange(response);
@@ -393,7 +397,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == entityId && p.IsActive == false && p.InActiveDate <= DateTime.Now.Date.AddMonths(1))
+                .Where(p => p.EntityId == entityId && p.IsActive == RecordStatusEnum.Trash && p.InActiveDate <= DateTime.Now.Date.AddMonths(1))
                 .Select(p => new InstituteClientResponse
                 {
                     Address1 = p.Address1,
@@ -427,16 +431,16 @@ namespace EvolvedTax.Business.Services.InstituteService
             foreach (var item in selectedValues)
             {
                 var result = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId == item);
-                result.IsActive = true;
+                result.IsActive = RecordStatusEnum.Active;
                 response.Add(result);
             }
             _evolvedtaxContext.UpdateRange(response);
             _evolvedtaxContext.SaveChanges();
             return new MessageResponseModel { Status = true, Message = "Records restored." };
         }
-        public async Task<MessageResponseModel> DeleteClient(int id)
+        public async Task<MessageResponseModel> DeleteClient(int id, RecordStatusEnum RecordStatus)
         {
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteClient {id},{DateTime.Now.Date}");
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteClient {id},{RecordStatus},{DateTime.Now.Date}");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -485,6 +489,48 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return respModel;
             }
             return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> TrashEmptyClient(int[] selectedValues, RecordStatusEnum recordStatusEnum)
+        {
+            var count = 0;
+            foreach (var item in selectedValues)
+            {
+                count = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteClient {item},{recordStatusEnum},{DateTime.Now.Date}");
+            }
+            if (count > 0)
+            {
+                return new MessageResponseModel { Status = true, Message = "Record has been deleted permanently." };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<MessageResponseModel> TrashEmptyEntity(int[] selectedValues, RecordStatusEnum recordStatusEnum)
+        {
+            var count = 0;
+            foreach (var item in selectedValues)
+            {
+                count = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {item},{recordStatusEnum},{DateTime.Now.Date}");
+            }
+            if (count > 0)
+            {
+                return new MessageResponseModel { Status = true, Message = "Record has been deleted permanently." };
+            }
+            return new MessageResponseModel { Status = false };
+        }
+        public async Task<bool> CheckIfClientRecordExist(string clientEmail)
+        {
+            var query = from client in _evolvedtaxContext.InstitutesClients
+                        join entity in _evolvedtaxContext.InstituteEntities on client.EntityId equals entity.EntityId
+                        where client.ClientEmailId == clientEmail
+                        select new { Client = client, Entity = entity };
+
+            var result = await query.FirstOrDefaultAsync();
+
+            if (result != null && (result.Client.IsActive == RecordStatusEnum.EmptyTrash || result.Entity.IsActive == RecordStatusEnum.EmptyTrash))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using EvolvedTax.Business.Services.GeneralQuestionareService;
+using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
+using Microsoft.AspNetCore.Http;
 
 namespace EvolvedTax.Controllers
 {
@@ -15,10 +17,12 @@ namespace EvolvedTax.Controllers
         #region Ctor
         readonly IUserService _userService;
         readonly IGeneralQuestionareService _generalQuestionareService;
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService)
+        readonly IInstituteService _instituteService;
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
+            _instituteService = instituteService;
         }
         #endregion
 
@@ -55,8 +59,12 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
-        public IActionResult OTP(string clientEmail)
+        public async Task<IActionResult> OTP(string clientEmail)
         {
+            if (await _instituteService.CheckIfClientRecordExist(clientEmail))
+            {
+               return RedirectToAction("AccessDenied", new { statusCode = 400 });
+            }
             ViewBag.ClientEmail = clientEmail;
             return View();
         }

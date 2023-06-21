@@ -3,6 +3,7 @@ using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
@@ -187,7 +188,18 @@ namespace EvolvedTax.Controllers
             {
                 return Json(false);
             }
-            var response = await _instituteService.DeleteEntity(id);
+            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+        [Route("institute/EmptyRecycleBinEntity")]
+        [HttpPost]
+        public async Task<IActionResult> EmptyRecycleBinEntity(int[] selectedValues)
+        {
+            if (selectedValues.Length == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.TrashEmptyEntity(selectedValues, RecordStatusEnum.EmptyTrash);
             return Json(response);
         }
         [Route("institute/LockUnlockEntity")]
@@ -216,7 +228,18 @@ namespace EvolvedTax.Controllers
             {
                 return Json(false);
             }
-            var response = await _instituteService.DeleteClient(id);
+            var response = await _instituteService.DeleteClient(id, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+        [Route("institute/EmptyRecycleBinClient")]
+        [HttpPost]
+        public async Task<IActionResult> EmptyRecycleBinClient(int[] selectedValues)
+        {
+            if (selectedValues.Length == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.TrashEmptyClient(selectedValues, RecordStatusEnum.EmptyTrash);
             return Json(response);
         }
         [Route("institute/LockUnlockClient")]

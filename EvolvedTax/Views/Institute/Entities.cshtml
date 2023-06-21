@@ -306,7 +306,7 @@
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
-                        text: 'Download New Entity Template',
+                        text: '<i class="fa fa-download"></i> Download New Entity Template',
                         className: 'btn-template',
                         action: function (e, dt, button, config) {
                             let url = 'DownloadExcel';
@@ -314,16 +314,21 @@
                             COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
                         }
                     },
-                    { extend: 'excel', title: 'ExampleFile', text: 'Export to Excel', className: 'btn-excel' },
                     {
-                        text: 'Import Entity Data',
+                        extend: 'excel',
+                        title: 'ExampleFile',
+                        text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                        className: 'btn-excel'
+                    },
+                    {
+                        text: '<i class="fa fa-upload"></i> Import Entity Data',
                         className: 'btn-imp-data',
                         action: function (e, dt, button, config) {
                             $('#uploadDataDiv').prop('hidden', false);
                         }
                     },
                     {
-                        text: 'Recycle Bin',
+                        text: '<i class="fa fa-trash"></i> Recycle Bin',
                         className: 'btn-recycle-bin',
                         action: function (e, dt, button, config) {
                             window.location.href = '/Institute/EntitiesRecyleBin';

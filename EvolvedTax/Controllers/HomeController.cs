@@ -1,6 +1,7 @@
 ﻿
 
 using EvolvedTax.Business.Services.GeneralQuestionareService;
+using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 
@@ -22,6 +23,11 @@ namespace EvolvedTax.Controllers
             _generalQuestionareService = generalQuestionareService;
             _evolvedtaxContext = evolvedtaxContext;
             _webHostEnvironment = webHostEnvironment;
+        }
+        public IActionResult OpenForm83()
+        {
+            ViewBag.FileName = Path.Combine("Forms", "83b.pdf");
+            return View();
         }
         public IActionResult TaxPayerDetails()
         {

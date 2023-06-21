@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EvolvedTax.Data.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace EvolvedTax.Data.Models.Entities;
@@ -46,6 +47,6 @@ public partial class InstitutesClient
 
     public string? FormName { get; set; }
     public bool? IsLocked { get; set; }
-    public bool? IsActive { get; set;}
+    public RecordStatusEnum IsActive { get; set;}
     public DateTime? InActiveDate { get; set;}
 }

@@ -77,6 +77,7 @@
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     <div class="dropdown-menu-horizontal">
                                                         <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Restore','RestoreEntity',{selectedValues:'@item?.EntityId'})">Restore</a>
+                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Delete Permanently','EmptyRecycleBinEntity',{selectedValues:'@item?.EntityId'})">Delete permanently</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,9 +104,14 @@
                 pageLength: 25,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    { extend: 'excel', title: 'ExampleFile', text: 'Export to Excel', className: 'btn-excel' },
                     {
-                        text: 'Restore',
+                        extend: 'excel',
+                        title: 'ExampleFile',
+                        text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                        className: 'btn-excel'
+                    },
+                    {
+                        text: '<i class="fa fa-undo"></i> Restore',
                         className: 'btn-recycle-bin',
                         action: function (e, dt, button, config) {
                             var selectedValues = [];
@@ -121,16 +127,25 @@
                             $('.loading').show();
                             // Send the selectedValues to the controller using AJAX or a form submission
                             COMMON.confirmAlertActive('Restore', 'RestoreEntity', { selectedValues: selectedValues });
-                            //let params = { selectedValues: selectedValues }
-                            //var jsonResponse = COMMON.doAjaxPostWithJSONResponse('/Institute/RestoreEntity', params);
-                            //if (jsonResponse.Status === true) {
-                            //    COMMON.notification(1, 'Records restored.')
-                            //}else{
-                            //    COMMON.notification(2, 'Something went wrong')
-                            //}
-                            //setTimeout(function () {
-                            //    window.location.reload();
-                            //}, 3000);
+                        }
+                    },
+                    {
+                        text: '<i class="fa fa-trash"></i> Empty Recycle Bin',
+                        className: 'btn-empty-recycle-bin',
+                        action: function (e, dt, button, config) {
+                            var selectedValues = [];
+                            $('.rowCheckbox:checked').each(function () {
+                                selectedValues.push($(this).val());
+                            });
+
+                            if (selectedValues.length === 0) {
+                                COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                return;
+                            }
+
+                            $('.loading').show();
+                            // Send the selectedValues to the controller using AJAX or a form submission
+                            COMMON.confirmAlertActive('Empty', 'EmptyRecycleBinEntity', { selectedValues: selectedValues });
                         }
                     }
                 ],
