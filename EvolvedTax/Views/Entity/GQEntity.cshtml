@@ -630,6 +630,7 @@
             }
         }
         function showTab(n) {
+   
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
 
@@ -641,6 +642,7 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
+       
                 if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
                     var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
                     if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
@@ -656,6 +658,9 @@
                         $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
                         document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
                     }
+                }
+                else if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W9Form') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
                 }
                 else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
                     document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";

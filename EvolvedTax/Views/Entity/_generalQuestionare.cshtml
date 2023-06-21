@@ -153,7 +153,7 @@
                     <label class="form-check-label" for="inlinecheckbox3">
                         c) The entity identified in Part I is a controlled entity of the government of
                     </label>
-                    <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid">
+                    <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid ">
                         <option></option>
                     </select>
                 </div>
@@ -488,12 +488,12 @@
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
                         <input class="form-check-input" type="radio" id="DE1" value="true"
-                               asp-for="DE" required onchange="SelectDEEntity(this)">
+                               asp-for="DE"  onchange="SelectDEEntity(this)">
                         <label class="form-check-label" for="DE1"> Yes </label>
                     </div>
                     <div class="form-check abc-radio form-check-inline">
                         <input class="form-check-input" type="radio" id="DE2" value="false"
-                               asp-for="DE" required onchange="SelectDEEntity(this)">
+                               asp-for="DE"  onchange="SelectDEEntity(this)">
                         <label class="form-check-label" for="DE2"> No </label>
                     </div>
                     @Html.HiddenFor(model => model.DE, new { id = "DEValue" })

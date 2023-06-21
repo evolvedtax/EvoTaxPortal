@@ -11,7 +11,7 @@ namespace EvolvedTax.Business.Services.CommonService
     public interface ICommonService
     {
         string AssignSignature(PdfFormDetailsRequest request, string filePath);
-        public void RemoveAnnotations(PdfFormDetailsRequest request,string filePath);
+        public string RemoveAnnotations(string filePath);
         MemoryStream DownloadFile(string filePath);
 
     }

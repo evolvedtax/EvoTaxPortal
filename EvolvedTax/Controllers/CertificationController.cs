@@ -156,7 +156,7 @@ namespace EvolvedTax.Controllers
             {
                 System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
             }
-           // _commonService.RemoveAnnotations(request,request.FileName);
+           // request.FileName=_commonService.RemoveAnnotations(request.FileName);
             var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
             var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
             HttpContext.Session.SetString("FormName", string.Empty);
