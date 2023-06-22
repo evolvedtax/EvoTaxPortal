@@ -70,7 +70,7 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-            ViewBag.EntitiesList = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
+            ViewBag.EntitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p=>p.IsActive == true).Select(p => new SelectListItem
             {
                 Text = p.EntityType,
                 Value = p.EntityId.ToString()

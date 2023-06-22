@@ -8,4 +8,5 @@ public partial class MasterEntityType
     public int EntityId { get; set; }
 
     public string? EntityType { get; set; }
+    public bool IsActive { get; set; }
 }

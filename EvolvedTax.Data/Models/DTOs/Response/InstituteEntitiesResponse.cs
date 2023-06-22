@@ -10,6 +10,5 @@ namespace EvolvedTax.Data.Models.DTOs.Response
 {
     public class InstituteEntitiesResponse : InstituteEntity
     {
-        public bool IsLocked { get; set; }
     }
 }

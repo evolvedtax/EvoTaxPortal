@@ -130,32 +130,42 @@
     <div class="form-box" id="FrgnGovDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_10a">
-                    <label class="form-check-label" for="inlinecheckbox1">
-                        a) I certify that the entity identified in Part I is a foreign government within the meaning of section 892 and the payments are within the scope of the exemption granted by section 892.
-                        Check box 10b or box 10c, whichever applies
-                    </label>
+                <div class="row">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_10a">
+                        <label class="form-check-label" for="inlinecheckbox1">
+                            a) I certify that the entity identified in Part I is a foreign government within the meaning of section 892 and the payments are within the scope of the exemption granted by section 892.
+                            Check box 10b or box 10c, whichever applies
+                        </label>
+                    </div>
                 </div>
 
-                <div class="form-check inline">
-                    <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_10b">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        b) The entity identified in Part I is an integral part of the government of
-                    </label>
-                    <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid">
-                        <option></option>
-                    </select>
+                <div class="row">
+                    <div class="form-check inline col-md-4">
+                        <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_10b">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            b) The entity identified in Part I is an integral part of the government of
+                        </label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid">
+                            <option></option>
+                        </select>
+                    </div>
                 </div>
+                <div class="row mt-2">
+                    <div class="form-check inline col-md-4">
+                        <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox3" asp-for="_10c">
+                        <label class="form-check-label" for="inlinecheckbox3">
+                            c) The entity identified in Part I is a controlled entity of the government of
+                        </label>
 
-                <div class="form-check inline">
-                    <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox3" asp-for="_10c">
-                    <label class="form-check-label" for="inlinecheckbox3">
-                        c) The entity identified in Part I is a controlled entity of the government of
-                    </label>
-                    <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid ">
-                        <option></option>
-                    </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid ">
+                            <option></option>
+                        </select>
+                    </div>
                 </div>
 
             </div>
@@ -359,7 +369,7 @@
                         I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
                     </label>
                     <br />
-                    <input id="lastName" type="text" class="form-control required-control-valid"  asp-for="_21_Text">
+                    <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
                 </div>
 
 
@@ -488,12 +498,12 @@
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
                         <input class="form-check-input" type="radio" id="DE1" value="true"
-                               asp-for="DE"  onchange="SelectDEEntity(this)">
+                               asp-for="DE" onchange="SelectDEEntity(this)">
                         <label class="form-check-label" for="DE1"> Yes </label>
                     </div>
                     <div class="form-check abc-radio form-check-inline">
                         <input class="form-check-input" type="radio" id="DE2" value="false"
-                               asp-for="DE"  onchange="SelectDEEntity(this)">
+                               asp-for="DE" onchange="SelectDEEntity(this)">
                         <label class="form-check-label" for="DE2"> No </label>
                     </div>
                     @Html.HiddenFor(model => model.DE, new { id = "DEValue" })
@@ -568,7 +578,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-      
+
                 <div class="col-md-6">
                     <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
                     <div class="form-group">

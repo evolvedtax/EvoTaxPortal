@@ -1,4 +1,5 @@
-﻿using EvolvedTax.Data.Models.DTOs;
+﻿using EvolvedTax.Data.Enums;
+using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.Entities;
@@ -24,5 +25,18 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
         InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId);
         InstituteEntity GetEntityDataByClientEmailId(string clientEmail);
+        Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request);
+        Task<MessageResponseModel> DeleteEntity(int id, RecordStatusEnum RecordStatus);
+        Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked);
+        IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId);
+        MessageResponseModel RestoreEntities(int[] selectedValues);
+        IQueryable<InstituteClientResponse> GetRecyleBinClientsByEntityId(int instId, int entityId);
+        MessageResponseModel RestoreClients(int[] selectedValues);
+        Task<MessageResponseModel> DeleteClient(int id, RecordStatusEnum RecordStatus);
+        Task<MessageResponseModel> UpdateClient(InstituteClientRequest request);
+        Task<MessageResponseModel> LockUnlockClient(int clientId, bool isLocked);
+        Task<MessageResponseModel> TrashEmptyClient(int[] selectedValues, RecordStatusEnum recordStatusEnum);
+        Task<MessageResponseModel> TrashEmptyEntity(int[] selectedValues, RecordStatusEnum recordStatusEnum);
+        Task<bool> CheckIfClientRecordExist(string clientEmail);
     }
 }

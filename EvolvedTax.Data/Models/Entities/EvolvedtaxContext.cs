@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvolvedTax.Data.Models.DTOs.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace EvolvedTax.Data.Models.Entities;
@@ -98,11 +99,13 @@ public partial class EvolvedtaxContext : DbContext
     public virtual DbSet<W9> W9s { get; set; }
 
     public virtual DbSet<W91> W91s { get; set; }
+    public virtual DbSet<TaxPayerInfo> TaxPayerInfo { get; set; }
 
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TaxPayerInfo>().HasNoKey();
         modelBuilder.Entity<EmailDomain>(entity =>
         {
             entity.ToTable("EmailDomain");

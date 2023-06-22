@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.Ocsp;
 using EvolvedTax.Common.Constants;
 using NPOI.OpenXmlFormats.Dml.Diagram;
+using EvolvedTax.Data.Models.DTOs.Response;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace EvolvedTax.Business.Services.GeneralQuestionareService
 {
@@ -114,6 +117,17 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareService
         public bool IsClientAlreadyExist(string ClientEmailId)
         {
             return _evolvedtaxContext.GeneralQuestionIndividuals.Any(p => p.UserName == ClientEmailId);
+        }
+        public TaxPayerInfo? GetTaxpayerInfoByEmailId(string emailId)
+        {
+            var emailParameter = new SqlParameter("@Email", emailId);
+
+            var result = _evolvedtaxContext
+                .Set<TaxPayerInfo>()
+                .FromSqlRaw("EXECUTE dbo.GetTaxPayerInfoByEmail @Email", emailParameter)
+                .AsEnumerable()
+                .FirstOrDefault();
+            return result;
         }
     }
 }

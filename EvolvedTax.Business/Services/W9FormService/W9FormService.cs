@@ -243,7 +243,11 @@ namespace EvolvedTax.Business.Services.W9FormService
             iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(130, 230, 350, 250, 0);
             rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
-
+            //for date
+            PdfContentByte overContent1 = pdfStamper.GetOverContent(1);
+            iTextSharp.text.Rectangle rectangle1 = new iTextSharp.text.Rectangle(440, 230, 510, 250, 0);
+            rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
+            overContent1.Rectangle(rectangle1);
             // For pasting image of signature
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");
             iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(src1);
@@ -296,10 +300,16 @@ namespace EvolvedTax.Business.Services.W9FormService
             PdfContentByte over2 = pdfStamper.GetOverContent(1);
             over2.AddImage(image2);
             #endregion
+
+            
+
             PdfAnnotation annotation;
             annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation, 1);
 
+            PdfAnnotation annotation1;
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            pdfStamper.AddAnnotation(annotation1, 1);
 
             pdfStamper.Close();
             pdfReader.Close();

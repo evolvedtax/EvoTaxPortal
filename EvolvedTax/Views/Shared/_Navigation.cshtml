@@ -22,6 +22,8 @@
                 <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Individual")">GQ Individual</a></li>
+                    <li class="@Html.IsSelected(action: "TaxPayerDetails")"><a href="@Url.Action("TaxPayerDetails", "Home")">TaxPayerDetails</a></li>
+                    <li class="@Html.IsSelected(action: "OpenForm83")"><a href="@Url.Action("OpenForm83", "Home")">Form 83(b)</a></li>
                 </ul>
             </li>
             <li class="@Html.IsSelected(controller: "Institute")">

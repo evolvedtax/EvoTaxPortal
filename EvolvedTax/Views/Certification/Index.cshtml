@@ -107,8 +107,8 @@
                     </strong>
                     <strong class="w8BenCertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
-                        knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that: 
-                    
+                        knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
+
                     </strong>
 
 
@@ -120,8 +120,8 @@
             </div>
             <br />
             <div class="w8ExpCertification">
-                <ol >
-                    <li >The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
+                <ol>
+                    <li>The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
                     <li>The beneficial owner is not a U.S. person,</li>
                     <li>
                         For a beneficial owner that is a controlled entity of a foreign sovereign (other than a central bank of issue wholly owned by a
@@ -378,13 +378,13 @@
             var linkText = $('<p><strong></strong></p>').append(link1).append('<strong> </strong>');
 
             var disclaimerText = $("<span>")
-                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team at ")
- 
+                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team ")
+
 
             var emailLink = $("<a>")
                 .attr("href", "mailto:" + instituteEmail)
                 .attr("target", "_blank")
-                .text(instituteEmail);
+                .text('@@' + instituteEmail);
 
             $('#certifyDiv').append(text, linkText, disclaimerText, emailLink);
 
@@ -404,14 +404,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                                                        // Disable back and forward navigation
-                                                                                                                        //window.onbeforeunload = function () {
-                                                                                                                        //    return "Are you sure you want to leave this page?";
-                                                                                                                        //};
+                                                                                                                                // Disable back and forward navigation
+                                                                                                                                //window.onbeforeunload = function () {
+                                                                                                                                //    return "Are you sure you want to leave this page?";
+                                                                                                                                //};
 
-                                                                                                                        //window.addEventListener("popstate", function (event) {
-                                                                                                                        //    history.pushState(null, document.title, location.href);
-                                                                                                                        //});
+                                                                                                                                //window.addEventListener("popstate", function (event) {
+                                                                                                                                //    history.pushState(null, document.title, location.href);
+                                                                                                                                //});
 
     </script>
 }

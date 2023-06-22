@@ -406,6 +406,14 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             image1.SetAbsolutePosition(130, 51);
             PdfContentByte over1 = pdfStamper.GetOverContent(1);
             over1.AddImage(image1);
+            //for date
+            PdfContentByte overContent1 = pdfStamper.GetOverContent(1);
+            iTextSharp.text.Rectangle rectangle1 = new iTextSharp.text.Rectangle(500, 52, 560, 70, 0);
+            rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
+            overContent1.Rectangle(rectangle1);
+            PdfAnnotation annotation1;
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            pdfStamper.AddAnnotation(annotation1, 1);
             #region Pasting Date Picture
             // Load the image file using SkiaSharp
             using (SKBitmap bitmap = SKBitmap.Decode(Path.Combine(Directory.GetCurrentDirectory(), "pictureText.bmp")))
@@ -496,8 +504,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         }
         public string Update(FormRequest request)
         {
-            var response = _evolvedtaxContext.TblW8eciforms.First(p => p.W8eciemailAddress == request.EmailId);
-            if (response == null)
+            var response = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == request.EmailId);
+            if (response != null)
             {
                 string Items1stLine = string.Empty;
                 string Items2ndLine = string.Empty;
