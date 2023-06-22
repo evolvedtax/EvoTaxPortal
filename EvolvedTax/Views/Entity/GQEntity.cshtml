@@ -332,10 +332,11 @@
                 //allowClear: true
             });
 
+            $('#Ssnitnein').attr('placeholder', '00-0000000');
+            $('#Ssnitnein').mask('00-0000000', { reverse: true });
 
             ChekboxValidationForDropdowns();
             if ($('#IdNumber').val() == '') {
-
                 var ssnitneinValue = $('#Ssnitnein').val();
                 if (ssnitneinValue !== '') {
                     $('#inlineRadio7').prop('checked', true);
@@ -343,13 +344,14 @@
                 }
             }
 
-        
 
             $('#Ssnitnein').on('input', function () {
                 var inputValue = $(this).val();
                 if (inputValue !== '') {
+                    if ($('#IdNumber').val() == '' || $('#IdNumber').val() != inputValue) {
                     $('#inlineRadio7').prop('checked', true);
                     $('#IdNumber').val(inputValue);
+                    }
                 }
             });
 
