@@ -145,7 +145,7 @@
 
                         var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
 
-                   
+
                         $.each(result.entitiesListW8, function (index, entity) {
                             var option = $('<option>', {
                                 value: entity.Value,
@@ -166,6 +166,55 @@
                             // Trigger the change event after a small delay
                             setTimeout(function () {
                                 $('#EntityTypeW8').trigger('change');
+                            }, 10);
+                        }
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+        function BindEntityForW8ECIForm() {
+            $.ajax({
+                url: '@Url.Action("BindEntityForW8ECIForm", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityTypeW8ECI').empty();
+
+                        // Add "Please Select" option as the first option
+                        var pleaseSelectOption = $('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        });
+                        $('#EntityTypeW8ECI').append(pleaseSelectOption);
+
+                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
+
+
+                        $.each(result.entitiesList, function (index, entity) {
+                            var option = $('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (!selectedValue || entity.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+                            $('#EntityTypeW8ECI').append(option);
+                        });
+
+                        // Trigger the change event if selectedValue is empty
+                        if (!selectedValue) {
+                            $('#EntityTypeW8ECI').val('').trigger('change');
+                        } else {
+                            // Trigger the change event after a small delay
+                            setTimeout(function () {
+                                $('#EntityTypeW8ECI').trigger('change');
                             }, 10);
                         }
                     }
@@ -230,35 +279,33 @@
         }
 
         function BindEntityForW9Form() {
-            /*
-            $.ajax({
-                url: '@Url.Action("BindEntityForW9Form", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW9').empty();
-                        debugger;
+            
+            //$.ajax({
+            //    url: '@Url.Action("BindEntityForW9Form", "Entity")',
+            //    type: 'POST',
+            //    success: function (result) {
+            //        // Check if the action was successful
+            //        if (result.success) {
+            //            // Clear existing options from the dropdown
+            //            $('#EntityTypeW9').empty();
+            //            debugger;
 
-                        // Iterate over the updated entities and add new options to the dropdown
-                        $.each(result.entitiesList, function (index, entity) {
-                            debugger;
-                            $('#EntityTypeW9').append($('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            }));
-                        });
+            //            // Iterate over the updated entities and add new options to the dropdown
+            //            $.each(result.entitiesList, function (index, entity) {
+            //                debugger;
+            //                $('#EntityTypeW9').append($('<option>', {
+            //                    value: entity.Value,
+            //                    text: entity.Text
+            //                }));
+            //            });
 
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert('Error: ' + textStatus);
-                    console.log('AJAX Error:', errorThrown);
-                }
-            });
-            */
-
+            //        }
+            //    },
+            //    error: function (jqXHR, textStatus, errorThrown) {
+            //        alert('Error: ' + textStatus);
+            //        console.log('AJAX Error:', errorThrown);
+            //    }
+            //});
         }
 
         function ChekboxValidationForDropdowns() {
@@ -349,8 +396,8 @@
                 var inputValue = $(this).val();
                 if (inputValue !== '') {
                     if ($('#IdNumber').val() == '' || $('#IdNumber').val() != inputValue) {
-                    $('#inlineRadio7').prop('checked', true);
-                    $('#IdNumber').val(inputValue);
+                        $('#inlineRadio7').prop('checked', true);
+                        $('#IdNumber').val(inputValue);
                     }
                 }
             });
@@ -363,22 +410,41 @@
                     $('#W8EXPFatcaDiv').prop('hidden', false);
                     $('#W8Entity').prop('hidden', false);
                     $('#W8Country').prop('hidden', false);
+                    $('#AuthSignatoryNameDiv').prop('hidden', false);
 
                     $('#W9Entity').prop('hidden', true);
                     $('#W9Country').prop('hidden', true);
+                    $('#W8ECIQuestionareDiv').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', true);
 
                     BindEntityForW8EXPForm();
                     BindEW8EXPFATCA();
 
 
+                } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
+                    $('#W8Entity').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', false);
+                    $('#W8Country').prop('hidden', false);
+                    $('#BackupWithHoldingMainDiv').prop('hidden', false);
+                    $('#W8ECIQuestionareDiv').prop('hidden', false);
+
+                    $('#W9Entity').prop('hidden', true);
+                    $('#W9Country').prop('hidden', true);
+                    $('#AuthSignatoryNameDiv').prop('hidden', true);
+                    $('.w8EXPDDLSelectedDivs').prop('hidden', true);
+
+                    BindEntityForW8ECIForm();
                 }
                 else {
                     // alert('here in w8 different');
                     $('#W8EXPFatcaDiv').prop('hidden', true);
                     $('#W9Entity').prop('hidden', false);
                     $('#W9Country').prop('hidden', false);
+                    $('#AuthSignatoryNameDiv').prop('hidden', false);
 
                     $('#W8Country').prop('hidden', true);
+                    $('#W8ECIQuestionareDiv').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', true);
 
                     BindEntityForW9Form();
                     HideDivOnDDLEntitySelection();
@@ -509,7 +575,7 @@
                 ShowHideFTIN(objLegallyRequired);
             }
             //end
-            
+
 
         });
         function ajaxsuccess(response) {
@@ -573,7 +639,7 @@
             if (obj.value === 'false' || obj.value === 'False') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
-            }else if (obj == 'false' || obj.value === 'False') {
+            } else if (obj == 'false' || obj.value === 'False') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
@@ -585,7 +651,7 @@
             else if (obj.value === undefined) {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
-            } 
+            }
         }
 
         function SelectForm(obj) {
@@ -632,7 +698,7 @@
             }
         }
         function showTab(n) {
-   
+
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
 
@@ -644,7 +710,7 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-       
+
                 if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
                     var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
                     if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {

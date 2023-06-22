@@ -35,8 +35,8 @@
                 <br />
 
                 <div class="form-check inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio2" value="@AppConstants.W8ECIForm" asp-for="W8FormType">
-                    <label class="form-check-label" for="inlineRadio2">
+                    <input class="form-check-input" type="radio" id="W8ECIForm1" value="@AppConstants.W8ECIForm" asp-for="W8FormType">
+                    <label class="form-check-label" for="W8ECIForm1">
                         A payee or beneficial owner indicating that all the income is effectively connected with the conduct of a trade or business within the United States? {W-8ECI 'Certificate of Foreing Person's Claim That Income is Effectively Connected with the Conduct of a Trade or Business in the United States'}
                     </label>
                 </div>
@@ -77,6 +77,16 @@
                 </div>
             </div>
 
+            <div id="W8ECIEntityDiv" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select id="EntityTypeW8ECI" asp-for="TypeOfEntity" required>
+                        @Html.HiddenFor(model => model.TypeOfEntity, new { id = "TypeOfEntity" })
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
             <div id="W8Entity" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Type of Entity<span class="text-danger">*</span></label>
@@ -85,7 +95,6 @@
                         <option></option>
                     </select>
                 </div>
-
             </div>
 
             <div id="W9Country" class="col-md-6" hidden>
@@ -268,7 +277,7 @@
     @* Div for DDL selection for Entity W-8EXP end*@
 
     @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
-    <div class="form-box" id="FincalInsDiv" hidden>
+    <div class="form-box w8EXPDDLSelectedDivs" id="FincalInsDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
@@ -281,7 +290,7 @@
             </div>
         </div>
     </div>
-    <div class="form-box" id="FrgnGovUSDiv" hidden>
+    <div class="form-box w8EXPDDLSelectedDivs" id="FrgnGovUSDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
@@ -294,7 +303,7 @@
             </div>
         </div>
     </div>
-    <div class="form-box" id="RetPlanSDiv" hidden>
+    <div class="form-bo w8EXPDDLSelectedDivs" id="RetPlanSDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
@@ -310,7 +319,7 @@
             </div>
         </div>
     </div>
-    <div class="form-box" id="501OrgUSDiv" hidden>
+    <div class="form-box w8EXPDDLSelectedDivs" id="501OrgUSDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
@@ -325,7 +334,7 @@
     </div>
 
 
-    <div class="form-box" id="PassNFEDiv" hidden>
+    <div class="form-box w8EXPDDLSelectedDivs" id="PassNFEDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
@@ -358,11 +367,9 @@
             </div>
         </div>
     </div>
-    <div class="form-box" id="SponEntity_RirRepNFFEDiv" hidden>
+    <div class="form-box w8EXPDDLSelectedDivs" id="SponEntity_RirRepNFFEDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
-
-
                 <div class="form-check inline">
                     <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_21">
                     <label class="form-check-label" for="inlinecheckbox2">
@@ -371,9 +378,6 @@
                     <br />
                     <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
                 </div>
-
-
-
             </div>
         </div>
     </div>
@@ -492,8 +496,8 @@
     <div class="form-box">
 
         @*New changes start*@
-        <div id="QFormDiv" hidden>
-            <div class="col-md-12">
+        <div id="QFormDiv" class="row" hidden>
+            <div class="col-md-6">
                 <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
@@ -508,10 +512,9 @@
                     </div>
                     @Html.HiddenFor(model => model.DE, new { id = "DEValue" })
                 </div>
-
             </div>
-            <div class="col-md-12" id="DeEntityOwnerNameDiv" hidden>
-                <div class="form-group">
+            <div class="col-md-6">
+                <div class="form-group" id="DeEntityOwnerNameDiv" hidden>
                     <label>Name of the owner of the discarded entity </label>
                     <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control">
                 </div>
@@ -519,6 +522,8 @@
 
             <div class="col-md-12">
                 <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
+            </div>
+            <div class="col-md-6">
                 <div class="form-group">
                     <label id="lbl_TypeofTaxNumber">
                         <div class="form-check abc-radio abc-radio-info form-check-inline">
@@ -535,11 +540,16 @@
                         </div>
 
                     </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group ">
+                    <label>Number</label>
                     <input id="IdNumber" asp-for="SsnOrItin" type="text" class="form-control">
                 </div>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
@@ -554,10 +564,7 @@
                     </div>
                 </div>
             </div>
-
-
-
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label>Is the entity managed outside the United States?</label>
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
@@ -571,87 +578,82 @@
                 </div>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>GIIN Number </label>
                     <input id="GIN" asp-for="GIN" type="text" class="form-control">
                 </div>
             </div>
-            <div class="col-md-12">
-
-                <div class="col-md-6">
-                    <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
-                    <div class="form-group">
-                        <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
-                                   asp-for="LegallyRequired" />
-                            <label class="form-check-label" for="LegallyReq1"> Yes </label>
-                        </div>
-                        <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
-                                   asp-for="LegallyRequired" />
-                            <label class="form-check-label" for="LegallyReq2"> No </label>
-                        </div>
-                    </div>
-                    @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
-                </div>
-
-                <div id="FTINDiv" class="col-md-6" hidden>
-                    <div class="form-group">
-                        <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
-                        <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>Reference Number</label>
                     <input type="text" asp-for=Referencenumber title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
                 </div>
             </div>
+            <div class="col-md-6">
+                <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq2"> No </label>
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
+            </div>
+            <div class="col-md-6">
+                <div id="FTINDiv" class="form-group" hidden>
+                    <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                    <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+                </div>
+            </div>
         </div>
         @*New changes end*@
-
-
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
-                <input asp-for="AuthSignatoryName" class="form-control" required />
-            </div>
-        </div>
-        <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
-            <label>Are you required to have backup withholding? If No, please select below.</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
-                    <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" checked="checked" required>
-                    <label class="form-check-label" for="BackupWithHolding2"> No </label>
-                </div>
-            </div>
-        </div>
-        <div id="BackupWithHoldingDiv" hidden>
-            <div class="col-md-12">
+        <div class="row">
+            <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
                 <div class="form-group">
-                    <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
-                    <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
-                        <option></option>
-                    </select>
+                    <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+                    <input asp-for="AuthSignatoryName" class="form-control" required />
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
+                <label>Are you required to have backup withholding? If No, please select below.</label>
                 <div class="form-group">
-                    <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
-                    <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
-                        <option></option>
-                    </select>
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
+                        <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" checked="checked" required>
+                        <label class="form-check-label" for="BackupWithHolding2"> No </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="BackupWithHoldingDiv" style="padding-left: inherit;padding-right: inherit" hidden>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
+                        <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
+                        <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
+                            <option></option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 

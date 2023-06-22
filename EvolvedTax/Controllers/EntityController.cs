@@ -237,6 +237,16 @@ namespace EvolvedTax.Controllers
         }
 
         [HttpPost]
+        public ActionResult BindEntityForW8ECIForm()
+        {
+            var entitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p=>p.IsActive == true).Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityId.ToString()
+            });
+            return Json(new { success = true, entitiesList });
+        }
+        [HttpPost]
         public ActionResult BindEntityForW9Form()
         {
             var entitiesList = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
