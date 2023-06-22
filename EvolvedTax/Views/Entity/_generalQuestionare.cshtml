@@ -609,44 +609,44 @@
             @*New changes end*@
 
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
-                    <input asp-for="AuthSignatoryName" class="form-control" required />
-                </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+                <input asp-for="AuthSignatoryName" class="form-control" required />
             </div>
-            <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
-                <label>Are you required to have backup withholding? If No, please select below.</label>
-                <div class="form-group">
-                    <div class="form-check abc-radio abc-radio-info form-check-inline">
-                        <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
-                        <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
-                    </div>
-                    <div class="form-check abc-radio form-check-inline">
-                        <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
-                        <label class="form-check-label" for="BackupWithHolding2"> No </label>
-                    </div>
+        </div>
+        <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
+            <label>Are you required to have backup withholding? If No, please select below.</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
+                    <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
                 </div>
-            </div>
-            <div id="BackupWithHoldingDiv" hidden>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
-                        <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
-                            <option></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
-                        <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
-                            <option></option>
-                        </select>
-                    </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" checked="checked" required>
+                    <label class="form-check-label" for="BackupWithHolding2"> No </label>
                 </div>
             </div>
         </div>
+        <div id="BackupWithHoldingDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
+                    <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
+                    <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </div>
 
