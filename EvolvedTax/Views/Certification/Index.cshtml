@@ -353,7 +353,6 @@
             }
         });
         function ajaxsuccess(response) {
-            debugger;
             if (response.status == false) {
                 COMMON.notification(2, "There's some technical issue");
                 return;
@@ -389,6 +388,11 @@
 
             $('#certifyDiv').append(text, linkText, disclaimerText, emailLink);
 
+            // Re-render the PDF without annotations
+            var pdfObject = '<object data="/' + response.fileName + '" type="application/pdf" width="100%" height="800px"></object>';
+            $('#contentContainer').html(pdfObject);
+   
+          
         }
 
         function openFile(fileName) {

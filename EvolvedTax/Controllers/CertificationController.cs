@@ -27,7 +27,7 @@ namespace EvolvedTax.Controllers
         private readonly IW8ECIFormService _w8ECIFormService;
 
         public CertificationController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
-            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, 
+            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
             IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, IW8EXPFormService w8ExpFormService)
         {
             _w9FormService = w9FormService;
@@ -121,7 +121,9 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> Certify(PdfFormDetailsRequest request)
         {
             var oldFile = request.FileName;
+
             request.FileName = request.FileName.Replace("_temp", "");
+            var copyFile = request.FileName;
             var clientEmail = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             if (!(request.Agreement1 && request.Agreement2))
             {
@@ -152,15 +154,34 @@ namespace EvolvedTax.Controllers
                 return Json(new { staus = false });
             }
 
-            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, oldFile)))
-            {
-                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
-            }
-           // request.FileName=_commonService.RemoveAnnotations(request.FileName);
+
+
+
+            request.FileName = _commonService.RemoveAnnotations(request.FileName);
+
+            var OldFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName);
+            var newFileName= Path.Combine(_webHostEnvironment.WebRootPath, request.FileName.Replace("_new", ""));
+            request.FileName = request.FileName.Replace("_new", "");
+            // Remove "_new" from the file name
+
+
+            //request.FileName = "output.pdf";
             var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
             var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
             HttpContext.Session.SetString("FormName", string.Empty);
             var sd = HttpContext.Session.GetString("ClientNameSig");
+
+            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, oldFile)))
+            {
+                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
+            }
+
+            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, copyFile)))
+            {
+                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, copyFile));
+            }
+
+
             if (string.IsNullOrEmpty(sd))
             {
 
@@ -168,6 +189,11 @@ namespace EvolvedTax.Controllers
             else
             {
                 request.PrintName = sd;
+            }
+            // Rename the file in the folder
+            if (System.IO.File.Exists(OldFileName))
+            {
+                System.IO.File.Move(OldFileName, newFileName);
             }
             return Json(new { fileName = request.FileName, staus = true, entityName = EntityName, printName = request.PrintName, formName = request.FormName, InstituteEmail = InstituteEmail }); ;
         }
