@@ -35,8 +35,8 @@
                 <br />
 
                 <div class="form-check inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio2" value="@AppConstants.W8ECIForm" asp-for="W8FormType">
-                    <label class="form-check-label" for="inlineRadio2">
+                    <input class="form-check-input" type="radio" id="W8ECIForm1" value="@AppConstants.W8ECIForm" asp-for="W8FormType">
+                    <label class="form-check-label" for="W8ECIForm1">
                         A payee or beneficial owner indicating that all the income is effectively connected with the conduct of a trade or business within the United States? {W-8ECI 'Certificate of Foreing Person's Claim That Income is Effectively Connected with the Conduct of a Trade or Business in the United States'}
                     </label>
                 </div>
@@ -46,6 +46,7 @@
                     <label class="form-check-label" for="inlineRadio3">
                         An intermediary, a withholding foreign partnership, a withholding foreign trust, or flow through entity? {W-8IMY 'Certificate of Foreing Intermediary, Foregin Flow-Through Entity, or certain U.S. Branches for United States Tax Withholding and Reporting'}
                     </label>
+
                 </div>
                 <br />
                 <div class="form-check inline">
@@ -65,13 +66,23 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Name of Organization<span class="text-danger">*</span></label>
-                    <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
+                    <input id="GQOrgName" asp-for="GQOrgName" type="text" class="form-control" required>
                 </div>
             </div>
             <div id="W9Entity" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Type of Entity<span class="text-danger">*</span></label>
                     <select id="EntityTypeW9" asp-for="EntityType" asp-items="ViewBag.EntitiesList" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="W8ECIEntityDiv" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select id="EntityTypeW8ECIGQ" asp-for="TypeOfEntity" required>
+                        @Html.HiddenFor(model => model.TypeOfEntity, new { id = "EntityTypeW8ECIGQ" })
                         <option></option>
                     </select>
                 </div>
@@ -85,7 +96,6 @@
                         <option></option>
                     </select>
                 </div>
-
             </div>
 
             <div id="W9Country" class="col-md-6" hidden>
@@ -106,9 +116,27 @@
                     </select>
                 </div>
             </div>
+            <div id="SSNDivW8ECI" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label id="lbl_TypeofTaxNumber">
+                        <div class="form-check abc-radio abc-radio-info form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio5">SSN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio6">ITIN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline" style="margin-right: 0px;">
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio7">EIN</label>
+                        </div>
+                    </label>
+                    <input id="SsnitneinDQW8ECI" asp-for="Ssnitnein" type="text" class="form-control">
+                </div>
+            </div>
 
-
-            <div id="SSNDiv" class="col-md-6">
+            <div id="SSNDiv" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>I.R.S Employee Identification Number (EIN)<span class="text-danger">*</span></label>
                     <input id="Ssnitnein" asp-for="Ssnitnein" type="text" placeholder="00-0000000" class="form-control" required>
@@ -140,25 +168,29 @@
                     </div>
                 </div>
 
-
-                <div class="form-check">
-                    <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_10b">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        b) The entity identified in Part I is an integral part of the government of
-                    </label>
-
-                    <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid">
-                        <option></option>
-                    </select>
-
-                    <div class="form-check">
+                <div class="row">
+                    <div class="form-check inline col-md-4">
+                        <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_10b">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            b) The entity identified in Part I is an integral part of the government of
+                        </label>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="country-dropdown select2 required-control-valid">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="form-check inline col-md-4">
                         <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox3" asp-for="_10c">
                         <label class="form-check-label" for="inlinecheckbox3">
                             c) The entity identified in Part I is a controlled entity of the government of
                         </label>
 
-
-                        <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid ">
+                    </div>
+                    <div class="col-md-4">
+                        <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="country-dropdown select2 required-control-valid ">
                             <option></option>
                         </select>
                     </div>
@@ -263,117 +295,112 @@
         </div>
         @* Div for DDL selection for Entity W-8EXP end*@
 
-        @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
-        <div class="form-box" id="FincalInsDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_16">
-                        <label class="form-check-label" for="inlinecheckbox1">
-                            I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or
-                            organized under the laws of a possession of the United States.
-                        </label>
-                    </div>
+    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
+    <div class="form-box w8EXPDDLSelectedDivs" id="FincalInsDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_16">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or
+                        organized under the laws of a possession of the United States.
+                    </label>
                 </div>
             </div>
         </div>
-        <div class="form-box" id="FrgnGovUSDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_17">
-                        <label class="form-check-label" for="inlinecheckbox2">
-                            I certify that the entity identified in Part I is the beneficial owner of the payment and is not engaged in commercial financial
-                            activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to thepayments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
-                        </label>
-                    </div>
+    </div>
+    <div class="form-box w8EXPDDLSelectedDivs" id="FrgnGovUSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_17">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is the beneficial owner of the payment and is not engaged in commercial financial
+                        activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to thepayments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
+                    </label>
                 </div>
             </div>
         </div>
-        <div class="form-box" id="RetPlanSDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_18">
-                        <label class="form-check-label" for="inlinecheckbox2">
-                            I certify that the entity identified in Part I:
-                            <ul>
-                                <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
-                                <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are</li>
-                            </ul>
-                        </label>
-                    </div>
+    </div>
+    <div class="form-bo w8EXPDDLSelectedDivs" id="RetPlanSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_18">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I:
+                        <ul>
+                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
+                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are</li>
+                        </ul>
+                    </label>
                 </div>
             </div>
         </div>
-        <div class="form-box" id="501OrgUSDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_19">
-                        <label class="form-check-label" for="inlinecheckbox2">
-                            I certify that the entity identified in Part I is an entity described in section 501(c) but is not an insurance company described
-                            in section 501(c)(15).
-                        </label>
-                    </div>
+    </div>
+    <div class="form-box w8EXPDDLSelectedDivs" id="501OrgUSDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_19">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is an entity described in section 501(c) but is not an insurance company described
+                        in section 501(c)(15).
+                    </label>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        <div class="form-box" id="PassNFEDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_20a">
-                        <label class="form-check-label" for="inlinecheckbox1">
-                            I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity
-                            organized in a possession of the United States).
-                        </label>
-                    </div>
+    <div class="form-box w8EXPDDLSelectedDivs" id="PassNFEDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_20a">
+                    <label class="form-check-label" for="inlinecheckbox1">
+                        I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity
+                        organized in a possession of the United States).
+                    </label>
+                </div>
 
-                    <div class="form-check inline">
-                        <label class="form-check-label" for="inlinecheckbox">
-                            <b> Check box 20b or 20c, whichever applies.</b>
-                        </label>
-                    </div>
+                <div class="form-check inline">
+                    <label class="form-check-label" for="inlinecheckbox">
+                        <b> Check box 20b or 20c, whichever applies.</b>
+                    </label>
+                </div>
+                <br />
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4" asp-for="_20b">
+                    <label class="form-check-label" for="inlinecheckbox4">
+                        I further certify that the entity identified in Part I has no substantial U.S. owners, or
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5" asp-for="_20c">
+                    <label class="form-check-label" for="inlinecheckbox5">
+                        I further certify that the entity identified in Part I has provided a statement including the name, address, and TIN of each
+                        substantial U.S. owner of the NFFE (see instructions).
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box w8EXPDDLSelectedDivs" id="SponEntity_RirRepNFFEDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="form-check inline">
+                    <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_21">
+                    <label class="form-check-label" for="inlinecheckbox2">
+                        I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
+                    </label>
                     <br />
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox4" asp-for="_20b">
-                        <label class="form-check-label" for="inlinecheckbox4">
-                            I further certify that the entity identified in Part I has no substantial U.S. owners, or
-                        </label>
-                    </div>
-                    <div class="form-check inline">
-                        <input class="form-check-input" type="checkbox" id="inlinecheckbox5" asp-for="_20c">
-                        <label class="form-check-label" for="inlinecheckbox5">
-                            I further certify that the entity identified in Part I has provided a statement including the name, address, and TIN of each
-                            substantial U.S. owner of the NFFE (see instructions).
-                        </label>
-                    </div>
+                    <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
                 </div>
             </div>
         </div>
-        <div class="form-box" id="SponEntity_RirRepNFFEDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-
-
-                    <div class="form-check inline">
-                        <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_21">
-                        <label class="form-check-label" for="inlinecheckbox2">
-                            I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
-                        </label>
-                        <br />
-                        <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
-                    </div>
-
-
-
-                </div>
-            </div>
-        </div>
-        @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP end*@
+    </div>
+    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP end*@
 
     </div>
 
@@ -474,181 +501,199 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label id="lblZipCodePerm">Zip/Postal Code <span class="text-danger"> *</span></label>
-                        <input id="zipCodePerm" asp-for="PZipCode" type="text" class="form-control" required>
-                    </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCodePerm">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCodePerm" asp-for="PZipCode" type="text" class="form-control" required>
                 </div>
             </div>
         </div>
     </div>
-    <div class="tab">
-        <div class="text-center"><span><p>Additional Information</p></span></div>
-        <div class="form-box">
+</div>
+<div class="tab">
+    <div class="text-center"><span><p>Additional Information</p></span></div>
+    <div class="form-box">
+        <div id="DEW8ECIDiv" class="col-md-6" hidden>
+            <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI1" value="true"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                    <label class="form-check-label" for="DEW8ECI1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI2" value="false"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                    <label class="form-check-label" for="DEW8ECI2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
+                <label>Name of disregarded entity receiving the payments (if applicable)</label>
+                <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
+            </div>
+        </div>
+        @*New changes start*@
+        <div id="QFormDiv" class="row" hidden>
+            <div class="col-md-6">
+                <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE1" value="true"
+                               asp-for="DE" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE2" value="false"
+                               asp-for="DE" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE2"> No </label>
+                    </div>
+                    @Html.HiddenFor(model => model.DE, new { id = "DEValue" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="DeEntityOwnerNameDiv" hidden>
+                    <label>Name of the owner of the discarded entity </label>
+                    <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control">
+                </div>
+            </div>
 
-            @*New changes start*@
-            <div id="QFormDiv" hidden>
-                <div class="col-md-12">
-                    <label>Are you a disregarded entity (DE) for U.S. tax purposes?</label>
-                    <div class="form-group">
+            <div class="col-md-12">
+                <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lbl_TypeofTaxNumber">
                         <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="DE1" value="true"
-                                   asp-for="DE" onchange="SelectDEEntity(this)">
-                            <label class="form-check-label" for="DE1"> Yes </label>
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio5">SSN</label>
                         </div>
                         <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="DE2" value="false"
-                                   asp-for="DE" onchange="SelectDEEntity(this)">
-                            <label class="form-check-label" for="DE2"> No </label>
-                        </div>
-                        @Html.HiddenFor(model => model.DE, new { id = "DEValue" })
-                    </div>
-
-                </div>
-                <div class="col-md-12" id="DeEntityOwnerNameDiv" hidden>
-                    <div class="form-group">
-                        <label>Name of the owner of the discarded entity </label>
-                        <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <label>Social Security Number (SSN), Employer Identification Number (EIN) or Taxpayer Identification Number (ITIN)</label>
-                    <div class="form-group">
-                        <label id="lbl_TypeofTaxNumber">
-                            <div class="form-check abc-radio abc-radio-info form-check-inline">
-                                <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
-                                <label class="form-check-label" for="inlineRadio5">SSN</label>
-                            </div>
-                            <div class="form-check abc-radio form-check-inline">
-                                <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
-                                <label class="form-check-label" for="inlineRadio6">ITIN</label>
-                            </div>
-                            <div class="form-check abc-radio form-check-inline">
-                                <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
-                                <label class="form-check-label" for="inlineRadio7">EIN</label>
-                            </div>
-
-                        </label>
-                        <input id="IdNumber" asp-for="SsnOrItin" type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-md-12">
-                    <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
-                    <div class="form-group">
-                        <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="RetirementPlan1" value="true"
-                                   asp-for="RetirementPlan">
-                            <label class="form-check-label" for="RetirementPlan1"> Yes </label>
+                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio6">ITIN</label>
                         </div>
                         <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="RetirementPlan2" value="false"
-                                   asp-for="RetirementPlan">
-                            <label class="form-check-label" for="RetirementPlan2"> No </label>
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio7">EIN</label>
                         </div>
-                    </div>
+
+                    </label>
                 </div>
-
-
-
-                <div class="col-md-12">
-                    <label>Is the entity managed outside the United States?</label>
-                    <div class="form-group">
-                        <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="ManagedoutUSA1" value="true" asp-for="EnitityManagendOutSideUSA">
-                            <label class="form-check-label" for="ManagedoutUSA1"> Yes </label>
-                        </div>
-                        <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="ManagedoutUSA2" value="false" asp-for="EnitityManagendOutSideUSA">
-                            <label class="form-check-label" for="ManagedoutUSA2"> No </label>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group ">
+                    <label>Number</label>
+                    <input id="IdNumber" asp-for="SsnOrItin" type="text" class="form-control">
                 </div>
+            </div>
 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>GIIN Number </label>
-                        <input id="GIN" asp-for="GIN" type="text" class="form-control">
+            <div class="col-md-6">
+                <label>Is this investor a retirement plan (IRA/SEP/Keogh/etc.)</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="RetirementPlan1" value="true"
+                               asp-for="RetirementPlan">
+                        <label class="form-check-label" for="RetirementPlan1"> Yes </label>
                     </div>
-                </div>
-                <div class="col-md-12">
-
-                    <div class="col-md-6">
-                        <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
-                        <div class="form-group">
-                            <div class="form-check abc-radio abc-radio-info form-check-inline">
-                                <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
-                                       asp-for="LegallyRequired" />
-                                <label class="form-check-label" for="LegallyReq1"> Yes </label>
-                            </div>
-                            <div class="form-check abc-radio form-check-inline">
-                                <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
-                                       asp-for="LegallyRequired" />
-                                <label class="form-check-label" for="LegallyReq2"> No </label>
-                            </div>
-                        </div>
-                        @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
-                    </div>
-
-                    <div id="FTINDiv" class="col-md-6" hidden>
-                        <div class="form-group">
-                            <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
-                            <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Reference Number</label>
-                        <input type="text" asp-for=Referencenumber title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="RetirementPlan2" value="false"
+                               asp-for="RetirementPlan">
+                        <label class="form-check-label" for="RetirementPlan2"> No </label>
                     </div>
                 </div>
             </div>
-            @*New changes end*@
+            <div class="col-md-6">
+                <label>Is the entity managed outside the United States?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="ManagedoutUSA1" value="true" asp-for="EnitityManagendOutSideUSA">
+                        <label class="form-check-label" for="ManagedoutUSA1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="ManagedoutUSA2" value="false" asp-for="EnitityManagendOutSideUSA">
+                        <label class="form-check-label" for="ManagedoutUSA2"> No </label>
+                    </div>
+                </div>
+            </div>
 
-
-        <div class="col-md-6">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>GIIN Number </label>
+                    <input id="GIN" asp-for="GIN" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Reference Number</label>
+                    <input type="text" asp-for=Referencenumber title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq2"> No </label>
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
+            </div>
+            <div class="col-md-6">
+                <div id="FTINDiv" class="form-group" hidden>
+                    <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                    <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+                </div>
+            </div>
+        </div>
+        @*New changes end*@
+        <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
             <div class="form-group">
                 <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
                 <input asp-for="AuthSignatoryName" class="form-control" required />
             </div>
         </div>
-        <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
-            <label>Are you required to have backup withholding? If No, please select below.</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
-                    <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" checked="checked" required>
-                    <label class="form-check-label" for="BackupWithHolding2"> No </label>
+        <div class="row">
+            <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
+                <label>Are you required to have backup withholding? If No, please select below.</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="BackupWithHolding1" value="true" checked onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" required>
+                        <label class="form-check-label" for="BackupWithHolding1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="BackupWithHolding2" value="false" onclick="BackupWithHoldingFunc(this)" asp-for="BackupWithHolding" checked="checked" required>
+                        <label class="form-check-label" for="BackupWithHolding2"> No </label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="BackupWithHoldingDiv" hidden>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
-                    <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
-                        <option></option>
-                    </select>
+            <div class="col-md-12" id="BackupWithHoldingDiv" style="padding-left: inherit;padding-right: inherit" hidden>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Please select exempt payee code from the list below<span class="text-danger">*</span></label>
+                        <select id="Payeecode" asp-for="Payeecode" asp-items="ViewBag.PayeeCodeList" class="select2" required>
+                            <option></option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
-                    <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
-                        <option></option>
-                    </select>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Please select the exemption code from FATCA reporting<span class="text-danger">*</span></label>
+                        <select id="Fatca" asp-for="W9Fatca" asp-items="ViewBag.FATCACodeList" class="select2" required>
+                            <option></option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    </div>
+</div>
 
 
     <style>

@@ -1,0 +1,502 @@
+﻿@model FormRequest
+
+
+<div class="tab">
+    <div class="text-center"><span><p>Identification of Entity</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Name of Organization<span class="text-danger">*</span></label>
+                    <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
+                </div>
+            </div>
+
+
+            <div id="W8Country" class="col-md-6">
+                <div class="form-group">
+                    <label>Country of Incorporation/Organization<span class="text-danger">*</span></label>
+                    <select id="CountryW8" asp-for="CountryOfIncorporation" asp-items="ViewBag.CountriesList" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lbl_TypeofTaxNumber">
+                        <div class="form-check abc-radio abc-radio-info form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="US_TIN_CB">
+                            <label class="form-check-label" for="inlineRadio5">QI-EIN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="US_TIN_CB">
+                            <label class="form-check-label" for="inlineRadio6">WP-EIN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="US_TIN_CB">
+                            <label class="form-check-label" for="inlineRadio7">WT-EIN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="US_TIN_CB">
+                            <label class="form-check-label" for="inlineRadio7">EIN</label>
+                        </div>
+
+                    </label>
+                    <input id="IdNumber" asp-for="US_TIN" type="text" class="form-control">
+                </div>
+            </div>
+         @*   <div class="col-md-6">
+                <div class="form-group ">
+                    <label>Number</label>
+                    
+                </div>
+            </div>*@
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>GIIN Number </label>
+                    <input id="GIN" asp-for="GIN" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
+                               asp-for="LegallyRequired" />
+                        <label class="form-check-label" for="LegallyReq2"> No </label>
+                    </div>
+                </div>
+                @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
+            </div>
+            <div class="col-md-6">
+                <div id="FTINDiv" class="form-group" hidden>
+                    <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                    <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Reference Number</label>
+                    <input type="text" asp-for=Referencenumber title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+<div class="tab">
+    <div class="text-center"><span><p>Mailing Address</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="country" asp-for="MCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2" asp-for="MAddress2" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="city" asp-for="MCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="stateDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="state" asp-items="ViewBag.StatesList" asp-for="MState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provinceDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="province" asp-for="MProvince" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCode">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCode" asp-for="MZipCode" type="text" class="form-control" required>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="mt-3 mb-3 ml-3">
+        <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Permanent address is the same as the mailing address
+    </div>
+    <div id="SamePermAddressDiv" class="form-box" hidden>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="countryPerm" asp-for="PCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvincePerm(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <input id="adreess1Perm" asp-for="PAddress1" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2Perm" asp-for="PAddress2" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="cityPerm" asp-for="PCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="statePermDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="statePerm" asp-items="ViewBag.StatesList" asp-for="PState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provincePermDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="provincePerm" name="provincePerm" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCodePerm">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCodePerm" asp-for="PZipCode" type="text" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="tab">
+    <div class="text-center"><span><p>Disregarded Entity or Branch Receiving Payment</p></span></div>
+    <div class="form-box">
+        <div class="row">
+
+
+            <div class="col-md-6">
+                <label>Are you a disregarded entity or branch recieving payment ?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE1" value="true"
+                               asp-for="DE" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE2" value="false"
+                               asp-for="DE" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE2"> No </label>
+                    </div>
+                    @Html.HiddenFor(model => model.DE, new { id = "DEValue" })
+                </div>
+            </div>
+            <div class="col-md-6" id="div_DE1">
+                <div class="form-group" id="DeEntityOwnerNameDiv" hidden>
+                    <label>Name of the disregarded entity or branch </label>
+                    <input id="DEOwnerName" asp-for="DEOwnerName" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6" id="div_DE2">
+                <div class="form-group">
+                    <label>Chapter 4 Status(FATCA)<span class="text-danger">*</span></label>
+                    <select id="_11FATCA_CB" asp-for="W8EXPFatca" asp-items="ViewBag.FATCAListForCH4" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6" id="div_DE3">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="_12_Country" asp-for="_12_Country" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6"  id="div_DE4">
+                <div class="form-group">
+                    <label>Address of disregarded entity or branch <span class="text-danger">*</span></label>
+                    <input id="_12Mailing_address" asp-for="_12Mailing_address" type="text" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="col-md-6" id="div_DE5">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="_12_City" asp-for="_12_City" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6" id="div_DE6">
+                <div id="stateDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="_12_State" asp-items="ViewBag.StatesList" asp-for="_12_State" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provinceDiv" class="form-group" >
+                    <label>Province</label>
+                    <input id="_12_Province" asp-for="_12_Province" type="text" class="form-control">
+                </div>
+            </div>
+
+
+            <div class="col-md-6"  id="div_DE7">
+                <div class="form-group">
+                    <label>GIIN Number </label>
+                    <input id="_13GIN" asp-for="_13GIN" type="text" class="form-control">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div class="tab">
+    <div class="text-center"><span><p>Additional Information</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div id="Entities" class="col-md-6">
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select id="EntityTypeW8" asp-for="EntityType" asp-items="ViewBag.EntitiesList" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="W8FatcaDiv" class="col-md-6">
+                <div class="form-group">
+                    <label>Chapter 4 Status(FATCA)<span class="text-danger">*</span></label>
+                    <select id="FatcaStatus" asp-for="FatcaStatus" asp-items="ViewBag.FATCAList" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+                    <input asp-for="AuthSignatoryName" class="form-control" required />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    @* Div for DDL selection for Entity start*@
+    <div class="form-box" id="Q1Div" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="row">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_14_CB">
+                        <label class="form-check-label" for="inlinecheckbox1">
+                         (14)   I certify that the entity identified in Part I (or branch, if relevant):
+                            <br />
+                            Is a QI with respect to the accounts identified on line 10 or in a withholding statement associated with this form (as required) that is one
+                            or more of the following:
+                            <br />
+                            (i) Not acting for its own account;
+                            <br />
+                            (ii) A QDD receiving payments on underlying securities and/or potential section 871(m) transactions;
+                            <br />
+                            (iii) A QI assuming primary withholding responsibility for payments of substitute interest, as permitted by the QI Agreement.
+                            <br />
+                            Has provided or will provide a withholding statement (as required) for purposes of chapters 3 and 4, and section 1446(a), or section
+                            1446(f), subject to the certifications made on this form.
+                            <br />
+                            To the extent it acts as a disclosing QI for purposes of section 1446(a) or (f) for payments associated with this form, the QI is to provide
+                            the required payee documentation to associate with an amount realized or an amount subject to withholding on a PTP distribution.
+                        </label>
+                    </div>
+
+                       
+                   
+                </div>
+                <h4>Qualified Intermediaries When Not Acting As Qualified Derivatives Dealers (check all that apply)</h4>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15a">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                       15(a) I certify that the entity identified in Part I of this form assumes primary withholding responsibility for purposes of chapters 3 and 4 for each account identified on a withholding statement attached to this form (or, if no withholding statement is attached to this form, for all accounts
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (b) I certify that the entity identified in Part I of this form assumes primary withholding and reporting responsibility for each payment of an amount realized from the sale of an interest in a publicly traded partnership under section 1446(f) associated with each account identified on a withholding statement attached to this form for receiving such amounts (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15c">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (c) I certify that the entity identified in Part I of this form assumes primary withholding as a nominee under Regulations section 1.1446-4(b)(3) for each distribution by a publicly traded partnership associated with each account identified on a withholding statement attached to this form for receiving such distributions (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+                
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15d">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (d) I certify that the entity identified in Part I of this form is a QI acting as a qualified securities lender assuming primary withholding and reporting responsibilities with respect to payments that are U.S. source substitute dividends received from the withholding agent associated with each account identified on a withholding statement attached to this form (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15e">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (e) certify that the entity identified in Part I of this form assumes primary withholding responsibility for purposes of chapters 3 and 4 and primary Form 1099 reporting and backup withholding responsibility for all payments of U.S. source interest and substitute interest associated with this form, as permitted by the QI Agreement.
+                    </label>
+                </div>
+
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15f">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                       (f) I certify that the entity identified in Part I of this form assumes primary Form 1099 reporting and backup withholding responsibility or reporting responsibility as a participating FFI or registered deemed-compliant FFI with respect to accounts that it maintains that are held by specified U.S. persons as permitted under Regulations sections 1.6049-4(c)(4)(i) or (c)(4)(ii) in lieu of Form 1099 reporting for each account identified on a withholding statement attached to this form (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15g">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (g) I certify that the entity identified in Part I of this form does not assume primary Form 1099 reporting and backup withholding responsibility for each account identified on a withholding statement attached to this form (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15h">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (h) (Complete only to the extent the entity identified in Part I of this form does not assume primary Form 1099 reporting and backup withholding responsibility.) If the entity identified in Part I of this form has allocated or will allocate a portion of a payment to a chapter 4 withholding rate pool of U.S. payees on a withholding statement associated with this form, I certify that the entity meets the requirements of Regulations section 1.6049-4(c)(4)(iii) with respect to any account holder of an account it maintains that is included in such a withholding rate pool.
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_15i">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (i) (Complete only to the extent the entity identified in Part I of this form does not assume primary Form 1099 reporting and backup withholding responsibility.) If the entity identified in Part I of this form has allocated or will allocate a portion of a payment to a chapter 4 withholding rate pool of U.S. payees on a withholding statement associated with this form, to the extent the U.S. payees are account holders of an intermediary or flow-through entity receiving a payment from the entity, I certify that the entity has obtained, or will obtain, documentation sufficient to establish each such intermediary or flow-through entity status as a participating FFI, registered deemed-compliant FFI, or FFI that is a QI.
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        16(a) I certify that each QDD identified in Part I of this form or on a withholding statement associated with this form meets the requirements to act as a QDD (including approval by the IRS to so act) and assumes primary withholding and reporting responsibilities under chapters 3, 4, and 61 and section 3406 with respect to any payments it makes with respect to potential section 871(m) transactions
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        16(b) Entity classification of QDD:           
+                    </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="form-box" id="NonqualifiedDiv" hidden>
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="row">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_10a">
+                        <label class="form-check-label" for="inlinecheckbox1">
+                         17(a)   (All nonqualified intermediaries and QIs that are not acting in their capacity as such check here.) I certify that the entity identified in Part I of this form is not acting as a QI with respect to each account(s) for which this form is provided and is not acting for its own account
+                        </label>
+                    </div>
+
+                </div>
+ 
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (b) I certify that the entity identified in Part I of this form is using this form to transmit withholding certificates and/or other documentation and has provided, or will provide, a withholding statement, as required. Note: If this form is provided for purposes of the entity’s interest in a publicly traded partnership, see the instructions for Part IV before checking this box.
+                    </label>
+                </div>
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (c) certify that the entity identified in Part I of this form meets the requirements of Regulations section 1.6049-4(c)(4)(iii) with respect to any account holder of an account it maintains that is included in a withholding rate pool of U.S. payees provided on a withholding statement associated with this form (excluding a distribution from a publicly traded partnership).
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (d) certify that the entity identified in Part I of this form is acting as a qualified securities lender (other than a QI) assuming primary withholding and reporting responsibilities with respect to payments associated with this form that are U.S. source substitute dividends received from the withholding agent.
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (d) I certify that the entity identified in Part I of this form is a QI acting as a qualified securities lender assuming primary withholding and reporting responsibilities with respect to payments that are U.S. source substitute dividends received from the withholding agent associated with each account identified on a withholding statement attached to this form (or, if no withholding statement is attached to this form, for all accounts).
+                    </label>
+                </div>
+
+                <div class="form-check inline">
+                    <input class="form-check-input" type="checkbox" id="inlinecheckbox3" asp-for="_13b">
+                    <label class="form-check-label" for="inlinecheckbox3">
+                        (e) To the extent that the entity identified in Part I of this form is providing an alternative withholding statement described in Regulations section 1.1441-1(e)(3)(iv)(C)(3) for any payments associated with the form, the entity represents that the information on all of the withholding statements associated with this withholding certificate have been (or will be) verified for inconsistency with any other account information the entity has for the beneficial owners for determining the rate of withholding with respect to each payee (applying the standards of knowledge under section 1441 or section 1471, as applicable).
+                    </label>
+                </div>
+
+
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .form-check {
+        margin-bottom: 10px; /* Adjust the margin as per your preference */
+    }
+</style>
+
