@@ -161,7 +161,7 @@ namespace EvolvedTax.Controllers
                     {
                         model.US1 = "2";
                         model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                        filePathResponse = _w8ECIFormService.Update(model);
+                        filePathResponse = _w8ECIFormService.UpdateForIndividual(model);
                     }
                     FormName = model.W8FormType;
                 }
@@ -222,7 +222,7 @@ namespace EvolvedTax.Controllers
                             HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
                             model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
                         }
-                        filePathResponse = _w8ECIFormService.Save(model);
+                        filePathResponse = _w8ECIFormService.SaveForIndividual(model);
                     }
                     FormName = model.W8FormType;
                 }

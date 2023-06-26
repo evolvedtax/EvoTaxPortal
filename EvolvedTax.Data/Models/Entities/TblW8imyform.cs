@@ -187,7 +187,7 @@ public partial class TblW8imyform
 
     public bool? _35Cb { get; set; }
 
-    public string? _35Text { get; set; }
+    public bool? _34 { get; set; }
 
     public DateTime? _36Text { get; set; }
 

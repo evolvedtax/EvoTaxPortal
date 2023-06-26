@@ -300,7 +300,7 @@
             }
         }
         function W8ECIOnBehalfNameFunc(obj) {
-            if (obj.value == 'True') {
+            if (String(obj.value).toLowerCase() == 'true') {
                 $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', false);
             } else {
                 $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', true);
