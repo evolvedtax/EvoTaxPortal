@@ -30,6 +30,7 @@ public class FormRequest
     public bool? DEW8ECI { get; set; } = false;
 
     public string? DEOwnerNameW8ECI { get; set; } = string.Empty;
+    public string? TypeOfEntityForW8ECI { get; set; } = string.Empty;
     public bool? EnitityManagendOutSideUSA { get; set; } = false;
     public string? USPartner { get; set; } = string.Empty;
     public string? IdType { get; set; }
@@ -187,20 +188,104 @@ public class FormRequest
 
     public string? PrintNameOfSignerW8ECI { get; set; }
 
-public string? UploadedFileW8ECI { get; set; }
+    public string? UploadedFileW8ECI { get; set; }
 
     public string? CountryOfIncorporation { get; set; }
 
     public string? DisregardedEntity { get; set; }
 
-public string? TypeOfEntity { get; set; }
+    public string? TypeOfEntity { get; set; }
 
     public string? Ssnitnein { get; set; }
 
     public string? Items { get; set; }
 
-public bool DealerCertification { get; set; }
-public bool IsYouCertifiedW8ECI { get; set; }
-public string? W9PrintName { get; set; }
-public bool W8ECIOnBehalfName { get; set; }
+    public bool DealerCertification { get; set; }
+    public bool IsYouCertifiedW8ECI { get; set; }
+    public string? W9PrintName { get; set; }
+    public bool W8ECIOnBehalfName { get; set; }
+
+    #region W8IMYForm
+    public string FatcaStatus { get; set; } = string.Empty;
+
+    public bool? US_TIN_CB { get; set; } = false;
+    public string US_TIN { get; set; } = string.Empty;
+
+    public string? _11FATCA_CB { get; set; } = string.Empty;
+    public string? _12_City { get; set; } = string.Empty;
+    public string? _12_Country { get; set; } = string.Empty;
+    public string? _12Mailing_address { get; set; } = string.Empty;
+    public string? _12_State { get; set; } = string.Empty;
+    public string? _12_Province { get; set; } = string.Empty;
+    public string? _13GIN { get; set; } = string.Empty;
+
+    public bool _14_CB { get; set; } = false;
+    public bool _15a { get; set; } = false;
+    public bool _15b { get; set; } = false;
+    public bool _15c { get; set; } = false;
+    public bool _15d { get; set; } = false;
+    public bool _15e { get; set; } = false;
+    public bool _15f { get; set; } = false;
+    public bool _15g { get; set; } = false;
+    public bool _15h { get; set; } = false;
+    public bool _15i { get; set; } = false;
+    public bool _16a { get; set; } = false;
+    public bool _16b { get; set; } = false;
+    public bool _17a { get; set; } = false;
+    public bool _17b { get; set; } = false;
+    public bool _175c { get; set; } = false;
+    public bool _17d { get; set; } = false;
+    public bool _17e { get; set; } = false;
+    public bool _18a { get; set; } = false;
+    public bool _18b { get; set; } = false;
+    public bool _18c { get; set; } = false;
+    public bool _18d { get; set; } = false;
+    public bool _18e { get; set; } = false;
+    public bool _18f { get; set; } = false;
+    public bool _19a { get; set; } = false;
+    public bool _19b { get; set; } = false;
+    public bool _19c { get; set; } = false;
+    public bool _19d { get; set; } = false;
+    public bool _19e { get; set; } = false;
+    public bool _19f { get; set; } = false;
+    public bool _20 { get; set; } = false;
+
+    public bool _21a { get; set; } = false;
+    public bool _21b { get; set; } = false;
+    public bool _21c { get; set; } = false;
+    public bool _21d { get; set; } = false;
+    public bool _21e { get; set; } = false;
+    public bool _21f { get; set; } = false;
+    public bool _22 { get; set; } = false;
+    public string _23a_text { get; set; } = string.Empty;
+    public bool _23b { get; set; } = false;
+    public bool _23c { get; set; } = false;
+    public bool _24a { get; set; } = false;
+    public bool _24b { get; set; } = false;
+    public bool _24c { get; set; } = false;
+    public bool _25 { get; set; } = false;
+    public bool _26 { get; set; } = false;
+    public bool _27a_text { get; set; } = false;
+    public string _27b { get; set; } = string.Empty;
+    public bool _28 { get; set; } = false;
+    public bool _29 { get; set; } = false;
+    public bool _30a { get; set; } = false;
+    public bool _30b { get; set; } = false;
+    public bool _30c { get; set; } = false;
+    public bool _31 { get; set; } = false;
+    public string _32_Text1 { get; set; } = string.Empty;
+    public bool _32_CB1 { get; set; } = false;
+    public string _32_Text2 { get; set; } = string.Empty;
+    public string _32_Text3 { get; set; } = string.Empty;
+    public bool _32_CB2 { get; set; } = false;
+    public bool _32_CB3 { get; set; } = false;
+    public bool _32_CB4 { get; set; } = false;
+    public bool _32_CB5 { get; set; } = false;
+    public bool _33a { get; set; } = false;
+    public bool _33b { get; set; } = false;
+    public bool _33c { get; set; } = false;
+    public bool _33d { get; set; } = false;
+    public bool _33e { get; set; } = false;
+    public bool _33f { get; set; } = false;
+    #endregion
 }
