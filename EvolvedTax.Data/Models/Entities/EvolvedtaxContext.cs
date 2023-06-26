@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvolvedTax.Data.Models.DTOs.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace EvolvedTax.Data.Models.Entities;
@@ -109,13 +108,10 @@ public partial class EvolvedtaxContext : DbContext
     public virtual DbSet<W9> W9s { get; set; }
 
     public virtual DbSet<W91> W91s { get; set; }
-    public virtual DbSet<TaxPayerInfo> TaxPayerInfo { get; set; }
-
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TaxPayerInfo>().HasNoKey();
         modelBuilder.Entity<EmailDomain>(entity =>
         {
             entity.ToTable("EmailDomain");
@@ -1515,9 +1511,15 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.CountryOfIncorporation)
                 .IsUnicode(false)
                 .HasColumnName("Country of incorporation");
+            entity.Property(e => e.EmailAddress)
+                .HasMaxLength(250)
+                .IsUnicode(false);
             entity.Property(e => e.FatcaStatus)
                 .IsUnicode(false)
                 .HasColumnName("FATCA Status");
+            entity.Property(e => e.FontName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.ForeignTaxIdentifyingNumber)
                 .IsUnicode(false)
                 .HasColumnName("Foreign tax identifying number");
@@ -1669,6 +1671,17 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e._36Text)
                 .HasColumnType("datetime")
                 .HasColumnName("36_Text");
+            entity.Property(e => e._37aCb).HasColumnName("37a_CB");
+            entity.Property(e => e._37aText)
+                .IsUnicode(false)
+                .HasColumnName("37a_Text");
+            entity.Property(e => e._37bCb).HasColumnName("37b_CB");
+            entity.Property(e => e._37bText1)
+                .IsUnicode(false)
+                .HasColumnName("37b_Text1");
+            entity.Property(e => e._37bText2)
+                .IsUnicode(false)
+                .HasColumnName("37b_Text2");
             entity.Property(e => e._38).HasColumnName("38");
             entity.Property(e => e._39).HasColumnName("39");
             entity.Property(e => e._40).HasColumnName("40");

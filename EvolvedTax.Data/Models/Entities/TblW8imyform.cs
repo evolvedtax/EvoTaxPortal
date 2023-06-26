@@ -187,11 +187,21 @@ public partial class TblW8imyform
 
     public bool? _35Cb { get; set; }
 
-    public string? _35Text { get; set; }
+    public bool? _34 { get; set; }
 
     public DateTime? _36Text { get; set; }
 
     public bool? _36 { get; set; }
+
+    public bool? _37aCb { get; set; }
+
+    public string? _37aText { get; set; }
+
+    public bool? _37bCb { get; set; }
+
+    public string? _37bText1 { get; set; }
+
+    public string? _37bText2 { get; set; }
 
     public bool? _38 { get; set; }
 
@@ -210,4 +220,10 @@ public partial class TblW8imyform
     public string? UploadedFile { get; set; }
 
     public string? Status { get; set; }
+
+    public string? EmailAddress { get; set; }
+
+    public int? PrintSize { get; set; }
+
+    public string? FontName { get; set; }
 }

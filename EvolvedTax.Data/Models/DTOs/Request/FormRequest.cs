@@ -187,23 +187,20 @@ public class FormRequest
 
     public string? PrintNameOfSignerW8ECI { get; set; }
 
-    public string? UploadedFileW8ECI { get; set; }
-    public string? SsnitneinW8ECI { get; set; }
-
+public string? UploadedFileW8ECI { get; set; }
 
     public string? CountryOfIncorporation { get; set; }
 
     public string? DisregardedEntity { get; set; }
 
-    public string? TypeOfEntity { get; set; }
-    public string? TypeOfEntityForW8ECI { get; set; }
+public string? TypeOfEntity { get; set; }
 
     public string? Ssnitnein { get; set; }
 
     public string? Items { get; set; }
 
-    public bool DealerCertification { get; set; }
-    public bool IsYouCertifiedW8ECI { get; set; }
-    public string? W9PrintName { get; set; }
-    public bool W8ECIOnBehalfName { get; set; }
+public bool DealerCertification { get; set; }
+public bool IsYouCertifiedW8ECI { get; set; }
+public string? W9PrintName { get; set; }
+public bool W8ECIOnBehalfName { get; set; }
 }
