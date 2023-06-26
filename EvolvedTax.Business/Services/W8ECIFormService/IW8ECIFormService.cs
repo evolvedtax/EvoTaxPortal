@@ -14,7 +14,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         public string SaveForEntity(FormRequest model);
         public string UpdateForIndividual(FormRequest model);
         public string UpdateForEntity(FormRequest model);
-        public FormRequest GetDataByClientEmailId(string ClientEmailId);
+        public FormRequest GetIndividualDataByClientEmailId(string ClientEmailId);
+        public FormRequest GetEntityDataByClientEmailId(string ClientEmailId);
         Task<bool> UpdateByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
     }
 }

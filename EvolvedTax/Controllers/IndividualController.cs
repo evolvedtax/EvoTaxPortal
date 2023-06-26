@@ -103,7 +103,7 @@ namespace EvolvedTax.Controllers
                         else if (formName == AppConstants.W8ECIForm)
                         {
                             GQIndividulResponse.W8FormType = formName;
-                            GQIndividulResponse = _w8ECIFormService.GetDataByClientEmailId(clientEmmail);
+                            GQIndividulResponse = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmmail);
                         }
                     }
                     return View(GQIndividulResponse);

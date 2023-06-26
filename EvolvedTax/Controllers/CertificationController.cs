@@ -145,7 +145,7 @@ namespace EvolvedTax.Controllers
             }
             else if (request.FormName == AppConstants.W8ECIForm)
             {
-                //await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
+                await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
             else
@@ -205,7 +205,7 @@ namespace EvolvedTax.Controllers
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8ECIForm)
             {
-                ViewBag.PrintName = _w8ECIFormService.GetDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
+                ViewBag.PrintName = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
             }
             return View();
         }

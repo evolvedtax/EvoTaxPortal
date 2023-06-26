@@ -71,7 +71,7 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-            ViewBag.EntitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p=>p.IsActive == true).Select(p => new SelectListItem
+            ViewBag.EntitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p => p.IsActive == true).Select(p => new SelectListItem
             {
                 Text = p.EntityType,
                 Value = p.EntityId.ToString()
@@ -99,7 +99,7 @@ namespace EvolvedTax.Controllers
                     }
                     else if (formName == AppConstants.W8ECIForm)
                     {
-                        GQEntitiesResponse = _w8ECIFormService.GetDataByClientEmailId(clientEmail);
+                        GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
                         //GQEntitiesResponse.FormType = formName;
                     }
                     else if (formName == AppConstants.W8EXPForm)
@@ -141,8 +141,8 @@ namespace EvolvedTax.Controllers
                 model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
 
                 var responsew8EXPForm = _w8EXPFormService.Save(model);
-               // int SaveID = Convert.ToInt32(responsew8EXPForm[0].ToString());
-               // string FilePath = responsew8EXPForm[1].ToString();
+                // int SaveID = Convert.ToInt32(responsew8EXPForm[0].ToString());
+                // string FilePath = responsew8EXPForm[1].ToString();
                 //model.W8ExpId = SaveID;
                 var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
                 HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
@@ -226,8 +226,159 @@ namespace EvolvedTax.Controllers
             return Json(filePathResponse);
         }
 
+        #region W8ECI
+        public async Task<IActionResult> W8ECI()
+        {
+            string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
+            {
+                return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
+            }
+
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+
+            ViewBag.CountriesListW8 = items.Where(item => item.Favorite != "5")
+                                 .OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country)
+                                 .Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+
+            ViewBag.TypeOfEntityW8ECI = _evolvedtaxContext.W8eciEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityId.ToString()
+            });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
+
+            var GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
+            //GQEntitiesResponse.FormType = formName;
+            return View(GQEntitiesResponse);
+        }
+        [HttpPost]
+        public IActionResult W8ECI(FormRequest model)
+        {
+            string filePathResponse = string.Empty;
+            model.IndividualOrEntityStatus = AppConstants.EntityStatus;
+            model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+            model.BasePath = _webHostEnvironment.WebRootPath;
+
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            model.Host = fullUrl;
 
 
+            model.US1 = "2";
+            model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
+            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+
+            filePathResponse = _w8ECIFormService.SaveForEntity(model);
+
+            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            if (responseGQForm == 0)
+            {
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("PdfdFileName", filePathResponse);
+            HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
+            HttpContext.Session.SetString("FormName", AppConstants.W8ECIForm);
+            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
+            return Json(filePathResponse);
+        }
+        #endregion
+        
+        #region W8BENE
+        public async Task<IActionResult> W8BENE()
+        {
+            string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
+            {
+                return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
+            }
+
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+
+            ViewBag.CountriesListW8 = items.Where(item => item.Favorite != "5")
+                                 .OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country)
+                                 .Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+
+            ViewBag.TypeOfEntityW8ECI = _evolvedtaxContext.W8eciEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityId.ToString()
+            });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
+
+            var GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
+            //GQEntitiesResponse.FormType = formName;
+            return View(GQEntitiesResponse);
+        }
+        [HttpPost]
+        public IActionResult W8BENE(FormRequest model)
+        {
+            string filePathResponse = string.Empty;
+            model.IndividualOrEntityStatus = AppConstants.EntityStatus;
+            model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+            model.BasePath = _webHostEnvironment.WebRootPath;
+
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            model.Host = fullUrl;
+
+
+            model.US1 = "2";
+            model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
+            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+
+            filePathResponse = _w8ECIFormService.SaveForEntity(model);
+
+            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            if (responseGQForm == 0)
+            {
+                return View(model);
+            }
+
+            HttpContext.Session.SetString("PdfdFileName", filePathResponse);
+            HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
+            HttpContext.Session.SetString("FormName", AppConstants.W8ECIForm);
+            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
+            return Json(filePathResponse);
+        }
+        #endregion
 
         #region W8IMY Code
 
@@ -258,7 +409,7 @@ namespace EvolvedTax.Controllers
                 Text = p.EntityType,
                 Value = p.EntityId.ToString()
             });
-         
+
             ViewBag.FATCAList = _evolvedtaxContext.W8imyFatcas.Select(p => new SelectListItem
             {
                 Text = p.Fatca,
@@ -319,7 +470,7 @@ namespace EvolvedTax.Controllers
         [HttpPost]
         public ActionResult BindEntityForW8ECIGQForm()
         {
-            var entitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p=>p.IsActive == true).Select(p => new SelectListItem
+            var entitiesList = _evolvedtaxContext.MasterEntityTypes.Where(p => p.IsActive == true).Select(p => new SelectListItem
             {
                 Text = p.EntityType,
                 Value = p.EntityId.ToString()

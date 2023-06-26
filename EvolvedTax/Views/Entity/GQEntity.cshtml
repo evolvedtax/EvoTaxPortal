@@ -88,7 +88,7 @@
                 <partial name="_w8BenQuestionare" model="Model" />
 
                 <!--W8 ECI Questionare View-->
-                <partial name="_w8ECIQuestionare" model="Model" />
+                @*<partial name="_w8ECIQuestionare" model="Model" />*@
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
@@ -490,29 +490,29 @@
 
 
                 } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
-                    $('#W8ECIEntityDiv').prop('hidden', false);
-                    $('#W8Country').prop('hidden', false);
-                    $('#BackupWithHoldingMainDiv').prop('hidden', false);
-                    $('#W8ECIQuestionareDiv').prop('hidden', false);
-                    $('#SSNDivW8ECI').prop('hidden', false);
-                    $('#DEW8ECIDiv').prop('hidden', false);
-                    $('#AuthSignatoryNameDiv').prop('hidden', false);
+                    //$('#W8ECIEntityDiv').prop('hidden', false);
+                    //$('#W8Country').prop('hidden', false);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', false);
+                    //$('#W8ECIQuestionareDiv').prop('hidden', false);
+                    //$('#SSNDivW8ECI').prop('hidden', false);
+                    //$('#DEW8ECIDiv').prop('hidden', false);
+                    //$('#AuthSignatoryNameDiv').prop('hidden', false);
 
-                    $('#W8Entity').prop('hidden', true);
-                    $('#W9Entity').prop('hidden', true);
-                    $('#W9Country').prop('hidden', true);
-                    $('#BackupWithHoldingMainDiv').prop('hidden', true);
-                    $('.w8EXPDDLSelectedDivs').prop('hidden', true);
-                    $('.SSNDiv').prop('hidden', true);
-                    $('#QFormDiv').prop('hidden', true);
+                    //$('#W8Entity').prop('hidden', true);
+                    //$('#W9Entity').prop('hidden', true);
+                    //$('#W9Country').prop('hidden', true);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', true);
+                    //$('.w8EXPDDLSelectedDivs').prop('hidden', true);
+                    //$('.SSNDiv').prop('hidden', true);
+                    //$('#QFormDiv').prop('hidden', true);
 
-                    $('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
-                    $('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
+                    //$('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
+                    //$('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
 
-                    BindEntityForW8ECIGQForm();
-                    BindEntityForW8ECIForm();
+                    //BindEntityForW8ECIGQForm();
+                    //BindEntityForW8ECIForm();
+                    window.location.href = '@Url.Action("W8ECI", "Entity")';
                 }
- 
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     window.location.href = '@Url.Action("W8IMY", "Entity")';
                 }

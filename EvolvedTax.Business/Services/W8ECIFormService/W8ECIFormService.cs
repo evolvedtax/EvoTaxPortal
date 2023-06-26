@@ -11,6 +11,7 @@ using SkiaSharp;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 
 namespace EvolvedTax.Business.Services.W8ECIFormService
 {
@@ -18,10 +19,12 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IGeneralQuestionareService _generalQuestionareService;
-        public W8ECIFormService(EvolvedtaxContext evolvedtaxContext, IGeneralQuestionareService generalQuestionareService)
+        readonly IGeneralQuestionareEntityService _generalQuestionareEntityService;
+        public W8ECIFormService(EvolvedtaxContext evolvedtaxContext, IGeneralQuestionareService generalQuestionareService, IGeneralQuestionareEntityService generalQuestionareEntityService)
         {
             _generalQuestionareService = generalQuestionareService;
             _evolvedtaxContext = evolvedtaxContext;
+            _generalQuestionareEntityService = generalQuestionareEntityService;
         }
 
         public string SaveForIndividual(FormRequest request)
@@ -216,11 +219,11 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode),
                 DisregardedEntity = request.DEOwnerNameW8ECI,
                 TypeOfEntity = request.TypeOfEntityForW8ECI,
-                CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN,
+                CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYNW8ECI,
                 Country = request.PCountry,
                 Ssnitnein = request.Ssnitnein,
                 DateOfBirthMmDdYyyy = "",
-                ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", ""),
+                ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumberW8ECI?.Replace("&nbsp;", ""),
                 MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2),
                 MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode),
                 PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2),
@@ -810,7 +813,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[12]", "0");
             }
 
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[0]", request.AuthSignatoryName);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[0]", request.PrintNameOfSignerW8ECI);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_4[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_5[0]", request.PCity);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_6[0]", request.PCountry);
@@ -835,7 +838,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             {
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_3[0]", "0");
             }
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_11[0]", request.ReferenceNumberS);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_11[0]", request.ReferenceNumberSW8ECI);
             //pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_12[0]", request.DateOfBirthMmDdYyyyW8ECI);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_13[0]", Items1stLine);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_14[0]", Items2ndLine);
@@ -944,12 +947,12 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             return true;
         }
 
-        public FormRequest GetDataByClientEmailId(string ClientEmailId)
+        public FormRequest GetIndividualDataByClientEmailId(string ClientEmailId)
         {
             var gQuestionData = _generalQuestionareService.GetDataByClientEmail(ClientEmailId);
             var w8ECIData = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == ClientEmailId);
             gQuestionData.NameOfIndividualW8ECI = w8ECIData?.NameOfIndividual;
-            gQuestionData.CheckIfFtinNotLegallyRequiredYNW8ECI = w8ECIData?.CheckIfFtinNotLegallyRequiredYN;
+            gQuestionData.CheckIfFtinNotLegallyRequiredYNW8ECI = w8ECIData?.CheckIfFtinNotLegallyRequiredYN ?? false;
             gQuestionData.DateOfBirthMmDdYyyyW8ECI = w8ECIData?.DateOfBirthMmDdYyyy;
             gQuestionData.ForeignTaxIdentifyingNumberW8ECI = w8ECIData?.ForeignTaxIdentifyingNumber;
             gQuestionData.PrintNameOfSignerW8ECI = w8ECIData?.PrintNameOfSigner;
@@ -958,6 +961,29 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             gQuestionData.EmailId = w8ECIData?.W8eciemailAddress ?? ClientEmailId;
             gQuestionData.Items = w8ECIData?.Items;
             gQuestionData.DealerCertification = (bool)w8ECIData.DealerCertification;
+            return gQuestionData;
+        }
+        public FormRequest GetEntityDataByClientEmailId(string ClientEmailId)
+        {
+            var gQuestionData = _generalQuestionareEntityService.GetDataByClientEmail(ClientEmailId);
+            var w8ECIData = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == ClientEmailId);
+            if (w8ECIData != null) {
+                gQuestionData.GQOrgName = w8ECIData?.NameOfIndividual;
+                gQuestionData.DEW8ECI = !string.IsNullOrEmpty(w8ECIData.DisregardedEntity);
+                gQuestionData.DEOwnerNameW8ECI = w8ECIData.DisregardedEntity;
+                gQuestionData.CountryOfIncorporation = w8ECIData.CountryOfIncorporation;
+                gQuestionData.TypeOfEntityForW8ECI = w8ECIData.TypeOfEntity;
+                gQuestionData.W8ECIOnBehalfName = w8ECIData?.W8ecionBehalfName ?? false;
+                gQuestionData.CheckIfFtinNotLegallyRequiredYNW8ECI = w8ECIData?.CheckIfFtinNotLegallyRequiredYN ??  false;
+                gQuestionData.DateOfBirthMmDdYyyyW8ECI = w8ECIData?.DateOfBirthMmDdYyyy;
+                gQuestionData.ForeignTaxIdentifyingNumberW8ECI = w8ECIData?.ForeignTaxIdentifyingNumber;
+                gQuestionData.PrintNameOfSignerW8ECI = w8ECIData?.PrintNameOfSigner;
+                gQuestionData.ReferenceNumberSW8ECI = w8ECIData?.ReferenceNumberS;
+                gQuestionData.SignatureDateMmDdYyyyW8ECI = w8ECIData?.SignatureDateMmDdYyyy;
+                gQuestionData.EmailId = w8ECIData?.W8eciemailAddress ?? ClientEmailId;
+                gQuestionData.Items = w8ECIData?.Items;
+                gQuestionData.DealerCertification = (bool)w8ECIData.DealerCertification;
+            }
             return gQuestionData;
         }
         public string UpdateForIndividual(FormRequest request)
@@ -1151,16 +1177,16 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 response.CountryOfIncorporation = request.CountryOfIncorporation;
                 response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
                 response.DisregardedEntity = request.DEOwnerNameW8ECI;
-                response.TypeOfEntity = request.EntityType;
-                response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN;
+                response.TypeOfEntity = request.TypeOfEntityForW8ECI;
+                response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYNW8ECI;
                 response.Country = request.PCountry;
                 response.Ssnitnein = request.Ssnitnein;
                 response.DateOfBirthMmDdYyyy = "";
-                response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", "");
+                response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumberW8ECI?.Replace("&nbsp;", "");
                 response.MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2);
                 response.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
                 response.PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2);
-                response.PrintNameOfSigner = request.AuthSignatoryName;
+                response.PrintNameOfSigner = request.PrintNameOfSignerW8ECI;
                 response.ReferenceNumberS = request.ReferenceNumberSW8ECI;
                 response.Items = items;
                 response.SignatureDateMmDdYyyy = DateTime.Now.ToString("MM-dd-yyyy");
