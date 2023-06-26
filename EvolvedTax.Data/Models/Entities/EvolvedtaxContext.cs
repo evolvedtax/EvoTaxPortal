@@ -76,6 +76,8 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<TblW8imyform> TblW8imyforms { get; set; }
 
+    public virtual DbSet<TblW8imyformBckup> TblW8imyformBckups { get; set; }
+
     public virtual DbSet<TblW9form> TblW9forms { get; set; }
 
     public virtual DbSet<TblW9formIndividual> TblW9formIndividuals { get; set; }
@@ -92,9 +94,17 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<W8benefatcade> W8benefatcades { get; set; }
 
+    public virtual DbSet<W8eciEntityType> W8eciEntityTypes { get; set; }
+
     public virtual DbSet<W8expentity> W8expentities { get; set; }
 
     public virtual DbSet<W8expfatca> W8expfatcas { get; set; }
+
+    public virtual DbSet<W8imyEntityType> W8imyEntityTypes { get; set; }
+
+    public virtual DbSet<W8imyFatca> W8imyFatcas { get; set; }
+
+    public virtual DbSet<W8imyfatcade> W8imyfatcades { get; set; }
 
     public virtual DbSet<W9> W9s { get; set; }
 
@@ -158,18 +168,12 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("CCountry");
-            entity.Property(e => e.De)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("DE");
+            entity.Property(e => e.De).HasColumnName("DE");
             entity.Property(e => e.DeownerName)
                 .HasMaxLength(300)
                 .IsUnicode(false)
                 .HasColumnName("DEOwnerName");
-            entity.Property(e => e.EnitityManagendOutSideUsa)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("EnitityManagendOutSideUSA");
+            entity.Property(e => e.EnitityManagendOutSideUsa).HasColumnName("EnitityManagendOutSideUSA");
             entity.Property(e => e.EntityType)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -177,6 +181,9 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("FATCA");
+            entity.Property(e => e.FormType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Id)
                 .ValueGeneratedOnAdd()
                 .HasColumnName("ID");
@@ -238,9 +245,6 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.PermanentZip)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.RetirementPlan)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.TypeofTaxNumber)
@@ -468,6 +472,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.InstituteName)
                 .IsUnicode(false)
                 .HasColumnName("Institute_Name");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.LastUpdatedDate).HasColumnType("date");
             entity.Property(e => e.Province).IsUnicode(false);
             entity.Property(e => e.State).IsUnicode(false);
@@ -621,6 +626,9 @@ public partial class EvolvedtaxContext : DbContext
 
             entity.Property(e => e.EntityId).HasColumnName("EntityID");
             entity.Property(e => e.EntityType).IsUnicode(false);
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValueSql("((1))");
         });
 
         modelBuilder.Entity<MasterState>(entity =>
@@ -628,6 +636,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.ToTable("Master_State");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Address).IsUnicode(false);
             entity.Property(e => e.State)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -1560,6 +1569,182 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.UsTinCb)
                 .IsUnicode(false)
                 .HasColumnName("US_TIN_CB");
+            entity.Property(e => e._11fatcaCb).HasColumnName("11FATCA_CB");
+            entity.Property(e => e._12City)
+                .IsUnicode(false)
+                .HasColumnName("12_City");
+            entity.Property(e => e._12Country)
+                .IsUnicode(false)
+                .HasColumnName("12_Country");
+            entity.Property(e => e._12mailingAddress)
+                .IsUnicode(false)
+                .HasColumnName("12Mailing address");
+            entity.Property(e => e._13gin)
+                .IsUnicode(false)
+                .HasColumnName("13GIN");
+            entity.Property(e => e._14Cb).HasColumnName("14_CB");
+            entity.Property(e => e._15a).HasColumnName("15a");
+            entity.Property(e => e._15b).HasColumnName("15b");
+            entity.Property(e => e._15c).HasColumnName("15c");
+            entity.Property(e => e._15d).HasColumnName("15d");
+            entity.Property(e => e._15e).HasColumnName("15e");
+            entity.Property(e => e._15f).HasColumnName("15f");
+            entity.Property(e => e._15g).HasColumnName("15g");
+            entity.Property(e => e._15h).HasColumnName("15h");
+            entity.Property(e => e._15i).HasColumnName("15i");
+            entity.Property(e => e._16a).HasColumnName("16a");
+            entity.Property(e => e._16b).HasColumnName("16b");
+            entity.Property(e => e._17a).HasColumnName("17a");
+            entity.Property(e => e._17b).HasColumnName("17b");
+            entity.Property(e => e._17c).HasColumnName("17c");
+            entity.Property(e => e._17d).HasColumnName("17d");
+            entity.Property(e => e._17e).HasColumnName("17e");
+            entity.Property(e => e._18a).HasColumnName("18a");
+            entity.Property(e => e._18b).HasColumnName("18b");
+            entity.Property(e => e._18c).HasColumnName("18c");
+            entity.Property(e => e._18d).HasColumnName("18d");
+            entity.Property(e => e._18e).HasColumnName("18e");
+            entity.Property(e => e._18f).HasColumnName("18f");
+            entity.Property(e => e._19a).HasColumnName("19a");
+            entity.Property(e => e._19b).HasColumnName("19b");
+            entity.Property(e => e._19c).HasColumnName("19c");
+            entity.Property(e => e._19d).HasColumnName("19d");
+            entity.Property(e => e._19e).HasColumnName("19e");
+            entity.Property(e => e._19f).HasColumnName("19f");
+            entity.Property(e => e._20).HasColumnName("20");
+            entity.Property(e => e._21a).HasColumnName("21a");
+            entity.Property(e => e._21b).HasColumnName("21b");
+            entity.Property(e => e._21c).HasColumnName("21c");
+            entity.Property(e => e._21d).HasColumnName("21d");
+            entity.Property(e => e._21e).HasColumnName("21e");
+            entity.Property(e => e._21f).HasColumnName("21f");
+            entity.Property(e => e._22).HasColumnName("22");
+            entity.Property(e => e._23aText)
+                .IsUnicode(false)
+                .HasColumnName("23a_Text");
+            entity.Property(e => e._23b).HasColumnName("23b");
+            entity.Property(e => e._23c).HasColumnName("23c");
+            entity.Property(e => e._24a).HasColumnName("24a");
+            entity.Property(e => e._24b).HasColumnName("24b");
+            entity.Property(e => e._24c).HasColumnName("24c");
+            entity.Property(e => e._25).HasColumnName("25");
+            entity.Property(e => e._26).HasColumnName("26");
+            entity.Property(e => e._27aText)
+                .IsUnicode(false)
+                .HasColumnName("27a_Text");
+            entity.Property(e => e._27b).HasColumnName("27b");
+            entity.Property(e => e._28).HasColumnName("28");
+            entity.Property(e => e._29).HasColumnName("29");
+            entity.Property(e => e._30a).HasColumnName("30a");
+            entity.Property(e => e._30b).HasColumnName("30b");
+            entity.Property(e => e._30c).HasColumnName("30c");
+            entity.Property(e => e._31).HasColumnName("31");
+            entity.Property(e => e._32Cb1).HasColumnName("32_CB1");
+            entity.Property(e => e._32Cb2).HasColumnName("32_CB2");
+            entity.Property(e => e._32Cb3).HasColumnName("32_CB3");
+            entity.Property(e => e._32Cb4).HasColumnName("32_CB4");
+            entity.Property(e => e._32Cb5).HasColumnName("32_CB5");
+            entity.Property(e => e._32Text1)
+                .IsUnicode(false)
+                .HasColumnName("32_Text1");
+            entity.Property(e => e._32Text2)
+                .IsUnicode(false)
+                .HasColumnName("32_Text2");
+            entity.Property(e => e._32Text3)
+                .IsUnicode(false)
+                .HasColumnName("32_Text3");
+            entity.Property(e => e._33a).HasColumnName("33a");
+            entity.Property(e => e._33b).HasColumnName("33b");
+            entity.Property(e => e._33c).HasColumnName("33c");
+            entity.Property(e => e._33d).HasColumnName("33d");
+            entity.Property(e => e._33e).HasColumnName("33e");
+            entity.Property(e => e._33f).HasColumnName("33f");
+            entity.Property(e => e._34).HasColumnName("34");
+            entity.Property(e => e._35Cb).HasColumnName("35_CB");
+            entity.Property(e => e._35Text)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("35_Text");
+            entity.Property(e => e._36).HasColumnName("36");
+            entity.Property(e => e._36Text)
+                .HasColumnType("datetime")
+                .HasColumnName("36_Text");
+            entity.Property(e => e._38).HasColumnName("38");
+            entity.Property(e => e._39).HasColumnName("39");
+            entity.Property(e => e._40).HasColumnName("40");
+            entity.Property(e => e._41Text)
+                .IsUnicode(false)
+                .HasColumnName("41_Text");
+            entity.Property(e => e._42Cb).HasColumnName("42_CB");
+        });
+
+        modelBuilder.Entity<TblW8imyformBckup>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("tblW8IMYForm_bckup");
+
+            entity.Property(e => e.City).IsUnicode(false);
+            entity.Property(e => e.Country).IsUnicode(false);
+            entity.Property(e => e.CountryOfIncorporation)
+                .IsUnicode(false)
+                .HasColumnName("Country of incorporation");
+            entity.Property(e => e.FatcaStatus)
+                .IsUnicode(false)
+                .HasColumnName("FATCA Status");
+            entity.Property(e => e.ForeignTaxIdentifyingNumber)
+                .IsUnicode(false)
+                .HasColumnName("Foreign tax identifying number");
+            entity.Property(e => e.Gin)
+                .IsUnicode(false)
+                .HasColumnName("GIN");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
+            entity.Property(e => e.MCity)
+                .IsUnicode(false)
+                .HasColumnName("M_City");
+            entity.Property(e => e.MCountry)
+                .IsUnicode(false)
+                .HasColumnName("M_Country");
+            entity.Property(e => e.MailingAddress)
+                .IsUnicode(false)
+                .HasColumnName("Mailing address");
+            entity.Property(e => e.NameOfDiregardedEntity)
+                .IsUnicode(false)
+                .HasColumnName("Name of Diregarded Entity");
+            entity.Property(e => e.NameOfOrganization)
+                .IsUnicode(false)
+                .HasColumnName("Name of Organization");
+            entity.Property(e => e.PermanentResidenceAddress)
+                .IsUnicode(false)
+                .HasColumnName("Permanent residence address");
+            entity.Property(e => e.PrintNameOfSigner)
+                .IsUnicode(false)
+                .HasColumnName("Print name of signer");
+            entity.Property(e => e.ReferenceNumberS)
+                .IsUnicode(false)
+                .HasColumnName("Reference number(s)");
+            entity.Property(e => e.SignatureDateMmDdYyyy)
+                .IsUnicode(false)
+                .HasColumnName("Signature Date (MM-DD-YYYY)");
+            entity.Property(e => e.Status)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.TypeOfEntity)
+                .IsUnicode(false)
+                .HasColumnName("Type of Entity");
+            entity.Property(e => e.UploadedFile)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("Uploaded_File");
+            entity.Property(e => e.UsTin)
+                .IsUnicode(false)
+                .HasColumnName("US TIN");
+            entity.Property(e => e.UsTinCb)
+                .IsUnicode(false)
+                .HasColumnName("US_TIN_CB");
             entity.Property(e => e._11fatcaCb)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -2071,6 +2256,18 @@ public partial class EvolvedtaxContext : DbContext
                 .HasColumnName("FATCA");
         });
 
+        modelBuilder.Entity<W8eciEntityType>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("W8ECI_EntityType");
+
+            entity.Property(e => e.EntityId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("EntityID");
+            entity.Property(e => e.EntityType).IsUnicode(false);
+        });
+
         modelBuilder.Entity<W8expentity>(entity =>
         {
             entity.HasKey(e => e.EntityId);
@@ -2091,6 +2288,46 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Fatca)
                 .IsUnicode(false)
                 .HasColumnName("FATCA");
+        });
+
+        modelBuilder.Entity<W8imyEntityType>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("W8IMY_EntityType");
+
+            entity.Property(e => e.EntityId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("EntityID");
+            entity.Property(e => e.EntityType).IsUnicode(false);
+        });
+
+        modelBuilder.Entity<W8imyFatca>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("W8IMY_FATCA");
+
+            entity.Property(e => e.Fatca)
+                .IsUnicode(false)
+                .HasColumnName("FATCA");
+            entity.Property(e => e.FatcaId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FATCA_ID");
+        });
+
+        modelBuilder.Entity<W8imyfatcade>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("W8IMYFATCADE");
+
+            entity.Property(e => e.Fatca)
+                .IsUnicode(false)
+                .HasColumnName("FATCA");
+            entity.Property(e => e.FatcaId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("FATCA_ID");
         });
 
         modelBuilder.Entity<W9>(entity =>

@@ -65,7 +65,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Name of Organization<span class="text-danger">*</span></label>
-                    <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
+                    <input id="GQOrgName" asp-for="GQOrgName" type="text" class="form-control" required>
                 </div>
             </div>
             <div id="W9Entity" class="col-md-6" hidden>
@@ -80,8 +80,8 @@
             <div id="W8ECIEntityDiv" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>Type of Entity<span class="text-danger">*</span></label>
-                    <select id="EntityTypeW8ECI" asp-for="TypeOfEntity" required>
-                        @Html.HiddenFor(model => model.TypeOfEntity, new { id = "TypeOfEntity" })
+                    <select id="EntityTypeW8ECIGQ" asp-for="TypeOfEntity" required>
+                        @Html.HiddenFor(model => model.TypeOfEntity, new { id = "EntityTypeW8ECIGQ" })
                         <option></option>
                     </select>
                 </div>
@@ -115,9 +115,27 @@
                     </select>
                 </div>
             </div>
+            <div id="SSNDivW8ECI" class="col-md-6" hidden>
+                <div class="form-group">
+                    <label id="lbl_TypeofTaxNumber">
+                        <div class="form-check abc-radio abc-radio-info form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio5">SSN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio6">ITIN</label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline" style="margin-right: 0px;">
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio7">EIN</label>
+                        </div>
+                    </label>
+                    <input id="SsnitneinDQW8ECI" asp-for="Ssnitnein" type="text" class="form-control">
+                </div>
+            </div>
 
-
-            <div id="SSNDiv" class="col-md-6">
+            <div id="SSNDiv" class="col-md-6" hidden>
                 <div class="form-group">
                     <label>I.R.S Employee Identification Number (EIN)<span class="text-danger">*</span></label>
                     <input id="Ssnitnein" asp-for="Ssnitnein" type="text" placeholder="00-0000000" class="form-control" required>
@@ -494,7 +512,27 @@
 <div class="tab">
     <div class="text-center"><span><p>Additional Information</p></span></div>
     <div class="form-box">
-
+        <div id="DEW8ECIDiv" class="col-md-6" hidden>
+            <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI1" value="true"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                    <label class="form-check-label" for="DEW8ECI1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI2" value="false"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                    <label class="form-check-label" for="DEW8ECI2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
+                <label>Name of disregarded entity receiving the payments (if applicable)</label>
+                <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
+            </div>
+        </div>
         @*New changes start*@
         <div id="QFormDiv" class="row" hidden>
             <div class="col-md-6">
@@ -614,13 +652,13 @@
             </div>
         </div>
         @*New changes end*@
-        <div class="row">
-            <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
-                <div class="form-group">
-                    <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
-                    <input asp-for="AuthSignatoryName" class="form-control" required />
-                </div>
+        <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
+            <div class="form-group">
+                <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+                <input asp-for="AuthSignatoryName" class="form-control" required />
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-12" id="BackupWithHoldingMainDiv" hidden>
                 <label>Are you required to have backup withholding? If No, please select below.</label>
                 <div class="form-group">

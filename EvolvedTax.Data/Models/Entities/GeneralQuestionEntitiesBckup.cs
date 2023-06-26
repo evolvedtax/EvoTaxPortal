@@ -21,7 +21,7 @@ public partial class GeneralQuestionEntitiesBckup
 
     public string? Fatca { get; set; }
 
-    public string? RetirementPlan { get; set; }
+    public bool? RetirementPlan { get; set; }
 
     public string? PermanentCountry { get; set; }
 
@@ -53,11 +53,11 @@ public partial class GeneralQuestionEntitiesBckup
 
     public string UserName { get; set; } = null!;
 
-    public string? De { get; set; }
+    public bool? De { get; set; }
 
     public string? DeownerName { get; set; }
 
-    public string? EnitityManagendOutSideUsa { get; set; }
+    public bool? EnitityManagendOutSideUsa { get; set; }
 
     public string? BackupWithHolding { get; set; }
 
@@ -68,6 +68,8 @@ public partial class GeneralQuestionEntitiesBckup
     public string? Idnumber { get; set; }
 
     public string? W8formType { get; set; }
+
+    public string? FormType { get; set; }
 
     public int? W8expId { get; set; }
 }
