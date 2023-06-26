@@ -46,6 +46,7 @@
                     <label class="form-check-label" for="inlineRadio3">
                         An intermediary, a withholding foreign partnership, a withholding foreign trust, or flow through entity? {W-8IMY 'Certificate of Foreing Intermediary, Foregin Flow-Through Entity, or certain U.S. Branches for United States Tax Withholding and Reporting'}
                     </label>
+
                 </div>
                 <br />
                 <div class="form-check inline">
@@ -157,7 +158,7 @@
                         </label>
                     </div>
                     <div class="col-md-4">
-                        <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid">
+                        <select id="Ccountry1" asp-for="_10b_Text" asp-items="ViewBag.CountriesList" class="country-dropdown select2 required-control-valid">
                             <option></option>
                         </select>
                     </div>
@@ -171,7 +172,7 @@
 
                     </div>
                     <div class="col-md-4">
-                        <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="select2 required-control-valid ">
+                        <select id="Ccountry2" asp-for="_10c_Text" asp-items="ViewBag.CountriesList" class="country-dropdown select2 required-control-valid ">
                             <option></option>
                         </select>
                     </div>

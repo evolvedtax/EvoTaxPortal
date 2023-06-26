@@ -64,6 +64,8 @@
         border-radius: 4px;
         margin: 20px;
     }
+
+
 </style>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
@@ -82,13 +84,9 @@
             <div>
 
                 <!--General Questionare View-->
-                <partial name="_generalQuestionare" model="Model" />
+                <partial name="_generalQuestionareW8IMY" model="Model" />
 
-                <!--W8 BEN Questionare View-->
-                <partial name="_w8BenQuestionare" model="Model" />
-
-                <!--W8 ECI Questionare View-->
-                <partial name="_w8ECIQuestionare" model="Model" />
+            
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
@@ -325,19 +323,17 @@
             });
         }
         function HideDivOnDDLEntitySelection() {
-            $('#Q1Div').prop('hidden', true);
+            $('#FrgnGovDiv').prop('hidden', true);
             $('#NonqualifiedDiv').prop('hidden', true);
-            $('#FrgnBankDiv').prop('hidden', true);
-            $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
-            $('#GovUSPossDiv').prop('hidden', true);
+
         }
         function HideDivOnDDLStatusFATCASelection() {
-            $('#FincalInsDiv').prop('hidden', true);
-            $('#FrgnGovUSDiv').prop('hidden', true);
-            $('#RetPlanSDiv').prop('hidden', true);
-            $('#501OrgUSDiv').prop('hidden', true);
-            $('#PassNFEDiv').prop('hidden', true);
-            $('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
+            //$('#FincalInsDiv').prop('hidden', true);
+            //$('#FrgnGovUSDiv').prop('hidden', true);
+            //$('#RetPlanSDiv').prop('hidden', true);
+            //$('#501OrgUSDiv').prop('hidden', true);
+            //$('#PassNFEDiv').prop('hidden', true);
+            //$('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
 
         }
         function ChangeMasking(obj) {
@@ -381,6 +377,8 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+            
+
 
             $('#Ssnitnein').attr('placeholder', '00-0000000');
             $('#Ssnitnein').mask('00-0000000', { reverse: true });
@@ -437,7 +435,7 @@
 
                     BindEntityForW8ECIForm();
                 }
- 
+
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     window.location.href = '@Url.Action("W8IMY", "Entity")';
                 }
@@ -465,12 +463,13 @@
                 //Foreign government
                 if (selectedValue == 1) {
                     HideDivOnDDLEntitySelection();
-                    $('#FrgnGovDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', false);
                 }
                 //Internal organization
                 if (selectedValue == 2) {
                     HideDivOnDDLEntitySelection();
-                    $('#IntOrgDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', true);
+                    $('#NonqualifiedDiv').prop('hidden', false);
                 }
                 //Foreign central bank of issue (not wholly owned by the foreign sovereign)
                 if (selectedValue == 3) {
@@ -639,24 +638,51 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
+        function HideDivs(){
+            $('#div_DE1').prop('hidden', true);
+            $('#div_DE2').prop('hidden', true);
+            $('#div_DE3').prop('hidden', true);
+            $('#div_DE4').prop('hidden', true);
+            $('#div_DE5').prop('hidden', true);
+            $('#div_DE6').prop('hidden', true);
+            $('#div_DE7').prop('hidden', true);
+            $('#provinceDiv').prop('hidden', true);
+        }
+
+        function ShowHideDivs() {
+            $('#div_DE1').prop('hidden', false);
+            $('#div_DE2').prop('hidden', false);
+            $('#div_DE3').prop('hidden', false);
+            $('#div_DE4').prop('hidden', false);
+            $('#div_DE5').prop('hidden', false);
+            $('#div_DE6').prop('hidden', false);
+            $('#div_DE7').prop('hidden', false);
+            $('#provinceDiv').prop('hidden', false);
+        }
         function SelectDEEntity(obj) {
-            //console.log(typeof obj, obj);
-            //console.log(typeof obj.value, obj.value);
+        //    console.log(typeof obj, obj);
+        //    console.log(typeof obj.value, obj.value);
             if (obj.value === 'false' || obj.value === 'False') {
+                HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj == 'false' || obj.value === 'False') {
+                 HideDivs();
+
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
             }
             else if (obj == 'true' || obj == 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
             }
             else if (obj.value === undefined) {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
+                HideDivs();
             }
         }
 
@@ -716,41 +742,8 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-
-                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
-                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
-                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
-                        $('#firstNameW8Ben').val($('#firstName').val());
-                        $('#lastNameW8Ben').val($('#lastName').val());
-                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
-                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
-                    } else {
-                        $('#firstNameW8ECI').val($('#firstName').val());
-                        $('#lastNameW8ECI').val($('#lastName').val());
-                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
-                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
-                    }
-                }
-                else if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W9Form') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8ECIForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8ECI  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8IMYForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8EXPForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8EXP  >>";
-                }
-                else {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
+                document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
+            
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next Page >>";
             }

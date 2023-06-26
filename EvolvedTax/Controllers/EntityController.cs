@@ -221,6 +221,80 @@ namespace EvolvedTax.Controllers
         }
 
 
+
+
+        #region W8IMY Code
+
+        public async Task<IActionResult> W8IMY()
+        {
+            string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
+            {
+                return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
+            }
+            var GQEntitiesResponse = _generalQuestionareEntityService.GetDataByClientEmail(clientEmail);
+
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
+            ViewBag.EntitiesList = _evolvedtaxContext.W8imyEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityId.ToString()
+            });
+         
+            ViewBag.FATCAList = _evolvedtaxContext.W8imyFatcas.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
+            });
+
+            ViewBag.FATCAListForCH4 = _evolvedtaxContext.W8imyfatcades.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
+            });
+
+
+
+
+            var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            if (!string.IsNullOrEmpty(formName))
+            {
+                if (!string.IsNullOrEmpty(clientEmail))
+                {
+                    if (formName == AppConstants.W9Form)
+                    {
+                        GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else if (formName == AppConstants.W8EXPForm)
+                    {
+                        GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else
+                    {
+
+                    }
+                    return View(GQEntitiesResponse);
+                }
+            }
+            return View(GQEntitiesResponse);
+        }
+        #endregion
+
+
         #region Entity Dropdown Dynamic Binding on the basis of selection
         [HttpPost]
         public ActionResult BindEntityForW8EXPForm()
