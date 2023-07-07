@@ -32,7 +32,8 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label>Specify each item of income that is, or is expected to be, recieved from the payer that is effectively connected with the conduct of a trade or business in the United States.</label>
-                    <textarea id="Items" asp-for=Items class="form-control"></textarea>
+                    <textarea id="Items" asp-for=Items class="form-control" maxlength="342"></textarea>
+                    <span id="textCounter" style="color:crimson"></span>
                 </div>
             </div>
             <div class="col-md-12">
@@ -53,17 +54,17 @@
             <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
             <div class="form-group">
                 <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="true" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required checked="@(Model.W8ECIOnBehalfName ? "checked" : null)">
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="true" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required >
                     <label class="form-check-label" for="W8ECIOnBehalfName1"> Yes </label>
                 </div>
                 <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="false" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required checked="@(Model.W8ECIOnBehalfName ? null : "checked")">
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="false" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required >
                     <label class="form-check-label" for="W8ECIOnBehalfName2"> No </label>
                 </div>
             </div>
         </div>
         <div class="col-md-6">
-            <div class="form-group">
+            <div id="W8ECIOnBehalfNameDiv" class="form-group" hidden>
                 <label id="lbl_authSignatory">Please enter the name of the beneficial owner <span class="text-danger">*</span></label>
                 <input asp-for="PrintNameOfSignerW8ECI" class="form-control" required />
             </div>

@@ -1,28 +1,59 @@
-﻿@model FormRequest
-@{
-    var fgh = 45;
-    var sd = Model;
-}
+﻿@model W8BENERequest
+<style>
+    ul {
+        padding-left: inherit;
+    }
+
+    ol.custom-list {
+        list-style-type: none;
+        counter-reset: item;
+        padding-left: 0;
+    }
+
+        ol.custom-list li {
+            position: relative;
+            padding-left: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+            ol.custom-list li::before {
+                content: "(" counter(item, lower-roman) ")";
+                counter-increment: item;
+                font-weight: bold;
+                position: absolute;
+                left: -5px;
+            }
+
+   /* .bottom-align-text {
+        display: inline-block;
+        position: relative;
+        bottom: 7px;
+    }*/
+    .no-border {
+        border: none;
+        outline: none;
+        border-bottom: groove;
+        display: inline-block;
+        position: relative;
+        bottom: 3px;
+        background-color: #d6e3f9;
+        height: 20px;
+    }
+
+    .input-table {
+        width: 100%;
+    }
+</style>
 <div class="tab">
-    <div class="text-center"><span><p>Personal Questions</p></span></div>
+    <div class="text-center"><span><p>Identification of Beneficial Owner</p></span></div>
     <div class="form-box">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Name of individual or organization that is the beneficial owner<span class="text-danger">*</span></label>
-                    <input asp-for="GQOrgName" type="text" class="form-control" required>
+                    <label>Name of organization that is the beneficial owner<span class="text-danger">*</span></label>
+                    <input asp-for="NameOfOrganization" type="text" class="form-control" required>
                 </div>
             </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Type of Entity<span class="text-danger">*</span></label>
-                    <select asp-for="TypeOfEntityForW8ECI" asp-items="ViewBag.TypeOfEntityW8ECI" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Country of incorporation or organization<span class="text-danger">*</span></label>
@@ -33,48 +64,47 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label id="lbl_TypeofTaxNumber">
-                        <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
-                            <label class="form-check-label" for="inlineRadio5">SSN or ITIN </label>
-                        </div>
-                        <div class="form-check abc-radio form-check-inline" style="margin-right: 0px;">
-                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber" checked>
-                            <label class="form-check-label" for="inlineRadio7">EIN</label>
-                        </div>
-                    </label>
-                    <input id="SsnitneinDQW8ECI" asp-for="Ssnitnein" type="text" class="form-control">
+                    <label>U.S. taxpayer identification number (TIN), if required</label>
+                    <input asp-for="UsTin" type="text" class="form-control">
                 </div>
             </div>
             <div class="col-md-6">
-                <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
+                <div class="form-group">
+                    <label>GIIN</label>
+                    <input asp-for="Gin" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label>Is a foreign Tax Identification Number(FTIN) legally required for you?</label>
                 <div class="form-group">
                     <div class="form-check abc-radio abc-radio-info form-check-inline">
-                        <input class="form-check-input" type="radio" id="DEW8ECI1" value="true" checked="@(Model.DEW8ECI ? "checked" : null)"
-                               asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
-                        <label class="form-check-label" for="DEW8ECI1"> Yes </label>
+                        <input class="form-check-input" type="radio" id="inlineRadio6" value="true" onclick="ShowHideFTINW8BENE(this)" asp-for="FtinCheck" checked="@(Model.FtinCheck ? "checked" : null)">
+                        <label class="form-check-label" for="inlineRadio6"> Yes </label>
                     </div>
                     <div class="form-check abc-radio form-check-inline">
-                        <input class="form-check-input" type="radio" id="DEW8ECI2" value="false" checked="@(Model.DEW8ECI ? null : "checked")"
-                               asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
-                        <label class="form-check-label" for="DEW8ECI2"> No </label>
+                        <input class="form-check-input" type="radio" id="inlineRadio5" value="false" onclick="ShowHideFTINW8BENE(this)" asp-for="FtinCheck" checked="@(Model.FtinCheck ? null : "checked")">
+                        <label class="form-check-label" for="inlineRadio5"> No </label>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
-                    <label>Name of disregarded entity receiving the payments (if applicable)</label>
-                    <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
+                <div id="FTINW8BENEDiv" class="form-group" hidden>
+                    <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                    <input id="ForeignTaxIdentifyingNumberW8ECI" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Reference number(s)</label>
+                    <input type="text" asp-for=ReferenceNumberS title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <div class="tab">
     <div class="text-center">
-        <span><p>Permanent residence address</p></span><br />
-        <strong>Do not use a P.O. box or in-care-of address</strong>
+        <span><p>Mailing address</p></span><br />
     </div>
     <div class="form-box">
         <div class="row">
@@ -88,7 +118,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <label>Address Line 1 <span class="text-danger">*</span> (<strong>Do not use a P.O. box or in-care-of address</strong>)</label>
                     <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
                 </div>
             </div>
@@ -126,8 +156,8 @@
             </div>
         </div>
     </div>
-    <div class="mt-3 mb-3 ml-3">
-        <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Business address is the same as the permanent residence address
+    <div class="mt-3 mb-3 ml-4">
+        <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Permanent address is the same as the mailing address
     </div>
     <div id="SamePermAddressDiv" class="form-box" hidden>
         <div class="row">
@@ -141,7 +171,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <label>Address Line 1 <span class="text-danger">*</span> (<strong>Do not use a P.O. box or in-care-of address</strong>)</label>
                     <input id="adreess1Perm" asp-for="PAddress1" type="text" class="form-control" required>
                 </div>
             </div>
@@ -167,7 +197,7 @@
                 </div>
                 <div id="provincePermDiv" class="form-group">
                     <label>Province</label>
-                    <input id="provincePerm" name="provincePerm" type="text" class="form-control">
+                    <input id="provincePerm" asp-for="PProvince" type="text" class="form-control">
                 </div>
             </div>
 
@@ -180,59 +210,1284 @@
         </div>
     </div>
 </div>
-@*<div class="tab">
-    <div class="text-center"><span><p>Additional Information</p></span></div>
+<div class="tab">
+    <div class="text-center"><span><p>Disregarded Entity or Branch Receiving Payment</p></span></div>
     <div class="form-box">
-        <div class="col-md-6">
-            <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="DEW8ECI1" value="true"
-                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
-                    <label class="form-check-label" for="DEW8ECI1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="DEW8ECI2" value="false"
-                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)" checked>
-                    <label class="form-check-label" for="DEW8ECI2"> No </label>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Are you a disregarded entity or branch recieving the payment?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE1" value="true"
+                               asp-for="DECheckBox" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="DE2" value="false"
+                               asp-for="DECheckBox" onchange="SelectDEEntity(this)">
+                        <label class="form-check-label" for="DE2"> No </label>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
-                <label>Name of disregarded entity receiving the payments (if applicable)</label>
-                <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
-                           asp-for="LegallyRequired" />
-                    <label class="form-check-label" for="LegallyReq1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
-                           asp-for="LegallyRequired" />
-                    <label class="form-check-label" for="LegallyReq2"> No </label>
+        <div id="DEDiv" class="row" hidden>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Name of the disregarded entity or branch </label>
+                    <input id="DEOwnerName" asp-for="NameOfDiregardedEntity" type="text" class="form-control">
                 </div>
             </div>
-            @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
-        </div>
-        <div class="col-md-6">
-            <div id="FTINDiv" class="form-group" hidden>
-                <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
-                <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Chapter 4 Status (FATCA status) of disregarded entity or branch receiving payment<span class="text-danger">*</span></label>
+                    <select id="_11FATCA_CB" asp-for="_11fatcaCb" asp-items="ViewBag.W8benefatcaDE" required>
+                        <option></option>
+                    </select>
+                </div>
             </div>
-        </div>
-    </div>
-    <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
-        <div class="form-group">
-            <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
-            <input asp-for="AuthSignatoryName" class="form-control" required />
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="_12_Country" asp-for="_12Country" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince12(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address of disregarded entity or branch <span class="text-danger">* </span>(<strong>Do not use a P.O. box or in-care-of address</strong>)</label>
+                    <input id="_12Mailing_address" asp-for="_12mailingAddress" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="_12_City" asp-for="_12City" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="12_stateDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="_12_State" asp-items="ViewBag.StatesList" asp-for="_12State" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="12_provinceDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="_12_Province" asp-for="_12Province" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="12_lblZipCode">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="_12ZipPostCode" asp-for="_12ZipPostCode" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>GIIN (if any)</label>
+                    <input id="_13GIN" asp-for="_13gin" type="text" class="form-control">
+                </div>
+            </div>
         </div>
     </div>
 </div>
-*@
+<div class="tab">
+    <div class="text-center"><span><p>Additional Information</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select asp-for="TypeOfEntity" asp-items="ViewBag.TypeOfEntityW8BENE" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Chapter 4 Status(FATCA)<span class="text-danger">*</span></label>
+                    <select asp-for="FatcaStatus" asp-items="ViewBag.FATCAStatusW8BENE" onchange="ShowHideFormParts(this)" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 3*@
+    <div id="part3" hidden>
+        <h5 class="ml-4">PartIII Claim of Tax Treaty Benefits (if applicable)</h5>
+        <div class="form-box">
+            <div>
+                <strong>14</strong> I certify that (check all that apply):
+            </div>
+            <div class="ml-3">
+                <div class="d-flex">
+                    <strong class="mr-4">a</strong>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_14aCb">
+                                <label class="form-check-label" for="inlinecheckbox1">
+                                    The beneficial owner is a resident of <span class="bottom-align-text"><input asp-for="_14aTb" class="no-border" /></span> within the meaning of the income tax treaty between the United States and that country.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ml-3">
+                <div class="d-flex">
+                    <strong class="mr-4">b</strong>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_14bCb1">
+                                <label class="form-check-label" for="inlinecheckbox2">
+                                    The beneficial owner derives the item (or items) of income for which the treaty benefits are claimed, and, if applicable, meets the requirements of the treaty provision dealing with limitation on benefits. The following are types of limitation on benefits provisions that may be included in an applicable tax treaty (check only one; see instructions):
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="1"  id="inlinecheckbox3" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox3">
+                                    Government
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="2"  id="inlinecheckbox4" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox4">
+                                    Company that meets the ownership and base erosion test
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="3"  id="inlinecheckbox5" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox5">
+                                    Tax-exempt pension trust or pension fund
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="4"  id="inlinecheckbox6" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox6">
+                                    Company that meets the derivative benefits test
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="5"  id="inlinecheckbox7" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox7">
+                                    Other tax-exempt organization
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="6"  id="inlinecheckbox8" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox8">
+                                    Company with an item of income that meets active trade or business test
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="7"  id="inlinecheckbox9" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox9">
+                                    Publicly traded corporation
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="8"  id="inlinecheckbox10" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox10">
+                                    Favorable discretionary determination by the U.S. competent authority received
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="9"  id="inlinecheckbox11" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox11">
+                                    Subsidiary of a publicly traded corporation
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="10"  id="inlinecheckbox12" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox12">
+                                    No LOB article in treaty
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-check inline">
+                                <input class="form-check-input" type="radio" value="11"  id="inlinecheckbox13" asp-for="_14bCb2others">
+                                <label class="form-check-label" for="inlinecheckbox13">
+                                    Other (specify Article and paragraph): <input asp-for=_14bTb class="no-border" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ml-3">
+                <div class="d-flex">
+                    <strong class="mr-4">c</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox14" asp-for="_14cCb">
+                        <label class="form-check-label" for="inlinecheckbox14">
+                            The beneficial owner is claiming treaty benefits for U.S. source dividends received from a foreign corporation or interest from a U.S. trade or business of a foreign corporation and meets qualified resident status.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <strong class="mr-3">15</strong> <strong> Special rates and conditions (if applicable—see instructions):</strong>
+            </div>
+            <div class="ml-3">
+                <div>
+                    <label>
+                        The beneficial owner is claiming the provisions of Article and paragraph <input asp-for=_15cTb1 class="no-border" /> of the treaty identified on line 14a above to claim a <input asp-for=_15cTb2 class="no-border" /> % rate of withholding on (specify type of income): <input asp-for=_15cTb3 class="no-border" /> <br />
+                        Explain the additional conditions in the Article the beneficial owner meets to be eligible for the rate of withholding:
+                    </label>
+                    <textarea asp-for=_15cTb4 class="col-md-12" cols="3"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 4*@
+    <div id="part4" hidden>
+        <h5 class="ml-4">
+            Part IV
+            Sponsored FFI
+        </h5>
+        <div class="form-box">
+            <div class="mt-2">
+                <strong class="mr-3">16</strong>  Name of sponsoring entity: <input asp-for=_16tb class="no-border" />
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">17</strong>
+                    <strong>Check whichever box applies.</strong>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox15" asp-for="_17cb1">
+                        <label class="form-check-label" for="inlinecheckbox15">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                    <ul>
+                        <li>Is an investment entity;</li>
+                        <li>Is not a QI, WP (except to the extent permitted in the withholding foreign partnership agreement), or WT; and</li>
+                        <li>Has agreed with the entity identified above (that is not a nonparticipating FFI) to act as the sponsoring entity for this entity.</li>
+                    </ul>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox16" asp-for="_17cb2">
+                        <label class="form-check-label" for="inlinecheckbox16">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                    <ul>
+                        <li>Is a controlled foreign corporation as defined in section 957(a);</li>
+                        <li>Is not a QI, WP, or WT;</li>
+                        <li>Is wholly owned, directly or indirectly, by the U.S. financial institution identified above that agrees to act as the sponsoring entity for this entity; and</li>
+                        <li>Shares a common electronic account system with the sponsoring entity (identified above) that enables the sponsoring entity to identify all account holders and payees of the entity and to access all account and customer information maintained by the entity including, but not limited to, customer identification information, customer documentation, account balance, and all payments made to account holders or payees.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 5*@
+    <div id="part5" hidden>
+        <h5 class="ml-4">
+            Part V
+            Certified Deemed-Compliant Nonregistering Local Bank
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">18</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox28" asp-for="_18cb">
+                        <label class="form-check-label" for="inlinecheckbox28">
+                            I certify that the FFI identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Operates and is licensed solely as a bank or credit union (or similar cooperative credit organization operated without profit) in its country of incorporation or organization;</li>
+                        <li>Engages primarily in the business of receiving deposits from and making loans to, with respect to a bank, retail customers unrelated to such bank and, with respect to a credit union or similar cooperative credit organization, members, provided that no member has a greater than 5% interest in such credit union or cooperative credit organization;</li>
+                        <li>Does not solicit account holders outside its country of organization;</li>
+                        <li>Has no fixed place of business outside such country (for this purpose, a fixed place of business does not include a location that is not advertised to the public and from which the FFI performs solely administrative support functions);</li>
+                        <li>Has no more than $175 million in assets on its balance sheet and, if it is a member of an expanded affiliated group, the group has no more than $500 million in total assets on its consolidated or combined balance sheets; and</li>
+                        <li>Does not have any member of its expanded affiliated group that is a foreign financial institution, other than a foreign financial institution that is incorporated or organized in the same country as the FFI identified in Part I and that meets the requirements set forth in this part.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 6*@
+    <div id="part6" hidden>
+        <h5 class="ml-4">
+            Part VI
+            Certified Deemed-Compliant FFI with Only Low-Value Accounts
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">19</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox17" asp-for="_19cb">
+                        <label class="form-check-label" for="inlinecheckbox17">
+                            I certify that the FFI identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is not engaged primarily in the business of investing, reinvesting, or trading in securities, partnership interests, commodities, notional principal contracts, insurance or annuity contracts, or any interest (including a futures or forward contract or option) in such security, partnership interest, commodity, notional principal contract, insurance contract or annuity contract;</li>
+                        <li>No financial account maintained by the FFI or any member of its expanded affiliated group, if any, has a balance or value in excess of $50,000 (as determined after applying applicable account aggregation rules); and</li>
+                        <li>Neither the FFI nor the entire expanded affiliated group, if any, of the FFI, have more than $50 million in assets on its consolidated or combined balance sheet as of the end of its most recent accounting year.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 7*@
+    <div id="part7" hidden>
+        <h5 class="ml-4">
+            Part VII
+            Certified Deemed-Compliant Sponsored, Closely Held Investment Vehicle
+        </h5>
+        <div class="form-box">
+            <div>
+                <strong class="mr-3">20</strong>  Name of sponsoring entity: <input asp-for=_20tb class="no-border" />
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">21</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox18" asp-for="_21cb">
+                        <label class="form-check-label" for="inlinecheckbox18">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is an FFI solely because it is an investment entity described in Regulations section 1.1471-5(e)(4);</li>
+                        <li>Is not a QI, WP, or WT;</li>
+                        <li>Will have all of its due diligence, withholding, and reporting responsibilities (determined as if the FFI were a participating FFI) fulfilled by the sponsoring entity identified on line 20; and</li>
+                        <li>20 or fewer individuals own all of the debt and equity interests in the entity (disregarding debt interests owned by U.S. financial institutions, participating FFIs, registered deemed-compliant FFIs, and certified deemed-compliant FFIs and equity interests owned by an entity if that entity owns 100% of the equity interests in the FFI and is itself a sponsored FFI).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 8*@
+    <div id="part8" hidden>
+        <h5 class="ml-4">
+            Part VIII
+            Certified Deemed-Compliant Limited Life Debt Investment Entity
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">22</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox19" asp-for="_22cb">
+                        <label class="form-check-label" for="inlinecheckbox19">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Was in existence as of January 17, 2013;</li>
+                        <li>Issued all classes of its debt or equity interests to investors on or before January 17, 2013, pursuant to a trust indenture or similar agreement; and</li>
+                        <li>Is certified deemed-compliant because it satisfies the requirements to be treated as a limited life debt investment entity (such as the restrictions with respect to its assets and other requirements under Regulations section 1.1471-5(f)(2)(iv)).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 9*@
+    <div id="part9" hidden>
+        <h5 class="ml-4">
+            Part IX
+            Certain Investment Entities that Do Not Maintain Financial Accounts
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">23</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox20" asp-for="_23cb">
+                        <label class="form-check-label" for="inlinecheckbox20">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is a financial institution solely because it is an investment entity described in Regulations section 1.1471-5(e)(4)(i)(A), and</li>
+                        <li>Does not maintain financial accounts.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 10*@
+    <div id="part10" hidden>
+        <h5 class="ml-4">
+            Part X
+            Owner-Documented FFI
+        </h5>
+        <div class="form-box">
+            <div>
+                <strong>Note:</strong> This status only applies if the U.S. financial institution, participating FFI, or reporting Model 1 FFI to which this form is given has agreed that it will treat the FFI as an owner-documented FFI (see instructions for eligibility requirements). In addition, the FFI must make the certifications below.
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">24a</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox21" asp-for="_24aCb">
+                        <label class="form-check-label" for="inlinecheckbox21">
+                            (All owner-documented FFIs check here) I certify that the FFI identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Does not act as an intermediary;</li>
+                        <li>Does not accept deposits in the ordinary course of a banking or similar business;</li>
+                        <li>Does not hold, as a substantial portion of its business, financial assets for the account of others;</li>
+                        <li>Is not an insurance company (or the holding company of an insurance company) that issues or is obligated to make payments with respect to a financial account;</li>
+                        <li>Is not owned by or in an expanded affiliated group with an entity that accepts deposits in the ordinary course of a banking or similar business, holds, as a substantial portion of its business, financial assets for the account of others, or is an insurance company (or the holding company of an insurance company) that issues or is obligated to make payments with respect to a financial account;</li>
+                        <li>Does not maintain a financial account for any nonparticipating FFI; and</li>
+                        <li>Does not have any specified U.S. persons that own an equity interest or debt interest (other than a debt interest that is not a financial account or that has a balance or value not exceeding $50,000) in the FFI other than those identified on the FFI owner reporting statement.</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <strong>Check box 24b or 24c, whichever applies.</strong>
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="radio" value="1" id="inlinecheckbox22" asp-for="_24borcCb">
+                        <label class="form-check-label" for="inlinecheckbox22">
+                            I certify that the FFI identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Has provided, or will provide, an FFI owner reporting statement that contains:</li>
+                        <ol type="i" class="custom-list">
+                            <li>The name, address, TIN (if any), chapter 4 status, and type of documentation provided (if required) of every individual and specified U.S. person that owns a direct or indirect equity interest in the owner-documented FFI (looking through all entities other than specified U.S. persons);</li>
+                            <li>The name, address, TIN (if any), and chapter 4 status of every individual and specified U.S. person that owns a debt interest in the owner-documented FFI (including any indirect debt interest, which includes debt interests in any entity that directly or indirectly owns the payee or any direct or indirect equity interest in a debt holder of the payee) that constitutes a financial account in excess of $50,000 (disregarding all such debt interests owned by participating FFIs, registered deemed-compliant FFIs, certified deemed-compliant FFIs, excepted NFFEs, exempt beneficial owners, or U.S. persons other than specified U.S. persons); and</li>
+                            <li>Any additional information the withholding agent requests in order to fulfill its obligations with respect to the entity.</li>
+                        </ol>
+                        <li>Has provided, or will provide, valid documentation meeting the requirements of Regulations section 1.1471-3(d)(6)(iii) for each person identified in the FFI owner reporting statement.</li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">c</strong>
+                    <div class="form-check inline" style="width: 97%;">
+                        <input class="form-check-input" type="radio" value="2" id="inlinecheckbox23" asp-for="_24borcCb">
+                        <label class="form-check-label" for="inlinecheckbox23">
+                            certify that the FFI identified in Part I has provided, or will provide, an auditor's letter, signed within 4 years of the date of payment,
+                            from an independent accounting firm or legal representative with a location in the United States stating that the firm or representative has reviewed the FFI’s documentation with respect to all of its owners and debt holders identified in Regulations section 1.1471-3(d)(6)(iv)(A)(2), and that the FFI meets all the requirements to be an owner-documented FFI. The FFI identified in Part I has also provided, or will provide, an FFI owner reporting statement of its owners that are specified U.S. persons and Form(s) W-9, with applicable waivers.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <strong>Check box 24d if applicable</strong> (optional, see instructions).
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-4">d</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox24" asp-for="_24dCb">
+                        <label class="form-check-label" for="inlinecheckbox24">
+                            I certify that the entity identified on line 1 is a trust that does not have any contingent beneficiaries or designated classes with unidentified beneficiaries.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 11*@
+    <div id="part11" hidden>
+        <h5 class="ml-4">
+            Part XI
+            Restricted Distributor
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">25a</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox25" asp-for="_25aCb">
+                        <label class="form-check-label" for="inlinecheckbox25">
+                            (All restricted distributors check here) I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Operates as a distributor with respect to debt or equity interests of the restricted fund with respect to which this form is furnished;</li>
+                        <li>Provides investment services to at least 30 customers unrelated to each other and less than half of its customers are related to each other;</li>
+                        <li>Is required to perform AML due diligence procedures under the anti-money laundering laws of its country of organization (which is an FATF-compliant jurisdiction);</li>
+                        <li>Operates solely in its country of incorporation or organization, has no fixed place of business outside of that country, and has the same country of incorporation or organization as all members of its affiliated group, if any;</li>
+                        <li>Does not solicit customers outside its country of incorporation or organization;</li>
+                        <li>Has no more than $175 million in total assets under management and no more than $7 million in gross revenue on its income statement for the most recent accounting year;</li>
+                        <li>Is not a member of an expanded affiliated group that has more than $500 million in total assets under management or more than $20 million in gross revenue for its most recent accounting year on a combined or consolidated income statement; and</li>
+                        <li>Does not distribute any debt or securities of the restricted fund to specified U.S. persons, passive NFFEs with one or more substantial U.S. owners, or nonparticipating FFIs.</li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <strong>Check box 25b or 25c, whichever applies.</strong>
+                <div>I further certify that with respect to all sales of debt or equity interests in the restricted fund with respect to which this form is furnished that are made after December 31, 2011, the entity identified in Part I:</div>
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="1" id="inlinecheckbox26" asp-for="_25bcCb">
+                        <label class="form-check-label" for="inlinecheckbox26">
+                            Has been bound by a distribution agreement that contained a general prohibition on the sale of debt or securities to U.S. entities and U.S. resident individuals and is currently bound by a distribution agreement that contains a prohibition of the sale of debt or securities to any specified U.S. person, passive NFFE with one or more substantial U.S. owners, or nonparticipating FFI.
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">c</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="2" id="inlinecheckbox27" asp-for="_25bcCb">
+                        <label class="form-check-label" for="inlinecheckbox27">
+                            Is currently bound by a distribution agreement that contains a prohibition on the sale of debt or securities to any specified U.S. person, passive NFFE with one or more substantial U.S. owners, or nonparticipating FFI and, for all sales made prior to the time that such a restriction was included in its distribution agreement, has reviewed all accounts related to such sales in accordance with the procedures identified in Regulations section 1.1471-4(c) applicable to preexisting accounts and has redeemed or retired any, or caused the restricted fund to transfer the securities to a distributor that is a participating FFI or reporting Model 1 FFI securities which were sold to specified U.S. persons, passive NFFEs with one or more substantial U.S. owners, or nonparticipating FFIs.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 12*@
+    <div id="part12" hidden>
+        <h5 class="ml-4">
+            Part XII
+            Nonreporting IGA FFI
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">26</strong>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox29" asp-for="_26cb1">
+                        <label class="form-check-label" for="inlinecheckbox29">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>
+                            Meets the requirements to be considered a nonreporting financial institution pursuant to an applicable IGA between the United States and <input asp-for=_26tb1 class="no-border" /> .
+                            The applicable IGA is a <input asp-for=_26cb2or3 type="radio" value="1" /> Model 1 IGA or a <input asp-for=_26cb2or3 type="radio" value="2" /> Model 2 IGA; and
+                            is treated as a <input asp-for=_26tb2 class="no-border" /> under the provisions of the applicable IGA or Treasury regulations
+                            (if applicable, see instructions);
+                        </li>
+                        <li>If you are a trustee documented trust or a sponsored entity, provide the name of the trustee or sponsor <input asp-for=_26tb3 class="no-border" /></li>
+                    </ul>
+                    The trustee is: <input asp-for=_26cb4or5 type="radio" value="1" /> U.S.
+                    <input asp-for=_26cb4or5 type="radio" value="2" /> Foreign
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 13*@
+    <div id="part13" hidden>
+        <h5 class="ml-4">
+            Part XIII
+            Foreign Government, Government of a U.S. Possession, or Foreign Central Bank of Issue
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">27</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox30" asp-for="_27cb">
+                        <label class="form-check-label" for="inlinecheckbox30">
+                            I certify that the entity identified in Part I is the beneficial owner of the payment, and is not engaged in commercial financial activities of a
+                            type engaged in by an insurance company, custodial institution, or depository institution with respect to the payments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 14*@
+    <div id="part14" hidden>
+        <h5 class="ml-4">
+            Part XIV
+            International Organization
+        </h5>
+        <div class="form-box">
+            <div>
+                <strong>Check box 28a or 28b, whichever applies.</strong>
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">28a</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="1" id="inlinecheckbox31" asp-for="_28aorbCb">
+                        <label class="form-check-label" for="inlinecheckbox31">
+                            I certify that the entity identified in Part I is an international organization described in section 7701(a)(18).
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="2" id="inlinecheckbox32" asp-for="_28aorbCb">
+                        <label class="form-check-label" for="inlinecheckbox32">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is comprised primarily of foreign governments;</li>
+                        <li>Is recognized as an intergovernmental or supranational organization under a foreign law similar to the International Organizations Immunities Act or that has in effect a headquarters agreement with a foreign government;</li>
+                        <li>The benefit of the entity’s income does not inure to any private person; and</li>
+                        <li>Is the beneficial owner of the payment and is not engaged in commercial financial activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to the payments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 15*@
+    <div id="part15" hidden>
+        <h5 class="ml-4">
+            Part XV
+            Exempt Retirement Plans
+        </h5>
+        <div class="form-box">
+            <div>
+                <strong>Check box 29a, b, c, d, e, or f, whichever applies.</strong>
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">29a</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="1"  id="inlinecheckbox33" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox33">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is established in a country with which the United States has an income tax treaty in force (see Part III if claiming treaty benefits);</li>
+                        <li>Is operated principally to administer or provide pension or retirement benefits; and</li>
+                        <li>Is entitled to treaty benefits on income that the fund derives from U.S. sources (or would be entitled to benefits if it derived any such income) as a resident of the other country which satisfies any applicable limitation on benefits requirement.</li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="2"  id="inlinecheckbox33" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox33">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is organized for the provision of retirement, disability, or death benefits (or any combination thereof) to beneficiaries that are former employees of one or more employers in consideration for services rendered;</li>
+                        <li>No single beneficiary has a right to more than 5% of the FFI’s assets;</li>
+                        <li>
+                            Is subject to government regulation and provides annual information reporting about its beneficiaries to the relevant tax authorities in the country in which the fund is established or operated; and
+                            <ol class="custom-list">
+                                <li>Is generally exempt from tax on investment income under the laws of the country in which it is established or operates due to its status as a retirement or pension plan;</li>
+                                <li>Receives at least 50% of its total contributions from sponsoring employers (disregarding transfers of assets from other plans described in this part, retirement and pension accounts described in an applicable Model 1 or Model 2 IGA, other retirement funds described in an applicable Model 1 or Model 2 IGA, or accounts described in Regulations section 1.1471-5(b)(2)(i)(A));</li>
+                                <li>Either does not permit or penalizes distributions or withdrawals made before the occurrence of specified events related to retirement, disability, or death (except rollover distributions to accounts described in Regulations section 1.1471-5(b)(2)(i)(A) (referring to retirement and pension accounts), to retirement and pension accounts described in an applicable Model 1 or Model 2 IGA, or to other retirement funds described in this part or in an applicable Model 1 or Model 2 IGA); or</li>
+                                <li>Limits contributions by employees to the fund by reference to earned income of the employee or may not exceed $50,000 annually.</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">c</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="3"  id="inlinecheckbox34" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox34">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is organized for the provision of retirement, disability, or death benefits (or any combination thereof) to beneficiaries that are former employees of one or more employers in consideration for services rendered;</li>
+                        <li>Has fewer than 50 participants;</li>
+                        <li>Is sponsored by one or more employers each of which is not an investment entity or passive NFFE;</li>
+                        <li>Employee and employer contributions to the fund (disregarding transfers of assets from other plans described in this part, retirement and pension accounts described in an applicable Model 1 or Model 2 IGA, or accounts described in Regulations section 1.1471-5(b)(2)(i)(A)) are limited by reference to earned income and compensation of the employee, respectively;</li>
+                        <li>Participants that are not residents of the country in which the fund is established or operated are not entitled to more than 20% of the fund’s assets; and</li>
+                        <li>Is subject to government regulation and provides annual information reporting about its beneficiaries to the relevant tax authorities in the country in which the fund is established or operates.</li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">d</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="4"  id="inlinecheckbox35" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox35">
+                            I certify that the entity identified in Part I is formed pursuant to a pension plan that would meet the requirements of section 401(a), other
+                            than the requirement that the plan be funded by a trust created or organized in the United States.
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">e</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="5"  id="inlinecheckbox36" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox36">
+                            I certify that the entity identified in Part I is established exclusively to earn income for the benefit of one or more retirement funds
+                            described in this part or in an applicable Model 1 or Model 2 IGA, or accounts described in Regulations section 1.1471-5(b)(2)(i)(A) (referring to retirement and pension accounts), or retirement and pension accounts described in an applicable Model 1 or Model 2 IGA.
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">f</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="6"  id="inlinecheckbox37" asp-for="_29cb">
+                        <label class="form-check-label" for="inlinecheckbox37">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6) or an exempt beneficial owner described in an applicable Model 1 or Model 2 IGA to provide retirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
+                        <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6) or an exempt beneficial owner described in an applicable Model 1 or Model 2 IGA to provide retirement, disability, or death benefits to beneficiaries or participants that are not current or former employees of such sponsor, but are in consideration of personal services performed for the sponsor.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 16*@
+    <div id="part16" hidden>
+        <h5 class="ml-4">
+            Part XVI
+            Entity Wholly Owned by Exempt Beneficial Owners
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">30</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox38" asp-for="_30cb">
+                        <label class="form-check-label" for="inlinecheckbox38">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is an FFI solely because it is an investment entity;</li>
+                        <li>Each direct holder of an equity interest in the investment entity is an exempt beneficial owner described in Regulations section 1.1471-6 or in an applicable Model 1 or Model 2 IGA;</li>
+                        <li>Each direct holder of a debt interest in the investment entity is either a depository institution (with respect to a loan made to such entity) or an exempt beneficial owner described in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA.</li>
+                        <li>Has provided an owner reporting statement that contains the name, address, TIN (if any), chapter 4 status, and a description of the type of documentation provided to the withholding agent for every person that owns a debt interest constituting a financial account or direct equity interest in the entity; and</li>
+                        <li>Has provided documentation establishing that every owner of the entity is an entity described in Regulations section 1.1471-6(b), (c), (d), (e), (f) and/or (g) without regard to whether such owners are beneficial owners.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 17*@
+    <div id="part17" hidden>
+        <h5 class="ml-4">
+            Part XVII
+            Territory Financial Institution
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">31</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox39" asp-for="_31cb">
+                        <label class="form-check-label" for="inlinecheckbox39">
+                            I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or organized under
+                            the laws of a possession of the United States.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 18*@
+    <div id="part18" hidden>
+        <h5 class="ml-4">
+            Part XVIII
+            Excepted Nonfinancial Group Entity
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">32</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox40" asp-for="_32cb">
+                        <label class="form-check-label" for="inlinecheckbox40">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is a holding company, treasury center, or captive finance company and substantially all of the entity’s activities are functions described in Regulations section 1.1471-5(e)(5)(i)(C) through (E);</li>
+                        <li>Is a member of a nonfinancial group described in Regulations section 1.1471-5(e)(5)(i)(B);</li>
+                        <li>Is not a depository or custodial institution (other than for members of the entity’s expanded affiliated group); and</li>
+                        <li>Does not function (or hold itself out) as an investment fund, such as a private equity fund, venture capital fund, leveraged buyout fund, or any investment vehicle with an investment strategy to acquire or fund companies and then hold interests in those companies as capital assets for investment purposes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 19*@
+    <div id="part19" hidden>
+        <h5 class="ml-4">
+            Part XIX
+            Excepted Nonfinancial Start-Up Company
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">33</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox41" asp-for="_33cb">
+                        <label class="form-check-label" for="inlinecheckbox41">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>
+                            Was formed on (or, in the case of a new line of business, the date of board resolution approving the new line of business) <input asp-for="_33tb" class="no-border"/>
+                            (date must be less than 24 months prior to date of payment);
+                        </li>
+                        <li>Is not yet operating a business and has no prior operating history or is investing capital in assets with the intent to operate a new line of business other than that of a financial institution or passive NFFE;</li>
+                        <li>Is investing capital into assets with the intent to operate a business other than that of a financial institution; and</li>
+                        <li>Does not function (or hold itself out) as an investment fund, such as a private equity fund, venture capital fund, leveraged buyout fund, or any investment vehicle whose purpose is to acquire or fund companies and then hold interests in those companies as capital assets for investment purposes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 20*@
+    <div id="part20" hidden>
+        <h5 class="ml-4">
+            Part XX
+            Excepted Nonfinancial Entity in Liquidation or Bankruptcy
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">34</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox42" asp-for="_34cb">
+                        <label class="form-check-label" for="inlinecheckbox42">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Filed a plan of liquidation, filed a plan of reorganization, or filed for bankruptcy on <input asp-for=_34tb class="no-border" /></li>
+                        <li>During the past 5 years has not been engaged in business as a financial institution or acted as a passive NFFE;</li>
+                        <li>Is either liquidating or emerging from a reorganization or bankruptcy with the intent to continue or recommence operations as a nonfinancial entity; and</li>
+                        <li>Has, or will provide, documentary evidence such as a bankruptcy filing or other public documentation that supports its claim if it remains in bankruptcy or liquidation for more than 3 years.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 21*@
+    <div id="part21" hidden>
+        <h5 class="ml-4">
+            Part XXI
+            501(c) Organization
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">35</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox43" asp-for="_35cb">
+                        <label class="form-check-label" for="inlinecheckbox43">
+                            I certify that the entity identified in Part I is a 501(c) organization that:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>
+                            Has been issued a determination letter from the IRS that is currently in effect concluding that the payee is a section 501(c) organization that is dated
+                            <input asp-for=_35tb class="no-border" />; or
+                        </li>
+                        <li>Has provided a copy of an opinion from U.S. counsel certifying that the payee is a section 501(c) organization (without regard to whether the payee is a foreign private foundation).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 22*@
+    <div id="part22" hidden>
+        <h5 class="ml-4">
+            Part XXII
+            Nonprofit Organization
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">36</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox44" asp-for="_36cb">
+                        <label class="form-check-label" for="inlinecheckbox44">
+                            I certify that the entity identified in Part I is a nonprofit organization that meets the following requirements.
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>The entity is established and maintained in its country of residence exclusively for religious, charitable, scientific, artistic, cultural or educational purposes;</li>
+                        <li>The entity is exempt from income tax in its country of residence;</li>
+                        <li>The entity has no shareholders or members who have a proprietary or beneficial interest in its income or assets;</li>
+                        <li>Neither the applicable laws of the entity’s country of residence nor the entity’s formation documents permit any income or assets of the entity to be distributed to, or applied for the benefit of, a private person or noncharitable entity other than pursuant to the conduct of the entity’s charitable activities or as payment of reasonable compensation for services rendered or payment representing the fair market value of property which the entity has purchased; and</li>
+                        <li>The applicable laws of the entity’s country of residence or the entity’s formation documents require that, upon the entity’s liquidation or dissolution, all of its assets be distributed to an entity that is a foreign government, an integral part of a foreign government, a controlled entity of a foreign government, or another organization that is described in this part or escheats to the government of the entity’s country of residence or any political subdivision thereof.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 23*@
+    <div id="part23" hidden>
+        <h5 class="ml-4">
+            Part XXIII
+            Publicly Traded NFFE or NFFE Affiliate of a Publicly Traded Corporation
+        </h5>
+        <div class="form-box">
+            <div>
+                <strong>Check box 37a or 37b, whichever applies.</strong>
+            </div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">37a</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="1" id="inlinecheckbox45" asp-for="_37aorbCb">
+                        <label class="form-check-label" for="inlinecheckbox45">
+                            I certify that:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>The entity identified in Part I is a foreign corporation that is not a financial institution; and</li>
+                        <li>The stock of such corporation is regularly traded on one or more established securities markets, including <input asp-for=_37aTb class="no-border" /> (name one securities exchange upon which the stock is regularly traded).</li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="2" id="inlinecheckbox46" asp-for="_37aorbCb">
+                        <label class="form-check-label" for="inlinecheckbox46">
+                            I certify that:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>The entity identified in Part I is a foreign corporation that is not a financial institution;</li>
+                        <li>The entity identified in Part I is a member of the same expanded affiliated group as an entity the stock of which is regularly traded on an established securities market;</li>
+                        <li>
+                            The name of the entity, the stock of which is regularly traded on an established securities market, is
+                            <input asp-for=_37bTb1 class="no-border" /> ; and
+                        </li>
+                        <li>The name of the securities market on which the stock is regularly traded is <input asp-for=_37bTb2 class="no-border" /></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 24*@
+    <div id="part24" hidden>
+        <h5 class="ml-4">
+            Part XXIV
+            Excepted Territory NFFE
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">38</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox48" asp-for="_38cb">
+                        <label class="form-check-label" for="inlinecheckbox48">
+                            I certify that:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>The entity identified in Part I is an entity that is organized in a possession of the United States;</li>
+                        <li>
+                            The entity identified in Part I:
+                            <ol class="custom-list">
+                                <li>Does not accept deposits in the ordinary course of a banking or similar business;</li>
+                                <li>Does not hold, as a substantial portion of its business, financial assets for the account of others; or</li>
+                                <li>Is not an insurance company (or the holding company of an insurance company) that issues or is obligated to make payments with respect to a financial account; and</li>
+                            </ol>
+                        </li>
+                        <li>All of the owners of the entity identified in Part I are bona fide residents of the possession in which the NFFE is organized or incorporated.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 25*@
+    <div id="part25" hidden>
+        <h5 class="ml-4">
+            Part XXV
+            Active NFFE
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">39</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox49" asp-for="_39cb">
+                        <label class="form-check-label" for="inlinecheckbox49">
+                            I certify that:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>The entity identified in Part I is a foreign entity that is not a financial institution;</li>
+                        <li>Less than 50% of such entity’s gross income for the preceding calendar year is passive income; and</li>
+                        <li>Less than 50% of the assets held by such entity are assets that produce or are held for the production of passive income (calculated as a weighted average of the percentage of passive assets measured quarterly) (see instructions for the definition of passive income).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 26*@
+    <div id="part26" hidden>
+        <h5 class="ml-4">
+            Part XXVI
+            Passive NFFE
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-2">40a</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox50" asp-for="_40aCb">
+                        <label class="form-check-label" for="inlinecheckbox50">
+                            I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity organized in a
+                            possession of the United States) and is not certifying its status as a publicly traded NFFE (or affiliate), excepted territory NFFE, active NFFE, direct reporting NFFE, or sponsored direct reporting NFFE.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2"><strong>Check box 40b or 40c, whichever applies.</strong></div>
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-4">b</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="1" id="inlinecheckbox51" onchange="_40cCheckBox(this)" asp-for="_40borcCb">
+                        <label class="form-check-label" for="inlinecheckbox51">
+                            I further certify that the entity identified in Part I has no substantial U.S. owners (or, if applicable, no controlling U.S. persons); or
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <strong class="mr-4">c</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="radio" value="2" id="inlinecheckbox52" onchange="_40cCheckBox(this)" asp-for="_40borcCb">
+                        <label class="form-check-label" for="inlinecheckbox52">
+                            I further certify that the entity identified in Part I has provided the name, address, and TIN of each substantial U.S. owner (or, if applicable,
+                            controlling U.S. person) of the NFFE in Part XXIX.
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 27*@
+    <div id="part27" hidden>
+        <h5 class="ml-4">
+            Part XXVII
+            Excepted Inter-Affiliate FFI
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">41</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox53" asp-for="_41cb">
+                        <label class="form-check-label" for="inlinecheckbox53">
+                            I certify that the entity identified in Part I:
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <ul>
+                        <li>Is a member of an expanded affiliated group;</li>
+                        <li>Does not maintain financial accounts (other than accounts maintained for members of its expanded affiliated group);</li>
+                        <li>Does not make withholdable payments to any person other than to members of its expanded affiliated group;</li>
+                        <li>Does not hold an account (other than depository accounts in the country in which the entity is operating to pay for expenses) with or receive payments from any withholding agent other than a member of its expanded affiliated group; and</li>
+                        <li>Has not agreed to report under Regulations section 1.1471-4(d)(2)(ii)(C) or otherwise act as an agent for chapter 4 purposes on behalf of any financial institution, including a member of its expanded affiliated group.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Part 28*@
+    <div id="part28" hidden>
+        <h5 class="ml-4">
+            Part XXVIII
+            Sponsored Direct Reporting NFFE (see instructions for when this is permitted)
+        </h5>
+        <div class="form-box">
+            <div class="ml-3">
+                <div class="row">
+                    <strong class="mr-3">42</strong>
+                    Name of sponsoring entity: <input asp-for=_42tb class="no-border" />
+                </div>
+                <div class="row">
+                    <strong class="mr-3">43</strong>
+                    <div class="form-check inline" style="width:97%">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox54" asp-for="_43cb">
+                        <label class="form-check-label" for="inlinecheckbox54">
+                            I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified on line 42.
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @*Part 29*@
+    <div id="part29" hidden>
+        <h5 class="ml-4">
+            Part XXIX
+            Substantial U.S. Owners of Passive NFFE
+        </h5>
+        <div class="form-box">
+            <div>
+                As required by Part XXVI, provide the name, address, and TIN of each substantial U.S. owner of the NFFE. Please see the instructions for a definition of substantial U.S. owner. If providing the form to an FFI treated as a reporting Model 1 FFI or reporting Model 2 FFI, an NFFE may also use this part for reporting its controlling U.S. persons under an applicable IGA.
+            </div>
+            <div class="mt-2">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>TIN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input class="input-table" type="text" asp-for="NameRow1" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow1" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow1" /></td>
+                        </tr>
+                        <tr>
+                             <td><input class="input-table" type="text" asp-for="NameRow2" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow2" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow2" /></td>
+                        </tr>
+                        <tr>
+                             <td><input class="input-table" type="text" asp-for="NameRow3" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow3" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow3" /></td>
+                        </tr>
+                        <tr>
+                             <td><input class="input-table" type="text" asp-for="NameRow4" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow4" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow4" /></td>
+                        </tr>
+                        <tr>
+                             <td><input class="input-table" type="text" asp-for="NameRow5" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow5" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow5" /></td>
+                        </tr>
+                        <tr>
+                            <td><input class="input-table" type="text" asp-for="NameRow6" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow6" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow6" /></td>
+                        </tr>
+                        <tr>
+                            <td><input class="input-table" type="text" asp-for="NameRow7" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow7" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tin1row7" /></td>
+                        </tr>
+                        <tr>
+                            <td><input class="input-table" type="text" asp-for="NameRow8" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow8" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow8" /></td>
+                        </tr>
+                        <tr>
+                            <td><input class="input-table" type="text" asp-for="NameRow9" /></td>
+                            <td><input class="input-table" type="text" asp-for="AddressRow9" /></td>
+                            <td><input class="input-table" type="text" asp-for="Tinrow9" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="form-box">
+        <div class="col-md-12">
+            <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="W8BENEOnBehalfName1" value="true" onclick="W8BENEOnBehalfNameFunc(this)" asp-for="W8beneonBehalfName" required>
+                    <label class="form-check-label" for="W8BENEOnBehalfName1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="W8BENEOnBehalfName2" value="false" onclick="W8BENEOnBehalfNameFunc(this)" asp-for="W8beneonBehalfName" required>
+                    <label class="form-check-label" for="W8BENEOnBehalfName2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="W8BENEOnBehalfNameDiv" class="form-group" hidden>
+                <label id="lbl_authSignatory">Please enter the name of the beneficial owner <span class="text-danger">*</span></label>
+                <input asp-for="PrintNameOfSigner" class="form-control" required />
+            </div>
+        </div>
+    </div>
+</div>

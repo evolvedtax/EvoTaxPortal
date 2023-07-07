@@ -14,6 +14,11 @@
             white-space: nowrap;
             margin-right: 10px;
         }
+
+    .center-dropdown {
+        left: -100% !important;
+        transform: translateX(-50%) !important;
+    }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -73,7 +78,8 @@
                                 foreach (var item in Model)
                                 {
                                     string status = string.Empty;
-                                    @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = "disabled"; }
+                                    @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = ""; }
+                                    //"disabled"; }
                                     <tr id="@item.ClientId">
                                         <td><input type="checkbox" class="rowCheckbox" value="@item.ClientId" @status></td>
                                         <td hidden>@item.PartnerName1</td>
@@ -112,13 +118,13 @@
                                                     <div class="dropdown-menu-horizontal">
                                                         @if (item?.IsLocked ?? false)
                                                         {
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{clientId:'@item?.ClientId',isLocked:'false'})">Unlock</a>
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>
                                                         }
                                                         else
                                                         {
                                                             <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
                                                             <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{clientId:'@item?.ClientId',isLocked:'true'})">Lock</a>
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>
                                                         }
                                                         <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
                                                     </div>
@@ -284,6 +290,10 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+            $('.btn-menu-toggle').click(function () {
+                debugger
+                var obj = $('.dt-button-collection');
+            });
             $('.edit-row').click(function () {
                 debugger
                 // Get the row ID from the data attribute
@@ -384,10 +394,61 @@
                             let params = { selectedValues: selectedValues }
                             COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
                         }
+                    },{
+                        extend: 'collection',
+                        text: '<i class="fa fa-lock"></i>',
+                        className: 'btn-menu-toggle',
+                        buttons: [
+                            {
+                                text: '<i class="fa fa-unlock"></i> Unlock All',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'false' })
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-lock"></i> Lock All',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
+                            }
+                        ],
                     }
                 ],
                 initComplete: function () {
                     $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Lock/Unlock All').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+                        dropdown.addClass('center-dropdown');
+                    });
                 }
             });
 
@@ -455,7 +516,7 @@
                 $.each(response, function (index, item) {
                     let ClientStatus = '';
                     if (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') {
-                        ClientStatus = 'disabled';
+                        //ClientStatus = 'disabled';
                     }
                     let status = '';
                     if (item.ClientStatus == '@AppConstants.ClientStatusActive') {

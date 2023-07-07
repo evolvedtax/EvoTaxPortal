@@ -180,17 +180,35 @@
             $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
         }
+        var textarea = document.getElementById("Items");
+        var counter = document.getElementById("textCounter");
+        textarea.addEventListener("input", function () {
+            var remainingChars = textarea.maxLength - textarea.value.length;
+            counter.textContent = remainingChars + " characters remaining";
+        });
         function ShowHideProvince(obj) {
+            debugger
+            var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
             if (obj.value == 'United States') {
                 $('#provinceDiv').prop('hidden', true);
                 $('#province').val('');
                 $('#stateDiv').prop('hidden', false);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+                if (checkedRadioButton.val() == '@AppConstants.W8ECIForm') {
+                    $('#SamePermAddress').prop('checked', true).trigger('change');
+                    $('#businessCheckboxDiv').prop('hidden', false);
+                    $('#businessAddressHeading').prop('hidden', true);
+                }
             } else {
                 $('#provinceDiv').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);
                 $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+                if (checkedRadioButton.val() == '@AppConstants.W8ECIForm') {
+                    $('#SamePermAddress').prop('checked', false).trigger('change');
+                    $('#businessCheckboxDiv').prop('hidden', true);
+                    $('#businessAddressHeading').prop('hidden', false);
+                }
             }
         }
         function ShowHideFTIN(obj) {
@@ -234,6 +252,8 @@
         showTab(currentTab); // Display the current tab
 
         function SelectForm(obj) {
+            $('#businessCheckboxText').text('Permanent address is the same as the mailing address');
+            $('#countryPerm').prop('disabled', false);
             if (obj.value == '@AppConstants.W8Form') {
                 $('#W8FormDiv').prop('hidden', false);
                 $('#W8BenQuestionareDiv').prop('hidden', false);
@@ -282,12 +302,17 @@
             }
         }
         function ShowHideW8(obj) {
+            $('#businessCheckboxText').text('Permanent address is the same as the mailing address');
+            $('#countryPerm').prop('disabled', false);
             if (obj.value == '@AppConstants.W8BENForm') {
                 $('#W8BenQuestionareDiv').prop('hidden', false);
                 $('#W8ECIQuestionareDiv').prop('hidden', true);
             } else {
                 $('#W8BenQuestionareDiv').prop('hidden', true);
                 $('#W8ECIQuestionareDiv').prop('hidden', false);
+                $('#businessCheckboxText').text('Business address is the same as the permanent residence address');
+                $('#countryPerm').val('United States').change().prop('disabled', true);
+                $('select').change();
             }
             showTab(currentTab);
         }
@@ -352,7 +377,7 @@
 
             if ($('#SamePermAddress').is(':checked')) {
                 //--------------------//
-                $('#countryPerm').val($('#country').val()).change();
+                //$('#countryPerm').val($('#country').val()).change();
                 $('#adreess1Perm').val($('#adreess1').val());
                 $('#adreess2Perm').val($('#adreess2').val());
                 $('#cityPerm').val($('#city').val());

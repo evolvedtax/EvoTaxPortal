@@ -1,8 +1,8 @@
-﻿using EvolvedTax.Business.Services.CommonService;
+﻿using AutoMapper;
+using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
-using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
-using EvolvedTax.Business.Services.W8BenFormService;
+using EvolvedTax.Business.Services.W8BEN_E_FormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W8EXPFormService;
 using EvolvedTax.Business.Services.W9FormService;
@@ -10,9 +10,6 @@ using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
@@ -26,10 +23,12 @@ namespace EvolvedTax.Controllers
         private readonly IInstituteService _instituteService;
         private readonly IGeneralQuestionareEntityService _generalQuestionareEntityService;
         private readonly IW8ECIFormService _w8ECIFormService;
+        private readonly IW8BEN_E_FormService _w8BENEFormService;
         private readonly IW8EXPFormService _w8EXPFormService;
+        private readonly IMapper _mapper;
         public EntityController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
             IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
-                            IGeneralQuestionareEntityService generalQuestionareEntityService, IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService)
+                            IGeneralQuestionareEntityService generalQuestionareEntityService, IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService, IW8BEN_E_FormService w8BENEFormService = null, IMapper mapper = null)
         {
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
@@ -39,6 +38,8 @@ namespace EvolvedTax.Controllers
             _generalQuestionareEntityService = generalQuestionareEntityService;
             _w8EXPFormService = W8EXPFormService;
             _w8ECIFormService = w8ECIFormService;
+            _w8BENEFormService = w8BENEFormService;
+            _mapper = mapper;
         }
         public async Task<IActionResult> GQEntity()
         {
@@ -184,7 +185,7 @@ namespace EvolvedTax.Controllers
                 {
                     model.US1 = "2";
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                    if (model.W8ECIOnBehalfName)
+                    if (model.W8ECIOnBehalfName ?? false)
                     {
                         HttpContext.Session.SetString("ClientName", model.AuthSignatoryName ?? string.Empty);
                     }
@@ -199,7 +200,7 @@ namespace EvolvedTax.Controllers
                 {
                     model.US1 = "2";
                     model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
-                    if (model.W8ECIOnBehalfName)
+                    if (model.W8ECIOnBehalfName ?? false)
                     {
                         HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
                     }
@@ -302,7 +303,7 @@ namespace EvolvedTax.Controllers
             return Json(filePathResponse);
         }
         #endregion
-        
+
         #region W8BENE
         public async Task<IActionResult> W8BENE()
         {
@@ -329,10 +330,21 @@ namespace EvolvedTax.Controllers
                                      Value = p.Country,
                                  });
 
-            ViewBag.TypeOfEntityW8ECI = _evolvedtaxContext.W8eciEntityTypes.Select(p => new SelectListItem
+            ViewBag.TypeOfEntityW8BENE = _evolvedtaxContext.W8beneEntityTypes.Select(p => new SelectListItem
             {
                 Text = p.EntityType,
                 Value = p.EntityId.ToString()
+            });
+
+            ViewBag.FATCAStatusW8BENE = _evolvedtaxContext.W8benefatcas.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
+            });
+            ViewBag.W8benefatcaDE = _evolvedtaxContext.W8benefatcades.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
             });
 
             ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
@@ -340,18 +352,18 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-
-            var GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
+            var GQEntitiesResponse = new W8BENERequest();
+            //var GQEntitiesResponse = _w8BENEFormService.GetEntityDataByClientEmailId(clientEmail);
             //GQEntitiesResponse.FormType = formName;
             return View(GQEntitiesResponse);
         }
         [HttpPost]
-        public IActionResult W8BENE(FormRequest model)
+        public IActionResult W8BENE(W8BENERequest model)
         {
             string filePathResponse = string.Empty;
             model.IndividualOrEntityStatus = AppConstants.EntityStatus;
             model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
-            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+            //model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
             model.BasePath = _webHostEnvironment.WebRootPath;
 
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
@@ -360,13 +372,19 @@ namespace EvolvedTax.Controllers
             model.Host = fullUrl;
 
 
-            model.US1 = "2";
-            model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-            HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
+            model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8BENETemplateFileName);
+            HttpContext.Session.SetString("ClientName", model.PrintNameOfSigner ?? string.Empty);
 
-            filePathResponse = _w8ECIFormService.SaveForEntity(model);
+            model.GQOrgName = model.NameOfOrganization ?? string.Empty;
+            model.EntityType = model.TypeOfEntity ?? "";
+            model.DE = model.DECheckBox;
+            model.DEOwnerName = model.NameOfDiregardedEntity ?? string.Empty;
+            model.FormType = AppConstants.W8FormTypes;
+            model.W8FormType = AppConstants.W8BENEForm;
 
-            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            filePathResponse = _w8BENEFormService.SaveForEntity(model);
+
+            var responseGQForm = _generalQuestionareEntityService.Save(_mapper.Map<FormRequest>(model));
             if (responseGQForm == 0)
             {
                 return View(model);
@@ -374,7 +392,7 @@ namespace EvolvedTax.Controllers
 
             HttpContext.Session.SetString("PdfdFileName", filePathResponse);
             HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
-            HttpContext.Session.SetString("FormName", AppConstants.W8ECIForm);
+            HttpContext.Session.SetString("FormName", AppConstants.W8BENEForm);
             HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
             return Json(filePathResponse);
         }

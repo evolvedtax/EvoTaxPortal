@@ -1,6 +1,6 @@
-﻿@model FormRequest
+﻿@model W8BENERequest
 @{
-    ViewData["Title"] = "General Questions";
+    ViewData["Title"] = "W8 BEN-E";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -77,15 +77,13 @@
               data-ajax-failure="COMMON.ajaxfailure"
               data-ajax-loading="#ajax-loader"
               data-ajax-success="ajaxsuccess"
-              data-ajax-url="@Url.Action("W8ECI","Entity")">
+              data-ajax-url="@Url.Action("W8BENE","Entity")">
 
             <!-- One "tab" for each step in the form: -->
             <div>
                 <!--General Questionare View-->
-                <partial name="_generalQuestionareW8ECI" model="Model" />
+                <partial name="_generalQuestionareW8BENE" model="Model" />
 
-                <!--W8 ECI Questionare View-->
-                <partial name="_w8ECIQuestionare" model="Model" />
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
@@ -132,8 +130,8 @@
                 //allowClear: true
             });
             $('.select2-container').css('width', '100%');
-            $('#Ssnitnein').attr('placeholder', '00-0000000');
-            $('#Ssnitnein').mask('00-0000000', { reverse: true });
+            //$('#Ssnitnein').attr('placeholder', '00-0000000');
+            //$('#Ssnitnein').mask('00-0000000', { reverse: true });
 
             //-------------------//
             $('select').change();
@@ -161,6 +159,106 @@
             //    W8FormTypecheckedRadioButton.trigger("change");
             //}
         });
+        function W8BENEOnBehalfNameFunc(obj) {
+            $('#W8BENEOnBehalfNameDiv').prop('hidden', false);
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
+            } else {
+                $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
+            }
+        }
+        function ShowHideFormParts(obj) {
+            AllFormDivsHide();
+            if (obj.value == '5') {
+                $('#part3').prop('hidden', false);
+            } else if (obj.value == '6') {
+                $('#part4').prop('hidden', false);
+            } else if (obj.value == '7') {
+                $('#part5').prop('hidden', false);
+            } else if (obj.value == '8') {
+                $('#part6').prop('hidden', false);
+            } else if (obj.value == '9') {
+                $('#part7').prop('hidden', false);
+            } else if (obj.value == '10') {
+                $('#part8').prop('hidden', false);
+            } else if (obj.value == '11') {
+                $('#part9').prop('hidden', false);
+            } else if (obj.value == '12') {
+                $('#part10').prop('hidden', false);
+            } else if (obj.value == '13') {
+                $('#part11').prop('hidden', false);
+            } else if (obj.value == '14') {
+                $('#part12').prop('hidden', false);
+            } else if (obj.value == '15') {
+                $('#part13').prop('hidden', false);
+            } else if (obj.value == '16') {
+                $('#part14').prop('hidden', false);
+            } else if (obj.value == '17') {
+                $('#part15').prop('hidden', false);
+            } else if (obj.value == '18') {
+                $('#part16').prop('hidden', false);
+            } else if (obj.value == '19') {
+                $('#part17').prop('hidden', false);
+            } else if (obj.value == '20') {
+                $('#part18').prop('hidden', false);
+            } else if (obj.value == '21') {
+                $('#part19').prop('hidden', false);
+            } else if (obj.value == '22') {
+                $('#part20').prop('hidden', false);
+            } else if (obj.value == '23') {
+                $('#part21').prop('hidden', false);
+            } else if (obj.value == '24') {
+                $('#part22').prop('hidden', false);
+            } else if (obj.value == '25') {
+                $('#part23').prop('hidden', false);
+            } else if (obj.value == '26') {
+                $('#part24').prop('hidden', false);
+            } else if (obj.value == '27') {
+                $('#part25').prop('hidden', false);
+            } else if (obj.value == '28') {
+                $('#part26').prop('hidden', false);
+            } else if (obj.value == '29') {
+                $('#part27').prop('hidden', false);
+            } else if (obj.value == '31') {
+                $('#part28').prop('hidden', false);
+            }
+        }
+        function _40cCheckBox(obj) {
+            if (obj.value == "2") {
+                $('#part29').prop('hidden', false);
+            } else {
+                $('#part29').prop('hidden', true);
+            }
+        }
+        function AllFormDivsHide() {
+            $('#part3').prop('hidden', true);
+            $('#part4').prop('hidden', true);
+            $('#part5').prop('hidden', true);
+            $('#part6').prop('hidden', true);
+            $('#part7').prop('hidden', true);
+            $('#part8').prop('hidden', true);
+            $('#part9').prop('hidden', true);
+            $('#part10').prop('hidden', true);
+            $('#part11').prop('hidden', true);
+            $('#part12').prop('hidden', true);
+            $('#part13').prop('hidden', true);
+            $('#part14').prop('hidden', true);
+            $('#part15').prop('hidden', true);
+            $('#part16').prop('hidden', true);
+            $('#part17').prop('hidden', true);
+            $('#part18').prop('hidden', true);
+            $('#part19').prop('hidden', true);
+            $('#part20').prop('hidden', true);
+            $('#part21').prop('hidden', true);
+            $('#part22').prop('hidden', true);
+            $('#part23').prop('hidden', true);
+            $('#part24').prop('hidden', true);
+            $('#part25').prop('hidden', true);
+            $('#part26').prop('hidden', true);
+            $('#part27').prop('hidden', true);
+            $('#part28').prop('hidden', true);
+            $('#part29').prop('hidden', true);
+        }
         function ChangeMaskingW8ECI(obj) {
 
             if (obj.value == 'S') {
@@ -237,6 +335,19 @@
                 $('#lblZipCodePerm').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
             }
         }
+        function ShowHideProvince12(obj) {
+            if (obj.value == 'United States') {
+                $('#12_provinceDiv').prop('hidden', true);
+                $('#_12_Province').val('');
+                $('#12_stateDiv').prop('hidden', false);
+                $('#12_lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#12_provinceDiv').prop('hidden', false);
+                $('#12_stateDiv').prop('hidden', true);
+                $('#_12_State').val(1);
+                $('#12_lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
 
         function HideAddress(obj) {
             if (obj.checked) {
@@ -249,12 +360,12 @@
         showTab(currentTab); // Display the current tab
 
 
-        function ShowHideFTINW8ECI(obj) {
+        function ShowHideFTINW8BENE(obj) {
             if (String(obj.value).toLowerCase() == 'true') {
-                $('#FTINW8ECIDiv').prop('hidden', false);
+                $('#FTINW8BENEDiv').prop('hidden', false);
             } else {
-                $('#FTINW8ECIDiv').prop('hidden', true);
-                $('#ForeignTaxIdentifyingNumberW8ECI').val('');
+                $('#FTINW8BENEDiv').prop('hidden', true);
+                $('#CheckIfFtinNotLegallyRequiredYNW8BENE').val('');
             }
         }
         function W8ECIOnBehalfNameFunc(obj) {
@@ -264,24 +375,12 @@
                 $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
             }
         }
-        function SelectDEW8ECIEntity(obj) {
-            //console.log(typeof obj, obj);
-            //console.log(typeof obj.value, obj.value);
+        function SelectDEEntity(obj) {
             if (obj.value === 'false' || obj.value === 'False') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
-            } else if (obj == 'false' || obj.value === 'False') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
+                $('#DEDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
-            }
-            else if (obj == 'true' || obj == 'True') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
-            }
-            else if (obj.value === undefined) {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
+                $('#DEDiv').prop('hidden', false);
             }
         }
         function showTab(n) {
@@ -297,7 +396,7 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
+                document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN-E >>";
                 // ... and run a function that displays the correct step indicator:
                 fixStepIndicator(n)
             }

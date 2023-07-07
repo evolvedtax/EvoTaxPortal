@@ -161,6 +161,12 @@
             //    W8FormTypecheckedRadioButton.trigger("change");
             //}
         });
+        var textarea = document.getElementById("Items");
+        var counter = document.getElementById("textCounter");
+        textarea.addEventListener("input", function () {
+            var remainingChars = textarea.maxLength - textarea.value.length;
+            counter.textContent = remainingChars + " characters remaining";
+        });
         function ChangeMaskingW8ECI(obj) {
 
             if (obj.value == 'S') {
@@ -212,16 +218,24 @@
             $('#nextBtn').prop('hidden', true);
         }
         function ShowHideProvince(obj) {
+            $('#countryPerm').val('United States').change();
+            $('#countryPerm').prop('disabled', true);
             if (obj.value == 'United States') {
                 $('#provinceDiv').prop('hidden', true);
                 $('#province').val('');
                 $('#stateDiv').prop('hidden', false);
+                $('#SamePermAddress').prop('checked', true).trigger('change');
+                $('#businessCheckboxDiv').prop('hidden', false);
+                $('#businessAddressHeading').prop('hidden', true);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
                 $('#provinceDiv').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);
                 $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+                $('#SamePermAddress').prop('checked', false).trigger('change');
+                $('#businessCheckboxDiv').prop('hidden', true);
+                $('#businessAddressHeading').prop('hidden', false);
             }
         }
         function ShowHideProvincePerm(obj) {
@@ -258,6 +272,7 @@
             }
         }
         function W8ECIOnBehalfNameFunc(obj) {
+            $('#W8ECIOnBehalfNameDiv').prop('hidden', false);
             if (String(obj.value).toLowerCase() == 'true') {
                 $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
             } else {
@@ -311,7 +326,7 @@
 
             if ($('#SamePermAddress').is(':checked')) {
                 //--------------------//
-                $('#countryPerm').val($('#country').val()).change();
+                //$('#countryPerm').val($('#country').val()).change();
                 $('#adreess1Perm').val($('#adreess1').val());
                 $('#adreess2Perm').val($('#adreess2').val());
                 $('#cityPerm').val($('#city').val());

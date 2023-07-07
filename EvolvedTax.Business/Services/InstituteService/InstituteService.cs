@@ -340,23 +340,30 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
-        public async Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked)
+        public async Task<MessageResponseModel> LockUnlockEntity(int[] selectedValues, bool isLocked)
         {
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+            var result = 0;
+            foreach (var item in selectedValues)
+            {
+                result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC LockUnlockEntity
-            {EntityId},
-            {isLocked}");
+                    {item},
+                    {isLocked}");
+            }
             if (result > 0)
             {
                 var respModel = new MessageResponseModel();
                 respModel.Status = true;
+                var message = "";
                 if (isLocked)
                 {
-                    respModel.Message = "Record is Locked";
+                    if (selectedValues.Count() > 1) { message = "Records are locked"; } else { message = "Record is locked"; }
+                    respModel.Message = message;
                 }
                 else
                 {
-                    respModel.Message = "Record is Unlocked";
+                    if (selectedValues.Count() > 1) { message = "Records are unlocked"; } else { message = "Record is unlocked"; }
+                    respModel.Message = message;
                 }
                 return respModel;
             }
@@ -477,23 +484,30 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
-        public async Task<MessageResponseModel> LockUnlockClient(int clientId, bool isLocked)
+        public async Task<MessageResponseModel> LockUnlockClient(int[] selectedValues, bool isLocked)
         {
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
+            var result = 0;
+            foreach (var item in selectedValues)
+            {
+                result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC LockUnlockClient
-            {clientId},
-            {isLocked}");
+                        {item},
+                        {isLocked}");
+            }
             if (result > 0)
             {
                 var respModel = new MessageResponseModel();
                 respModel.Status = true;
+                var message = "";
                 if (isLocked)
                 {
-                    respModel.Message = "Record is Locked";
+                    if (selectedValues.Count() > 1) { message = "Records are locked"; } else { message = "Record is locked"; }
+                    respModel.Message = message;
                 }
                 else
                 {
-                    respModel.Message = "Record is Unlocked";
+                    if (selectedValues.Count() > 1) { message = "Records are unlocked"; } else { message = "Record is unlocked"; }
+                    respModel.Message = message;
                 }
                 return respModel;
             }

@@ -211,7 +211,7 @@ namespace EvolvedTax.Controllers
                     {
                         model.US1 = "2";
                         model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                        if (model.W8ECIOnBehalfName)
+                        if (model.W8ECIOnBehalfName ?? false)
                         {
                             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
                             HttpContext.Session.SetString("ClientNameSig", string.Concat(model.GQFirstName, " ", model.GQLastName));

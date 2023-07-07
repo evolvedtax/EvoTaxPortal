@@ -14,6 +14,11 @@
             white-space: nowrap;
             margin-right: 10px;
         }
+
+    .center-dropdown {
+        left: -100% !important;
+        transform: translateX(-50%) !important;
+    }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -39,6 +44,7 @@
                     <table class="table table-striped table-bordered table-hover dataTables-example">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
                                 <th>Entity Name</th>
                                 <th>EIN</th>
                                 <th>Entity Registration Date</th>
@@ -60,6 +66,7 @@
                                 foreach (var item in Model)
                                 {
                                     <tr id="@item.EntityId">
+                                        <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
                                         <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId}) </td>
                                         <td>@item.Ein</td>
                                         <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
@@ -90,13 +97,13 @@
                                                     <div class="dropdown-menu-horizontal">
                                                         @if (item?.IsLocked ?? false)
                                                         {
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockEntity',{entityId:'@item?.EntityId',isLocked:'false'})">Unlock</a>
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'false'})">Unlock</a>
                                                         }
                                                         else
                                                         {
                                                             <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
                                                             <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockEntity',{entityId:'@item?.EntityId',isLocked:'true'})">Lock</a>
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'true'})">Lock</a>
                                                         }
                                                     </div>
                                                 </div>
@@ -333,10 +340,63 @@
                         action: function (e, dt, button, config) {
                             window.location.href = '/Institute/EntitiesRecyleBin';
                         }
+                    },
+                    {
+                        extend: 'collection',
+                        text: '<i class="fa fa-lock"></i>',
+                        className: 'btn-menu-toggle',
+                        title: 'Lock/Unlock All',
+                        buttons: [
+                            {
+                                text: '<i class= "fa fa-unlock" ></i> Unlock All',
+                                className: 'btn-unlock-all',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'false' })
+                                }
+                            },
+                            {
+                                text: '<i class= "fa fa-lock" ></i> Lock All',
+                                className: 'btn-lock-all',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
+                            }
+                        ],
                     }
                 ],
                 initComplete: function () {
                     $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Lock/Unlock All').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+                        dropdown.addClass('center-dropdown');
+                    });
                 }
             });
             // Get the file input element
@@ -348,7 +408,36 @@
             }
             bsCustomFileInput.init();
         });
+        // Select All checkbox
+        $('#selectAll').change(function () {
+            $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
+            //$('.email-btn').text('Send Email to All');
+            var selectedValues = [];
+            $('.rowCheckbox:checked').each(function () {
+                selectedValues.push($(this).val());
+            });
+            if (selectedValues.length === 0) {
+                //$('.email-btn').text('Send Email');
+            }
+        });
 
+        // Individual row checkbox
+        $('.rowCheckbox').change(function () {
+            if ($('.rowCheckbox:checked').length == $('.rowCheckbox').length) {
+                $('#selectAll').prop('checked', true);
+                //$('.email-btn').text('Send Email to All');
+            } else {
+                $('#selectAll').prop('checked', false);
+                //$('.email-btn').text('Send Email to Selected');
+                var selectedValues = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+                if (selectedValues.length === 0) {
+                    //$('.email-btn').text('Send Email');
+                }
+            }
+        });
         $('#saveBtn').click(function () {
             let form = $('#regForm');
             if (form.valid()) {

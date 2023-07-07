@@ -516,6 +516,9 @@
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     window.location.href = '@Url.Action("W8IMY", "Entity")';
                 }
+                else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
+                    window.location.href = '@Url.Action("W8BENE", "Entity")';
+                }
                 else {
                     // alert('here in w8 different');
                     $('#W8EXPFatcaDiv').prop('hidden', true);

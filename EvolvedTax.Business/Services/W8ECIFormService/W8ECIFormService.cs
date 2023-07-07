@@ -813,7 +813,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[12]", "0");
             }
 
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[0]", request.PrintNameOfSignerW8ECI);
+            //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[0]", request.PrintNameOfSignerW8ECI);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_4[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_5[0]", request.PCity);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_6[0]", request.PCountry);
@@ -830,7 +830,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_2[1]", "0");
             }
 
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_9[0]", request.Ssnitnein);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_9[0]", request.Ssnitnein ?? "");
 
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_10[0]", request.ForeignTaxIdentifyingNumberW8ECI);
 
