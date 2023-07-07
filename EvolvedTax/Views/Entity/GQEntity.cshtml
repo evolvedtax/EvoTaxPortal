@@ -375,13 +375,14 @@
             });
         }
         function HideDivOnDDLEntitySelection() {
-            $('#Q1Div').prop('hidden', true);
+            //$('#Q1Div').prop('hidden', true);
             $('#IntOrgDiv').prop('hidden', true);
             $('#FrgnBankDiv').prop('hidden', true);
             $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
             $('#GovUSPossDiv').prop('hidden', true);
         }
         function HideDivOnDDLStatusFATCASelection() {
+            $('#NonreportingDiv').prop('hidden', true);
             $('#FincalInsDiv').prop('hidden', true);
             $('#FrgnGovUSDiv').prop('hidden', true);
             $('#RetPlanSDiv').prop('hidden', true);
@@ -554,6 +555,7 @@
                 //Internal organization
                 if (selectedValue == 2) {
                     HideDivOnDDLEntitySelection();
+                    $('#FrgnGovDiv').prop('hidden', true);
                     $('#IntOrgDiv').prop('hidden', false);
                 }
                 //Foreign central bank of issue (not wholly owned by the foreign sovereign)
@@ -578,6 +580,11 @@
             $('#FatcaW8').on('change', function () {
                 var selectedValue = $(this).val();
 
+                //Nonreporting IGA FFI
+                if (selectedValue == 5) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#NonreportingDiv').prop('hidden', false);
+                }
                 //Territory financial institution. Complete Part III.
                 if (selectedValue == 6) {
                     HideDivOnDDLStatusFATCASelection();
@@ -692,28 +699,25 @@
             //    console.log(typeof obj, obj);
             //    console.log(typeof obj.value, obj.value);
             if (obj.value === 'false' || obj.value === 'False') {
-                HideDivs();
+               // HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj == 'false' || obj.value === 'False') {
-                HideDivs();
-
-
-
+               // HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
-                ShowHideDivs();
+               // ShowHideDivs();
             }
             else if (obj == 'true' || obj == 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
-                ShowHideDivs();
+               // ShowHideDivs();
             }
             else if (obj.value === undefined) {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
-                HideDivs();
+               // HideDivs();
             }
         }
         function ShowHideProvince(obj) {
