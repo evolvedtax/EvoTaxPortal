@@ -37,6 +37,8 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<MasterEntityType> MasterEntityTypes { get; set; }
 
+    public virtual DbSet<MasterPoboxWildcard> MasterPoboxWildcards { get; set; }
+
     public virtual DbSet<MasterState> MasterStates { get; set; }
 
     public virtual DbSet<MasterStatus> MasterStatuses { get; set; }
@@ -110,6 +112,7 @@ public partial class EvolvedtaxContext : DbContext
     public virtual DbSet<W9> W9s { get; set; }
 
     public virtual DbSet<W91> W91s { get; set; }
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -627,6 +630,17 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.IsActive)
                 .IsRequired()
                 .HasDefaultValueSql("((1))");
+        });
+
+        modelBuilder.Entity<MasterPoboxWildcard>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Master_POBox_Wildcard");
+
+            entity.Property(e => e.WildCard)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<MasterState>(entity =>
@@ -1812,6 +1826,9 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.NameOfOrganization)
                 .IsUnicode(false)
                 .HasColumnName("Name of Organization");
+            entity.Property(e => e.OnBehalfName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.PermanentResidenceAddress)
                 .IsUnicode(false)
                 .HasColumnName("Permanent residence address");
@@ -1952,8 +1969,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e._34).HasColumnName("34");
             entity.Property(e => e._35Cb).HasColumnName("35_CB");
             entity.Property(e => e._35Text)
-                .HasMaxLength(50)
-                .IsUnicode(false)
+                .HasColumnType("datetime")
                 .HasColumnName("35_Text");
             entity.Property(e => e._36).HasColumnName("36");
             entity.Property(e => e._36Text)

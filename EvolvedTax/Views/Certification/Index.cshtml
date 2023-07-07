@@ -105,6 +105,11 @@
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my knowledge and
                         belief it is true, correct, and complete. I further certify under penalties of perjury that:
                     </strong>
+                    <strong class="w8IMYCertification" hidden>
+                        Under penalties of perjury, I declare that I have examined the information on this form, and to the best of my knowledge and belief, it is true, correct, and
+                        complete. Furthermore, I authorize this form to be provided to any withholding agent that has control, receipt, or custody of the income or proceeds for
+                        which I am providing this form or any withholding agent that can disburse or make payments of the amounts for which I am providing this form.
+                    </strong>
                     <strong class="w8BenCertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
                         knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
@@ -121,7 +126,7 @@
                 </label>
             </div>
             <br />
-            <div class="w8ExpCertification">
+            <div class="w8ExpCertification" hidden>
                 <ol>
                     <li>The organization for which I am signing is the beneficial owner of the income and other payments to which this form relates,</li>
                     <li>The beneficial owner is not a U.S. person,</li>
@@ -312,6 +317,7 @@
             $('.w8BenCertification').prop('hidden', true);
             $('.w8ECICertification').prop('hidden', true);
             $('.w8ExpCertification').prop('hidden', true);
+            $('.w8IMYCertification').prop('hidden', true);
             $('.w8BENECertification').prop('hidden', true);
             //$('.certifyDiv').prop('hidden', true);
         }
@@ -352,6 +358,11 @@
                 else if ('@Model?.FormName' == '@AppConstants.W8BENEForm') {
                     HideDivs();
                     $('.w8BENECertification').prop('hidden', false);
+                }
+                else if ('@Model?.FormName' == '@AppConstants.W8IMYForm') {
+                    HideDivs();
+                    $('.w8IMYCertification').prop('hidden', false);
+
                 }
             }
             //$('#prevBtn').on('click', function () {
@@ -432,14 +443,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                                                                                        // Disable back and forward navigation
-                                                                                                                                                        //window.onbeforeunload = function () {
-                                                                                                                                                        //    return "Are you sure you want to leave this page?";
-                                                                                                                                                        //};
+                                                                                                                                // Disable back and forward navigation
+                                                                                                                                //window.onbeforeunload = function () {
+                                                                                                                                //    return "Are you sure you want to leave this page?";
+                                                                                                                                //};
 
-                                                                                                                                                        //window.addEventListener("popstate", function (event) {
-                                                                                                                                                        //    history.pushState(null, document.title, location.href);
-                                                                                                                                                        //});
+                                                                                                                                //window.addEventListener("popstate", function (event) {
+                                                                                                                                //    history.pushState(null, document.title, location.href);
+                                                                                                                                //});
 
     </script>
 }

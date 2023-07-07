@@ -191,7 +191,7 @@ public partial class TblW8imyform
 
     public bool? _35Cb { get; set; }
 
-    public string? _35Text { get; set; }
+    public DateTime? _35Text { get; set; }
 
     public DateTime? _36Text { get; set; }
 
@@ -230,4 +230,6 @@ public partial class TblW8imyform
     public int? PrintSize { get; set; }
 
     public string? FontName { get; set; }
+
+    public string? OnBehalfName { get; set; }
 }
