@@ -33,6 +33,10 @@ namespace EvolvedTax.Controllers
         {
             return View();
         }
+        public IActionResult EmailFrequency()
+        {
+            return View();
+        }
         [HttpPost]
         public IActionResult TaxPayerDetails(string emailId)
         {

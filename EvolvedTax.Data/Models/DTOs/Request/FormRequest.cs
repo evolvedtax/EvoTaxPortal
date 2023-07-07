@@ -27,7 +27,7 @@ public class FormRequest
     public bool? DE { get; set; } = false;
 
     public string? DEOwnerName { get; set; } = string.Empty;
-    public bool? DEW8ECI { get; set; } = false;
+    public bool DEW8ECI { get; set; } = false;
 
     public string? DEOwnerNameW8ECI { get; set; } = string.Empty;
     public string? TypeOfEntityForW8ECI { get; set; } = string.Empty;
@@ -174,9 +174,11 @@ public class FormRequest
 
     public string? ForeignTaxIdentifyingNumberW8ECI { get; set; }
 
-    public bool? CheckIfFtinNotLegallyRequiredYNW8ECI { get; set; }
+    public bool CheckIfFtinNotLegallyRequiredYNW8ECI { get; set; } = false;
+    public bool CheckIfFtinNotLegallyRequiredYNW8BENE { get; set; } = false;
 
     public string? ReferenceNumberSW8ECI { get; set; }
+    public string? ReferenceNumberSW8BENE { get; set; }
     [BindProperty, DataType(DataType.Date)]
     public string? DateOfBirthMmDdYyyyW8ECI { get; set; }
 
@@ -208,7 +210,7 @@ public class FormRequest
     public bool DealerCertification { get; set; }
     public bool IsYouCertifiedW8ECI { get; set; }
     public string? W9PrintName { get; set; }
-    public bool W8ECIOnBehalfName { get; set; }
+    public bool? W8ECIOnBehalfName { get; set; }
 
     #region W8IMYForm
     public string FatcaStatus { get; set; } = string.Empty;

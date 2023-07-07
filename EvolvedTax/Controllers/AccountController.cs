@@ -63,7 +63,9 @@ namespace EvolvedTax.Controllers
         {
             if (await _instituteService.CheckIfClientRecordExist(clientEmail))
             {
-               return RedirectToAction("AccessDenied", new { statusCode = 400 });
+                TempData["EntityName"] = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
+                TempData["InstituteEmail"] = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress;
+                return RedirectToAction("AccessDenied", new { statusCode = 400 });
             }
             ViewBag.ClientEmail = clientEmail;
             return View();

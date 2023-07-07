@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.Entities;
 using System.Reflection;
@@ -26,6 +27,8 @@ namespace EvolvedTax.Helpers
             CreateMap(typeof(InstituteMasterResponse),typeof(InstituteMaster)).ReverseMap();
             CreateMap(typeof(InstituteEntitiesResponse),typeof(InstituteEntity)).ReverseMap();
             CreateMap(typeof(InstituteClientResponse),typeof(InstitutesClient)).ReverseMap();
+            CreateMap(typeof(W8BENERequest),typeof(FormRequest)).ReverseMap();
+            CreateMap(typeof(W8BENERequest),typeof(TblW8ebeneform)).ReverseMap();
         }
 
         private static List<Type> GetTypesInNamespace(Assembly assembly, string[] dtoNameSpace)

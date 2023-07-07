@@ -229,5 +229,5 @@ public partial class TblW8ebeneform
 
     public string? W8beneemailAddress { get; set; }
 
-    public string? W8beneonBehalfName { get; set; }
+    public bool? W8beneonBehalfName { get; set; }
 }

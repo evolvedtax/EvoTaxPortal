@@ -141,6 +141,14 @@ namespace EvolvedTax.Business.Services.CommonService
                             image2.SetAbsolutePosition(450, 530);
                         }
                     }
+                    else if (AppConstants.W8BENEForm == request.FormName)
+                        {
+                        image1.SetAbsolutePosition(120, 110);
+                        if (request.EntryDate != null)
+                        {
+                            image2.SetAbsolutePosition(470, 110);
+                        }
+                    }
                     else if (AppConstants.W8IMYForm == request.FormName)
                     {
                         image1.SetAbsolutePosition(107, 185);

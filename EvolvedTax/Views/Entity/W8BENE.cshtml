@@ -1,6 +1,6 @@
-﻿@model FormRequest
+﻿@model W8BENERequest
 @{
-    ViewData["Title"] = "General Questions";
+    ViewData["Title"] = "W8 BEN-E";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -64,6 +64,7 @@
         border-radius: 4px;
         margin: 20px;
     }
+
 </style>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
@@ -76,24 +77,17 @@
               data-ajax-failure="COMMON.ajaxfailure"
               data-ajax-loading="#ajax-loader"
               data-ajax-success="ajaxsuccess"
-              data-ajax-url="@Url.Action("GQIndividual","Individual")">
+              data-ajax-url="@Url.Action("W8BENE","Entity")">
 
             <!-- One "tab" for each step in the form: -->
             <div>
-
                 <!--General Questionare View-->
-                <partial name="_generalQuestionare" model="Model" />
+                <partial name="_generalQuestionareW8BENE" model="Model" />
 
-                <!--W8 BEN Questionare View-->
-                <partial name="_w8BenQuestionare" model="Model" />
-
-                <!--W8 ECI Questionare View-->
-                <partial name="_w8ECIQuestionare" model="Model" />
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
-                <span class="step"></span>
                 <span class="step"></span>
                 <span class="step"></span>
                 <span class="step"></span>
@@ -106,7 +100,7 @@
 <div class="footer fixed" style="height:25%">
     <div style="overflow:auto;">
         <div style="float:right;">
-            <button type="button" onclick="location.href='@Url.Action("GQIndividual","Individual")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
         </div>
@@ -127,41 +121,176 @@
 
     <script type="text/javascript">
 
+
         $(document).ready(function () {
+
             $("select").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select One",
                 //allowClear: true
             });
-            // Get the current date
-            var currentDate = new Date().toISOString().split('T')[0];
-            // Set the max attribute of the date input
-            $('#dateOfBirthW8Ben').attr('max', currentDate);
-            $('#dateOfBirthW8ECI').attr('max', currentDate);
+            $('.select2-container').css('width', '100%');
+            //$('#Ssnitnein').attr('placeholder', '00-0000000');
+            //$('#Ssnitnein').mask('00-0000000', { reverse: true });
+
             //-------------------//
             $('select').change();
-            var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
-            if (checkedRadioButton.length > 0) {
-                checkedRadioButton.trigger("click");
-            }
-            var checkedRadioButtonW8From = $("input[type='radio'][name='W8FormType']:checked");
-            if (checkedRadioButtonW8From.length > 0) {
-                checkedRadioButtonW8From.trigger("click");
-            }
-            $('#CitizenshipW8Ben').find("option[value='United States']").remove();
-            $('#CitizenshipW8ECI').find("option[value='United States']").remove();
         });
         $(window).on('load', function () {
             $('select').change();
-            var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
-            if (checkedRadioButton.length > 0) {
-                checkedRadioButton.trigger("click");
+            var checkedDEW8ECI = $("input[type='radio'][name='DEW8ECI']:checked");
+            if (checkedDEW8ECI.length > 0) {
+                checkedDEW8ECI.trigger("change");
             }
-            var checkedRadioButtonW8From = $("input[type='radio'][name='W8FormType']:checked");
-            if (checkedRadioButtonW8From.length > 0) {
-                checkedRadioButtonW8From.trigger("click");
+
+            var checkedCheckIfFtinNotLegallyRequiredYN = $("input[type='radio'][name='CheckIfFtinNotLegallyRequiredYNW8ECI']:checked");
+            if (checkedCheckIfFtinNotLegallyRequiredYN.length > 0) {
+                checkedCheckIfFtinNotLegallyRequiredYN.trigger("click");
             }
+
+            var checkedOnBehalfName = $("input[type='radio'][name='W8ECIOnBehalfName']:checked");
+            if (checkedOnBehalfName.length > 0) {
+                checkedOnBehalfName.trigger("click");
+            }
+
+
+            //var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
+            //if (W8FormTypecheckedRadioButton.length > 0) {
+            //    W8FormTypecheckedRadioButton.trigger("change");
+            //}
         });
+        function W8BENEOnBehalfNameFunc(obj) {
+            $('#W8BENEOnBehalfNameDiv').prop('hidden', false);
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
+            } else {
+                $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
+            }
+        }
+        function ShowHideFormParts(obj) {
+            AllFormDivsHide();
+            if (obj.value == '5') {
+                $('#part3').prop('hidden', false);
+            } else if (obj.value == '6') {
+                $('#part4').prop('hidden', false);
+            } else if (obj.value == '7') {
+                $('#part5').prop('hidden', false);
+            } else if (obj.value == '8') {
+                $('#part6').prop('hidden', false);
+            } else if (obj.value == '9') {
+                $('#part7').prop('hidden', false);
+            } else if (obj.value == '10') {
+                $('#part8').prop('hidden', false);
+            } else if (obj.value == '11') {
+                $('#part9').prop('hidden', false);
+            } else if (obj.value == '12') {
+                $('#part10').prop('hidden', false);
+            } else if (obj.value == '13') {
+                $('#part11').prop('hidden', false);
+            } else if (obj.value == '14') {
+                $('#part12').prop('hidden', false);
+            } else if (obj.value == '15') {
+                $('#part13').prop('hidden', false);
+            } else if (obj.value == '16') {
+                $('#part14').prop('hidden', false);
+            } else if (obj.value == '17') {
+                $('#part15').prop('hidden', false);
+            } else if (obj.value == '18') {
+                $('#part16').prop('hidden', false);
+            } else if (obj.value == '19') {
+                $('#part17').prop('hidden', false);
+            } else if (obj.value == '20') {
+                $('#part18').prop('hidden', false);
+            } else if (obj.value == '21') {
+                $('#part19').prop('hidden', false);
+            } else if (obj.value == '22') {
+                $('#part20').prop('hidden', false);
+            } else if (obj.value == '23') {
+                $('#part21').prop('hidden', false);
+            } else if (obj.value == '24') {
+                $('#part22').prop('hidden', false);
+            } else if (obj.value == '25') {
+                $('#part23').prop('hidden', false);
+            } else if (obj.value == '26') {
+                $('#part24').prop('hidden', false);
+            } else if (obj.value == '27') {
+                $('#part25').prop('hidden', false);
+            } else if (obj.value == '28') {
+                $('#part26').prop('hidden', false);
+            } else if (obj.value == '29') {
+                $('#part27').prop('hidden', false);
+            } else if (obj.value == '31') {
+                $('#part28').prop('hidden', false);
+            }
+        }
+        function _40cCheckBox(obj) {
+            if (obj.value == "2") {
+                $('#part29').prop('hidden', false);
+            } else {
+                $('#part29').prop('hidden', true);
+            }
+        }
+        function AllFormDivsHide() {
+            $('#part3').prop('hidden', true);
+            $('#part4').prop('hidden', true);
+            $('#part5').prop('hidden', true);
+            $('#part6').prop('hidden', true);
+            $('#part7').prop('hidden', true);
+            $('#part8').prop('hidden', true);
+            $('#part9').prop('hidden', true);
+            $('#part10').prop('hidden', true);
+            $('#part11').prop('hidden', true);
+            $('#part12').prop('hidden', true);
+            $('#part13').prop('hidden', true);
+            $('#part14').prop('hidden', true);
+            $('#part15').prop('hidden', true);
+            $('#part16').prop('hidden', true);
+            $('#part17').prop('hidden', true);
+            $('#part18').prop('hidden', true);
+            $('#part19').prop('hidden', true);
+            $('#part20').prop('hidden', true);
+            $('#part21').prop('hidden', true);
+            $('#part22').prop('hidden', true);
+            $('#part23').prop('hidden', true);
+            $('#part24').prop('hidden', true);
+            $('#part25').prop('hidden', true);
+            $('#part26').prop('hidden', true);
+            $('#part27').prop('hidden', true);
+            $('#part28').prop('hidden', true);
+            $('#part29').prop('hidden', true);
+        }
+        function ChangeMaskingW8ECI(obj) {
+
+            if (obj.value == 'S') {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
+                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
+            } else if (obj.value == 'E') {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
+                $('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
+            } else {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
+                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
+            }
+        }
+        function ShowHideFTIN(obj) {
+
+            if (obj.value === 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#FTINDiv').prop('hidden', false);
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#FTINDiv').prop('hidden', false);
+            }
+            else if (obj.value === undefined) {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            }
+        }
         function ajaxsuccess(response) {
             document.getElementById("stepsDiv").style.display = "none";
             let pdfUrl = window.location.origin + '//' + response;
@@ -180,51 +309,17 @@
             $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
         }
-        var textarea = document.getElementById("Items");
-        var counter = document.getElementById("textCounter");
-        textarea.addEventListener("input", function () {
-            var remainingChars = textarea.maxLength - textarea.value.length;
-            counter.textContent = remainingChars + " characters remaining";
-        });
         function ShowHideProvince(obj) {
-            debugger
-            var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
             if (obj.value == 'United States') {
                 $('#provinceDiv').prop('hidden', true);
                 $('#province').val('');
                 $('#stateDiv').prop('hidden', false);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
-                if (checkedRadioButton.val() == '@AppConstants.W8ECIForm') {
-                    $('#SamePermAddress').prop('checked', true).trigger('change');
-                    $('#businessCheckboxDiv').prop('hidden', false);
-                    $('#businessAddressHeading').prop('hidden', true);
-                }
             } else {
                 $('#provinceDiv').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);
                 $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
-                if (checkedRadioButton.val() == '@AppConstants.W8ECIForm') {
-                    $('#SamePermAddress').prop('checked', false).trigger('change');
-                    $('#businessCheckboxDiv').prop('hidden', true);
-                    $('#businessAddressHeading').prop('hidden', false);
-                }
-            }
-        }
-        function ShowHideFTIN(obj) {
-            if (obj.value == 'true') {
-                $('#FTINDiv').prop('hidden', false);
-            } else {
-                $('#FTINDiv').prop('hidden', true);
-                $('#FTIN').val('');
-            }
-        }
-        function ShowHideFTINW8ECI(obj) {
-            if (obj.value == 'true') {
-                $('#FTINW8ECIDiv').prop('hidden', false);
-            } else {
-                $('#FTINW8ECIDiv').prop('hidden', true);
-                $('#FTINW8ECI').val('');
             }
         }
         function ShowHideProvincePerm(obj) {
@@ -240,6 +335,19 @@
                 $('#lblZipCodePerm').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
             }
         }
+        function ShowHideProvince12(obj) {
+            if (obj.value == 'United States') {
+                $('#12_provinceDiv').prop('hidden', true);
+                $('#_12_Province').val('');
+                $('#12_stateDiv').prop('hidden', false);
+                $('#12_lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#12_provinceDiv').prop('hidden', false);
+                $('#12_stateDiv').prop('hidden', true);
+                $('#_12_State').val(1);
+                $('#12_lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
 
         function HideAddress(obj) {
             if (obj.checked) {
@@ -251,91 +359,35 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
-        function SelectForm(obj) {
-            $('#businessCheckboxText').text('Permanent address is the same as the mailing address');
-            $('#countryPerm').prop('disabled', false);
-            if (obj.value == '@AppConstants.W8Form') {
-                $('#W8FormDiv').prop('hidden', false);
-                $('#W8BenQuestionareDiv').prop('hidden', false);
-                $("#Citizenship").find("option[value='United States']").remove();
-                $("#Citizenship").prop('disabled', false).trigger("change");
-                // Uncheck all radio buttons within the group
-                $("input[type='radio'][name='W8FormType']").prop('checked', false);
-                // Remove span and required attributes
-                $('#lbl_TypeofTaxNumber span').remove();
-                $('#Ssnitnein').removeAttr('required');
-                $('input[name="TypeofTaxNumber"]').removeAttr('required');
+
+        function ShowHideFTINW8BENE(obj) {
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#FTINW8BENEDiv').prop('hidden', false);
             } else {
-                $('#W8FormDiv').prop('hidden', true);
-                $('#W8BenQuestionareDiv').prop('hidden', true);
-                $('#W8ECIQuestionareDiv').prop('hidden', true);
-                // Check if "United States" already exists in the select list
-                if ($("#Citizenship option[value='United States']").length === 0) {
-                    var newOption = $("<option>").val("United States").text("United States");
-                    $("#Citizenship").prepend(newOption).trigger("change");
-                }
-                $("#Citizenship").val('United States').trigger('change');
-                $('#inlineRadio5').prop('checked', true);
-                if ($('#inlineRadio5').is(':checked')) {
-                    // Disable the other radio buttons
-                    //$('#inlineRadio6, #inlineRadio7').prop('disabled', true);
-                    $('#Ssnitnein').attr('placeholder', '000-00-0000');
-                    $('#Ssnitnein').mask('000-00-0000', { reverse: true });
-                }
-                // Add span and required attributes
-                //$('#lbl_TypeofTaxNumber').append('<span class="text-danger">*</span>');
-                $('#Ssnitnein').attr('required', 'required');
-                $('input[name="TypeofTaxNumber"]').attr('required', 'required');
-            }
-            showTab(currentTab);
-        }
-        function ChangeMasking(obj) {
-            if (obj.value == 'S') {
-                $('#Ssnitnein').attr('placeholder', '000-00-0000');
-                $('#Ssnitnein').mask('000-00-0000', { reverse: true });
-            } else if (obj.value == 'E') {
-                $('#Ssnitnein').attr('placeholder', '00-0000000');
-                $('#Ssnitnein').mask('00-0000000', { reverse: true });
-            } else {
-                $('#Ssnitnein').attr('placeholder', '000-00-0000');
-                $('#Ssnitnein').mask('000-00-0000', { reverse: true });
-            }
-        }
-        function ShowHideW8(obj) {
-            $('#businessCheckboxText').text('Permanent address is the same as the mailing address');
-            $('#countryPerm').prop('disabled', false);
-            if (obj.value == '@AppConstants.W8BENForm') {
-                $('#W8BenQuestionareDiv').prop('hidden', false);
-                $('#W8ECIQuestionareDiv').prop('hidden', true);
-            } else {
-                $('#W8BenQuestionareDiv').prop('hidden', true);
-                $('#W8ECIQuestionareDiv').prop('hidden', false);
-                $('#businessCheckboxText').text('Business address is the same as the permanent residence address');
-                $('#countryPerm').val('United States').change().prop('disabled', true);
-                $('select').change();
-            }
-            showTab(currentTab);
-        }
-        function W8BENOnBehalfNameFunc(obj) {
-            if (obj.value == 'True') {
-                $('#W8BENOnBehalfNameQuesDiv').prop('hidden', false);
-            } else {
-                $('#W8BENOnBehalfNameQuesDiv').prop('hidden', true);
-                $('#PrintNameOfSigner').val('');
+                $('#FTINW8BENEDiv').prop('hidden', true);
+                $('#CheckIfFtinNotLegallyRequiredYNW8BENE').val('');
             }
         }
         function W8ECIOnBehalfNameFunc(obj) {
             if (String(obj.value).toLowerCase() == 'true') {
-                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', false);
+                $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
             } else {
-                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', true);
-                $('#PrintNameOfSignerW8ECI').val('');
+                $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
+            }
+        }
+        function SelectDEEntity(obj) {
+            if (obj.value === 'false' || obj.value === 'False') {
+                $('#DEDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#DEDiv').prop('hidden', false);
             }
         }
         function showTab(n) {
+
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
-
+            document.getElementById("nextBtn").innerHTML = "Next Page >>";
             x[n].style.display = "block";
             // ... and fix the Previous/Next buttons:
             if (n == 0) {
@@ -344,29 +396,10 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
-                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
-                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
-                        $('#firstNameW8Ben').val($('#firstName').val());
-                        $('#lastNameW8Ben').val($('#lastName').val());
-                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
-                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
-                    } else {
-                        $('#firstNameW8ECI').val($('#firstName').val());
-                        $('#lastNameW8ECI').val($('#lastName').val());
-                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
-                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
-                    }
-                } else {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
-            } else {
-                document.getElementById("nextBtn").innerHTML = "Next Page >>";
+                document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN-E >>";
+                // ... and run a function that displays the correct step indicator:
+                fixStepIndicator(n)
             }
-            // ... and run a function that displays the correct step indicator:
-            fixStepIndicator(n)
         }
 
         function nextPrev(n) {
@@ -377,7 +410,7 @@
 
             if ($('#SamePermAddress').is(':checked')) {
                 //--------------------//
-                //$('#countryPerm').val($('#country').val()).change();
+                $('#countryPerm').val($('#country').val()).change();
                 $('#adreess1Perm').val($('#adreess1').val());
                 $('#adreess2Perm').val($('#adreess2').val());
                 $('#cityPerm').val($('#city').val());
@@ -403,7 +436,6 @@
                 // document.getElementById("regForm").submit();
                 let form = $('#regForm');
                 if (form.valid()) {
-                    $("#Citizenship").prop('disabled', false);
                     form.submit();
                 }
                 return false;

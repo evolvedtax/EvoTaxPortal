@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.InstituteService;
+using EvolvedTax.Business.Services.W8BEN_E_FormService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W8EXPFormService;
@@ -26,12 +27,13 @@ namespace EvolvedTax.Controllers
         private readonly ICommonService _commonService;
         private readonly IInstituteService _instituteService;
         private readonly IW8BenFormService _w8BenFormService;
+        private readonly IW8BEN_E_FormService _w8BeneFormService;
         private readonly IW8ECIFormService _w8ECIFormService;
 
         public CertificationController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
             IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
             IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, IW8EXPFormService w8ExpFormService,
-            IW8IMYFormService w8IMYFormService)
+            IW8IMYFormService w8IMYFormService, IW8BEN_E_FormService w8BeneFormService)
         {
             _w9FormService = w9FormService;
             _w8ExpFormService = w8ExpFormService;
@@ -42,6 +44,7 @@ namespace EvolvedTax.Controllers
             _w8BenFormService = w8BenFormService;
             _w8ECIFormService = w8ECIFormService;
             _w8IMYFormService = w8IMYFormService;
+            _w8BeneFormService = w8BeneFormService;
         }
         public IActionResult Index()
         {
@@ -153,7 +156,12 @@ namespace EvolvedTax.Controllers
             }
             else if (request.FormName == AppConstants.W8ECIForm)
             {
-                //await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
+                await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
+                await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
+            }
+            else if (request.FormName == AppConstants.W8BENEForm)
+            {
+                await _w8BeneFormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
             else
@@ -213,7 +221,7 @@ namespace EvolvedTax.Controllers
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8ECIForm)
             {
-                ViewBag.PrintName = _w8ECIFormService.GetDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
+                ViewBag.PrintName = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
             }
             return View();
         }

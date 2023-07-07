@@ -27,14 +27,14 @@ namespace EvolvedTax.Business.Services.InstituteService
         InstituteEntity GetEntityDataByClientEmailId(string clientEmail);
         Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request);
         Task<MessageResponseModel> DeleteEntity(int id, RecordStatusEnum RecordStatus);
-        Task<MessageResponseModel> LockUnlockEntity(int EntityId, bool isLocked);
+        Task<MessageResponseModel> LockUnlockEntity(int[] selectedValues, bool isLocked);
         IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId);
         MessageResponseModel RestoreEntities(int[] selectedValues);
         IQueryable<InstituteClientResponse> GetRecyleBinClientsByEntityId(int instId, int entityId);
         MessageResponseModel RestoreClients(int[] selectedValues);
         Task<MessageResponseModel> DeleteClient(int id, RecordStatusEnum RecordStatus);
         Task<MessageResponseModel> UpdateClient(InstituteClientRequest request);
-        Task<MessageResponseModel> LockUnlockClient(int clientId, bool isLocked);
+        Task<MessageResponseModel> LockUnlockClient(int[] selectedValues, bool isLocked);
         Task<MessageResponseModel> TrashEmptyClient(int[] selectedValues, RecordStatusEnum recordStatusEnum);
         Task<MessageResponseModel> TrashEmptyEntity(int[] selectedValues, RecordStatusEnum recordStatusEnum);
         Task<bool> CheckIfClientRecordExist(string clientEmail);

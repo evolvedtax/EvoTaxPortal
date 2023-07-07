@@ -204,9 +204,9 @@ namespace EvolvedTax.Controllers
         }
         [Route("institute/LockUnlockEntity")]
         [HttpPost]
-        public async Task<IActionResult> LockUnlockEntity(int entityId, bool isLocked)
+        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
         {
-            var response = await _instituteService.LockUnlockEntity(entityId ,isLocked);
+            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
             return Json(response);
         }
         [Route("institute/UpdateClient")]
@@ -244,9 +244,9 @@ namespace EvolvedTax.Controllers
         }
         [Route("institute/LockUnlockClient")]
         [HttpPost]
-        public async Task<IActionResult> LockUnlockClient(int clientId, bool isLocked)
+        public async Task<IActionResult> LockUnlockClient(int[] selectedValues, bool isLocked)
         {
-            var response = await _instituteService.LockUnlockClient(clientId, isLocked);
+            var response = await _instituteService.LockUnlockClient(selectedValues, isLocked);
             return Json(response);
         }
     }

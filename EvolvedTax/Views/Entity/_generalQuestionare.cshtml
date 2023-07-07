@@ -27,8 +27,8 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="form-check inline">
-                    <input class="form-check-input" type="radio" id="inlineRadio1" value="@AppConstants.W8BENEForm" asp-for="W8FormType">
-                    <label class="form-check-label" for="inlineRadio1">
+                    <input class="form-check-input" type="radio" id="W8BENEForm1" value="@AppConstants.W8BENEForm" asp-for="W8FormType">
+                    <label class="form-check-label" for="W8BENEForm1">
                         An entity claiming foreign status or claiming treaty benefits? {W-8BEN-E 'Certificate of Status of Beneficial Owner for United States Tax Withholding and Reporting (Entities)'}
                     </label>
                 </div>
@@ -295,211 +295,212 @@
         </div>
         @* Div for DDL selection for Entity W-8EXP end*@
 
-    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
-    <div class="form-box w8EXPDDLSelectedDivs" id="FincalInsDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_16">
-                    <label class="form-check-label" for="inlinecheckbox1">
-                        I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or
-                        organized under the laws of a possession of the United States.
-                    </label>
+        @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP start*@
+        <div class="form-box w8EXPDDLSelectedDivs" id="FincalInsDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_16">
+                        <label class="form-check-label" for="inlinecheckbox1">
+                            I certify that the entity identified in Part I is a financial institution (other than an investment entity) that is incorporated or
+                            organized under the laws of a possession of the United States.
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-box w8EXPDDLSelectedDivs" id="FrgnGovUSDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_17">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        I certify that the entity identified in Part I is the beneficial owner of the payment and is not engaged in commercial financial
-                        activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to thepayments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
-                    </label>
+        <div class="form-box w8EXPDDLSelectedDivs" id="FrgnGovUSDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_17">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            I certify that the entity identified in Part I is the beneficial owner of the payment and is not engaged in commercial financial
+                            activities of a type engaged in by an insurance company, custodial institution, or depository institution with respect to thepayments, accounts, or obligations for which this form is submitted (except as permitted in Regulations section 1.1471-6(h)(2)).
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-bo w8EXPDDLSelectedDivs" id="RetPlanSDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_18">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        I certify that the entity identified in Part I:
-                        <ul>
-                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
-                            <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are</li>
-                        </ul>
-                    </label>
+        <div class="form-bo w8EXPDDLSelectedDivs" id="RetPlanSDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_18">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            I certify that the entity identified in Part I:
+                            <ul>
+                                <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are current or former employees of the sponsor (or persons designated by such employees); or</li>
+                                <li>Is established and sponsored by a foreign government, international organization, central bank of issue, or government of a U.S. possession (each as defined in Regulations section 1.1471-6 or an applicable Model 1 or Model 2 IGA) to provideretirement, disability, or death benefits to beneficiaries or participants that are</li>
+                            </ul>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="form-box w8EXPDDLSelectedDivs" id="501OrgUSDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_19">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        I certify that the entity identified in Part I is an entity described in section 501(c) but is not an insurance company described
-                        in section 501(c)(15).
-                    </label>
+        <div class="form-box w8EXPDDLSelectedDivs" id="501OrgUSDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_19">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            I certify that the entity identified in Part I is an entity described in section 501(c) but is not an insurance company described
+                            in section 501(c)(15).
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="form-box w8EXPDDLSelectedDivs" id="PassNFEDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_20a">
-                    <label class="form-check-label" for="inlinecheckbox1">
-                        I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity
-                        organized in a possession of the United States).
-                    </label>
-                </div>
+        <div class="form-box w8EXPDDLSelectedDivs" id="PassNFEDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox2" asp-for="_20a">
+                        <label class="form-check-label" for="inlinecheckbox1">
+                            I certify that the entity identified in Part I is a foreign entity that is not a financial institution (other than an investment entity
+                            organized in a possession of the United States).
+                        </label>
+                    </div>
 
-                <div class="form-check inline">
-                    <label class="form-check-label" for="inlinecheckbox">
-                        <b> Check box 20b or 20c, whichever applies.</b>
-                    </label>
-                </div>
-                <br />
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox4" asp-for="_20b">
-                    <label class="form-check-label" for="inlinecheckbox4">
-                        I further certify that the entity identified in Part I has no substantial U.S. owners, or
-                    </label>
-                </div>
-                <div class="form-check inline">
-                    <input class="form-check-input" type="checkbox" id="inlinecheckbox5" asp-for="_20c">
-                    <label class="form-check-label" for="inlinecheckbox5">
-                        I further certify that the entity identified in Part I has provided a statement including the name, address, and TIN of each
-                        substantial U.S. owner of the NFFE (see instructions).
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-box w8EXPDDLSelectedDivs" id="SponEntity_RirRepNFFEDiv" hidden>
-        <div class="col-md-12">
-            <div class="form-group">
-                <div class="form-check inline">
-                    <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_21">
-                    <label class="form-check-label" for="inlinecheckbox2">
-                        I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
-                    </label>
+                    <div class="form-check inline">
+                        <label class="form-check-label" for="inlinecheckbox">
+                            <b> Check box 20b or 20c, whichever applies.</b>
+                        </label>
+                    </div>
                     <br />
-                    <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
-                </div>
-            </div>
-        </div>
-    </div>
-    @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP end*@
-
-    </div>
-
-    <div class="tab">
-        <div class="text-center"><span><p>Mailing Address</p></span></div>
-        <div class="form-box">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Country <span class="text-danger">*</span></label>
-                        <select id="country" asp-for="MCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
-                            <option></option>
-                        </select>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox4" asp-for="_20b">
+                        <label class="form-check-label" for="inlinecheckbox4">
+                            I further certify that the entity identified in Part I has no substantial U.S. owners, or
+                        </label>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Address Line 1 <span class="text-danger">*</span></label>
-                        <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Address Line 2</label>
-                        <input id="adreess2" asp-for="MAddress2" type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>City <span class="text-danger">*</span></label>
-                        <input id="city" asp-for="MCity" type="text" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div id="stateDiv" class="form-group" hidden>
-                        <label>State </label>
-                        <select id="state" asp-items="ViewBag.StatesList" asp-for="MState" class="select2">
-                            <option></option>
-                        </select>
-                    </div>
-                    <div id="provinceDiv" class="form-group">
-                        <label>Province</label>
-                        <input id="province" asp-for="MProvince" type="text" class="form-control">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label id="lblZipCode">Zip/Postal Code <span class="text-danger"> *</span></label>
-                        <input id="zipCode" asp-for="MZipCode" type="text" class="form-control" required>
+                    <div class="form-check inline">
+                        <input class="form-check-input" type="checkbox" id="inlinecheckbox5" asp-for="_20c">
+                        <label class="form-check-label" for="inlinecheckbox5">
+                            I further certify that the entity identified in Part I has provided a statement including the name, address, and TIN of each
+                            substantial U.S. owner of the NFFE (see instructions).
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="mt-3 mb-3 ml-3">
-            <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Permanent address is the same as the mailing address
+        <div class="form-box w8EXPDDLSelectedDivs" id="SponEntity_RirRepNFFEDiv" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input chkbox-toggle" type="checkbox" id="inlinecheckbox2" asp-for="_21">
+                        <label class="form-check-label" for="inlinecheckbox2">
+                            I certify that the entity identified in Part I is a direct reporting NFFE that is sponsored by the entity identified in line 21.
+                        </label>
+                        <br />
+                        <input id="lastName" type="text" class="form-control required-control-valid" asp-for="_21_Text">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="SamePermAddressDiv" class="form-box" hidden>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Country <span class="text-danger">*</span></label>
-                        <select id="countryPerm" asp-for="PCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvincePerm(this)" class="select2" required>
-                            <option></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Address Line 1 <span class="text-danger">*</span></label>
-                        <input id="adreess1Perm" asp-for="PAddress1" type="text" class="form-control" required>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Address Line 2</label>
-                        <input id="adreess2Perm" asp-for="PAddress2" type="text" class="form-control">
-                    </div>
-                </div>
+        @* Div for DDL selection for Chapter 4 Status(FATCA) W-8EXP end*@
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>City <span class="text-danger">*</span></label>
-                        <input id="cityPerm" asp-for="PCity" type="text" class="form-control" required>
-                    </div>
+    </div>
+</div>
+
+<div class="tab">
+    <div class="text-center"><span><p>Mailing Address</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="country" asp-for="MCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                        <option></option>
+                    </select>
                 </div>
-                <div class="col-md-6">
-                    <div id="statePermDiv" class="form-group" hidden>
-                        <label>State </label>
-                        <select id="statePerm" asp-items="ViewBag.StatesList" asp-for="PState" class="select2">
-                            <option></option>
-                        </select>
-                    </div>
-                    <div id="provincePermDiv" class="form-group">
-                        <label>Province</label>
-                        <input id="provincePerm" name="provincePerm" type="text" class="form-control">
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2" asp-for="MAddress2" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="city" asp-for="MCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="stateDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="state" asp-items="ViewBag.StatesList" asp-for="MState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provinceDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="province" asp-for="MProvince" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCode">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCode" asp-for="MZipCode" type="text" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 mb-3 ml-3">
+        <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Permanent address is the same as the mailing address
+    </div>
+    <div id="SamePermAddressDiv" class="form-box" hidden>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="countryPerm" asp-for="PCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvincePerm(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span></label>
+                    <input id="adreess1Perm" asp-for="PAddress1" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2Perm" asp-for="PAddress2" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="cityPerm" asp-for="PCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="statePermDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="statePerm" asp-items="ViewBag.StatesList" asp-for="PState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provincePermDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="provincePerm" name="provincePerm" type="text" class="form-control">
+                </div>
+            </div>
 
             <div class="col-md-6">
                 <div class="form-group">
@@ -696,9 +697,9 @@
 </div>
 
 
-    <style>
-        .form-check {
-            margin-bottom: 10px; /* Adjust the margin as per your preference */
-        }
-    </style>
+<style>
+    .form-check {
+        margin-bottom: 10px; /* Adjust the margin as per your preference */
+    }
+</style>
 
