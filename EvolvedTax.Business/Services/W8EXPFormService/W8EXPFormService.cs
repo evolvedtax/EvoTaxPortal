@@ -415,7 +415,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_06[0]", request.MAddress1);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_07[0]", request.MCity);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_08[0]", request.MCountry);
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_09[0]", request.Ssnitnein);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_09[0]", request.Ssnitnein ?? "");
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_10[0]", request.GIN);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_11[0]", request.ForeignTaxIdentifyingNumber);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_12[0]", request.Referencenumber);

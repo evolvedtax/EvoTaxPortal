@@ -688,6 +688,34 @@
             $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
         }
+        function SelectDEEntity(obj) {
+            //    console.log(typeof obj, obj);
+            //    console.log(typeof obj.value, obj.value);
+            if (obj.value === 'false' || obj.value === 'False') {
+                HideDivs();
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                HideDivs();
+
+ 
+
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
+            }
+            else if (obj.value === undefined) {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+                HideDivs();
+            }
+        }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
                 $('#provinceDiv').prop('hidden', true);
