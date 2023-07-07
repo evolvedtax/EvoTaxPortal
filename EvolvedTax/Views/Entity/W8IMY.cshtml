@@ -65,7 +65,6 @@
         margin: 20px;
     }
 
-
 </style>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
@@ -78,7 +77,7 @@
               data-ajax-failure="COMMON.ajaxfailure"
               data-ajax-loading="#ajax-loader"
               data-ajax-success="ajaxsuccess"
-              data-ajax-url="@Url.Action("GQEntity","Entity")">
+              data-ajax-url="@Url.Action("W8IMY","Entity")">
 
             <!-- One "tab" for each step in the form: -->
             <div>
@@ -86,9 +85,10 @@
                 <!--General Questionare View-->
                 <partial name="_generalQuestionareW8IMY" model="Model" />
 
-            
-            </div>
 
+            </div>
+            <!-- Hidden field for isPartialSave -->
+            <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -105,8 +105,10 @@
     <div style="overflow:auto;">
         <div style="float:right;">
             <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save & Exit</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+           
         </div>
     </div>
 </div>
@@ -124,6 +126,21 @@
 @section Scripts {
 
     <script type="text/javascript">
+
+
+        $("#SaveExitBtn").click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                $('#isPartialSave').val('true');
+                form.submit();
+            }
+
+        });
+
+
+
+
+        /*
         function BindEntityForW8EXPForm() {
             $.ajax({
                 url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
@@ -222,9 +239,6 @@
                 }
             });
         }
-
-
-
         function BindEW8EXPFATCA() {
             $.ajax({
                 url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
@@ -305,6 +319,8 @@
             //    }
             //});
         }
+
+        */
         function ChekboxValidationForDropdowns() {
             // Handle checkbox change event
             $('.chkbox-toggle').change(function () {
@@ -325,23 +341,49 @@
         function HideDivOnDDLEntitySelection() {
             $('#FrgnGovDiv').prop('hidden', true);
             $('#NonqualifiedDiv').prop('hidden', true);
+            $('#TerritoryDiv').prop('hidden', true);
+            $('#USBranchDiv').prop('hidden', true);
+            $('#WithholdingforeignpartnershipDiv').prop('hidden', true);
+            $('#NonwithholdingDiv').prop('hidden', true);
 
         }
         function HideDivOnDDLStatusFATCASelection() {
-            //$('#FincalInsDiv').prop('hidden', true);
-            //$('#FrgnGovUSDiv').prop('hidden', true);
-            //$('#RetPlanSDiv').prop('hidden', true);
-            //$('#501OrgUSDiv').prop('hidden', true);
-            //$('#PassNFEDiv').prop('hidden', true);
-            //$('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
+            $('#NonparticipatingDiv').prop('hidden', true);
+            $('#SponsoredFFIDiv').prop('hidden', true);
+            $('#OwnerdocumentedDiv').prop('hidden', true);
+            $('#CertifiedDeemedCompliantNonregisteringDiv').prop('hidden', true);
+            $('#CertifiedDeemedCompliantLowDiv').prop('hidden', true);
+            $('#CertifiedDeemedCompliantSponseredDiv').prop('hidden', true);
+            $('#CertifiedDeemedCompliantInvestmentdDiv').prop('hidden', true);
+            $('#CertainInvestmentEntitiesdDiv').prop('hidden', true);
+            $('#RestrictedDistributorDiv').prop('hidden', true);
+            $('#ForeigncentralbankDiv').prop('hidden', true);
+            $('#NonreportingIGADiv').prop('hidden', true);
+            $('#ExemptRetirementDiv').prop('hidden', true);
+            $('#ExceptedNonfinancialGroup').prop('hidden', true);
+            $('#ExceptedNonfinancialStart').prop('hidden', true);
+            $('#ExceptedNonfinancialBankruptcy').prop('hidden', true);
+            $('#PubliclyTradedNFFE').prop('hidden', true);
+            $('#ExceptedTerritoryNFFE').prop('hidden', true);
+            $('#ActiveNFFE').prop('hidden', true);
+            $('#PassiveNFFE').prop('hidden', true);
+            $('#SponsoredDirectNFFE').prop('hidden', true);
 
+        }
+
+        function W8ECIOnBehalfNameFunc(obj) {
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
+            } else {
+                $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
+            }
         }
         function ChangeMasking(obj) {
 
-            if (obj.value == 'S') {
+            if (obj.value == "QI-EIN") {
                 $('#IdNumber').attr('placeholder', '000-00-0000');
                 $('#IdNumber').mask('000-00-0000', { reverse: true });
-            } else if (obj.value == 'E') {
+            } else if (obj.value == "WP-EIN") {
                 $('#IdNumber').attr('placeholder', '00-0000000');
                 $('#IdNumber').mask('00-0000000', { reverse: true });
             } else {
@@ -377,7 +419,26 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
-            
+            $('.select2-container').css('width', '100%');
+
+            $('#FATCADivHeading').prop('hidden', true);
+            $('#EntityDivHeading').prop('hidden', true);
+
+            //this is for auth div hide ane label text updated
+            $('#authdiv').prop('hidden', true);
+            $('input[name="W8IMYOnBehalfName"]').change(function () {
+                var selectedValue = $('input[name="W8IMYOnBehalfName"]:checked').val();
+                if (selectedValue === "1") {
+
+                    $('#authdiv').prop('hidden', false);
+                    $('#lbl_authSignatory').html('Please enter the name of the authorized signatory <span class="text-danger">*</span>');
+                } else {
+                    $('#authdiv').prop('hidden', false);
+                    $('#lbl_authSignatory').html('Please enter the name of the beneficial owner <span class="text-danger">*</span>');
+                }
+            });
+
+
 
 
             $('#Ssnitnein').attr('placeholder', '00-0000000');
@@ -458,75 +519,155 @@
             });
 
             $('#EntityTypeW8').on('change', function () {
+
                 var selectedValue = $(this).val();
 
-                //Foreign government
+                var selectedText = $(this).find("option:selected").text().trim();
+                if (selectedText !== "") {
+
+                    $('#EntityDivHeading').prop('hidden', false);
+                    $('#EntityHead').html(selectedText);
+                }
+
+
                 if (selectedValue == 1) {
                     HideDivOnDDLEntitySelection();
                     $('#Q1Div').prop('hidden', false);
                 }
-                //Internal organization
+
                 if (selectedValue == 2) {
                     HideDivOnDDLEntitySelection();
                     $('#Q1Div').prop('hidden', true);
                     $('#NonqualifiedDiv').prop('hidden', false);
                 }
-                //Foreign central bank of issue (not wholly owned by the foreign sovereign)
+
                 if (selectedValue == 3) {
                     HideDivOnDDLEntitySelection();
-                    $('#FrgnBankDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', true);
+                    $('#TerritoryDiv').prop('hidden', false);
                 }
-                //Foreign tax-exempt organization
-                //Foreign private foundation
-                if (selectedValue == 4 || selectedValue == 5) {
+
+                if (selectedValue == 4) {
                     HideDivOnDDLEntitySelection();
-                    $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', true);
+                    $('#USBranchDiv').prop('hidden', false);
                 }
-                if (selectedValue == 6) {
+                if (selectedValue == 5 || selectedValue == 6) {
                     HideDivOnDDLEntitySelection();
-                    $('#GovUSPossDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', true);
+                    $('#WithholdingforeignpartnershipDiv').prop('hidden', false);
                 }
+                if (selectedValue == 7 || selectedValue == 8 || selectedValue == 9) {
+                    HideDivOnDDLEntitySelection();
+                    $('#Q1Div').prop('hidden', true);
+                    $('#NonwithholdingDiv').prop('hidden', false);
+                }
+
 
 
             });
 
-            $('#FatcaW8').on('change', function () {
+            $('#FatcaStatus').on('change', function () {
                 var selectedValue = $(this).val();
 
-                //Territory financial institution. Complete Part III.
-                if (selectedValue == 6) {
-                    HideDivOnDDLStatusFATCASelection();
-                    $('#FincalInsDiv').prop('hidden', false);
+                var selectedText = $(this).find("option:selected").text().trim();
+                if (selectedText !== "") {
+
+                    $('#FATCAHead').html(selectedText);
+                    $('#FATCADivHeading').prop('hidden', false);
                 }
-                //Foreign government (including a political subdivision), government of a U.S. possession,
+
+
+
+                if (selectedValue == 1) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#NonparticipatingDiv').prop('hidden', false);
+                }
+
+                if (selectedValue == 7) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#SponsoredFFIDiv').prop('hidden', false);
+
+                }
                 if (selectedValue == 8) {
                     HideDivOnDDLStatusFATCASelection();
-                    $('#FrgnGovUSDiv').prop('hidden', false);
+                    $('#CertifiedDeemedCompliantNonregisteringDiv').prop('hidden', false);
+
                 }
-                //Exempt retirement plan of foreign government. Complete Part III.
                 if (selectedValue == 9) {
                     HideDivOnDDLStatusFATCASelection();
-                    $('#RetPlanSDiv').prop('hidden', false);
+                    $('#CertifiedDeemedCompliantLowDiv').prop('hidden', false);
+
                 }
-                //501(c) organization. Complete Part XXI.
                 if (selectedValue == 10) {
                     HideDivOnDDLStatusFATCASelection();
-                    $('#501OrgUSDiv').prop('hidden', false);
+                    $('#CertifiedDeemedCompliantSponseredDiv').prop('hidden', false);
                 }
-                //Passive NFFE. Complete Part XXVI.
+
                 if (selectedValue == 11) {
                     HideDivOnDDLStatusFATCASelection();
-                    $('#PassNFEDiv').prop('hidden', false);
+                    $('#CertifiedDeemedCompliantInvestmentdDiv').prop('hidden', false);
                 }
-
-
-
-                //Direct reporting NFFE.
-                //Sponsored direct reporting NFFE. Complete Part III.
-                if (selectedValue == 12 || selectedValue == 13) {
+                if (selectedValue == 12) {
                     HideDivOnDDLStatusFATCASelection();
-                    $('#SponEntity_RirRepNFFEDiv').prop('hidden', false);
+                    $('#CertainInvestmentEntitiesdDiv').prop('hidden', false);
                 }
+
+                if (selectedValue == 13) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#OwnerdocumentedDiv').prop('hidden', false);
+                }
+                if (selectedValue == 14) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#RestrictedDistributorDiv').prop('hidden', false);
+                }
+                if (selectedValue == 15) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ForeigncentralbankDiv').prop('hidden', false);
+                }
+                if (selectedValue == 16) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#NonreportingIGADiv').prop('hidden', false);
+                }
+                if (selectedValue == 17) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ExemptRetirementDiv').prop('hidden', false);
+                }
+                if (selectedValue == 18) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ExceptedNonfinancialGroup').prop('hidden', false);
+                }
+                if (selectedValue == 19) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ExceptedNonfinancialStart').prop('hidden', false);
+                }
+                if (selectedValue == 20) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ExceptedNonfinancialBankruptcy').prop('hidden', false);
+                }
+
+                if (selectedValue == 21) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#PubliclyTradedNFFE').prop('hidden', false);
+                }
+                if (selectedValue == 22) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ExceptedTerritoryNFFE').prop('hidden', false);
+                }
+                if (selectedValue == 23) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#ActiveNFFE').prop('hidden', false);
+                }
+                if (selectedValue == 24) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#PassiveNFFE').prop('hidden', false);
+                }
+
+                if (selectedValue == 26) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#SponsoredDirectNFFE').prop('hidden', false);
+                }
+
 
 
             });
@@ -565,6 +706,11 @@
             if (W8FormTypecheckedRadioButton.length > 0) {
                 W8FormTypecheckedRadioButton.trigger("change");
             }
+
+            var W8IMYOnBehalfNamecheckedRadioButton = $("input[type='radio'][name='W8IMYOnBehalfName']:checked");
+            if (W8IMYOnBehalfNamecheckedRadioButton.length > 0) {
+                W8IMYOnBehalfNamecheckedRadioButton.trigger("change");
+            }
             ChekboxValidationForDropdowns();
 
             //  code for w8-EXP of Are you a disregarded entity (DE) for U.S. tax purposes?
@@ -584,22 +730,34 @@
 
         });
         function ajaxsuccess(response) {
-            document.getElementById("stepsDiv").style.display = "none";
-            let pdfUrl = window.location.origin + '//' + response;
-            // Create the object element
-            var $pdfObject = $('<object>').attr({
-                data: pdfUrl,
-                type: 'application/pdf',
-                width: '100%',
-                height: '800px'
-            });
+            debugger;
+            console.log(response);
+            if (response.message != "Form partially saved.") {
 
-            $('#contentContainer').empty();
-            // Append the object element to the container
-            $('#contentContainer').append($pdfObject);
-            $('#editBtn').prop('hidden', false);
-            $('#prevBtn').prop('hidden', true);
-            $('#nextBtn').prop('hidden', true);
+                //Full form logic
+                document.getElementById("stepsDiv").style.display = "none";
+                let pdfUrl = window.location.origin + '//' + response;
+                // Create the object element
+                var $pdfObject = $('<object>').attr({
+                    data: pdfUrl,
+                    type: 'application/pdf',
+                    width: '100%',
+                    height: '800px'
+                });
+                $('#contentContainer').empty();
+                // Append the object element to the container
+                $('#contentContainer').append($pdfObject);
+                $('#editBtn').prop('hidden', false);
+                $('#prevBtn').prop('hidden', true);
+                $('#nextBtn').prop('hidden', true);
+                $('#SaveExitBtn').prop('hidden', true);
+            }
+            else if (response.message == "Form partially saved.") {
+                COMMON.notification(1, "Data is save");
+            }
+
+
+
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
@@ -638,7 +796,7 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
-        function HideDivs(){
+        function HideDivs() {
             $('#div_DE1').prop('hidden', true);
             $('#div_DE2').prop('hidden', true);
             $('#div_DE3').prop('hidden', true);
@@ -660,14 +818,14 @@
             $('#provinceDiv').prop('hidden', false);
         }
         function SelectDEEntity(obj) {
-        //    console.log(typeof obj, obj);
-        //    console.log(typeof obj.value, obj.value);
+            //    console.log(typeof obj, obj);
+            //    console.log(typeof obj.value, obj.value);
             if (obj.value === 'false' || obj.value === 'False') {
                 HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj == 'false' || obj.value === 'False') {
-                 HideDivs();
+                HideDivs();
 
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
@@ -743,7 +901,7 @@
             }
             if (n == (x.length - 1)) {
                 document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
-            
+
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next Page >>";
             }
@@ -780,11 +938,11 @@
             currentTab = currentTab + n;
             // if you have reached the end of the form... :
             if (currentTab >= x.length) {
-
                 //...the form gets submitted:
                 // document.getElementById("regForm").submit();
                 let form = $('#regForm');
                 if (form.valid()) {
+                    $('#isPartialSave').val('false');
                     form.submit();
                 }
                 return false;

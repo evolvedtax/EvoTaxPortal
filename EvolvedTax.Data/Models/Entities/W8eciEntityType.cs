@@ -7,5 +7,5 @@ public partial class W8eciEntityType
 {
     public string? EntityType { get; set; }
 
-    public int EntityId { get; set; }
+    public int? EntityId { get; set; }
 }

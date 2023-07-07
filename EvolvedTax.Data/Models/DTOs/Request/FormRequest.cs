@@ -89,6 +89,8 @@ public class FormRequest
     public string SSN { get; set; } = string.Empty;
 
     public string MCountry { get; set; } = string.Empty;
+    [Remote("ValidateAddress", "Entity", ErrorMessage = "Address Line 1 is not allowed.")]
+    [Display(Name = "Address Line 1")]
     public string MAddress1 { get; set; } = string.Empty;
     public string? MAddress2 { get; set; }
     public string MCity { get; set; } = string.Empty;
@@ -97,6 +99,9 @@ public class FormRequest
     public string MZipCode { get; set; } = string.Empty;
 
     public string PCountry { get; set; } = string.Empty;
+
+    [Remote("ValidatePAddress", "Entity", ErrorMessage = "Address Line 1 is not allowed.")]
+    [Display(Name = "Address Line 1")]
     public string PAddress1 { get; set; } = string.Empty;
     public string? PAddress2 { get; set; }
     public string PCity { get; set; } = string.Empty;
@@ -208,7 +213,7 @@ public class FormRequest
     #region W8IMYForm
     public string FatcaStatus { get; set; } = string.Empty;
 
-    public bool? US_TIN_CB { get; set; } = false;
+    public string? US_TIN_CB { get; set; } = string.Empty;
     public string US_TIN { get; set; } = string.Empty;
 
     public string? _11FATCA_CB { get; set; } = string.Empty;
@@ -230,10 +235,10 @@ public class FormRequest
     public bool _15h { get; set; } = false;
     public bool _15i { get; set; } = false;
     public bool _16a { get; set; } = false;
-    public bool _16b { get; set; } = false;
+    public string? _16b { get; set; } = string.Empty;
     public bool _17a { get; set; } = false;
     public bool _17b { get; set; } = false;
-    public bool _175c { get; set; } = false;
+    public bool _17c { get; set; } = false;
     public bool _17d { get; set; } = false;
     public bool _17e { get; set; } = false;
     public bool _18a { get; set; } = false;
@@ -265,8 +270,9 @@ public class FormRequest
     public bool _24c { get; set; } = false;
     public bool _25 { get; set; } = false;
     public bool _26 { get; set; } = false;
-    public bool _27a_text { get; set; } = false;
-    public string _27b { get; set; } = string.Empty;
+  
+    public string _27a_text { get; set; } = string.Empty;
+    public bool _27b { get; set; } = false;
     public bool _28 { get; set; } = false;
     public bool _29 { get; set; } = false;
     public bool _30a { get; set; } = false;
@@ -277,15 +283,32 @@ public class FormRequest
     public bool _32_CB1 { get; set; } = false;
     public string _32_Text2 { get; set; } = string.Empty;
     public string _32_Text3 { get; set; } = string.Empty;
-    public bool _32_CB2 { get; set; } = false;
-    public bool _32_CB3 { get; set; } = false;
-    public bool _32_CB4 { get; set; } = false;
-    public bool _32_CB5 { get; set; } = false;
+    public string _32_CB2 { get; set; } = string.Empty;
+    public string _32_CB3 { get; set; } = string.Empty;
+ 
     public bool _33a { get; set; } = false;
     public bool _33b { get; set; } = false;
     public bool _33c { get; set; } = false;
     public bool _33d { get; set; } = false;
     public bool _33e { get; set; } = false;
     public bool _33f { get; set; } = false;
+    public bool _34 { get; set; } = false;
+    public bool _35 { get; set; } = false;
+    public DateTime? _35_Text { get; set; }
+    public bool _36 { get; set; } = false;
+    public DateTime? _36_Text { get; set; }
+    public bool _37a { get; set; } = false;
+    public string _37a_Text { get; set; } = string.Empty;
+    public bool _37b { get; set; } = false;
+    public string _37b_Text1 { get; set; } = string.Empty;
+    public string _37b_Text2 { get; set; } = string.Empty;
+    public bool _38 { get; set; } = false;
+    public bool _39 { get; set; } = false;
+    public bool _40 { get; set; } = false;
+    public string _41_Text { get; set; } = string.Empty;
+    public bool _42 { get; set; } = false;
+    public bool IsPartialSave { get; set; } = false;
+    public string? PrintNameOfSignerW8IMY { get; set; } = string.Empty;
+    public string? W8IMYOnBehalfName { get; set; } = string.Empty;
     #endregion
 }

@@ -141,6 +141,14 @@ namespace EvolvedTax.Business.Services.CommonService
                             image2.SetAbsolutePosition(450, 530);
                         }
                     }
+                    else if (AppConstants.W8IMYForm == request.FormName)
+                    {
+                        image1.SetAbsolutePosition(107, 185);
+                        if (request.EntryDate != null)
+                        {
+                            image2.SetAbsolutePosition(495, 185);
+                        }
+                    }
 
                     PdfContentByte over1 = pdfStamper.GetOverContent(numberOfPages);
                     over1.AddImage(image1);

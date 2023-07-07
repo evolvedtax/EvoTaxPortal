@@ -5,6 +5,7 @@ using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W8EXPFormService;
+using EvolvedTax.Business.Services.W8IMYFormService;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
@@ -27,9 +28,11 @@ namespace EvolvedTax.Controllers
         private readonly IGeneralQuestionareEntityService _generalQuestionareEntityService;
         private readonly IW8ECIFormService _w8ECIFormService;
         private readonly IW8EXPFormService _w8EXPFormService;
+        private readonly IW8IMYFormService _W8IMYFormService;
         public EntityController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
             IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
-                            IGeneralQuestionareEntityService generalQuestionareEntityService, IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService)
+                            IGeneralQuestionareEntityService generalQuestionareEntityService,
+                            IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService, IW8IMYFormService W8IMYFormService)
         {
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
@@ -39,6 +42,7 @@ namespace EvolvedTax.Controllers
             _generalQuestionareEntityService = generalQuestionareEntityService;
             _w8EXPFormService = W8EXPFormService;
             _w8ECIFormService = w8ECIFormService;
+            _W8IMYFormService = W8IMYFormService;
         }
         public async Task<IActionResult> GQEntity()
         {
@@ -105,6 +109,11 @@ namespace EvolvedTax.Controllers
                     else if (formName == AppConstants.W8EXPForm)
                     {
                         GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else if (formName == AppConstants.W8IMYForm)
+                    {
+                        GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
                         //GQEntitiesResponse.FormType = formName;
                     }
                     else
@@ -193,7 +202,7 @@ namespace EvolvedTax.Controllers
                         HttpContext.Session.SetString("ClientName", string.Concat(model.AuthSignatoryName ?? string.Empty));
                         model.PrintNameOfSignerW8ECI = string.Concat(model.AuthSignatoryName ?? string.Empty);
                     }
-                    filePathResponse = _w8ECIFormService.SaveForEntity(model);
+                    //filePathResponse = _w8ECIFormService.SaveForEntity(model);
                 }
                 else if (model.W8FormType == AppConstants.W8IMYForm)
                 {
@@ -271,35 +280,120 @@ namespace EvolvedTax.Controllers
                 Value = p.FatcaId.ToString()
             });
 
+            GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
 
 
-
-            var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
-            if (!string.IsNullOrEmpty(formName))
-            {
-                if (!string.IsNullOrEmpty(clientEmail))
-                {
-                    if (formName == AppConstants.W9Form)
-                    {
-                        GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
-                        //GQEntitiesResponse.FormType = formName;
-                    }
-                    else if (formName == AppConstants.W8EXPForm)
-                    {
-                        GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
-                        //GQEntitiesResponse.FormType = formName;
-                    }
-                    else
-                    {
-
-                    }
-                    return View(GQEntitiesResponse);
-                }
-            }
+            //var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            //if (!string.IsNullOrEmpty(formName))
+            //{
+            //    if (!string.IsNullOrEmpty(clientEmail))
+            //    {
+            //        if (formName == AppConstants.W8IMYForm)
+            //        {
+            //            //GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
+            //            GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
+            //            //GQEntitiesResponse.FormType = formName;
+            //        }
+                 
+            //        return View(GQEntitiesResponse);
+            //    }
+            //}
             return View(GQEntitiesResponse);
         }
+
+        [HttpPost]
+        public IActionResult W8IMY(FormRequest model)
+        {
+            bool isPartialSave = model.IsPartialSave;
+            string FormName = string.Empty;
+            string filePathResponse = string.Empty;
+            model.IndividualOrEntityStatus = AppConstants.EntityStatus;
+            model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+            model.BasePath = _webHostEnvironment.WebRootPath;
+
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            model.Host = fullUrl;
+
+            FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            model.FormType= AppConstants.W8FormTypes.ToString();
+            model.W8FormType = AppConstants.W8IMYForm.ToString();
+
+
+            if (isPartialSave)
+            {
+
+                var responsePartialForm =  _W8IMYFormService.SavePartial(model);
+                var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
+                if (responseGQPartialForm == 0  || responsePartialForm == 0)
+                {
+                    return View(model);
+                }
+                // Return a response indicating successful partial save
+                return Json(new { success = true, message = "Form partially saved." });
+            }
+            #region W8EXPForm save logic
+
+
+            FormName = model.W8FormType;
+                model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
+
+                var responsew8EXPForm = _W8IMYFormService.Save(model);
+                //var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+                HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8IMY);
+                filePathResponse = responsew8EXPForm;
+
+            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            if (responseGQForm == 0)
+            {
+                return View(model);
+            }
+            #endregion
+            HttpContext.Session.SetString("PdfdFileName", filePathResponse);
+            HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
+            HttpContext.Session.SetString("FormName", FormName);
+            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
+            return Json(filePathResponse);
+        }
+
         #endregion
 
+        #region P.O BOX validation
+        [HttpGet]
+        public IActionResult ValidateAddress(string MAddress1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(MAddress1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        [HttpGet]
+        public IActionResult ValidatePAddress(string PAddress1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(PAddress1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        private bool CheckAddressAgainstForbiddenTerms(string address)
+        {
+            List<string> forbiddenTerms = _evolvedtaxContext.MasterPoboxWildcards.Select(w => w.WildCard.ToLower()).ToList();
+
+            bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
+
+            return !containsForbiddenTerm;
+        } 
+        #endregion
 
         #region Entity Dropdown Dynamic Binding on the basis of selection
         [HttpPost]

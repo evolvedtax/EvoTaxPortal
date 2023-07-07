@@ -109,6 +109,7 @@
             <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+            <input type="hidden" id="hdn_FormType" />
         </div>
     </div>
 </div>
@@ -470,6 +471,7 @@
 
             $('input[name="W8FormType"]').change(function () {
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
+                $('#hdn_FormType').val('');
                 if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
                     $('#W8EXPFatcaDiv').prop('hidden', false);
                     $('#W8Entity').prop('hidden', false);
@@ -514,7 +516,8 @@
                 }
  
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
-                    window.location.href = '@Url.Action("W8IMY", "Entity")';
+                    //window.location.href = '@Url.Action("W8IMY", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
                 }
                 else {
                     // alert('here in w8 different');
@@ -642,6 +645,8 @@
 
             var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
             if (W8FormTypecheckedRadioButton.length > 0) {
+                var selectedValueW8FormType = $("input[type='radio'][name='W8FormType']:checked").val();
+                console.log(selectedValueW8FormType);
                 W8FormTypecheckedRadioButton.trigger("change");
             }
             ChekboxValidationForDropdowns();
@@ -856,6 +861,10 @@
         }
 
         function nextPrev(n) {
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm'){
+                window.location.href = '@Url.Action("W8IMY", "Entity")';
+            }
 
             // This function will figure out which tab to display
             // var x = document.getElementsByClassName("tab");

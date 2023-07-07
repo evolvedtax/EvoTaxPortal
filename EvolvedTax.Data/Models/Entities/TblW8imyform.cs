@@ -13,6 +13,8 @@ public partial class TblW8imyform
 
     public string? NameOfDiregardedEntity { get; set; }
 
+    public bool? De { get; set; }
+
     public string? TypeOfEntity { get; set; }
 
     public string? FatcaStatus { get; set; }
@@ -35,15 +37,21 @@ public partial class TblW8imyform
 
     public string? Gin { get; set; }
 
+    public bool? ForeignNumberCb { get; set; }
+
     public string? ForeignTaxIdentifyingNumber { get; set; }
 
     public string? ReferenceNumberS { get; set; }
 
-    public bool? _11fatcaCb { get; set; }
+    public string? _11fatcaCb { get; set; }
 
     public string? _12mailingAddress { get; set; }
 
     public string? _12City { get; set; }
+
+    public string? _12Province { get; set; }
+
+    public string? _12State { get; set; }
 
     public string? _12Country { get; set; }
 
@@ -71,7 +79,7 @@ public partial class TblW8imyform
 
     public bool? _16a { get; set; }
 
-    public bool? _16b { get; set; }
+    public string? _16b { get; set; }
 
     public bool? _17a { get; set; }
 
@@ -163,13 +171,9 @@ public partial class TblW8imyform
 
     public string? _32Text3 { get; set; }
 
-    public bool? _32Cb2 { get; set; }
+    public string? _32Cb2 { get; set; }
 
-    public bool? _32Cb3 { get; set; }
-
-    public bool? _32Cb4 { get; set; }
-
-    public bool? _32Cb5 { get; set; }
+    public string? _32Cb3 { get; set; }
 
     public bool? _33a { get; set; }
 
@@ -187,7 +191,7 @@ public partial class TblW8imyform
 
     public bool? _35Cb { get; set; }
 
-    public string? _35Text { get; set; }
+    public DateTime? _35Text { get; set; }
 
     public DateTime? _36Text { get; set; }
 
@@ -226,4 +230,6 @@ public partial class TblW8imyform
     public int? PrintSize { get; set; }
 
     public string? FontName { get; set; }
+
+    public string? OnBehalfName { get; set; }
 }
