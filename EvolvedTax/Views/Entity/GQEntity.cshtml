@@ -88,7 +88,7 @@
                 <partial name="_w8BenQuestionare" model="Model" />
 
                 <!--W8 ECI Questionare View-->
-                <partial name="_w8ECIQuestionare" model="Model" />
+                @*<partial name="_w8ECIQuestionare" model="Model" />*@
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
@@ -492,32 +492,35 @@
 
 
                 } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
-                    $('#W8ECIEntityDiv').prop('hidden', false);
-                    $('#W8Country').prop('hidden', false);
-                    $('#BackupWithHoldingMainDiv').prop('hidden', false);
-                    $('#W8ECIQuestionareDiv').prop('hidden', false);
-                    $('#SSNDivW8ECI').prop('hidden', false);
-                    $('#DEW8ECIDiv').prop('hidden', false);
-                    $('#AuthSignatoryNameDiv').prop('hidden', false);
+                    //$('#W8ECIEntityDiv').prop('hidden', false);
+                    //$('#W8Country').prop('hidden', false);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', false);
+                    //$('#W8ECIQuestionareDiv').prop('hidden', false);
+                    //$('#SSNDivW8ECI').prop('hidden', false);
+                    //$('#DEW8ECIDiv').prop('hidden', false);
+                    //$('#AuthSignatoryNameDiv').prop('hidden', false);
 
-                    $('#W8Entity').prop('hidden', true);
-                    $('#W9Entity').prop('hidden', true);
-                    $('#W9Country').prop('hidden', true);
-                    $('#BackupWithHoldingMainDiv').prop('hidden', true);
-                    $('.w8EXPDDLSelectedDivs').prop('hidden', true);
-                    $('.SSNDiv').prop('hidden', true);
-                    $('#QFormDiv').prop('hidden', true);
+                    //$('#W8Entity').prop('hidden', true);
+                    //$('#W9Entity').prop('hidden', true);
+                    //$('#W9Country').prop('hidden', true);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', true);
+                    //$('.w8EXPDDLSelectedDivs').prop('hidden', true);
+                    //$('.SSNDiv').prop('hidden', true);
+                    //$('#QFormDiv').prop('hidden', true);
 
-                    $('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
-                    $('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
+                    //$('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
+                    //$('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
 
-                    BindEntityForW8ECIGQForm();
-                    BindEntityForW8ECIForm();
+                    //BindEntityForW8ECIGQForm();
+                    //BindEntityForW8ECIForm();
+                    window.location.href = '@Url.Action("W8ECI", "Entity")';
                 }
- 
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     //window.location.href = '@Url.Action("W8IMY", "Entity")';
                     $('#hdn_FormType').val($(this).val());
+                }
+                else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
+                    window.location.href = '@Url.Action("W8BENE", "Entity")';
                 }
                 else {
                     // alert('here in w8 different');
@@ -684,6 +687,34 @@
             $('#editBtn').prop('hidden', false);
             $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
+        }
+        function SelectDEEntity(obj) {
+            //    console.log(typeof obj, obj);
+            //    console.log(typeof obj.value, obj.value);
+            if (obj.value === 'false' || obj.value === 'False') {
+                HideDivs();
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                HideDivs();
+
+
+
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
+            }
+            else if (obj.value === undefined) {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+                HideDivs();
+            }
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
