@@ -110,11 +110,13 @@
                         knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
 
                     </strong>
-
-
                     <strong class="w8ECICertification" hidden>
                         Under penalties of perjury, I declare that I have examined the information on this form and to the best of my
                         knowledge and belief it is true, correct, and complete. I further certify under penalties of perjury that:
+                    </strong>
+                    <strong class="w8BENECertification" hidden>
+                        Under penalties of perjury, I declare that I have examined the information on this form and to the best of my knowledge and belief it is true, correct, and complete. I further
+                        certify under penalties of perjury that:
                     </strong>
                 </label>
             </div>
@@ -205,6 +207,33 @@
                 </p>
                 <p>I agree that I will submit a new form within 30 days if any certification made on this form becomes incorrect.</p>
             </div>
+            <div class="w8BENECertification" hidden>
+                <ul>
+                    <li>
+                        The entity identified on line 1 of this form is the beneficial owner of all the income or proceeds to which this form relates, is using this form to certify its status for
+                        chapter 4 purposes, or is submitting this form for purposes of section 6050W or 6050Y;
+                    </li>
+                    <li>
+                        The entity identified on line 1 of this form is not a U.S. person;
+                    </li>
+                    <li>
+                        This form relates to: (a) income not effectively connected with the conduct of a trade or business in the United States, (b) income effectively connected with the
+                        conduct of a trade or business in the United States but is not subject to tax under an income tax treaty, (c) the partner’s share of a partnership’s effectively
+                        connected taxable income, or (d) the partner’s amount realized from the transfer of a partnership interest subject to withholding under section 1446(f); and
+                    </li>
+                    <li> For broker transactions or barter exchanges, the beneficial owner is an exempt foreign person as defined in the instructions.</li>
+                </ul>
+                <p>
+                    Furthermore, I authorize this form to be provided to any withholding agent that has control, receipt, or custody of the income of which the entity on line 1 is the beneficial
+                    owner or any withholding agent that can disburse or make payments of the income of which the entity on line 1 is the beneficial owner.
+                </p>
+                <div class="form-check abc-radio abc-radio-info">
+                    <input class="form-check-input" type="checkbox" id="agreement3">
+                    <label class="form-check-label" for="agreement3">
+                        <p><strong>I agree that I will submit a new form within 30 days if any certification made on this form becomes incorrect.</strong></p>
+                    </label>
+                </div>
+            </div>
             <div class="form-check abc-radio abc-radio-info">
                 <input class="form-check-input" type="checkbox" asp-for=Agreement2 id="agreement2">
                 <label class="form-check-label" for="agreement2">
@@ -283,11 +312,12 @@
             $('.w8BenCertification').prop('hidden', true);
             $('.w8ECICertification').prop('hidden', true);
             $('.w8ExpCertification').prop('hidden', true);
+            $('.w8BENECertification').prop('hidden', true);
             //$('.certifyDiv').prop('hidden', true);
         }
 
         $(document).ready(function () {
-
+            HideDivs();
             $('#formDate').on('change', function () {
                 if ($('#signature').val()) {
                     // Submit the form
@@ -306,22 +336,22 @@
                 $('#nextBtn').prop('hidden', true);
                 $('#certify-submit').prop('hidden', false);
                 if ('@Model?.FormName' == '@AppConstants.W9Form') {
+                    HideDivs();
                     $('.w9Certification').prop('hidden', false);
-                    $('.w8BenCertification').prop('hidden', true);
-                    $('.w8ECICertification').prop('hidden', true);
                 } else if ('@Model?.FormName' == '@AppConstants.W8BENForm') {
-                    $('.w9Certification').prop('hidden', true);
+                    HideDivs();
                     $('.w8BenCertification').prop('hidden', false);
-                    $('.w8ECICertification').prop('hidden', true);
                 } else if ('@Model?.FormName' == '@AppConstants.W8ECIForm') {
-                    $('.w9Certification').prop('hidden', true);
-                    $('.w8BenCertification').prop('hidden', true);
+                    HideDivs();
                     $('.w8ECICertification').prop('hidden', false);
                 }
                 else if ('@Model?.FormName' == '@AppConstants.W8EXPForm') {
                     HideDivs();
                     $('.w8ExpCertification').prop('hidden', false);
-
+                }
+                else if ('@Model?.FormName' == '@AppConstants.W8BENEForm') {
+                    HideDivs();
+                    $('.w8BENECertification').prop('hidden', false);
                 }
             }
             //$('#prevBtn').on('click', function () {
@@ -353,7 +383,6 @@
             }
         });
         function ajaxsuccess(response) {
-            debugger;
             if (response.status == false) {
                 COMMON.notification(2, "There's some technical issue");
                 return;
@@ -389,6 +418,9 @@
 
             $('#certifyDiv').append(text, linkText, disclaimerText, emailLink);
 
+            // Re-render the PDF without annotations
+            var pdfObject = '<object data="/' + response.fileName + '" type="application/pdf" width="100%" height="800px"></object>';
+            $('#contentContainer').html(pdfObject);
         }
 
         function openFile(fileName) {
@@ -400,14 +432,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                                                                // Disable back and forward navigation
-                                                                                                                                //window.onbeforeunload = function () {
-                                                                                                                                //    return "Are you sure you want to leave this page?";
-                                                                                                                                //};
+                                                                                                                                                        // Disable back and forward navigation
+                                                                                                                                                        //window.onbeforeunload = function () {
+                                                                                                                                                        //    return "Are you sure you want to leave this page?";
+                                                                                                                                                        //};
 
-                                                                                                                                //window.addEventListener("popstate", function (event) {
-                                                                                                                                //    history.pushState(null, document.title, location.href);
-                                                                                                                                //});
+                                                                                                                                                        //window.addEventListener("popstate", function (event) {
+                                                                                                                                                        //    history.pushState(null, document.title, location.href);
+                                                                                                                                                        //});
 
     </script>
 }

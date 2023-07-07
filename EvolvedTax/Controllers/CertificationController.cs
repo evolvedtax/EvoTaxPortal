@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.InstituteService;
+using EvolvedTax.Business.Services.W8BEN_E_FormService;
 using EvolvedTax.Business.Services.W8BenFormService;
 using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W8EXPFormService;
@@ -24,11 +25,12 @@ namespace EvolvedTax.Controllers
         private readonly ICommonService _commonService;
         private readonly IInstituteService _instituteService;
         private readonly IW8BenFormService _w8BenFormService;
+        private readonly IW8BEN_E_FormService _w8BeneFormService;
         private readonly IW8ECIFormService _w8ECIFormService;
 
         public CertificationController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
-            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService, 
-            IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, IW8EXPFormService w8ExpFormService)
+            IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
+            IW8BenFormService w8BenFormService, IW8ECIFormService w8ECIFormService, IW8EXPFormService w8ExpFormService, IW8BEN_E_FormService w8BeneFormService)
         {
             _w9FormService = w9FormService;
             _w8ExpFormService = w8ExpFormService;
@@ -38,6 +40,7 @@ namespace EvolvedTax.Controllers
             _instituteService = instituteService;
             _w8BenFormService = w8BenFormService;
             _w8ECIFormService = w8ECIFormService;
+            _w8BeneFormService = w8BeneFormService;
         }
         public IActionResult Index()
         {
@@ -121,7 +124,9 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> Certify(PdfFormDetailsRequest request)
         {
             var oldFile = request.FileName;
+
             request.FileName = request.FileName.Replace("_temp", "");
+            var copyFile = request.FileName;
             var clientEmail = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             if (!(request.Agreement1 && request.Agreement2))
             {
@@ -132,11 +137,10 @@ namespace EvolvedTax.Controllers
                 await _w9FormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
-            if (request.FormName == AppConstants.W8EXPForm)
+            else if (request.FormName == AppConstants.W8EXPForm)
             {
                 await _w8ExpFormService.UpdateByClientEmailId(clientEmail, request);
             }
-
             else if (request.FormName == AppConstants.W8BENForm)
             {
                 // await _w8BenFormService.UpdateByClientEmailId(clientEmail, request);
@@ -144,7 +148,12 @@ namespace EvolvedTax.Controllers
             }
             else if (request.FormName == AppConstants.W8ECIForm)
             {
-                //await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
+                await _w8ECIFormService.UpdateByClientEmailId(clientEmail, request);
+                await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
+            }
+            else if (request.FormName == AppConstants.W8BENEForm)
+            {
+                await _w8BeneFormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
             else
@@ -152,22 +161,37 @@ namespace EvolvedTax.Controllers
                 return Json(new { staus = false });
             }
 
+            request.FileName = _commonService.RemoveAnnotations(request.FileName);
+
+            var OldFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName);
+            var newFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName.Replace("_new", ""));
+            request.FileName = request.FileName.Replace("_new", "");
+            // Remove "_new" from the file name
+
+            //request.FileName = "output.pdf";
+            var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
+            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
+            HttpContext.Session.SetString("FormName", string.Empty);
+            var AuthSigName = HttpContext.Session.GetString("ClientNameSig");
+            if (!string.IsNullOrEmpty(AuthSigName))
+            {
+                request.PrintName = AuthSigName;
+            }
+
             if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, oldFile)))
             {
                 System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
             }
-           // request.FileName=_commonService.RemoveAnnotations(request.FileName);
-            var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
-            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
-            HttpContext.Session.SetString("FormName", string.Empty);
-            var sd = HttpContext.Session.GetString("ClientNameSig");
-            if (string.IsNullOrEmpty(sd))
-            {
 
-            }
-            else
+            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, copyFile)))
             {
-                request.PrintName = sd;
+                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, copyFile));
+            }
+           
+            // Rename the file in the folder
+            if (System.IO.File.Exists(OldFileName))
+            {
+                System.IO.File.Move(OldFileName, newFileName);
             }
             return Json(new { fileName = request.FileName, staus = true, entityName = EntityName, printName = request.PrintName, formName = request.FormName, InstituteEmail = InstituteEmail }); ;
         }
@@ -189,7 +213,7 @@ namespace EvolvedTax.Controllers
             }
             else if (clientData?.FormName?.Trim() == AppConstants.W8ECIForm)
             {
-                ViewBag.PrintName = _w8ECIFormService.GetDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
+                ViewBag.PrintName = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
             }
             return View();
         }

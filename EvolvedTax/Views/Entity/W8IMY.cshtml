@@ -64,6 +64,8 @@
         border-radius: 4px;
         margin: 20px;
     }
+
+
 </style>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
@@ -82,13 +84,9 @@
             <div>
 
                 <!--General Questionare View-->
-                <partial name="_generalQuestionare" model="Model" />
+                <partial name="_generalQuestionareW8IMY" model="Model" />
 
-                <!--W8 BEN Questionare View-->
-                <partial name="_w8BenQuestionare" model="Model" />
-
-                <!--W8 ECI Questionare View-->
-                @*<partial name="_w8ECIQuestionare" model="Model" />*@
+            
             </div>
 
             <!-- Circles which indicates the steps of the form: -->
@@ -166,55 +164,6 @@
                             // Trigger the change event after a small delay
                             setTimeout(function () {
                                 $('#EntityTypeW8').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-        function BindEntityForW8ECIGQForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8ECIGQForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8ECIGQ').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8ECIGQ').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
-
-
-                        $.each(result.entitiesList, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8ECIGQ').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8ECIGQ').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8ECIGQ').trigger('change');
                             }, 10);
                         }
                     }
@@ -374,33 +323,18 @@
             });
         }
         function HideDivOnDDLEntitySelection() {
-            $('#Q1Div').prop('hidden', true);
-            $('#IntOrgDiv').prop('hidden', true);
-            $('#FrgnBankDiv').prop('hidden', true);
-            $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
-            $('#GovUSPossDiv').prop('hidden', true);
+            $('#FrgnGovDiv').prop('hidden', true);
+            $('#NonqualifiedDiv').prop('hidden', true);
+
         }
         function HideDivOnDDLStatusFATCASelection() {
-            $('#FincalInsDiv').prop('hidden', true);
-            $('#FrgnGovUSDiv').prop('hidden', true);
-            $('#RetPlanSDiv').prop('hidden', true);
-            $('#501OrgUSDiv').prop('hidden', true);
-            $('#PassNFEDiv').prop('hidden', true);
-            $('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
+            //$('#FincalInsDiv').prop('hidden', true);
+            //$('#FrgnGovUSDiv').prop('hidden', true);
+            //$('#RetPlanSDiv').prop('hidden', true);
+            //$('#501OrgUSDiv').prop('hidden', true);
+            //$('#PassNFEDiv').prop('hidden', true);
+            //$('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
 
-        }
-        function ChangeMaskingW8ECI(obj) {
-
-            if (obj.value == 'S') {
-                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
-                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
-            } else if (obj.value == 'E') {
-                $('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
-                $('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
-            } else {
-                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
-                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
-            }
         }
         function ChangeMasking(obj) {
 
@@ -443,6 +377,8 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+            
+
 
             $('#Ssnitnein').attr('placeholder', '00-0000000');
             $('#Ssnitnein').mask('00-0000000', { reverse: true });
@@ -475,49 +411,33 @@
                     $('#W8Entity').prop('hidden', false);
                     $('#W8Country').prop('hidden', false);
                     $('#AuthSignatoryNameDiv').prop('hidden', false);
-                    $('#SSNDiv').prop('hidden', false);
-                    $('#QFormDiv').prop('hidden', false);
 
                     $('#W9Entity').prop('hidden', true);
                     $('#W9Country').prop('hidden', true);
                     $('#W8ECIQuestionareDiv').prop('hidden', true);
                     $('#W8ECIEntityDiv').prop('hidden', true);
-                    $('#SSNDivW8ECI').prop('hidden', true);
-                    $('#DEW8ECIDiv').prop('hidden', true);
 
                     BindEntityForW8EXPForm();
                     BindEW8EXPFATCA();
 
 
                 } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
-                    //$('#W8ECIEntityDiv').prop('hidden', false);
-                    //$('#W8Country').prop('hidden', false);
-                    //$('#BackupWithHoldingMainDiv').prop('hidden', false);
-                    //$('#W8ECIQuestionareDiv').prop('hidden', false);
-                    //$('#SSNDivW8ECI').prop('hidden', false);
-                    //$('#DEW8ECIDiv').prop('hidden', false);
-                    //$('#AuthSignatoryNameDiv').prop('hidden', false);
+                    $('#W8Entity').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', false);
+                    $('#W8Country').prop('hidden', false);
+                    $('#BackupWithHoldingMainDiv').prop('hidden', false);
+                    $('#W8ECIQuestionareDiv').prop('hidden', false);
 
-                    //$('#W8Entity').prop('hidden', true);
-                    //$('#W9Entity').prop('hidden', true);
-                    //$('#W9Country').prop('hidden', true);
-                    //$('#BackupWithHoldingMainDiv').prop('hidden', true);
-                    //$('.w8EXPDDLSelectedDivs').prop('hidden', true);
-                    //$('.SSNDiv').prop('hidden', true);
-                    //$('#QFormDiv').prop('hidden', true);
+                    $('#W9Entity').prop('hidden', true);
+                    $('#W9Country').prop('hidden', true);
+                    $('#AuthSignatoryNameDiv').prop('hidden', true);
+                    $('.w8EXPDDLSelectedDivs').prop('hidden', true);
 
-                    //$('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
-                    //$('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
-
-                    //BindEntityForW8ECIGQForm();
-                    //BindEntityForW8ECIForm();
-                    window.location.href = '@Url.Action("W8ECI", "Entity")';
+                    BindEntityForW8ECIForm();
                 }
+
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     window.location.href = '@Url.Action("W8IMY", "Entity")';
-                }
-                else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
-                    window.location.href = '@Url.Action("W8BENE", "Entity")';
                 }
                 else {
                     // alert('here in w8 different');
@@ -525,13 +445,10 @@
                     $('#W9Entity').prop('hidden', false);
                     $('#W9Country').prop('hidden', false);
                     $('#AuthSignatoryNameDiv').prop('hidden', false);
-                    $('#SSNDiv').prop('hidden', false);
 
                     $('#W8Country').prop('hidden', true);
                     $('#W8ECIQuestionareDiv').prop('hidden', true);
                     $('#W8ECIEntityDiv').prop('hidden', true);
-                    $('#SSNDivW8ECI').prop('hidden', true);
-                    $('#DEW8ECIDiv').prop('hidden', true);
 
                     BindEntityForW9Form();
                     HideDivOnDDLEntitySelection();
@@ -546,12 +463,13 @@
                 //Foreign government
                 if (selectedValue == 1) {
                     HideDivOnDDLEntitySelection();
-                    $('#FrgnGovDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', false);
                 }
                 //Internal organization
                 if (selectedValue == 2) {
                     HideDivOnDDLEntitySelection();
-                    $('#IntOrgDiv').prop('hidden', false);
+                    $('#Q1Div').prop('hidden', true);
+                    $('#NonqualifiedDiv').prop('hidden', false);
                 }
                 //Foreign central bank of issue (not wholly owned by the foreign sovereign)
                 if (selectedValue == 3) {
@@ -720,24 +638,51 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
-        function SelectDEW8ECIEntity(obj) {
-            //console.log(typeof obj, obj);
-            //console.log(typeof obj.value, obj.value);
+        function HideDivs(){
+            $('#div_DE1').prop('hidden', true);
+            $('#div_DE2').prop('hidden', true);
+            $('#div_DE3').prop('hidden', true);
+            $('#div_DE4').prop('hidden', true);
+            $('#div_DE5').prop('hidden', true);
+            $('#div_DE6').prop('hidden', true);
+            $('#div_DE7').prop('hidden', true);
+            $('#provinceDiv').prop('hidden', true);
+        }
+
+        function ShowHideDivs() {
+            $('#div_DE1').prop('hidden', false);
+            $('#div_DE2').prop('hidden', false);
+            $('#div_DE3').prop('hidden', false);
+            $('#div_DE4').prop('hidden', false);
+            $('#div_DE5').prop('hidden', false);
+            $('#div_DE6').prop('hidden', false);
+            $('#div_DE7').prop('hidden', false);
+            $('#provinceDiv').prop('hidden', false);
+        }
+        function SelectDEEntity(obj) {
+        //    console.log(typeof obj, obj);
+        //    console.log(typeof obj.value, obj.value);
             if (obj.value === 'false' || obj.value === 'False') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
+                HideDivs();
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
             } else if (obj == 'false' || obj.value === 'False') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
+                 HideDivs();
+
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
             }
             else if (obj == 'true' || obj == 'True') {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                ShowHideDivs();
             }
             else if (obj.value === undefined) {
-                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
-                $('#DEOwnerNameW8ECI').val('');
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+                HideDivs();
             }
         }
 
@@ -757,7 +702,6 @@
             else if (obj.value == '@AppConstants.W9Form') {
                 $('#WFormDiv').prop('hidden', true);
                 $('#QFormDiv').prop('hidden', true);
-                $('#AuthSignatoryNameDiv').prop('hidden', false);
 
                 $('#W8EXPFatcaDiv').prop('hidden', true);
                 $('#W8Entity').prop('hidden', true);
@@ -775,22 +719,6 @@
                 HideDivOnDDLStatusFATCASelection();
             }
             showTab(currentTab);
-        }
-        function ShowHideFTINW8ECI(obj) {
-            if (String(obj.value).toLowerCase() == 'true') {
-                $('#FTINW8ECIDiv').prop('hidden', false);
-            } else {
-                $('#FTINW8ECIDiv').prop('hidden', true);
-                $('#ForeignTaxIdentifyingNumberW8ECI').val('');
-            }
-        }
-        function W8ECIOnBehalfNameFunc(obj) {
-            if (String(obj.value).toLowerCase() == 'true') {
-                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', false);
-            } else {
-                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', true);
-                $('#PrintNameOfSignerW8ECI').val('');
-            }
         }
         function BackupWithHoldingFunc(obj) {
             if (obj.value == 'false') {
@@ -814,43 +742,8 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-
-                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
-                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
-                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
-                        $('#firstNameW8Ben').val($('#firstName').val());
-                        $('#lastNameW8Ben').val($('#lastName').val());
-                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
-                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
-                    } else {
-                        $('#firstNameW8ECI').val($('#firstName').val());
-                        $('#lastNameW8ECI').val($('#lastName').val());
-                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
-                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
-                    }
-                }
-                else if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W9Form') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8ECIForm') {
-                    $('#nameOfOrganizationW8ECI').val($('#GQOrgName').val());
-                    $('#CountryW8ECI').val($('#CountryW8').val()).change();
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8ECI  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8IMYForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8EXPForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8EXP  >>";
-                }
-                else {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
+                document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
+            
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next Page >>";
             }

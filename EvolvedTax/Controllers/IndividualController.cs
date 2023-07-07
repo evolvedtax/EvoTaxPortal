@@ -103,7 +103,7 @@ namespace EvolvedTax.Controllers
                         else if (formName == AppConstants.W8ECIForm)
                         {
                             GQIndividulResponse.W8FormType = formName;
-                            GQIndividulResponse = _w8ECIFormService.GetDataByClientEmailId(clientEmmail);
+                            GQIndividulResponse = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmmail);
                         }
                     }
                     return View(GQIndividulResponse);
@@ -161,7 +161,7 @@ namespace EvolvedTax.Controllers
                     {
                         model.US1 = "2";
                         model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                        filePathResponse = _w8ECIFormService.Update(model);
+                        filePathResponse = _w8ECIFormService.UpdateForIndividual(model);
                     }
                     FormName = model.W8FormType;
                 }
@@ -211,7 +211,7 @@ namespace EvolvedTax.Controllers
                     {
                         model.US1 = "2";
                         model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
-                        if (model.W8ECIOnBehalfName)
+                        if (model.W8ECIOnBehalfName ?? false)
                         {
                             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
                             HttpContext.Session.SetString("ClientNameSig", string.Concat(model.GQFirstName, " ", model.GQLastName));
@@ -222,7 +222,7 @@ namespace EvolvedTax.Controllers
                             HttpContext.Session.SetString("ClientName", string.Concat(model.GQFirstName, " ", model.GQLastName));
                             model.PrintNameOfSignerW8ECI = string.Concat(model.GQFirstName, " ", model.GQLastName);
                         }
-                        filePathResponse = _w8ECIFormService.Save(model);
+                        filePathResponse = _w8ECIFormService.SaveForIndividual(model);
                     }
                     FormName = model.W8FormType;
                 }

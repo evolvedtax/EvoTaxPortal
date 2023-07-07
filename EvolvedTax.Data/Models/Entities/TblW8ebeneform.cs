@@ -35,7 +35,7 @@ public partial class TblW8ebeneform
 
     public string? ForeignTaxIdentifyingNumber { get; set; }
 
-    public string? FtinCheck { get; set; }
+    public bool? FtinCheck { get; set; }
 
     public string? ReferenceNumberS { get; set; }
 
@@ -49,171 +49,167 @@ public partial class TblW8ebeneform
 
     public string? _13gin { get; set; }
 
-    public string? _14aTextWithCb { get; set; }
+    public bool? _14aCb { get; set; }
 
-    public string? _14b { get; set; }
+    public string? _14aTb { get; set; }
 
-    public string? _14c { get; set; }
+    public bool? _14bCb1 { get; set; }
 
-    public string? _15a { get; set; }
+    public string? _14bCb2others { get; set; }
 
-    public string? _15b { get; set; }
+    public string? _14bTb { get; set; }
 
-    public string? _15c { get; set; }
+    public bool? _14cCb { get; set; }
 
-    public string? _15d { get; set; }
+    public string? _15cTb1 { get; set; }
 
-    public string? _15e { get; set; }
+    public string? _15cTb2 { get; set; }
 
-    public string? _16 { get; set; }
+    public string? _15cTb3 { get; set; }
 
-    public string? _17a { get; set; }
+    public string? _15cTb4 { get; set; }
 
-    public string? _17b { get; set; }
+    public string? _16tb { get; set; }
 
-    public string? _18 { get; set; }
+    public bool? _17cb1 { get; set; }
 
-    public string? _19 { get; set; }
+    public bool? _17cb2 { get; set; }
 
-    public string? _20Text { get; set; }
+    public bool? _18cb { get; set; }
 
-    public string? _21 { get; set; }
+    public bool? _19cb { get; set; }
 
-    public string? _22 { get; set; }
+    public string? _20tb { get; set; }
 
-    public string? _23 { get; set; }
+    public bool? _21cb { get; set; }
 
-    public string? _24a { get; set; }
+    public bool? _22cb { get; set; }
 
-    public string? _24b { get; set; }
+    public bool? _23cb { get; set; }
 
-    public string? _24c { get; set; }
+    public bool? _24aCb { get; set; }
 
-    public string? _24d { get; set; }
+    public string? _24borcCb { get; set; }
 
-    public string? _25a { get; set; }
+    public bool? _24dCb { get; set; }
 
-    public string? _25b { get; set; }
+    public bool? _25aCb { get; set; }
 
-    public string? _25c { get; set; }
+    public string? _25bcCb { get; set; }
 
-    public string? _26 { get; set; }
+    public bool? _26cb1 { get; set; }
 
-    public string? _26Text { get; set; }
+    public string? _26cb2or3 { get; set; }
 
-    public string? _26Cb { get; set; }
+    public string? _26cb4or5 { get; set; }
 
-    public string? _26Text2 { get; set; }
+    public string? _26tb1 { get; set; }
 
-    public string? _26Text3 { get; set; }
+    public string? _26tb2 { get; set; }
 
-    public string? _26Cb2 { get; set; }
+    public string? _26tb3 { get; set; }
 
-    public string? _27 { get; set; }
+    public bool? _27cb { get; set; }
 
-    public string? _28a { get; set; }
+    public string? _28aorbCb { get; set; }
 
-    public string? _28b { get; set; }
+    public string? _29cb { get; set; }
 
-    public string? _29a { get; set; }
+    public bool? _30cb { get; set; }
 
-    public string? _29b { get; set; }
+    public bool? _31cb { get; set; }
 
-    public string? _29c { get; set; }
+    public bool? _32cb { get; set; }
 
-    public string? _29d { get; set; }
+    public bool? _33cb { get; set; }
 
-    public string? _29e { get; set; }
+    public string? _33tb { get; set; }
 
-    public string? _29f { get; set; }
+    public bool? _34cb { get; set; }
 
-    public string? _30 { get; set; }
+    public string? _34tb { get; set; }
 
-    public string? _31 { get; set; }
+    public bool? _35cb { get; set; }
 
-    public string? _32 { get; set; }
+    public string? _35tb { get; set; }
 
-    public string? _33 { get; set; }
+    public bool? _36cb { get; set; }
 
-    public string? _34TextWithCb { get; set; }
+    public string? _37aorbCb { get; set; }
 
-    public string? _35TextWithCb { get; set; }
+    public string? _37aTb { get; set; }
 
-    public string? _36 { get; set; }
+    public string? _37bTb1 { get; set; }
 
-    public string? _37aTextWithCb { get; set; }
+    public string? _37bTb2 { get; set; }
 
-    public string? _37bTextWithCb { get; set; }
+    public bool? _38cb { get; set; }
 
-    public string? _38 { get; set; }
+    public bool? _39cb { get; set; }
 
-    public string? _39 { get; set; }
+    public bool? _40aCb { get; set; }
 
-    public string? _40a { get; set; }
+    public string? _40borcCb { get; set; }
 
-    public string? _40b { get; set; }
+    public bool? _41cb { get; set; }
 
-    public string? _40c { get; set; }
+    public string? _42tb { get; set; }
 
-    public string? _41 { get; set; }
+    public bool? _43cb { get; set; }
 
-    public string? _42Text { get; set; }
+    public string? NameRow1 { get; set; }
 
-    public string? _43 { get; set; }
+    public string? AddressRow1 { get; set; }
 
-    public string? Name1 { get; set; }
+    public string? Tinrow1 { get; set; }
 
-    public string? Address1 { get; set; }
+    public string? NameRow2 { get; set; }
 
-    public string? Tin1 { get; set; }
+    public string? AddressRow2 { get; set; }
 
-    public string? Name11 { get; set; }
+    public string? Tinrow2 { get; set; }
 
-    public string? Address11 { get; set; }
+    public string? NameRow3 { get; set; }
 
-    public string? Tin11 { get; set; }
+    public string? AddressRow3 { get; set; }
 
-    public string? Name12 { get; set; }
+    public string? Tinrow3 { get; set; }
 
-    public string? Address12 { get; set; }
+    public string? NameRow4 { get; set; }
 
-    public string? Tin12 { get; set; }
+    public string? AddressRow4 { get; set; }
 
-    public string? Name13 { get; set; }
+    public string? Tinrow4 { get; set; }
 
-    public string? Address13 { get; set; }
+    public string? NameRow5 { get; set; }
 
-    public string? Tin13 { get; set; }
+    public string? AddressRow5 { get; set; }
 
-    public string? Name14 { get; set; }
+    public string? Tinrow5 { get; set; }
 
-    public string? Address14 { get; set; }
+    public string? NameRow6 { get; set; }
 
-    public string? Tin14 { get; set; }
+    public string? AddressRow6 { get; set; }
 
-    public string? Name111 { get; set; }
+    public string? Tinrow6 { get; set; }
 
-    public string? Address111 { get; set; }
+    public string? NameRow7 { get; set; }
 
-    public string? Tin111 { get; set; }
+    public string? AddressRow7 { get; set; }
 
-    public string? Name121 { get; set; }
+    public string? Tin1row7 { get; set; }
 
-    public string? Address121 { get; set; }
+    public string? NameRow8 { get; set; }
 
-    public string? Tin121 { get; set; }
+    public string? AddressRow8 { get; set; }
 
-    public string? Name131 { get; set; }
+    public string? Tinrow8 { get; set; }
 
-    public string? Address131 { get; set; }
+    public string? NameRow9 { get; set; }
 
-    public string? Tin131 { get; set; }
+    public string? AddressRow9 { get; set; }
 
-    public string? Name1311 { get; set; }
-
-    public string? Address1311 { get; set; }
-
-    public string? Tin1311 { get; set; }
+    public string? Tinrow9 { get; set; }
 
     public string? PrintNameOfSigner { get; set; }
 
@@ -222,4 +218,16 @@ public partial class TblW8ebeneform
     public string? UploadedFile { get; set; }
 
     public string? Status { get; set; }
+
+    public string? W8beneprintName { get; set; }
+
+    public string? W8beneprintSize { get; set; }
+
+    public string? W8beneentryDate { get; set; }
+
+    public string? W8benefontName { get; set; }
+
+    public string? W8beneemailAddress { get; set; }
+
+    public bool? W8beneonBehalfName { get; set; }
 }

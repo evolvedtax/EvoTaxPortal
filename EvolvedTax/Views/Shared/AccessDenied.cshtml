@@ -64,13 +64,18 @@
     }
     else if ((short)ViewBag.StatusCode == 400 || (short)ViewBag.StatusCode == 0)
     {
-        <div class="middle-box text-center animated fadeInDown">
-            <h1>400</h1>
-            <h3 class="font-bold">Bad Request</h3>
-
-            @*<div class="error-desc">
-                Bad Request.
-            </div>*@
+        <div class="text-center animated fadeInDown" style="text-align: center;margin-top:5%;">
+            <h1 class="font-bold" style="margin-bottom:40px">
+                We apologize for the inconvenience, but it appears that the link you clicked on is not functioning
+            </h1>
+            <text style="font-size:initial">
+                If the problem persists or if
+                you have any further questions, please don&#39;t hesitate to contact <strong>@TempData["EntityName"]</strong> support team at <a href="mailto:'@TempData["InstituteEmail"]'">@TempData["InstituteEmail"]</a>. 
+            </text>
+            <br/>
+            <text style="font-size:initial">
+                We apologize for any inconvenience caused and appreciate your understanding.
+            </text>
         </div>
     }
     <!-- Mainly scripts -->

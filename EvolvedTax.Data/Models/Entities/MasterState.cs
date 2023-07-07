@@ -10,4 +10,6 @@ public partial class MasterState
     public string StateId { get; set; } = null!;
 
     public string? State { get; set; }
+
+    public string? Address { get; set; }
 }

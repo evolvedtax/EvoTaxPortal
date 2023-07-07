@@ -141,6 +141,14 @@ namespace EvolvedTax.Business.Services.CommonService
                             image2.SetAbsolutePosition(450, 530);
                         }
                     }
+                    else if (AppConstants.W8BENEForm == request.FormName)
+                        {
+                        image1.SetAbsolutePosition(120, 110);
+                        if (request.EntryDate != null)
+                        {
+                            image2.SetAbsolutePosition(470, 110);
+                        }
+                    }
 
                     PdfContentByte over1 = pdfStamper.GetOverContent(numberOfPages);
                     over1.AddImage(image1);
@@ -160,12 +168,15 @@ namespace EvolvedTax.Business.Services.CommonService
             return fileName;
         }
 
-        public string RemoveAnnotations (string filePath)
+
+        public string RemoveAnnotations(string filePath)
         {
-      
-            string FilePath = Path.Combine(BaseUrl, filePath);
+            string inputFilePath = Path.Combine(BaseUrl, filePath);
+            string outputFileName = Path.GetFileNameWithoutExtension(filePath) + "_new" + Path.GetExtension(filePath);
+            string outputFilePath = Path.Combine(Path.GetDirectoryName(inputFilePath), outputFileName);
+
             // Load the PDF document
-            using (PdfReader reader = new PdfReader(FilePath))
+            using (PdfReader reader = new PdfReader(inputFilePath))
             {
                 // Iterate through each page of the document
                 for (int pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
@@ -178,7 +189,6 @@ namespace EvolvedTax.Business.Services.CommonService
                 }
 
                 // Save the modified PDF document without annotations
-                string outputFilePath = Path.Combine(Path.GetDirectoryName(FilePath), "output.pdf");
                 using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
                 {
                     using (PdfStamper stamper = new PdfStamper(reader, outputStream))
@@ -186,35 +196,68 @@ namespace EvolvedTax.Business.Services.CommonService
                         // No need to flatten the form fields since we are only removing annotations
                     }
                 }
-                return outputFilePath;
-
-                    /*
-                    using (FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
-                    {
-                        // Forcefully close the file
-                        fileStream.Close();
-                    }
-
-                    // Overwrite the original PDF file with the modified PDF without annotations
-                    try
-                    {
-                        using (FileStream outputStream = new FileStream(FilePath, FileMode.Create))
-                        {
-                            using (PdfStamper stamper = new PdfStamper(reader, outputStream))
-                            {
-                                // No need to flatten the form fields since we are only removing annotations
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log or handle the exception
-                        Console.WriteLine($"An error occurred while removing annotations: {ex.Message}");
-                    }
-
-                    */
-                }
             }
+
+            return outputFileName;
+        }
+
+        //public string RemoveAnnotations (string filePath)
+        //{
+
+        //    string FilePath = Path.Combine(BaseUrl, filePath);
+        //    // Load the PDF document
+        //    using (PdfReader reader = new PdfReader(FilePath))
+        //    {
+        //        // Iterate through each page of the document
+        //        for (int pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
+        //        {
+        //            // Get the page dictionary
+        //            PdfDictionary pageDict = reader.GetPageN(pageNum);
+
+        //            // Remove the annotations from the page
+        //            pageDict.Remove(PdfName.ANNOTS);
+        //        }
+
+
+
+        //        // Save the modified PDF document without annotations
+        //        string outputFilePath = Path.Combine(Path.GetDirectoryName(FilePath), New_FileName);
+        //        using (FileStream outputStream = new FileStream(outputFilePath, FileMode.Create))
+        //        {
+        //            using (PdfStamper stamper = new PdfStamper(reader, outputStream))
+        //            {
+        //                // No need to flatten the form fields since we are only removing annotations
+        //            }
+        //        }
+        //        return outputFilePath;
+
+        //            /*
+        //            using (FileStream fileStream = new FileStream(FilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+        //            {
+        //                // Forcefully close the file
+        //                fileStream.Close();
+        //            }
+
+        //            // Overwrite the original PDF file with the modified PDF without annotations
+        //            try
+        //            {
+        //                using (FileStream outputStream = new FileStream(FilePath, FileMode.Create))
+        //                {
+        //                    using (PdfStamper stamper = new PdfStamper(reader, outputStream))
+        //                    {
+        //                        // No need to flatten the form fields since we are only removing annotations
+        //                    }
+        //                }
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                // Log or handle the exception
+        //                Console.WriteLine($"An error occurred while removing annotations: {ex.Message}");
+        //            }
+
+        //            */
+        //        }
+        //    }
         public MemoryStream DownloadFile(string filePath)
         {
             var memoryStream = new MemoryStream();

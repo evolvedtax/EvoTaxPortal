@@ -27,6 +27,7 @@ namespace EvolvedTax.Common.Constants
         public const short ClientStatusUpdateRequest = 4;
         //-----------FILE TEMPLATES----------------------//
         public const string W9TemplateFileName = @"Form_W9.pdf";
+        public const string W8BENETemplateFileName = @"Form_W8BEN-E.pdf";
         public const string W8BENTemplateFileName = @"Form_W8Ben.pdf";
         public const string W8ECITemplateFileName = @"Form_W8ECI.pdf";
         public const string W8IMYTemplateFileName = @"Form_W8IMY.pdf";

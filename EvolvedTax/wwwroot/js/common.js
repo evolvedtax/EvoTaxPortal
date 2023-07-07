@@ -617,6 +617,39 @@ var COMMON = (function () {
             });
         return confirmed;
     };
+    COMMON.confirmAlertActiveAll = function (message, url, params, gridId) {
+        var confirmed = false;
+        
+        swal({
+            title: "Are you sure you want to " + message + " these records?",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1ab394",
+            confirmButtonText: message,
+            cancelButtonText: "Cancel"
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    debugger
+                    var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
+                    if (jsonResponse.Status === true) {
+                        COMMON.notification(1, jsonResponse.Message)
+                        //COMMON.dataTableInitialized();
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 3000);
+                    } else if (jsonResponse.Status !== null) {
+                        COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
+                    }
+                    confirmed = true;
+                } else {
+                    swal("Cancelled", "You have cancelled update operation!", "error");
+                    return false;
+                }
+            });
+        return confirmed;
+    };
     COMMON.AlertSuccessMessage = function (message, tagLine, status) {
         swal(
             message,
