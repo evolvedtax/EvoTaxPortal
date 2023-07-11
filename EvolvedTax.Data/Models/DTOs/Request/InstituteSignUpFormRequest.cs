@@ -23,6 +23,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [Display(Name = "official email")]
         public string SUEmailAddress { get; set; } = string.Empty;
 
+        public string SupportEmailAddress { get; set; } = string.Empty;
+
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$", ErrorMessage = "Password at least one capital letter, one small letter, one number, one special character, and be at least 8 characters long")]
         [Display(Name = "password")]
         public string SUPassword { get; set; } = string.Empty;
@@ -42,6 +44,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SUIDNumber { get; set; } = string.Empty;
 
         public string SUMCountry { get; set; } = string.Empty;
+        [Remote("ValidateAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
+        [Display(Name = "Address Line 1")]
         public string SUMMAdd1 { get; set; } = string.Empty;
         public string? SUMMAdd2 { get; set; }
         public string SUMCity { get; set; } = string.Empty;
@@ -51,6 +55,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SUMZip { get; set; } = string.Empty;
 
         public string SUPCountry { get; set; } = string.Empty;
+        [Remote("ValidatePAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
+        [Display(Name = "Address Line 1")]
         public string SUMPAdd1 { get; set; } = string.Empty;
         public string? SUPPAdd2 { get; set; }
         public string SUPCity { get; set; } = string.Empty;

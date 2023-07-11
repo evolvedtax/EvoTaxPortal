@@ -16,5 +16,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
         public Task<bool> UpdateByClientEmailId(string ClientId, PdfFormDetailsRequest request);
         public FormRequest? GetDataByClientEmail(string ClientEmail);
         public string Update(FormRequest model);
+        public int SavePartial(FormRequest request);
+        public int UpdatePartial(FormRequest request);
     }
 }

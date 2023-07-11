@@ -78,4 +78,18 @@ public partial class InstituteMaster
     public string? PasswordSecuredQ3 { get; set; }
 
     public string? PasswordSecuredA3 { get; set; }
+
+    public string? Otp { get; set; }
+
+    public DateTime? OtpexpiryDate { get; set; }
+
+    public DateTime? RequestDate { get; set; }
+
+    public string? ApprovedBy { get; set; }
+
+    public DateTime? ApprovedOn { get; set; }
+
+    public string? RequestIp { get; set; }
+
+    public string? SupportEmail { get; set; }
 }
