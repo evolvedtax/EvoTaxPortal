@@ -740,7 +740,7 @@
 
         });
         function ajaxsuccess(response) {
-            if (response.message != "Form partially saved.") {
+            if (response.message != '@AppConstants.FormPartiallySave') {
 
                 //Full form logic
                 document.getElementById("stepsDiv").style.display = "none";
@@ -760,7 +760,7 @@
                 $('#nextBtn').prop('hidden', true);
                 $('#SaveExitBtn').prop('hidden', true);
             }
-            else if (response.message == "Form partially saved.") {
+            else if (response.message == '@AppConstants.FormPartiallySave') {
                 COMMON.notification(1, "Saving ...");
             }
 

@@ -173,7 +173,7 @@ namespace EvolvedTax.Controllers
                         return View(model);
                     }
                     // Return a response indicating successful partial save
-                    return Json(new { success = true, message = "Form partially saved." });
+                    return Json(new { success = true, message = AppConstants.FormPartiallySave });
                 }
 
                 model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
@@ -526,7 +526,7 @@ namespace EvolvedTax.Controllers
                     return View(model);
                 }
                 // Return a response indicating successful partial save
-                return Json(new { success = true, message = "Form partially saved." });
+                return Json(new { success = true, message = AppConstants.FormPartiallySave });
             }
             #region W8EXPForm save logic
 
