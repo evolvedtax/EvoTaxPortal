@@ -53,9 +53,9 @@ public partial class InstitutesClient
 
     public DateTime? InActiveDate { get; set; }
 
-    public string? Otp { get; set; }
+    public string? OTP { get; set; }
 
-    public DateTime? OtpexpiryDate { get; set; }
+    public DateTime? OTPExpiryDate { get; set; }
 
     public DateTime? RequestDate { get; set; }
 

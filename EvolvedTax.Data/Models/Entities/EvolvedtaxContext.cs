@@ -532,11 +532,11 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Mzip)
                 .IsUnicode(false)
                 .HasColumnName("MZip");
-            entity.Property(e => e.Otp)
+            entity.Property(e => e.OTP)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("OTP");
-            entity.Property(e => e.OtpexpiryDate)
+            entity.Property(e => e.OTPExpiryDate)
                 .HasColumnType("datetime")
                 .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.Padd1)
@@ -613,11 +613,11 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
-            entity.Property(e => e.Otp)
+            entity.Property(e => e.OTP)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("OTP");
-            entity.Property(e => e.OtpexpiryDate)
+            entity.Property(e => e.OTPExpiryDate)
                 .HasColumnType("datetime")
                 .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.PartnerName1)
