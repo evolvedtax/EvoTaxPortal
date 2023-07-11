@@ -89,7 +89,7 @@ public class FormRequest
     public string SSN { get; set; } = string.Empty;
 
     public string MCountry { get; set; } = string.Empty;
-    [Remote("ValidateAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]
+    [Remote("ValidateAddress", "Entity", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 1")]
     public string MAddress1 { get; set; } = string.Empty;
     //[Remote("ValidateAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]
@@ -102,7 +102,7 @@ public class FormRequest
 
     public string PCountry { get; set; } = string.Empty;
 
-    [Remote("ValidatePAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]
+    [Remote("ValidatePAddress", "Entity", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 1")]
     public string PAddress1 { get; set; } = string.Empty;
     //[Remote("ValidateAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]

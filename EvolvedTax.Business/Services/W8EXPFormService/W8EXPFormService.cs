@@ -20,12 +20,12 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
 
         public W8EXPFormService(EvolvedtaxContext evolvedtaxContext)
         {
-           
+
             _evolvedtaxContext = evolvedtaxContext;
         }
 
-     
-       // public List<object> Save(FormRequest request)
+
+      
         public string Save(FormRequest request)
         {
             if (_evolvedtaxContext.TblW8expforms.Any(p => p.EmailAddress == request.EmailId))
@@ -34,61 +34,119 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             }
             var model = new TblW8expform
             {
-                    NameOfOrganization =  request.GQOrgName,
-                    TypeOfEntity = request.TypeOfEntity,
-                    CountryOfIncorporation = request.CountryOfIncorporation,
-                    FatcaStatus = request.W8EXPFatca,
-                    PrintNameOfSigner = request.AuthSignatoryName,
-                    Gin=request.GIN,
-                    SsnOrItin= request.SsnOrItin,
-                    CheckIfFtinNotLegallyRequiredYN=request.LegallyRequired,
-                    ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber,
-                    ReferenceNumberS=request.Referencenumber,
-                    _10a = request._10a,
-                    _10b = request._10b,
-                    _10bText=request._10b_Text,
-                    _10c = request._10c,
-                    _10cText = request._10c_Text,
-                    _11 = request._11,
-                    _12 = request._12,
-                    _13a = request._13a,
-                    _13b = request._13b,
-                    _13c = request._13c,
-                    _13d = request._13d,
-                    _14 = request._14,
-                    _16 = request._16,
-                    _17 = request._17,
-                    _18 = request._18,
-                    _19 = request._19,
-                    _20a = request._20a,
-                    _20b = request._20b,
-                    _20c = request._20c,
-                    _21 = request._21,
-                    _21Text = request._21_Text,
-                EmailAddress=request.EmailId
-             
+                NameOfOrganization = request.GQOrgName,
+                TypeOfEntity = request.TypeOfEntity,
+                CountryOfIncorporation = request.CountryOfIncorporation,
+                FatcaStatus = request.W8EXPFatca,
+                PrintNameOfSigner = request.AuthSignatoryName,
+                Gin = request.GIN,
+                SsnOrItin = request.SsnOrItin,
+                CheckIfFtinNotLegallyRequiredYN = request.LegallyRequired,
+                ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber,
+                ReferenceNumberS = request.Referencenumber,
+                _10a = request._10a,
+                _10b = request._10b,
+                _10bText = request._10b_Text,
+                _10c = request._10c,
+                _10cText = request._10c_Text,
+                _11 = request._11,
+                _12 = request._12,
+                _13a = request._13a,
+                _13b = request._13b,
+                _13c = request._13c,
+                _13d = request._13d,
+                _14 = request._14,
+                _15 = request._15,
+                _15Text1=request._15_Text1,
+                _15Text2=request._15_Text2,
+                _15Text3=request._15_Text3,
+                _16 = request._16,
+                _17 = request._17,
+                _18 = request._18,
+                _19 = request._19,
+                _20a = request._20a,
+                _20b = request._20b,
+                _20c = request._20c,
+                _21 = request._21,
+                _21Text = request._21_Text,
+                EmailAddress = request.EmailId
+
             };
 
-            
+
 
             _evolvedtaxContext.TblW8expforms.Add(model);
             _evolvedtaxContext.SaveChanges();
-          
+
             //var resultList = new List<object>();
-           // resultList.Add(model.Id);
+            // resultList.Add(model.Id);
             request.W8ExpId = model.Id;
             //resultList.Add(W8CreationEXP(request));
             return W8CreationEXP(request);
-           // return resultList;
-       
+            // return resultList;
+
         }
 
+        public int SavePartial(FormRequest request)
+        {
+            if (_evolvedtaxContext.TblW8expforms.Any(p => p.EmailAddress == request.EmailId))
+            {
+                return UpdatePartial(request);
+            }
+            var model = new TblW8expform
+            {
+                NameOfOrganization = request.GQOrgName,
+                TypeOfEntity = request.TypeOfEntity,
+                CountryOfIncorporation = request.CountryOfIncorporation,
+                FatcaStatus = request.W8EXPFatca,
+                PrintNameOfSigner = request.AuthSignatoryName,
+                Gin = request.GIN,
+                SsnOrItin = request.SsnOrItin,
+                CheckIfFtinNotLegallyRequiredYN = request.LegallyRequired,
+                ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber,
+                ReferenceNumberS = request.Referencenumber,
+                _10a = request._10a,
+                _10b = request._10b,
+                _10bText = request._10b_Text,
+                _10c = request._10c,
+                _10cText = request._10c_Text,
+                _11 = request._11,
+                _12 = request._12,
+                _13a = request._13a,
+                _13b = request._13b,
+                _13c = request._13c,
+                _13d = request._13d,
+                _14 = request._14,
+                _15 = request._15,
+                _15Text1 = request._15_Text1,
+                _15Text2 = request._15_Text2,
+                _15Text3 = request._15_Text3,
+                _16 = request._16,
+                _17 = request._17,
+                _18 = request._18,
+                _19 = request._19,
+                _20a = request._20a,
+                _20b = request._20b,
+                _20c = request._20c,
+                _21 = request._21,
+                _21Text = request._21_Text,
+                EmailAddress = request.EmailId
 
-        public string Update(FormRequest request)
+            };
+
+            _evolvedtaxContext.TblW8expforms.Add(model);
+            _evolvedtaxContext.SaveChanges();
+
+            request.W8ExpId = model.Id;
+            return model.Id;
+        }
+
+        public int UpdatePartial(FormRequest request)
         {
             var response = _evolvedtaxContext.TblW8expforms.FirstOrDefault(p => p.EmailAddress == request.EmailId);
             if (response != null)
             {
+                request.W8ExpId = response.Id;
                 response.NameOfOrganization = request.GQOrgName;
                 response.TypeOfEntity = request.TypeOfEntity;
                 response.CountryOfIncorporation = request.CountryOfIncorporation;
@@ -111,6 +169,61 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 response._13c = request._13c;
                 response._13d = request._13d;
                 response._14 = request._14;
+                response._15 = request._15;
+                response._15Text1 = request._15_Text1;
+                response._15Text2 = request._15_Text2;
+                response._15Text3 = request._15_Text3;
+                response._16 = request._16;
+                response._17 = request._17;
+                response._18 = request._18;
+                response._19 = request._19;
+                response._20a = request._20a;
+                response._20b = request._20b;
+                response._20c = request._20c;
+                response._21 = request._21;
+                response._21Text = request._21_Text;
+                response.EmailAddress = request.EmailId;
+                _evolvedtaxContext.TblW8expforms.Update(response);
+                _evolvedtaxContext.SaveChanges();
+                return response.Id;
+
+            }
+            return SavePartial(request);
+        }
+
+
+        public string Update(FormRequest request)
+        {
+            var response = _evolvedtaxContext.TblW8expforms.FirstOrDefault(p => p.EmailAddress == request.EmailId);
+            if (response != null)
+            {
+                request.W8ExpId = response.Id;
+                response.NameOfOrganization = request.GQOrgName;
+                response.TypeOfEntity = request.TypeOfEntity;
+                response.CountryOfIncorporation = request.CountryOfIncorporation;
+                response.FatcaStatus = request.W8EXPFatca;
+                response.PrintNameOfSigner = request.AuthSignatoryName;
+                response.Gin = request.GIN;
+                response.SsnOrItin = request.SsnOrItin;
+                response.CheckIfFtinNotLegallyRequiredYN = request.LegallyRequired;
+                response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber;
+                response.ReferenceNumberS = request.Referencenumber;
+                response._10a = request._10a;
+                response._10b = request._10b;
+                response._10bText = request._10b_Text;
+                response._10c = request._10c;
+                response._10cText = request._10c_Text;
+                response._11 = request._11;
+                response._12 = request._12;
+                response._13a = request._13a;
+                response._13b = request._13b;
+                response._13c = request._13c;
+                response._13d = request._13d;
+                response._14 = request._14;
+                response._15 = request._15;
+                response._15Text1 = request._15_Text1;
+                response._15Text2 = request._15_Text2;
+                response._15Text3 = request._15_Text3;
                 response._16 = request._16;
                 response._17 = request._17;
                 response._18 = request._18;
@@ -300,7 +413,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_2[10]", "0");
                     break;
 
-                    /////////////////
+                /////////////////
                 case "7": // Limited liability company
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_2[0]", "0");
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_2[1]", "0");
@@ -660,12 +773,12 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                             W9Fatca = gq.Fatca ?? string.Empty,
                             BackupWithHolding = gq.BackupWithHolding ?? string.Empty,
                             Ssnitnein = gq.Number,
-                            DE= (bool)gq.De,
-                            EnitityManagendOutSideUSA= (bool)gq.EnitityManagendOutSideUsa,
-                            DEOwnerName=gq.DeownerName ?? string.Empty,
+                            DE = (bool)gq.De,
+                            EnitityManagendOutSideUSA = (bool)gq.EnitityManagendOutSideUsa,
+                            DEOwnerName = gq.DeownerName ?? string.Empty,
                             RetirementPlan = (bool)gq.RetirementPlan,
                             FormType = gq.FormType ?? string.Empty,
-                            W8FormType=gq.W8formType ?? string.Empty,
+                            W8FormType = gq.W8formType ?? string.Empty,
 
 
                             // Add the fields from TblW8expforms
@@ -691,6 +804,10 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                             _13c = (bool)w8._13c,
                             _13d = (bool)w8._13d,
                             _14 = (bool)w8._14,
+                            _15 = (bool)w8._15,
+                            _15_Text1 = w8._15Text1,
+                            _15_Text2 = w8._15Text2,
+                            _15_Text3 = w8._15Text3,
                             _16 = (bool)w8._16,
                             _17 = (bool)w8._17,
                             _18 = (bool)w8._18,
@@ -707,5 +824,8 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
             return query.FirstOrDefault();
         }
 
+
+
+       
     }
 }

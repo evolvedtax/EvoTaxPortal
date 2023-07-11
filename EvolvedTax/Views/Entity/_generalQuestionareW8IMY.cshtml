@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Name of organization that is the beneficial owner<span class="text-danger">*</span></label>
+                    <label>Name of organization that is acting as intermediary<span class="text-danger">*</span></label>
                     <input id="firstName" asp-for="GQOrgName" type="text" class="form-control" required>
                 </div>
             </div>
@@ -107,6 +107,7 @@
                     <label>Address Line 1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
                     <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
                     <span asp-validation-for="MAddress1" class="text-danger"></span>
+           
                 </div>
             </div>
             <div class="col-md-6">
@@ -130,7 +131,7 @@
                         <option></option>
                     </select>
                 </div>
-                <div id="provinceDiv" class="form-group">
+                <div id="provinceDivImy" class="form-group">
                     <label>Province</label>
                     <input id="province" asp-for="MProvince" type="text" class="form-control">
                 </div>
@@ -188,7 +189,7 @@
                 </div>
                 <div id="provincePermDiv" class="form-group">
                     <label>Province</label>
-                    <input id="provincePerm" name="provincePerm" type="text" class="form-control">
+                    <input id="provincePerm" name="provincePerm" type="text" asp-for="PProvince" class="form-control">
                 </div>
             </div>
 
@@ -243,7 +244,7 @@
             <div class="col-md-6" id="div_DE3">
                 <div class="form-group">
                     <label>Country <span class="text-danger">*</span></label>
-                    <select id="_12_Country" asp-for="_12_Country" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                    <select id="_12_Country" asp-for="_12_Country" asp-items="ViewBag.CountriesList" onChange="ShowHideProvinceDE(this)" class="select2" required>
                         <option></option>
                     </select>
                 </div>
@@ -262,13 +263,13 @@
                 </div>
             </div>
             <div class="col-md-6" id="div_DE6">
-                <div id="stateDiv" class="form-group" hidden>
+                <div id="stateDivDE" class="form-group" hidden>
                     <label>State </label>
                     <select id="_12_State" asp-items="ViewBag.StatesList" asp-for="_12_State" class="select2">
                         <option></option>
                     </select>
                 </div>
-                <div id="provinceDiv" class="form-group">
+                <div id="provinceDivDE" class="form-group">
                     <label>Province</label>
                     <input id="_12_Province" asp-for="_12_Province" type="text" class="form-control">
                 </div>

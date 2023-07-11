@@ -61,6 +61,14 @@
                 </div>
             </div>
 
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Support Email <span class="text-danger">*</span></label>
+                    <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control" required>
+                  
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -164,8 +172,10 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Address Line1 <span class="text-danger">*</span></label>
+                    <label>Address Line1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
                     <input id="adreess1" asp-for="SUMMAdd1" type="text" class="form-control" required>
+            
+                    <span asp-validation-for="SUMMAdd1" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6">
@@ -217,8 +227,9 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>Address Line1 <span class="text-danger">*</span></label>
+                    <label>Address Line1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
                     <input id="adreess1Perm" asp-for="SUMPAdd1" type="text" class="form-control" required>
+                    <span asp-validation-for="SUMPAdd1" class="text-danger"></span>
                 </div>
             </div>
             <div class="col-md-6">
@@ -269,7 +280,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Global intermediary Identification Number(GIIN)</label>
-                    <input id="lastName" asp-for="SUGIN" type="text" class="form-control">
+                    <input id="SUGIN" asp-for="SUGIN" type="text" class="form-control">
                 </div>
             </div>
             <div class="col-md-6">

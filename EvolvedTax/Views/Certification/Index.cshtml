@@ -406,6 +406,7 @@
             var formName = response.formName;
             var entityName = response.entityName;
             var instituteEmail = response.InstituteEmail;
+            debugger;
 
             var link1 = $("<a>")
                 .attr("href", "javascript:void(0)")
@@ -419,13 +420,13 @@
             var linkText = $('<p><strong></strong></p>').append(link1).append('<strong> </strong>');
 
             var disclaimerText = $("<span>")
-                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team ")
+                .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team at ")
 
 
             var emailLink = $("<a>")
                 .attr("href", "mailto:" + instituteEmail)
                 .attr("target", "_blank")
-                .text('@@' + instituteEmail);
+                .text(instituteEmail);
 
             $('#certifyDiv').append(text, linkText, disclaimerText, emailLink);
 

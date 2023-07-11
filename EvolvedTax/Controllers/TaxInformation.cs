@@ -10,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 
 
@@ -128,6 +129,43 @@ namespace EvolvedTax.Controllers
 
 
         }
+
+
+        #region P.O BOX validation
+        [HttpGet]
+        public IActionResult ValidateAddress(string SUMMAdd1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(SUMMAdd1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        [HttpGet]
+        public IActionResult ValidatePAddress(string SUMPAdd1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(SUMPAdd1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        private bool CheckAddressAgainstForbiddenTerms(string address)
+        {
+            List<string> forbiddenTerms = _evolvedtaxContext.MasterPoboxWildcards.Select(w => w.WildCard.ToLower()).ToList();
+
+            //bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
+            bool containsForbiddenTerm = forbiddenTerms.Any(term => Regex.IsMatch(address.ToLower(), $@"\b{Regex.Escape(term)}(?:[.]|\b|$)"));
+
+            return !containsForbiddenTerm;
+        }
+        #endregion
 
         //[HttpPost]
         //public ActionResult ValidateEmailDomain(string email)

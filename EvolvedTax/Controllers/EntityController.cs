@@ -11,6 +11,7 @@ using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
+using System.Text.RegularExpressions;
 
 namespace EvolvedTax.Controllers
 {
@@ -92,7 +93,18 @@ namespace EvolvedTax.Controllers
                 Value = p.FatcaValue
             });
 
-            var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+           
+            if (GQEntitiesResponse.W8FormType == AppConstants.W8EXPForm)
+            {
+                GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+            }
+            else
+            {
+                GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
+            }
+
+            /*
+                var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
             if (!string.IsNullOrEmpty(formName))
             {
                 if (!string.IsNullOrEmpty(clientEmail))
@@ -121,9 +133,11 @@ namespace EvolvedTax.Controllers
                     {
 
                     }
+                    
                     return View(GQEntitiesResponse);
                 }
             }
+            */
             return View(GQEntitiesResponse);
         }
         [HttpPost]
@@ -146,14 +160,25 @@ namespace EvolvedTax.Controllers
             #region W8EXPForm save logic
             if (model.FormType == AppConstants.W8FormTypes && model.W8FormType == AppConstants.W8EXPForm)
             {
-
+                bool isPartialSave = model.IsPartialSave;
                 FormName = model.W8FormType;
+
+                if (isPartialSave)
+                {
+
+                    var responsePartialForm = _w8EXPFormService.SavePartial(model);
+                    var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
+                    if (responseGQPartialForm == 0 || responsePartialForm == 0)
+                    {
+                        return View(model);
+                    }
+                    // Return a response indicating successful partial save
+                    return Json(new { success = true, message = "Form partially saved." });
+                }
+
                 model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
 
                 var responsew8EXPForm = _w8EXPFormService.Save(model);
-                // int SaveID = Convert.ToInt32(responsew8EXPForm[0].ToString());
-                // string FilePath = responsew8EXPForm[1].ToString();
-                //model.W8ExpId = SaveID;
                 var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
                 HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
                 filePathResponse = responsew8EXPForm;
@@ -558,7 +583,8 @@ namespace EvolvedTax.Controllers
         {
             List<string> forbiddenTerms = _evolvedtaxContext.MasterPoboxWildcards.Select(w => w.WildCard.ToLower()).ToList();
 
-            bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
+            //bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
+            bool containsForbiddenTerm = forbiddenTerms.Any(term => Regex.IsMatch(address.ToLower(), $@"\b{Regex.Escape(term)}(?:[.]|\b|$)"));
 
             return !containsForbiddenTerm;
             //return true;

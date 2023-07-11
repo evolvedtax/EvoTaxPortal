@@ -40,7 +40,7 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 BackupWithHolding = p.BackupWithHolding ?? string.Empty,
                 Ssnitnein = p.Number,
                 FormType=p.FormType ?? string.Empty,
-                W8FormType = p.FormType ?? string.Empty,
+                W8FormType = p.W8formType ?? string.Empty,
             }).FirstOrDefault();
         }
 

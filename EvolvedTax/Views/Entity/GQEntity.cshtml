@@ -90,7 +90,8 @@
                 <!--W8 ECI Questionare View-->
                 @*<partial name="_w8ECIQuestionare" model="Model" />*@
             </div>
-
+            <!-- Hidden field for isPartialSave -->
+            <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -107,6 +108,7 @@
     <div style="overflow:auto;">
         <div style="float:right;">
             <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save Progress</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
             <input type="hidden" id="hdn_FormType" />
@@ -127,6 +129,15 @@
 @section Scripts {
 
     <script type="text/javascript">
+
+        $("#SaveExitBtn").click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                $('#isPartialSave').val('true');
+                form.submit();
+            }
+
+        });
         function BindEntityForW8EXPForm() {
             $.ajax({
                 url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
@@ -375,13 +386,14 @@
             });
         }
         function HideDivOnDDLEntitySelection() {
-            $('#Q1Div').prop('hidden', true);
+            //$('#Q1Div').prop('hidden', true);
             $('#IntOrgDiv').prop('hidden', true);
             $('#FrgnBankDiv').prop('hidden', true);
             $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
             $('#GovUSPossDiv').prop('hidden', true);
         }
         function HideDivOnDDLStatusFATCASelection() {
+            $('#NonreportingDiv').prop('hidden', true);
             $('#FincalInsDiv').prop('hidden', true);
             $('#FrgnGovUSDiv').prop('hidden', true);
             $('#RetPlanSDiv').prop('hidden', true);
@@ -438,11 +450,60 @@
 
 
         $(document).ready(function () {
-
+            $('#SaveExitBtn').prop('hidden', true);
             $("select").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select One",
                 //allowClear: true
+            });
+
+
+
+
+            //Mailing  Address Validation
+            var addressInput = $('#adreess1');
+            var MvalidationMessage = $('#MvalidationMessageAddress');
+
+            addressInput.on('focusout', function () {
+                var address = addressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            MvalidationMessage.text('');
+                        } else {
+                            MvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            //Permeant Address Validation
+            var PaddressInput = $('#adreess1Perm');
+            var PvalidationMessage = $('#PvalidationMessageAddress');
+
+            PaddressInput.on('focusout', function () {
+                var address = PaddressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            PvalidationMessage.text('');
+                        } else {
+                            PvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
             });
 
             $('#Ssnitnein').attr('placeholder', '00-0000000');
@@ -472,7 +533,9 @@
             $('input[name="W8FormType"]').change(function () {
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
                 $('#hdn_FormType').val('');
+            
                 if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
+                    $('#hdn_FormType').val($(this).val());
                     $('#W8EXPFatcaDiv').prop('hidden', false);
                     $('#W8Entity').prop('hidden', false);
                     $('#W8Country').prop('hidden', false);
@@ -554,6 +617,7 @@
                 //Internal organization
                 if (selectedValue == 2) {
                     HideDivOnDDLEntitySelection();
+                    $('#FrgnGovDiv').prop('hidden', true);
                     $('#IntOrgDiv').prop('hidden', false);
                 }
                 //Foreign central bank of issue (not wholly owned by the foreign sovereign)
@@ -578,6 +642,11 @@
             $('#FatcaW8').on('change', function () {
                 var selectedValue = $(this).val();
 
+                //Nonreporting IGA FFI
+                if (selectedValue == 5) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#NonreportingDiv').prop('hidden', false);
+                }
                 //Territory financial institution. Complete Part III.
                 if (selectedValue == 6) {
                     HideDivOnDDLStatusFATCASelection();
@@ -671,49 +740,56 @@
 
         });
         function ajaxsuccess(response) {
-            document.getElementById("stepsDiv").style.display = "none";
-            let pdfUrl = window.location.origin + '//' + response;
-            // Create the object element
-            var $pdfObject = $('<object>').attr({
-                data: pdfUrl,
-                type: 'application/pdf',
-                width: '100%',
-                height: '800px'
-            });
+            if (response.message != "Form partially saved.") {
 
-            $('#contentContainer').empty();
-            // Append the object element to the container
-            $('#contentContainer').append($pdfObject);
-            $('#editBtn').prop('hidden', false);
-            $('#prevBtn').prop('hidden', true);
-            $('#nextBtn').prop('hidden', true);
+                //Full form logic
+                document.getElementById("stepsDiv").style.display = "none";
+                let pdfUrl = window.location.origin + '//' + response;
+                // Create the object element
+                var $pdfObject = $('<object>').attr({
+                    data: pdfUrl,
+                    type: 'application/pdf',
+                    width: '100%',
+                    height: '800px'
+                });
+                $('#contentContainer').empty();
+                // Append the object element to the container
+                $('#contentContainer').append($pdfObject);
+                $('#editBtn').prop('hidden', false);
+                $('#prevBtn').prop('hidden', true);
+                $('#nextBtn').prop('hidden', true);
+                $('#SaveExitBtn').prop('hidden', true);
+            }
+            else if (response.message == "Form partially saved.") {
+                COMMON.notification(1, "Saving ...");
+            }
+
+
+
         }
         function SelectDEEntity(obj) {
             //    console.log(typeof obj, obj);
             //    console.log(typeof obj.value, obj.value);
             if (obj.value === 'false' || obj.value === 'False') {
-                HideDivs();
+               // HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj == 'false' || obj.value === 'False') {
-                HideDivs();
-
- 
-
+               // HideDivs();
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
             } else if (obj.value === 'true' || obj.value === 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
-                ShowHideDivs();
+               // ShowHideDivs();
             }
             else if (obj == 'true' || obj == 'True') {
                 $('#DeEntityOwnerNameDiv').prop('hidden', false);
-                ShowHideDivs();
+               // ShowHideDivs();
             }
             else if (obj.value === undefined) {
                 $('#DeEntityOwnerNameDiv').prop('hidden', true);
                 $('#DEOwnerName').val('');
-                HideDivs();
+               // HideDivs();
             }
         }
         function ShowHideProvince(obj) {
@@ -723,6 +799,8 @@
                 $('#stateDiv').prop('hidden', false);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
+                console.log('w8expppppp');
+                console.log(obj.value);
                 $('#provinceDiv').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);
@@ -788,6 +866,7 @@
                 $('#W8Country').prop('hidden', false);
             }
             else if (obj.value == '@AppConstants.W9Form') {
+                $('#SaveExitBtn').prop('hidden', true);
                 $('#WFormDiv').prop('hidden', true);
                 $('#QFormDiv').prop('hidden', true);
                 $('#AuthSignatoryNameDiv').prop('hidden', false);
@@ -835,16 +914,24 @@
             }
         }
         function showTab(n) {
-
+            debugger;
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
 
             x[n].style.display = "block";
             // ... and fix the Previous/Next buttons:
             if (n == 0) {
+                debugger;
                 document.getElementById("prevBtn").style.display = "none";
+              
+                    $('#SaveExitBtn').prop('hidden', true);
+              
             } else {
+                debugger;
                 document.getElementById("prevBtn").style.display = "inline";
+                if ($('#hdn_FormType').val() == '@AppConstants.W8EXPForm') {
+                    $('#SaveExitBtn').prop('hidden', false);
+                }
             }
             if (n == (x.length - 1)) {
 
@@ -892,10 +979,11 @@
         }
 
         function nextPrev(n) {
-
             if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm'){
                 window.location.href = '@Url.Action("W8IMY", "Entity")';
             }
+
+        
 
             // This function will figure out which tab to display
             // var x = document.getElementsByClassName("tab");
@@ -917,6 +1005,7 @@
             //if (n == 1 && !validateForm()) return false;
             if (n == 1 && !$('#regForm').valid()) return false;
             if (currentTab < x.length) {
+            
                 // Hide the current tab:
                 x[currentTab].style.display = "none";
                 // Increase or decrease the current tab by 1:
@@ -924,11 +1013,11 @@
             currentTab = currentTab + n;
             // if you have reached the end of the form... :
             if (currentTab >= x.length) {
-
                 //...the form gets submitted:
                 // document.getElementById("regForm").submit();
                 let form = $('#regForm');
                 if (form.valid()) {
+                    $('#isPartialSave').val('false');
                     form.submit();
                 }
                 return false;

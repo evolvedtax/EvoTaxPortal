@@ -178,7 +178,7 @@ namespace EvolvedTax.Controllers
 
             //request.FileName = "output.pdf";
             var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
-            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress ?? string.Empty;
+            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).SupportEmail ?? string.Empty;
             HttpContext.Session.SetString("FormName", string.Empty);
             var AuthSigName = HttpContext.Session.GetString("ClientNameSig");
             if (!string.IsNullOrEmpty(AuthSigName))

@@ -105,7 +105,7 @@
     <div style="overflow:auto;">
         <div style="float:right;">
             <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
-            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save & Exit</button>
+            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save Progress</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
            
@@ -138,189 +138,7 @@
         });
 
 
-
-
-        /*
-        function BindEntityForW8EXPForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
-
-
-                        $.each(result.entitiesListW8, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-        function BindEntityForW8ECIForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8ECIForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8ECI').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8ECI').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
-
-
-                        $.each(result.entitiesList, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8ECI').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8ECI').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8ECI').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-        function BindEW8EXPFATCA() {
-            $.ajax({
-                url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#FatcaW8').empty();
-
-                        // Add "Please Select" option as the first option
-                        $('#FatcaW8').prepend($('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        }));
-
-                        // Retrieve the value from the hidden field
-                        var selectedValue = $('#W8EXPFatca').val();
-
-                        // Iterate over the updated entities and add new options to the dropdown
-                        $.each(result.W8EXPFATCAList, function (index, FATCA) {
-                            var option = $('<option>', {
-                                value: FATCA.Value,
-                                text: FATCA.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (FATCA.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-
-                            $('#FatcaW8').append(option);
-                        });
-
-                        // Check if selectedValue is not set
-                        if (!selectedValue) {
-                            $('#FatcaW8').val(''); // Clear the selected value
-                        }
-
-                        // Trigger the change event after a small delay
-                        setTimeout(function () {
-                            $('#FatcaW8').trigger('change');
-                        }, 10);
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-
-        function BindEntityForW9Form() {
-
-            //$.ajax({
-            //    url: '@Url.Action("BindEntityForW9Form", "Entity")',
-            //    type: 'POST',
-            //    success: function (result) {
-            //        // Check if the action was successful
-            //        if (result.success) {
-            //            // Clear existing options from the dropdown
-            //            $('#EntityTypeW9').empty();
-            //            debugger;
-
-            //            // Iterate over the updated entities and add new options to the dropdown
-            //            $.each(result.entitiesList, function (index, entity) {
-            //                debugger;
-            //                $('#EntityTypeW9').append($('<option>', {
-            //                    value: entity.Value,
-            //                    text: entity.Text
-            //                }));
-            //            });
-
-            //        }
-            //    },
-            //    error: function (jqXHR, textStatus, errorThrown) {
-            //        alert('Error: ' + textStatus);
-            //        console.log('AJAX Error:', errorThrown);
-            //    }
-            //});
-        }
-
-        */
+       
         function ChekboxValidationForDropdowns() {
             // Handle checkbox change event
             $('.chkbox-toggle').change(function () {
@@ -413,6 +231,57 @@
 
 
         $(document).ready(function () {
+
+            /*
+            //Mailing  Address Validation
+            var addressInput = $('#adreess1');
+            var MvalidationMessage = $('#MvalidationMessageAddress');
+
+            addressInput.on('focusout', function () {
+                var address = addressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            MvalidationMessage.text('');
+                        } else {
+                            MvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            //Permeant Address Validation
+            var PaddressInput = $('#adreess1Perm');
+            var PvalidationMessage = $('#PvalidationMessageAddress');
+
+            PaddressInput.on('focusout', function () {
+                var address = PaddressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            PvalidationMessage.text('');
+                        } else {
+                            PvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            */
+
+      
 
             $("select").select2({
                 theme: 'bootstrap4',
@@ -728,10 +597,10 @@
             //end
 
 
+        
+
         });
         function ajaxsuccess(response) {
-            debugger;
-            console.log(response);
             if (response.message != "Form partially saved.") {
 
                 //Full form logic
@@ -753,7 +622,7 @@
                 $('#SaveExitBtn').prop('hidden', true);
             }
             else if (response.message == "Form partially saved.") {
-                COMMON.notification(1, "Data is save");
+                COMMON.notification(1, "Saving ...");
             }
 
 
@@ -761,12 +630,17 @@
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
-                $('#provinceDiv').prop('hidden', true);
+                console.log('here');
+                debugger;
+                $('#provinceDivImy').prop('hidden', true);
                 $('#province').val('');
                 $('#stateDiv').prop('hidden', false);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
-                $('#provinceDiv').prop('hidden', false);
+                debugger;
+                console.log('imyyy');
+                console.log(obj.value);
+                 $('#provinceDivImy').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);
                 $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
@@ -784,6 +658,24 @@
                 $('#statePerm').val(1);
                 $('#lblZipCodePerm').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
             }
+        }
+
+
+        function ShowHideProvinceDE(obj) {
+            
+            if (obj.value == 'United States') {
+                $('#provinceDivDE').prop('hidden', true);
+                $('#_12_Province').val('');
+                $('#stateDivDE').prop('hidden', false);
+               // $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+           
+                $('#provinceDivDE').prop('hidden', false);
+                $('#stateDivDE').prop('hidden', true);
+                $('#_12_State').val(1);
+                //$('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+            
         }
 
         function HideAddress(obj) {

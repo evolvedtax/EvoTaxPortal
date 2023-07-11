@@ -49,6 +49,8 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<MstrCountry> MstrCountries { get; set; }
 
+    public virtual DbSet<Otphistory> Otphistories { get; set; }
+
     public virtual DbSet<PageChecking> PageCheckings { get; set; }
 
     public virtual DbSet<PasswordChangeLog> PasswordChangeLogs { get; set; }
@@ -484,9 +486,13 @@ public partial class EvolvedtaxContext : DbContext
         {
             entity.HasKey(e => e.InstId);
 
-            entity.ToTable("InstituteMaster");
+            entity.ToTable("InstituteMaster", tb => tb.HasTrigger("trg_UpdateOTP"));
 
             entity.Property(e => e.InstId).HasColumnName("InstID");
+            entity.Property(e => e.ApprovedBy)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ApprovedOn).HasColumnType("datetime");
             entity.Property(e => e.CountryOfIncorporation).IsUnicode(false);
             entity.Property(e => e.EmailAddress).IsUnicode(false);
             entity.Property(e => e.FirstName).IsUnicode(false);
@@ -526,6 +532,13 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Mzip)
                 .IsUnicode(false)
                 .HasColumnName("MZip");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.OtpexpiryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.Padd1)
                 .IsUnicode(false)
                 .HasColumnName("PAdd1");
@@ -556,8 +569,18 @@ public partial class EvolvedtaxContext : DbContext
                 .HasColumnName("PZip");
             entity.Property(e => e.RegistrationDate).HasColumnType("date");
             entity.Property(e => e.RegistrationExpiryDate).HasColumnType("date");
+            entity.Property(e => e.RequestDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.RequestIp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RequestIP");
             entity.Property(e => e.Status).IsUnicode(false);
             entity.Property(e => e.StatusDate).HasColumnType("date");
+            entity.Property(e => e.SupportEmail)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.TypeofEntity).IsUnicode(false);
         });
 
@@ -565,7 +588,7 @@ public partial class EvolvedtaxContext : DbContext
         {
             entity.HasKey(e => e.ClientId);
 
-            entity.ToTable("InstitutesClient");
+            entity.ToTable("InstitutesClient", tb => tb.HasTrigger("trg_UpdateOTPClient"));
 
             entity.Property(e => e.ClientId).HasColumnName("ClientID");
             entity.Property(e => e.Address1)
@@ -590,6 +613,13 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.OtpexpiryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.PartnerName1)
                 .IsUnicode(false)
                 .HasComment("Partner Name 1")
@@ -601,6 +631,13 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("Phone Number");
             entity.Property(e => e.Province).IsUnicode(false);
+            entity.Property(e => e.RequestDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.RequestIp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("RequestIP");
             entity.Property(e => e.State).IsUnicode(false);
             entity.Property(e => e.Zip).IsUnicode(false);
         });
@@ -757,6 +794,26 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength();
+        });
+
+        modelBuilder.Entity<Otphistory>(entity =>
+        {
+            entity.ToTable("OTPHistory");
+
+            entity.Property(e => e.EmailAddress).HasMaxLength(50);
+            entity.Property(e => e.EntryDateTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Otp)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("OTP");
+            entity.Property(e => e.OtpexpiryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("OTPExpiryDate");
+            entity.Property(e => e.UserType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<PageChecking>(entity =>

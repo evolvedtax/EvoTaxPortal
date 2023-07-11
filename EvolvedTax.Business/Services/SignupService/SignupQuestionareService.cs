@@ -32,6 +32,7 @@ namespace EvolvedTax.Business.Services.SignupService
                 RegistrationExpiryDate = request.SURegistrationExpiryDate,
 
                 EmailAddress = request.SUEmailAddress,
+                SupportEmail=request.SupportEmailAddress,
                 Password = request.SUPassword,
                 PasswordSecuredQ1 = request.SUPasswordSecuredQ1,
                 PasswordSecuredA1 = request.SUPasswordSecuredA1,
