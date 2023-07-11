@@ -78,4 +78,6 @@ public partial class InstituteMaster
     public string? PasswordSecuredQ3 { get; set; }
 
     public string? PasswordSecuredA3 { get; set; }
+    public string? OTP { get; set; }
+    public DateTime? OTPExpiryDate { get; set; } 
 }

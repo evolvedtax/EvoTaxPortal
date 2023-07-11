@@ -12,6 +12,7 @@ using EvolvedTax.Data.Enums;
 using Microsoft.Data.SqlClient;
 using SkiaSharp;
 using System.Data;
+using Azure;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -53,7 +54,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                             State = p.State,
                             Zip = p.Zip,
                             IsActive = p.IsActive,
-                            IsLocked = p.IsLocked
+                            IsLocked = p.IsLocked,
+                            EmailFrequency = p.EmailFrequency,
                         };
 
             return query;
@@ -272,6 +274,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 Zip = p.Zip,
                 IsActive = p.IsActive,
                 IsLocked = p.IsLocked,
+                OTPExpiryDate = p.OTPExpiryDate,
+                OTP = p.OTPExpiryDate >= DateTime.Now ? p.OTP : ""
             }).FirstOrDefault();
         }
 
@@ -554,6 +558,18 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
 
             return false;
+        }
+        public async Task<MessageResponseModel> UpdateEmailFrequncy(int EntityId, int emailFrequency)
+        {
+            var response = await _evolvedtaxContext.InstituteEntities.FirstOrDefaultAsync(p => p.EntityId == EntityId);
+            if (response != null)
+            {
+                response.EmailFrequency = emailFrequency;
+                _evolvedtaxContext.InstituteEntities.Update(response);
+                await _evolvedtaxContext.SaveChangesAsync();
+                return new MessageResponseModel { Status = true };
+            }
+            return new MessageResponseModel { Status = false };
         }
     }
 }

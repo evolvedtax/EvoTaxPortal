@@ -7,5 +7,6 @@ namespace EvolvedTax.Business.MailService
     {
         Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL);
         Task SendEmailToInstituteAsync(string UserFullName, String Email, string subject, string content, string URL);
+        Task SendOTPAsync(string OTP, string Email, string subject,string UserName, string URL);
     }
 }

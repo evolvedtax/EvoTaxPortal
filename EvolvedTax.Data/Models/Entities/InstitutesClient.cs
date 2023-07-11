@@ -52,4 +52,6 @@ public partial class InstitutesClient
     public RecordStatusEnum IsActive { get; set; }
 
     public DateTime? InActiveDate { get; set; }
+    public string? OTP { get; set; } 
+    public DateTime? OTPExpiryDate { get; set; } 
 }

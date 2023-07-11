@@ -16,6 +16,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string InstituteName { get; set; } = string.Empty!;
         public int StatusId { get; set; }
         public bool IsLoggedIn { get; set; }
+        public string? OTP { get; set; }
+        public DateTime? ExpiryDate { get; set; }
 
     }
 }

@@ -12,5 +12,8 @@ namespace EvolvedTax.Business.Services.UserService
     {
         public string Save(UserRequest model);
         public UserRequest Login(LoginRequest model);
+        bool UpdateInstituteMasterOTP(string emailId, string otp, DateTime expiryDate);
+        bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate);
+        UserRequest GetUserbyEmailId(string emailId);
     }
 }

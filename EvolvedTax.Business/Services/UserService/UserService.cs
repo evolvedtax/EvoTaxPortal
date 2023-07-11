@@ -6,6 +6,7 @@ using System.Diagnostics.Metrics;
 using System.Globalization;
 using iTextSharp.text;
 using EvolvedTax.Data.Models.DTOs.Request;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace EvolvedTax.Business.Services.UserService
 {
@@ -32,10 +33,53 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return request;
         }
+        public bool UpdateInstituteMasterOTP(string emailId, string otp, DateTime expiryDate)
+        {
+            var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailId);
+            if (response != null)
+            {
+                response.OTPExpiryDate = expiryDate;
+                response.OTP = otp;
+                _evolvedtaxContext.InstituteMasters.Update(response);
+                _evolvedtaxContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate)
+        {
+            var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId);
+            if (response != null)
+            {
+                response.OTPExpiryDate = expiryDate;
+                response.OTP = otp;
+                _evolvedtaxContext.InstitutesClients.Update(response);
+                _evolvedtaxContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
 
         public string Save(UserRequest model)
         {
             throw new NotImplementedException();
+        }
+        public UserRequest GetUserbyEmailId(string emailId)
+        {
+            var request = new UserRequest();
+            var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailId);
+            if (response != null)
+            {
+                request.UserName = response.FirstName + " " + response.LastName;
+                request.InstId = response.InstId;
+                request.EmailId = response.EmailAddress ?? string.Empty;
+                request.InstituteName = response.InstitutionName ?? string.Empty;
+                request.IsLoggedIn = true;
+                request.ExpiryDate = response.OTPExpiryDate;
+                request.OTP = response.OTPExpiryDate >= DateTime.Now ? response.OTP : "";
+                return request;
+            }
+            return request;
         }
     }
 }

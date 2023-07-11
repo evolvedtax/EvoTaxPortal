@@ -38,7 +38,7 @@ namespace EvolvedTax.Controllers
         }
         public IActionResult Entities()
         {
-            var items =  _evolvedtaxContext.MstrCountries.ToList();
+            var items = _evolvedtaxContext.MstrCountries.ToList();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
                                   {
@@ -88,12 +88,14 @@ namespace EvolvedTax.Controllers
                 Value = p.StateId
             });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(InstId).Select(p => new SelectListItem
+            var entities = _instituteService.GetEntitiesByInstId(InstId);
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
                 Selected = (p.EntityId == EntityId)
             });
+            ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
             return View(_instituteService.GetClientByEntityId(InstId, EntityId));
         }
@@ -102,7 +104,8 @@ namespace EvolvedTax.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var response = _instituteService.GetClientByEntityId(InstId, entityId);
-            return Json(response);
+            var EmailFrequency = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == entityId)?.EmailFrequency;
+            return Json(new { Data = response, EmailFrequency = EmailFrequency });
         }
 
         public async Task<IActionResult> SendEmail(int[] selectedValues)
@@ -218,6 +221,17 @@ namespace EvolvedTax.Controllers
                 return Json(false);
             }
             var response = await _instituteService.UpdateClient(request);
+            return Json(response);
+        }
+        [Route("institute/UpdateEmailFrequency")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateEmailFrequency(int EntityId, int EmailFrequency)
+        {
+            if (EntityId == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.UpdateEmailFrequncy(EntityId, EmailFrequency);
             return Json(response);
         }
         [Route("institute/DeleteClient")]

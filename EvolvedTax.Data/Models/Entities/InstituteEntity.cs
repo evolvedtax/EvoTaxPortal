@@ -42,4 +42,6 @@ public partial class InstituteEntity
     public bool? IsLocked { get; set; }
 
     public DateTime? InActiveDate { get; set; }
+
+    public int? EmailFrequency { get; set; } 
 }

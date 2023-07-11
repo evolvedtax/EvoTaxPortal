@@ -561,6 +561,7 @@ namespace EvolvedTax.Controllers
             bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
 
             return !containsForbiddenTerm;
+            //return true;
         } 
         #endregion
 

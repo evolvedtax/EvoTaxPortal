@@ -1,11 +1,15 @@
-﻿using EvolvedTax.Business.Services.GeneralQuestionareService;
+﻿using Azure;
+using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Common.ExtensionMethods;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Http;
+using static System.Net.WebRequestMethods;
 
 namespace EvolvedTax.Controllers
 {
@@ -18,11 +22,13 @@ namespace EvolvedTax.Controllers
         readonly IUserService _userService;
         readonly IGeneralQuestionareService _generalQuestionareService;
         readonly IInstituteService _instituteService;
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService)
+        readonly IMailService _mailService;
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
             _instituteService = instituteService;
+            _mailService = mailService;
         }
         #endregion
 
@@ -47,32 +53,35 @@ namespace EvolvedTax.Controllers
                 var response = _userService.Login(userDTO);
                 if (response.IsLoggedIn)
                 {
-                    HttpContext.Session.SetInt32("InstId", response.InstId);
-                    HttpContext.Session.SetString("UserName", response.UserName);
                     HttpContext.Session.SetString("EmailId", response.EmailId);
-                    HttpContext.Session.SetString("InstituteName", response.InstituteName);
-                    //return RedirectToAction(nameof(OTP));
-                    return RedirectToAction("Entities", "Institute");
+                    var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+                    var totp = new Totp(bytes);
+                    var otp = totp.ComputeTotp();
+
+                    _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoTax Portal", response.UserName, "");
+                    _userService.UpdateInstituteMasterOTP(response.EmailId, otp, DateTime.Now.AddMinutes(60));
+
+                    return RedirectToAction(nameof(Auth));
                 }
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
-        public async Task<IActionResult> OTP(string clientEmail)
+        public IActionResult Auth()
         {
-            if (await _instituteService.CheckIfClientRecordExist(clientEmail))
+            var emailId = HttpContext.Session.GetString("EmailId");
+            if (string.IsNullOrEmpty(emailId))
             {
-                TempData["EntityName"] = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
-                TempData["InstituteEmail"] = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress;
-                return RedirectToAction("AccessDenied", new { statusCode = 400 });
+                return RedirectToAction(nameof(Login));
             }
-            ViewBag.ClientEmail = clientEmail;
             return View();
         }
         [HttpPost]
-        public IActionResult OTP(IFormCollection formVals)
+        public IActionResult Auth(IFormCollection formVals)
         {
+            var emailId = HttpContext.Session.GetString("EmailId");
+            var response = _userService.GetUserbyEmailId(emailId ?? "");
             string Otp = string.Concat(
                 formVals["Otp1"].ToString(),
                 formVals["Otp2"].ToString(),
@@ -80,7 +89,64 @@ namespace EvolvedTax.Controllers
                 formVals["Otp4"].ToString(),
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
-            if (Otp == "123456")
+            if (response.OTP == "")
+            {
+                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                TempData["Message"] = "OTP has expired";
+                return View(nameof(Auth));
+            }
+            if (Otp == response.OTP)
+            {
+                HttpContext.Session.SetInt32("InstId", response.InstId);
+                HttpContext.Session.SetString("UserName", response.UserName);
+                HttpContext.Session.SetString("EmailId", response.EmailId);
+                HttpContext.Session.SetString("InstituteName", response.InstituteName);
+                _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
+                return RedirectToAction("Entities", "Institute");
+            }
+            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            TempData["Message"] = "Please enter correct OTP";
+            return View(nameof(Auth));
+        }
+        public async Task<IActionResult> OTP(string? clientEmail = "")
+        {
+            if (!string.IsNullOrEmpty(clientEmail))
+            {
+                if (await _instituteService.CheckIfClientRecordExist(clientEmail))
+                {
+                    TempData["EntityName"] = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
+                    TempData["InstituteEmail"] = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress;
+                    return RedirectToAction("AccessDenied", new { statusCode = 400 });
+                }
+                HttpContext.Session.SetString("ClientEmail", clientEmail);
+                var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+                var totp = new Totp(bytes);
+                var otp = totp.ComputeTotp();
+                var userName = _instituteService.GetClientDataByClientEmailId(clientEmail);
+                await _mailService.SendOTPAsync(otp, clientEmail, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
+                _userService.UpdateInstituteClientOTP(clientEmail, otp, DateTime.Now.AddMinutes(60));
+                ViewBag.ClientEmail = clientEmail;
+            }
+            return View();
+        }
+        [HttpPost]
+        public IActionResult OTP(IFormCollection formVals)
+        {
+            var response = _instituteService.GetClientDataByClientEmailId(formVals["clientEmail"]);
+            string Otp = string.Concat(
+                formVals["Otp1"].ToString(),
+                formVals["Otp2"].ToString(),
+                formVals["Otp3"].ToString(),
+                formVals["Otp4"].ToString(),
+                formVals["Otp5"].ToString(),
+                formVals["Otp6"].ToString());
+            if (response.OTP == "")
+            {
+                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                TempData["Message"] = "OTP has expired";
+                return View(nameof(OTP));
+            }
+            if (Otp == response?.OTP)
             {
                 HttpContext.Session.SetString("ClientEmail", formVals["clientEmail"]);
                 return RedirectToAction("Index", "Status");
