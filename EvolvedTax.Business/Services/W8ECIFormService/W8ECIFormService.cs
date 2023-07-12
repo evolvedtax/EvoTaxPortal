@@ -134,6 +134,10 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             }
             _evolvedtaxContext.TblW8eciforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W8ECICreation(request, Items1stLine, Items2ndLine, Items3rdLine);
         }
         public string SaveForEntity(FormRequest request)
@@ -243,6 +247,10 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             }
             _evolvedtaxContext.TblW8eciforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W8ECICreationForEntity(request, Items1stLine, Items2ndLine, Items3rdLine);
         }
         protected static string W8ECICreation(FormRequest request, string Items1stLine, string Items2ndLine, string Items3rdLine)
@@ -967,14 +975,15 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         {
             var gQuestionData = _generalQuestionareEntityService.GetDataByClientEmail(ClientEmailId);
             var w8ECIData = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == ClientEmailId);
-            if (w8ECIData != null) {
+            if (w8ECIData != null)
+            {
                 gQuestionData.GQOrgName = w8ECIData?.NameOfIndividual;
                 gQuestionData.DEW8ECI = !string.IsNullOrEmpty(w8ECIData.DisregardedEntity);
                 gQuestionData.DEOwnerNameW8ECI = w8ECIData.DisregardedEntity;
                 gQuestionData.CountryOfIncorporation = w8ECIData.CountryOfIncorporation;
                 gQuestionData.TypeOfEntityForW8ECI = w8ECIData.TypeOfEntity;
                 gQuestionData.W8ECIOnBehalfName = w8ECIData?.W8ecionBehalfName ?? false;
-                gQuestionData.CheckIfFtinNotLegallyRequiredYNW8ECI = w8ECIData?.CheckIfFtinNotLegallyRequiredYN ??  false;
+                gQuestionData.CheckIfFtinNotLegallyRequiredYNW8ECI = w8ECIData?.CheckIfFtinNotLegallyRequiredYN ?? false;
                 gQuestionData.DateOfBirthMmDdYyyyW8ECI = w8ECIData?.DateOfBirthMmDdYyyy;
                 gQuestionData.ForeignTaxIdentifyingNumberW8ECI = w8ECIData?.ForeignTaxIdentifyingNumber;
                 gQuestionData.PrintNameOfSignerW8ECI = w8ECIData?.PrintNameOfSigner;
@@ -1090,6 +1099,10 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
 
                 _evolvedtaxContext.TblW8eciforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
+                if (request.IsPartialSave)
+                {
+                    return AppConstants.FormPartiallySave;
+                }
                 return W8ECICreation(request, Items1stLine, Items2ndLine, Items3rdLine);
             }
             return SaveForIndividual(request);
@@ -1198,6 +1211,10 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
 
                 _evolvedtaxContext.TblW8eciforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
+                if (request.IsPartialSave)
+                {
+                    return AppConstants.FormPartiallySave;
+                }
                 return W8ECICreationForEntity(request, Items1stLine, Items2ndLine, Items3rdLine);
             }
             return SaveForEntity(request);

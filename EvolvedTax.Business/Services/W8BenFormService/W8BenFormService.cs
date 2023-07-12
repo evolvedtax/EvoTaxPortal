@@ -68,6 +68,10 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             }
             _evolvedtaxContext.TblW8benforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W8BenCreation(request);
         }
         protected static string W8BenCreation(FormRequest request)
@@ -261,6 +265,10 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             }
             _evolvedtaxContext.TblW8benforms.Update(response);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W8BenCreation(request);
         }
     }

@@ -59,6 +59,10 @@ namespace EvolvedTax.Business.Services.W9FormService
             }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W9Creation(request);
         }
 
@@ -89,6 +93,10 @@ namespace EvolvedTax.Business.Services.W9FormService
             }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            if (request.IsPartialSave)
+            {
+                return AppConstants.FormPartiallySave;
+            }
             return W9Creation(request);
         }
         protected static string W9Creation(FormRequest request)
@@ -202,7 +210,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                         break;
                 }
             }
-            
+
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].f1_3[0]", TextBox3.Text)
             // pdfFormFields.SetField("topmostSubform[0].Page1[0].FederalClassification[0].f1_4[0]", "4")
             // 4. Exemptions(codes apply only to certain entities, Not individuals; see instructions on page 3)
@@ -301,7 +309,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             over2.AddImage(image2);
             #endregion
 
-            
+
 
             PdfAnnotation annotation;
             annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
@@ -375,6 +383,10 @@ namespace EvolvedTax.Business.Services.W9FormService
                 response.W9emailAddress = request.EmailId;
                 _evolvedtaxContext.TblW9forms.Update(response);
                 _evolvedtaxContext.SaveChanges();
+                if (request.IsPartialSave)
+                {
+                    return AppConstants.FormPartiallySave;
+                }
                 return W9Creation(request);
             }
             return SaveForIndividual(request);
@@ -400,6 +412,10 @@ namespace EvolvedTax.Business.Services.W9FormService
                 response.W9emailAddress = request.EmailId;
                 _evolvedtaxContext.TblW9forms.Update(response);
                 _evolvedtaxContext.SaveChanges();
+                if (request.IsPartialSave)
+                {
+                    return AppConstants.FormPartiallySave;
+                }
                 return W9Creation(request);
             }
             return SaveForIndividual(request);

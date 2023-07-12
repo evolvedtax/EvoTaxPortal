@@ -194,7 +194,7 @@ namespace EvolvedTax.Controllers
                 var response = _w9FormService.SaveForEntity(model);
                 //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
                 var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
-                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
+                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName ?? "");
                 filePathResponse = response;
             }
             else if (model.FormType == AppConstants.W8FormTypes)
@@ -252,6 +252,10 @@ namespace EvolvedTax.Controllers
             if (responseGQForm == 0)
             {
                 return View(model);
+            }
+            if (filePathResponse == AppConstants.FormPartiallySave)
+            {
+                return Json(new { success = true, message = AppConstants.FormPartiallySave });
             }
             #endregion
             HttpContext.Session.SetString("PdfdFileName", filePathResponse);
@@ -321,15 +325,17 @@ namespace EvolvedTax.Controllers
             model.US1 = "2";
             model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
-
+            
             filePathResponse = _w8ECIFormService.SaveForEntity(model);
-
             var responseGQForm = _generalQuestionareEntityService.Save(model);
             if (responseGQForm == 0)
             {
                 return View(model);
             }
-
+            if (filePathResponse == AppConstants.FormPartiallySave)
+            {
+                return Json(new { success = true, message = AppConstants.FormPartiallySave });
+            }
             HttpContext.Session.SetString("PdfdFileName", filePathResponse);
             HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
             HttpContext.Session.SetString("FormName", AppConstants.W8ECIForm);
@@ -423,7 +429,10 @@ namespace EvolvedTax.Controllers
             {
                 return View(model);
             }
-
+            if (filePathResponse == AppConstants.FormPartiallySave)
+            {
+                return Json(new { success = true, message = AppConstants.FormPartiallySave });
+            }
             HttpContext.Session.SetString("PdfdFileName", filePathResponse);
             HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
             HttpContext.Session.SetString("FormName", AppConstants.W8BENEForm);
