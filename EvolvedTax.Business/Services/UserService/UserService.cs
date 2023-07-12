@@ -38,8 +38,8 @@ namespace EvolvedTax.Business.Services.UserService
             var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailId);
             if (response != null)
             {
-                response.OTPExpiryDate = expiryDate;
-                response.OTP = otp;
+                response.OtpexpiryDate = expiryDate;
+                response.Otp = otp;
                 _evolvedtaxContext.InstituteMasters.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return true;
@@ -51,8 +51,8 @@ namespace EvolvedTax.Business.Services.UserService
             var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId);
             if (response != null)
             {
-                response.OTPExpiryDate = expiryDate;
-                response.OTP = otp;
+                response.OtpexpiryDate = expiryDate;
+                response.Otp = otp;
                 _evolvedtaxContext.InstitutesClients.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return true;
@@ -75,8 +75,8 @@ namespace EvolvedTax.Business.Services.UserService
                 request.EmailId = response.EmailAddress ?? string.Empty;
                 request.InstituteName = response.InstitutionName ?? string.Empty;
                 request.IsLoggedIn = true;
-                request.ExpiryDate = response.OTPExpiryDate;
-                request.OTP = response.OTPExpiryDate >= DateTime.Now ? response.OTP : "";
+                request.ExpiryDate = response.OtpexpiryDate;
+                request.OTP = response.OtpexpiryDate >= DateTime.Now ? response.Otp : "";
                 return request;
             }
             return request;

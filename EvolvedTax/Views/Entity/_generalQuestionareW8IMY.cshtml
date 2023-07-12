@@ -1,5 +1,11 @@
 ﻿@model FormRequest
-
+@if (!string.IsNullOrEmpty(ViewData["LogErrorMessage"] as string))
+{
+    <script>
+         var errorMessage = '@ViewData["LogErrorMessage"]';
+        console.log(errorMessage);
+    </script>
+}
 
 <div class="tab">
     <div class="text-center"><span><p>Identification of Entity</p></span></div>

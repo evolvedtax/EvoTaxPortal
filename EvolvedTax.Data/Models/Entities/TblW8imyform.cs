@@ -232,4 +232,6 @@ public partial class TblW8imyform
     public string? FontName { get; set; }
 
     public string? OnBehalfName { get; set; }
+
+    public string? FilePath { get; set; }
 }

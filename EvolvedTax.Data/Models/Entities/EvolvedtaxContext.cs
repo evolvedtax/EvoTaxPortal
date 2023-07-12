@@ -532,11 +532,11 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Mzip)
                 .IsUnicode(false)
                 .HasColumnName("MZip");
-            entity.Property(e => e.OTP)
+            entity.Property(e => e.Otp)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("OTP");
-            entity.Property(e => e.OTPExpiryDate)
+            entity.Property(e => e.OtpexpiryDate)
                 .HasColumnType("datetime")
                 .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.Padd1)
@@ -613,11 +613,11 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
-            entity.Property(e => e.OTP)
+            entity.Property(e => e.Otp)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("OTP");
-            entity.Property(e => e.OTPExpiryDate)
+            entity.Property(e => e.OtpexpiryDate)
                 .HasColumnType("datetime")
                 .HasColumnName("OTPExpiryDate");
             entity.Property(e => e.PartnerName1)
@@ -1205,10 +1205,7 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("W8BENEFontName");
-            entity.Property(e => e.W8beneonBehalfName)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("W8BENEOnBehalfName");
+            entity.Property(e => e.W8beneonBehalfName).HasColumnName("W8BENEOnBehalfName");
             entity.Property(e => e.W8beneprintName)
                 .IsUnicode(false)
                 .HasColumnName("W8BENEPrintName");
@@ -1858,6 +1855,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.FatcaStatus)
                 .IsUnicode(false)
                 .HasColumnName("FATCA Status");
+            entity.Property(e => e.FilePath).IsUnicode(false);
             entity.Property(e => e.FontName)
                 .HasMaxLength(100)
                 .IsUnicode(false);

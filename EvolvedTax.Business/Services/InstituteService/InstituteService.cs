@@ -274,8 +274,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 Zip = p.Zip,
                 IsActive = p.IsActive,
                 IsLocked = p.IsLocked,
-                OTPExpiryDate = p.OTPExpiryDate,
-                OTP = p.OTPExpiryDate >= DateTime.Now ? p.OTP : ""
+                OtpexpiryDate = p.OtpexpiryDate,
+                Otp = p.OtpexpiryDate >= DateTime.Now ? p.Otp : ""
             }).FirstOrDefault();
         }
 

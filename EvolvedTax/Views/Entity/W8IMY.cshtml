@@ -630,16 +630,11 @@
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
-                console.log('here');
-                debugger;
                 $('#provinceDivImy').prop('hidden', true);
                 $('#province').val('');
                 $('#stateDiv').prop('hidden', false);
                 $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
-                debugger;
-                console.log('imyyy');
-                console.log(obj.value);
                  $('#provinceDivImy').prop('hidden', false);
                 $('#stateDiv').prop('hidden', true);
                 $('#state').val(1);

@@ -100,7 +100,7 @@
     }
 </style>
 <body style="background-color: white">
-
+    <partial name="_busyIndicator" />
     <div class="ibox" style="margin-bottom:15%">
         <div class="ibox-content" style="border: none;">
             <div id="contentContainer"></div>
@@ -154,6 +154,8 @@
         <!-- Only for demo purpose -->
         <script src="~/js/common.js"></script>
         <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
+
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -167,6 +169,7 @@
         <!-- Only for demo purpose -->
         <script src="~/js/common.js"></script>
         <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
     </environment>
     <script type="text/javascript">
 
@@ -206,7 +209,7 @@
             }
         });
         function ajaxsuccess(response) {
-            debugger;
+            COMMON.notification(1, "Account created successfully");
             document.getElementById("stepsDiv").style.display = "none";
             document.getElementById("nextBtn").style.display = "none";
             document.getElementById("prevBtn").style.display = "none";
@@ -267,32 +270,8 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
-        function SelectForm(obj) {
-            if (obj.value == '@AppConstants.W8Form') {
-                $('#W8FormDiv').prop('hidden', false);
-                $('#W8BenQuestionareDiv').prop('hidden', false);
-                $("#Citizenship").find("option[value='United States']").remove();
-                $("#Citizenship").prop('disabled', false).trigger("change");
-                // Uncheck all radio buttons within the group
-                $("input[type='radio'][name='W8FormType']").prop('checked', false);
-            } else {
-                $('#W8FormDiv').prop('hidden', true);
-                $('#W8BenQuestionareDiv').prop('hidden', true);
-                var newOption = $("<option>").val("United States").text("United States");
-                $("#Citizenship").prepend(newOption).trigger("change");
-                $("#Citizenship").val('United States').prop('disabled', true).trigger('change');
-                $('#inlineRadio5').prop('checked', true);
-                if ($('#inlineRadio5').is(':checked')) {
-                    // Disable the other radio buttons
-                    //$('#inlineRadio6, #inlineRadio7').prop('disabled', true);
-                    $('#SUIDNumber').attr('placeholder', '000-00-0000');
-                    $('#SUIDNumber').mask('000-00-0000', { reverse: true });
-                }
-            }
-            showTab(currentTab);
-        }
+  
         function ChangeMasking(obj) {
-
             if (obj.value == 'S') {
                 $('#SUIDNumber').attr('placeholder', '000-00-0000');
                 $('#SUIDNumber').mask('000-00-0000', { reverse: true });
@@ -304,16 +283,7 @@
                 $('#SUIDNumber').mask('000-00-0000', { reverse: true });
             }
         }
-        function ShowHideW8(obj) {
-            if (obj.value == '@AppConstants.W8BENForm') {
-                $('#W8BenQuestionareDiv').prop('hidden', false);
-                $('#W8ECIQuestionareDiv').prop('hidden', true);
-            } else {
-                $('#W8BenQuestionareDiv').prop('hidden', true);
-                $('#W8ECIQuestionareDiv').prop('hidden', false);
-            }
-            showTab(currentTab);
-        }
+     
 
         function showTab(n) {
             // This function will display the specified tab of the form ...

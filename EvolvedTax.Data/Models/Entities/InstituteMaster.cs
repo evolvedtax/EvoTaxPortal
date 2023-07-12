@@ -79,9 +79,9 @@ public partial class InstituteMaster
 
     public string? PasswordSecuredA3 { get; set; }
 
-    public string? OTP { get; set; }
+    public string? Otp { get; set; }
 
-    public DateTime? OTPExpiryDate { get; set; }
+    public DateTime? OtpexpiryDate { get; set; }
 
     public DateTime? RequestDate { get; set; }
 

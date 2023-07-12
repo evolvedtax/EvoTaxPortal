@@ -140,13 +140,13 @@ namespace EvolvedTax.Controllers
                 formVals["Otp4"].ToString(),
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
-            if (response.OTP == "")
+            if (response.Otp== "")
             {
                 TempData["Type"] = ResponseMessageConstants.ErrorStatus;
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(OTP));
             }
-            if (Otp == response?.OTP)
+            if (Otp == response?.Otp)
             {
                 HttpContext.Session.SetString("ClientEmail", formVals["clientEmail"]);
                 return RedirectToAction("Index", "Status");

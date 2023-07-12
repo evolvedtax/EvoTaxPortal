@@ -498,40 +498,47 @@ namespace EvolvedTax.Controllers
         [HttpPost]
         public IActionResult W8IMY(FormRequest model)
         {
-            bool isPartialSave = model.IsPartialSave;
-            string FormName = string.Empty;
-            string filePathResponse = string.Empty;
-            model.IndividualOrEntityStatus = AppConstants.EntityStatus;
-            model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
-            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
-            model.BasePath = _webHostEnvironment.WebRootPath;
-
-            var scheme = HttpContext.Request.Scheme; // "http" or "https"
-            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
-            var fullUrl = $"{scheme}://{host}";
-            model.Host = fullUrl;
-
-            FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
-            model.FormType= AppConstants.W8FormTypes.ToString();
-            model.W8FormType = AppConstants.W8IMYForm.ToString();
-
-
-            if (isPartialSave)
+            try
             {
+                bool isPartialSave = model.IsPartialSave;
+                string FormName = string.Empty;
+                string filePathResponse = string.Empty;
+                model.IndividualOrEntityStatus = AppConstants.EntityStatus;
+                model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+                model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+                model.BasePath = _webHostEnvironment.WebRootPath;
 
-                var responsePartialForm =  _W8IMYFormService.SavePartial(model);
-                var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
-                if (responseGQPartialForm == 0  || responsePartialForm == 0)
+                var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                var fullUrl = $"{scheme}://{host}";
+                model.Host = fullUrl;
+
+                FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+                model.FormType = AppConstants.W8FormTypes.ToString();
+                model.W8FormType = AppConstants.W8IMYForm.ToString();
+
+
+                if (isPartialSave)
                 {
-                    return View(model);
+
+                    var responsePartialForm = _W8IMYFormService.SavePartial(model);
+                    var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
+                    if (responseGQPartialForm == 0 || responsePartialForm == 0)
+                    {
+                        return View(model);
+                    }
+                    // Return a response indicating successful partial save
+                    return Json(new { success = true, message = AppConstants.FormPartiallySave });
                 }
-                // Return a response indicating successful partial save
-                return Json(new { success = true, message = AppConstants.FormPartiallySave });
-            }
-            #region W8EXPForm save logic
+                #region W8EXPForm save logic
 
 
-            FormName = model.W8FormType;
+                FormName = model.W8FormType;
+
+                //if (string.IsNullOrWhiteSpace(_webHostEnvironment.WebRootPath))
+                //{
+                //    _webHostEnvironment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                //}
                 model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
 
                 var responsew8EXPForm = _W8IMYFormService.Save(model);
@@ -539,17 +546,25 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8IMY);
                 filePathResponse = responsew8EXPForm;
 
-            var responseGQForm = _generalQuestionareEntityService.Save(model);
-            if (responseGQForm == 0)
+                var responseGQForm = _generalQuestionareEntityService.Save(model);
+                if (responseGQForm == 0)
+                {
+                    return View(model);
+                }
+                #endregion
+                HttpContext.Session.SetString("PdfdFileName", filePathResponse);
+                HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
+                HttpContext.Session.SetString("FormName", FormName);
+                HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
+                return Json(filePathResponse);
+            }
+            catch (Exception ex)
             {
+                // Pass the error message to the view
+                ViewData["ErrorMessage"] = ex.Message;
+                ViewData["LogErrorMessage"] = ex.Message.Replace("'", "\\'");
                 return View(model);
             }
-            #endregion
-            HttpContext.Session.SetString("PdfdFileName", filePathResponse);
-            HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
-            HttpContext.Session.SetString("FormName", FormName);
-            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
-            return Json(filePathResponse);
         }
 
         #endregion

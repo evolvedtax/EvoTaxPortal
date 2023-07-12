@@ -395,7 +395,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 _42Cb = request._42,
                 EmailAddress = request.EmailId,
                 PrintNameOfSigner = request.PrintNameOfSignerW8IMY,
-                OnBehalfName=request.W8IMYOnBehalfName
+                OnBehalfName=request.W8IMYOnBehalfName,
+                FilePath= request.TemplateFilePath
 
 
             };
@@ -519,6 +520,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 response.EmailAddress = request.EmailId;
                 response.PrintNameOfSigner = request.PrintNameOfSignerW8IMY;
                 response.OnBehalfName = request.W8IMYOnBehalfName;
+                response.FilePath = request.TemplateFilePath;
                 _evolvedtaxContext.TblW8imyforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return W8IMYCreationEXP(request);
