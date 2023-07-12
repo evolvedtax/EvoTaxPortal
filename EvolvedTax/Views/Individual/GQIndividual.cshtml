@@ -90,7 +90,8 @@
                 <!--W8 ECI Questionare View-->
                 <partial name="_w8ECIQuestionare" model="Model" />
             </div>
-
+            <!-- Hidden field for isPartialSave -->
+            <input type="hidden" asp-for="IsPartialSave" id="isPartialSave" value="true">
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -107,6 +108,7 @@
     <div style="overflow:auto;">
         <div style="float:right;">
             <button type="button" onclick="location.href='@Url.Action("GQIndividual","Individual")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save Progress</button>
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
         </div>
@@ -163,6 +165,7 @@
             }
         });
         function ajaxsuccess(response) {
+            if (response.message != '@AppConstants.FormPartiallySave') {
             document.getElementById("stepsDiv").style.display = "none";
             let pdfUrl = window.location.origin + '//' + response;
             // Create the object element
@@ -179,6 +182,11 @@
             $('#editBtn').prop('hidden', false);
             $('#prevBtn').prop('hidden', true);
             $('#nextBtn').prop('hidden', true);
+                $('#SaveExitBtn').prop('hidden', true);
+            }
+            else if (response.message == '@AppConstants.FormPartiallySave') {
+                COMMON.notification(1, "Saving ...");
+            }
         }
         var textarea = document.getElementById("Items");
         var counter = document.getElementById("textCounter");
@@ -368,7 +376,13 @@
             // ... and run a function that displays the correct step indicator:
             fixStepIndicator(n)
         }
-
+        $("#SaveExitBtn").click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                $('#isPartialSave').val('true');
+                form.submit();
+            }
+        });
         function nextPrev(n) {
 
             // This function will figure out which tab to display
@@ -404,6 +418,7 @@
                 let form = $('#regForm');
                 if (form.valid()) {
                     $("#Citizenship").prop('disabled', false);
+                    $('#isPartialSave').val('false');
                     form.submit();
                 }
                 return false;

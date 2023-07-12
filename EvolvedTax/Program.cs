@@ -1,4 +1,5 @@
 using EvolvedTax.Helpers;
+using EvolvedTax.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 
@@ -55,6 +56,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseMiddleware<ExceptionHandler>();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
