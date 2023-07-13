@@ -81,5 +81,39 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return request;
         }
+        public bool ValidateSecurityQuestions(ForgetPasswordRequest request)
+        {
+            var result = _evolvedtaxContext.InstituteMasters.Where(p => p.EmailAddress == request.EmailAddress
+            && p.PasswordSecuredA1.ToLower() == request.PasswordSecuredA1.Trim().ToLower() && p.PasswordSecuredQ1 == request.PasswordSecuredQ1
+            && p.PasswordSecuredA2.ToLower() == request.PasswordSecuredA2.Trim().ToLower() && p.PasswordSecuredQ2 == request.PasswordSecuredQ2
+            && p.PasswordSecuredA3.ToLower() == request.PasswordSecuredA3.Trim().ToLower() && p.PasswordSecuredQ3 == request.PasswordSecuredQ3
+            );
+            return result.Any();
+        }
+        public bool UpdateResetToeknInfo(string emailAddress, string passwordResetToken, DateTime passwordResetTokenExpiration)
+        {
+            var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailAddress);
+            if (response != null)
+            {
+                response.ResetToken = passwordResetToken;
+                response.ResetTokenExpiryTime = passwordResetTokenExpiration;
+                _evolvedtaxContext.Update(response);
+                _evolvedtaxContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+        public bool ResetPassword(ForgetPasswordRequest request)
+        {
+            var result = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.ResetToken == request.ResetToken);
+            if (result != null && result.ResetTokenExpiryTime > DateTime.Now)
+            {
+                result.Password = request.Password;
+                _evolvedtaxContext.Update(result);
+                _evolvedtaxContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }

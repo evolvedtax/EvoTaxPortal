@@ -1,7 +1,7 @@
 ﻿using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Response;
-using Microsoft.Extensions.Configuration;
+using EvolvedTax.Helpers;
 using System.Net;
 using System.Net.Mail;
 
@@ -27,7 +27,7 @@ namespace EvolvedTax.Business.MailService
                 content = AppConstants.EmailToClient
                     .Replace("{{Name}}", email.InstituteUserName)
                     .Replace("{{InstituteName}}", email.InstituteName)
-                    .Replace("{{Link}}", string.Concat(URL, "?clientEmail=", email.ClientEmailId));
+                    .Replace("{{Link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
                 try
                 {
                     MailMessage message = new MailMessage();
@@ -88,7 +88,7 @@ namespace EvolvedTax.Business.MailService
             }
 
         }
-        public async Task SendOTPAsync(string OTP, string Email, string subject,string Username, string URL)
+        public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL)
         {
             var FromEmail = "technology@evolvedtax.com";
             var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
@@ -118,6 +118,31 @@ namespace EvolvedTax.Business.MailService
             {
                 // Exception Details
             }
+
+        }
+        public void SendResetPassword(string emailAddress, string subject, string resetUrl)
+        {
+            var FromEmail = "technology@evolvedtax.com";
+            var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            var Host = "smtp.office365.com";
+            var Port = 587;
+            var content = AppConstants.ResetPassword
+                //.Replace("{{UserName}}", Username)
+                .Replace("{{ResetUrl}}", resetUrl);
+            MailMessage message = new MailMessage();
+            SmtpClient smtp = new SmtpClient();
+            message.From = new MailAddress(FromEmail);
+            message.To.Add(new MailAddress(emailAddress));
+            message.Subject = subject;
+            message.IsBodyHtml = true; //to make message body as html
+            message.Body = content;
+            smtp.Port = Port;
+            smtp.Host = Host;
+            smtp.EnableSsl = true;
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.Send(message);
 
         }
     }

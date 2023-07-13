@@ -6,9 +6,11 @@ using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Common.ExtensionMethods;
 using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using static System.Net.WebRequestMethods;
 
 namespace EvolvedTax.Controllers
@@ -23,12 +25,15 @@ namespace EvolvedTax.Controllers
         readonly IGeneralQuestionareService _generalQuestionareService;
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService)
+        private readonly EvolvedtaxContext _evolvedtaxContext;
+
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
             _instituteService = instituteService;
             _mailService = mailService;
+            _evolvedtaxContext = evolvedtaxContext;
         }
         #endregion
 
@@ -108,24 +113,26 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Please enter correct OTP";
             return View(nameof(Auth));
         }
-        public async Task<IActionResult> OTP(string? clientEmail = "")
+        public async Task<IActionResult> OTP(string? s = "", string e = "")
         {
-            if (!string.IsNullOrEmpty(clientEmail))
+            if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
-                if (await _instituteService.CheckIfClientRecordExist(clientEmail))
+                s = EncryptionHelper.Decrypt(s.Replace(' ','+').Replace('-', '+').Replace('_', '/'));
+                e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                if (await _instituteService.CheckIfClientRecordExist(s, e))
                 {
-                    TempData["EntityName"] = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
-                    TempData["InstituteEmail"] = _instituteService.GetInstituteDataByClientEmailId(clientEmail).EmailAddress;
+                    TempData["EntityName"] = _instituteService.GetEntityDataByClientEmailId(s).EntityName;
+                    TempData["InstituteEmail"] = _instituteService.GetInstituteDataByClientEmailId(s).EmailAddress;
                     return RedirectToAction("AccessDenied", new { statusCode = 400 });
                 }
-                HttpContext.Session.SetString("ClientEmail", clientEmail);
+                HttpContext.Session.SetString("ClientEmail", s);
                 var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
                 var totp = new Totp(bytes);
                 var otp = totp.ComputeTotp();
-                var userName = _instituteService.GetClientDataByClientEmailId(clientEmail);
-                await _mailService.SendOTPAsync(otp, clientEmail, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
-                _userService.UpdateInstituteClientOTP(clientEmail, otp, DateTime.Now.AddMinutes(60));
-                ViewBag.ClientEmail = clientEmail;
+                var userName = _instituteService.GetClientDataByClientEmailId(s);
+                await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
+                _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60));
+                ViewBag.ClientEmail = s;
             }
             return View();
         }
@@ -140,7 +147,7 @@ namespace EvolvedTax.Controllers
                 formVals["Otp4"].ToString(),
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
-            if (response.Otp== "")
+            if (response.Otp == "")
             {
                 TempData["Type"] = ResponseMessageConstants.ErrorStatus;
                 TempData["Message"] = "OTP has expired";
@@ -156,6 +163,72 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Please enter correct OTP";
             return View(nameof(OTP));
         }
+        [HttpGet]
+        public IActionResult SecurityInformation()
+        {
+            ViewBag.SecuredQ1 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ2 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ3 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SecurityInformation(ForgetPasswordRequest request)
+        {
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            var result = _userService.ValidateSecurityQuestions(request);
+            if (result)
+            {
+                var PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
+                var PasswordResetTokenExpiration = DateTime.UtcNow.AddMinutes(60);
+                var response = _userService.UpdateResetToeknInfo(request.EmailAddress, PasswordResetToken, PasswordResetTokenExpiration);
+                if (response)
+                {
+                    string resetUrl = Path.Combine(fullUrl, "Account", "ResetPassword?token=" + PasswordResetToken);
+                    _mailService.SendResetPassword(request.EmailAddress, "Action Required:Your Password Reset Request with EvoTax Portal", resetUrl);
+                    return Json(response);
+                }
+
+                return Json(response);
+            }
+            return Json(result);
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string token)
+        {
+            // Verify the token and check if it's still valid
+            var user = _evolvedtaxContext.InstituteMasters.FirstOrDefault(u => u.ResetToken == token && u.ResetTokenExpiryTime > DateTime.Now);
+
+            if (user == null)
+            {
+                // Token is invalid or expired
+                return BadRequest("Invalid or expired token.");
+            }
+
+            // Render the password reset page where the user can enter a new password
+            return View(new ForgetPasswordRequest { ResetToken = token});
+        }
+        [HttpPost]
+        public IActionResult ResetPassword(ForgetPasswordRequest request)
+        {
+            var result = _userService.ResetPassword(request);
+            return Json(result);
+        }
         [SessionTimeout]
         public ActionResult Logout()
         {
@@ -170,7 +243,11 @@ namespace EvolvedTax.Controllers
         #endregion
 
         #region Utilities
-
+        public IActionResult ValidateEmailAddress(string EmailAddress)
+        {
+            var result = _evolvedtaxContext.InstituteMasters.Any(p => p.EmailAddress == EmailAddress);
+            return Json(result);
+        }
         #endregion
     }
 }
