@@ -483,33 +483,39 @@ namespace EvolvedTax.Controllers
                 Value = p.FatcaId.ToString()
             });
 
-            GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
+        
 
 
-            //var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
-            //if (!string.IsNullOrEmpty(formName))
-            //{
-            //    if (!string.IsNullOrEmpty(clientEmail))
-            //    {
-            //        if (formName == AppConstants.W8IMYForm)
-            //        {
-            //            //GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
-            //            GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
-            //            //GQEntitiesResponse.FormType = formName;
-            //        }
-                 
-            //        return View(GQEntitiesResponse);
-            //    }
-            //}
+
+            var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            if (!string.IsNullOrEmpty(formName))
+            {
+                if (!string.IsNullOrEmpty(clientEmail))
+                {
+                    if (formName == AppConstants.W8IMYForm)
+                    {
+                        
+                        GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
+                        GQEntitiesResponse.activeTabIndex = "0";
+                    }
+
+                    return View(GQEntitiesResponse);
+                }
+            }
+            else
+            {
+                GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
+            }
+
             return View(GQEntitiesResponse);
         }
 
         [HttpPost]
         public IActionResult W8IMY(FormRequest model)
         {
-            try
-            {
+           
                 bool isPartialSave = model.IsPartialSave;
+              
                 string FormName = string.Empty;
                 string filePathResponse = string.Empty;
                 model.IndividualOrEntityStatus = AppConstants.EntityStatus;
@@ -529,7 +535,8 @@ namespace EvolvedTax.Controllers
 
                 if (isPartialSave)
                 {
-
+                    // string activeTabIndex = model.activeTabIndex;
+                    string activeTabIndex = HttpContext.Request.Form["activeTabIndex"];
                     var responsePartialForm = _W8IMYFormService.SavePartial(model);
                     var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
                     if (responseGQPartialForm == 0 || responsePartialForm == 0)
@@ -566,14 +573,7 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("FormName", FormName);
                 HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
                 return Json(filePathResponse);
-            }
-            catch (Exception ex)
-            {
-                // Pass the error message to the view
-                ViewData["ErrorMessage"] = ex.Message;
-                ViewData["LogErrorMessage"] = ex.Message.Replace("'", "\\'");
-                return View(model);
-            }
+          
         }
 
         #endregion

@@ -162,6 +162,13 @@ namespace EvolvedTax.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Login));
         }
+        [UserSession]
+        public ActionResult LogoutUser()
+        {
+            HttpContext.Session.Clear();
+           // HttpContext.Session.Remove("FormName");
+            return RedirectToAction(nameof(Login));
+        }
         public ActionResult AccessDenied(short statusCode)
         {
             ViewBag.StatusCode = statusCode;

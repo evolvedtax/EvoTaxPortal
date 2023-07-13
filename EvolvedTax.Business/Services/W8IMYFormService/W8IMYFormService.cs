@@ -155,6 +155,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                             _41_Text = w8._41Text ?? string.Empty,
                             _42 = (bool)w8._42Cb,
                             EmailId = w8.EmailAddress,
+                            //hard code for testing
+                            activeTabIndex=w8.ActiveTabIndex,
 
                         };
 
@@ -271,7 +273,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 _42Cb = request._42,
                 EmailAddress = request.EmailId,
                 PrintNameOfSigner = request.PrintNameOfSignerW8IMY,
-                OnBehalfName = request.W8IMYOnBehalfName
+                OnBehalfName = request.W8IMYOnBehalfName,
+                ActiveTabIndex = request.activeTabIndex
 
 
             };
@@ -637,6 +640,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 response.EmailAddress = request.EmailId;
                 response.PrintNameOfSigner = request.PrintNameOfSignerW8IMY;
                 response.OnBehalfName = request.W8IMYOnBehalfName;
+                response.ActiveTabIndex = request.activeTabIndex;
                 _evolvedtaxContext.TblW8imyforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return response.Id;

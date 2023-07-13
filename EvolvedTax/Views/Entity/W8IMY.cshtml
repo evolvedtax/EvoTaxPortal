@@ -89,6 +89,8 @@
             </div>
             <!-- Hidden field for isPartialSave -->
             <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
+            <input type="hidden" id="activeTabIndex" name="activeTabIndex" value="" />
+
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -132,6 +134,8 @@
             let form = $('#regForm');
             if (form.valid()) {
                 $('#isPartialSave').val('true');
+                var activeTabIndex = $('.tab[style*="display: block"]').data('tab-index');
+                $('#activeTabIndex').val(activeTabIndex);
                 form.submit();
             }
 
@@ -232,56 +236,19 @@
 
         $(document).ready(function () {
 
-            /*
-            //Mailing  Address Validation
-            var addressInput = $('#adreess1');
-            var MvalidationMessage = $('#MvalidationMessageAddress');
 
-            addressInput.on('focusout', function () {
-                var address = addressInput.val();
-                $.ajax({
-                    url: '/Entity/ValidateAddress',
-                    type: 'POST',
-                    data: { address: address },
-                    success: function (result) {
-                        if (result) {
-                            MvalidationMessage.text('');
-                        } else {
-                            MvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                    }
-                });
-            });
+            var activeTabIndex = @Html.Raw(Json.Serialize(Model != null ? Model.activeTabIndex : "0"));
+            // If activeTabIndex is not set, default to the first tab
+            if (!activeTabIndex) {
+                activeTabIndex = 0;
+            }
+            // Show the active tab and hide the others
+            $(".tab").css("display", "none");
+            $(".tab[data-tab-index='" + activeTabIndex + "']").css("display", "block");
+            console.log(activeTabIndex);
 
-            //Permeant Address Validation
-            var PaddressInput = $('#adreess1Perm');
-            var PvalidationMessage = $('#PvalidationMessageAddress');
 
-            PaddressInput.on('focusout', function () {
-                var address = PaddressInput.val();
-                $.ajax({
-                    url: '/Entity/ValidateAddress',
-                    type: 'POST',
-                    data: { address: address },
-                    success: function (result) {
-                        if (result) {
-                            PvalidationMessage.text('');
-                        } else {
-                            PvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(error);
-                    }
-                });
-            });
 
-            */
-
-      
 
             $("select").select2({
                 theme: 'bootstrap4',
@@ -775,32 +742,33 @@
             }
         }
         function showTab(n) {
-
-            // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
+            x[n].style.display = 'block';
 
-            x[n].style.display = "block";
-            // ... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
-            } else {
-                document.getElementById("prevBtn").style.display = "inline";
-            }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
+            var prevBtn = document.getElementById('prevBtn');
+            var nextBtn = document.getElementById('nextBtn');
 
+            if (n === 0) {
+                prevBtn.disabled = true;
             } else {
-                document.getElementById("nextBtn").innerHTML = "Next Page >>";
+                prevBtn.disabled = false;
             }
-            // ... and run a function that displays the correct step indicator:
-            fixStepIndicator(n)
+
+            if (n === x.length - 1) {
+                nextBtn.innerHTML = 'Preview and Sign Form W-8IMY  >>';
+            } else {
+                nextBtn.innerHTML = 'Next Page >>';
+            }
+
+            fixStepIndicator(n);
         }
 
-        function nextPrev(n) {
 
-            // This function will figure out which tab to display
-            // var x = document.getElementsByClassName("tab");
+  
+
+        function nextPrev(n) {
             var x = document.querySelectorAll('.tab:not([hidden])');
+            var currentTab = 0; // Initialize currentTab to 0
 
             if ($('#SamePermAddress').is(':checked')) {
                 //--------------------//
@@ -813,20 +781,18 @@
                 $('#statePerm').val($('#state').val());
                 //--------------------//
             }
+
             $('#contentContainer').empty();
-            // Exit the function if any field in the current tab is invalid:
-            //if (n == 1 && !validateForm()) return false;
+
             if (n == 1 && !$('#regForm').valid()) return false;
-            if (currentTab < x.length) {
-                // Hide the current tab:
-                x[currentTab].style.display = "none";
-                // Increase or decrease the current tab by 1:
+
+            currentTab = Array.from(x).findIndex((tab) => tab.style.display === 'block');
+            if (currentTab >= 0) {
+                x[currentTab].style.display = 'none';
             }
-            currentTab = currentTab + n;
-            // if you have reached the end of the form... :
+            currentTab += n;
+
             if (currentTab >= x.length) {
-                //...the form gets submitted:
-                // document.getElementById("regForm").submit();
                 let form = $('#regForm');
                 if (form.valid()) {
                     $('#isPartialSave').val('false');
@@ -835,9 +801,20 @@
                 return false;
             }
 
-            // Otherwise, display the correct tab:
-            showTab(currentTab);
+            x[currentTab].style.display = 'block';
+
+            // Enable "Previous" button
+            if (currentTab > 0) {
+                $('#prevBtn').prop('disabled', false);
+            } else {
+                $('#prevBtn').prop('disabled', true);
+            }
         }
+
+
+
+
+
 
         function validateForm() {
             // This function deals with validation of the form fields

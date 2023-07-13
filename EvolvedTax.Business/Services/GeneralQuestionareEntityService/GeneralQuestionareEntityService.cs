@@ -41,6 +41,8 @@ namespace EvolvedTax.Business.Services.GeneralQuestionareEntityService
                 Ssnitnein = p.Number,
                 FormType=p.FormType ?? string.Empty,
                 W8FormType = p.W8formType ?? string.Empty,
+                activeTabIndex="0"
+
             }).FirstOrDefault();
         }
 

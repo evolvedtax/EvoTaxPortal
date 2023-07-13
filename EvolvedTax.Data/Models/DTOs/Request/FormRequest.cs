@@ -314,6 +314,7 @@ public class FormRequest
     public string _41_Text { get; set; } = string.Empty;
     public bool _42 { get; set; } = false;
     public bool IsPartialSave { get; set; } = false;
+    public string activeTabIndex { get; set; } = "0";
     public string? PrintNameOfSignerW8IMY { get; set; } = string.Empty;
     public string? W8IMYOnBehalfName { get; set; } = string.Empty;
     #endregion

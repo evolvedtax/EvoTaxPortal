@@ -914,25 +914,20 @@
             }
         }
         function showTab(n) {
-            debugger;
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
 
             x[n].style.display = "block";
             // ... and fix the Previous/Next buttons:
             if (n == 0) {
-                debugger;
                 document.getElementById("prevBtn").style.display = "none";
 
-                //$('#SaveExitBtn').prop('hidden', true);
+                $('#SaveExitBtn').prop('hidden', true);
 
             } 
             else {
-                debugger;
                 document.getElementById("prevBtn").style.display = "inline";
-                if ($('#hdn_FormType').val() == '@AppConstants.W8EXPForm') {
-                    $('#SaveExitBtn').prop('hidden', false);
-                }
+                $('#SaveExitBtn').prop('hidden', false);
             }
             if (n == (x.length - 1)) {
 
@@ -980,11 +975,10 @@
         }
 
         function nextPrev(n) {
-            if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm') {
+        
+            if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
                 window.location.href = '@Url.Action("W8IMY", "Entity")';
             }
-
-
 
             // This function will figure out which tab to display
             // var x = document.getElementsByClassName("tab");

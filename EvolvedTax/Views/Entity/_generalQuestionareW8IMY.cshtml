@@ -1,13 +1,6 @@
 ﻿@model FormRequest
-@if (!string.IsNullOrEmpty(ViewData["LogErrorMessage"] as string))
-{
-    <script>
-        var errorMessage = '@ViewData["LogErrorMessage"]';
-        console.log(errorMessage);
-    </script>
-}
 
-<div class="tab">
+<div class="tab" data-tab-index="0" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "0") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Identification of Entity</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -96,7 +89,7 @@
 
 </div>
 
-<div class="tab">
+<div class="tab" data-tab-index="1" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "1") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Mailing Address</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -113,7 +106,7 @@
                     <label>Address Line 1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
                     <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
                     <span asp-validation-for="MAddress1" class="text-danger"></span>
-           
+
                 </div>
             </div>
             <div class="col-md-6">
@@ -210,7 +203,7 @@
 </div>
 
 
-<div class="tab">
+<div class="tab" data-tab-index="2" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "2") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Disregarded Entity or Branch Receiving Payment</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -294,7 +287,7 @@
 
 
 </div>
-<div class="tab">
+<div class="tab" data-tab-index="3" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "3") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Additional Information</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -334,11 +327,12 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="row align-items-center">
-                    <h4 id="EntityHead" style="margin-bottom: 0;"></h4>
+                    <h4 id="EntityHead" class="ml-4"></h4>
                 </div>
             </div>
         </div>
     </div>
+
 
     <div class="form-box" id="Q1Div" hidden>
         <div class="col-md-12">
@@ -476,6 +470,7 @@
             </div>
         </div>
     </div>
+
     <div class="form-box" id="NonqualifiedDiv" hidden>
         <div class="col-md-12">
             <div class="form-group">
@@ -703,7 +698,7 @@
         <div class="col-md-12">
             <div class="form-group">
                 <div class="row">
-                    <h4 id="FATCAHead" style="margin-bottom: 0; text-align: right;"></h4>
+                    <h4 id="FATCAHead" class="ml-4"></h4>
                 </div>
             </div>
         </div>
@@ -1103,7 +1098,7 @@
                         <input class="form-check-input" type="checkbox" id="inlinecheckbox1" asp-for="_35">
                         <label class="form-check-label" for="inlinecheckbox1">
                             I certify that the entity identified in Part I: <br />
-                            • Was formed on (or in the case of a new line of business, the date of board resolution approving the new line of business) 
+                            • Was formed on (or in the case of a new line of business, the date of board resolution approving the new line of business)
                             <input class="form-control" type="date" asp-for="_35_Text">
                             <br />
                             (date must be less than 24 months prior to date of payment);
@@ -1262,34 +1257,34 @@
 </div>
 
 
-<div class="tab">
-   
- 
+<div class="tab" data-tab-index="4" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "4") ? "style='display: block;'" : "style='display: none;'")>
+
+
     <div class="text-center"><span><p>Additional Information</p></span></div>
     <div class="form-box">
-    <div class="row">
+        <div class="row">
 
-        <div class="col-md-12">
-            <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
-            <div class="form-group">
-                <div class="form-check abc-radio abc-radio-info form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="1" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8IMYOnBehalfName" required>
-                    <label class="form-check-label" for="W8ECIOnBehalfName1"> Yes </label>
-                </div>
-                <div class="form-check abc-radio form-check-inline">
-                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="0" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8IMYOnBehalfName" required">
-                    <label class="form-check-label" for="W8ECIOnBehalfName2"> No </label>
+            <div class="col-md-12">
+                <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="1" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8IMYOnBehalfName" required>
+                        <label class="form-check-label" for="W8ECIOnBehalfName1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="0" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8IMYOnBehalfName" required">
+                        <label class="form-check-label" for="W8ECIOnBehalfName2"> No </label>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6" id="authdiv" hidden>
-            <div class="form-group">
-                <label id="lbl_authSignatory">Please enter the name of the beneficial owner <span class="text-danger">*</span></label>
-                <input asp-for="PrintNameOfSignerW8IMY" class="form-control" required />
+            <div class="col-md-6" id="authdiv" hidden>
+                <div class="form-group">
+                    <label id="lbl_authSignatory">Please enter the name of the beneficial owner <span class="text-danger">*</span></label>
+                    <input asp-for="PrintNameOfSignerW8IMY" class="form-control" required />
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
 
     </div>
 </div>
