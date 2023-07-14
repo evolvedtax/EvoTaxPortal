@@ -18,5 +18,6 @@ namespace EvolvedTax.Business.Services.UserService
         bool ValidateSecurityQuestions(ForgetPasswordRequest request);
         bool UpdateResetToeknInfo(string emailAddress, string passwordResetToken, DateTime passwordResetTokenExpiration);
         bool ResetPassword(ForgetPasswordRequest request);
+        InstituteMaster? GetSecurityQuestionsByInstituteEmail(string emailAddress);
     }
 }

@@ -117,7 +117,7 @@ namespace EvolvedTax.Controllers
         {
             if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
-                s = EncryptionHelper.Decrypt(s.Replace(' ','+').Replace('-', '+').Replace('_', '/'));
+                s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 if (await _instituteService.CheckIfClientRecordExist(s, e))
                 {
@@ -163,8 +163,14 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Please enter correct OTP";
             return View(nameof(OTP));
         }
+        [HttpPost]
+        public IActionResult SecurityInformation(ForgetPasswordRequest request)
+        {
+            var result = _userService.GetSecurityQuestionsByInstituteEmail(request.EmailAddress);
+            return Json(result);
+        }
         [HttpGet]
-        public IActionResult SecurityInformation()
+        public IActionResult ForgetPassword()
         {
             ViewBag.SecuredQ1 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
             {
@@ -186,24 +192,24 @@ namespace EvolvedTax.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult SecurityInformation(ForgetPasswordRequest request)
+        public IActionResult ForgetPassword(ForgetPasswordRequest request, string email)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
+            request.EmailAddress = email;
             var result = _userService.ValidateSecurityQuestions(request);
             if (result)
             {
                 var PasswordResetToken = Guid.NewGuid().ToString().Replace("-", "");
                 var PasswordResetTokenExpiration = DateTime.UtcNow.AddMinutes(60);
-                var response = _userService.UpdateResetToeknInfo(request.EmailAddress, PasswordResetToken, PasswordResetTokenExpiration);
+                var response = _userService.UpdateResetToeknInfo(email, PasswordResetToken, PasswordResetTokenExpiration);
                 if (response)
                 {
                     string resetUrl = Path.Combine(fullUrl, "Account", "ResetPassword?token=" + PasswordResetToken);
                     _mailService.SendResetPassword(request.EmailAddress, "Action Required:Your Password Reset Request with EvoTax Portal", resetUrl);
                     return Json(response);
                 }
-
                 return Json(response);
             }
             return Json(result);
@@ -221,7 +227,7 @@ namespace EvolvedTax.Controllers
             }
 
             // Render the password reset page where the user can enter a new password
-            return View(new ForgetPasswordRequest { ResetToken = token});
+            return View(new ForgetPasswordRequest { ResetToken = token });
         }
         [HttpPost]
         public IActionResult ResetPassword(ForgetPasswordRequest request)

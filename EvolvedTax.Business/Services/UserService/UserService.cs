@@ -115,5 +115,9 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return false;
         }
+        public InstituteMaster? GetSecurityQuestionsByInstituteEmail(string emailAddress)
+        {
+            return _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailAddress);
+        }
     }
 }
