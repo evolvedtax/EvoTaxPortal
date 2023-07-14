@@ -92,4 +92,6 @@ public partial class InstituteMaster
     public string? RequestIp { get; set; }
 
     public string? SupportEmail { get; set; }
+    public string? ResetToken { get; set; }
+    public DateTime? ResetTokenExpiryTime { get; set; }
 }
