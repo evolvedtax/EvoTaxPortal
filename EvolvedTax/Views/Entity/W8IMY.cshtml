@@ -245,7 +245,7 @@
             // Show the active tab and hide the others
             $(".tab").css("display", "none");
             $(".tab[data-tab-index='" + activeTabIndex + "']").css("display", "block");
-            console.log(activeTabIndex);
+           
 
 
 
@@ -742,6 +742,7 @@
             }
         }
         function showTab(n) {
+            debugger;
             var x = document.querySelectorAll('.tab:not([hidden])');
             x[n].style.display = 'block';
 
@@ -753,7 +754,6 @@
             } else {
                 prevBtn.disabled = false;
             }
-
             if (n === x.length - 1) {
                 nextBtn.innerHTML = 'Preview and Sign Form W-8IMY  >>';
             } else {
@@ -801,6 +801,9 @@
                 return false;
             }
 
+            x.forEach((tab) => {
+                tab.style.display = 'none';
+            });
             x[currentTab].style.display = 'block';
 
             // Enable "Previous" button
@@ -809,6 +812,8 @@
             } else {
                 $('#prevBtn').prop('disabled', true);
             }
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
         }
 
 

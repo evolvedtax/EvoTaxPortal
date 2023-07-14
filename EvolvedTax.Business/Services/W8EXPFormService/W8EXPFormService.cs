@@ -130,7 +130,8 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 _20c = request._20c,
                 _21 = request._21,
                 _21Text = request._21_Text,
-                EmailAddress = request.EmailId
+                EmailAddress = request.EmailId,
+               // ActiveTabIndex = request.activeTabIndex
 
             };
 
@@ -183,6 +184,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 response._21 = request._21;
                 response._21Text = request._21_Text;
                 response.EmailAddress = request.EmailId;
+               // response.ActiveTabIndex = request.activeTabIndex;
                 _evolvedtaxContext.TblW8expforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return response.Id;
@@ -818,6 +820,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                             _21 = (bool)w8._21,
                             _21_Text = w8._21Text,
                             EmailId = w8.EmailAddress,
+                           // activeTabIndex = w8.ActiveTabIndex,
 
                         };
 

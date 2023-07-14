@@ -45,7 +45,7 @@
         height: 50px;
     }
 </style>
-<div class="tab">
+<div class="tab" data-tab-index="0" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "0") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Identification of Beneficial Owner</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-<div class="tab">
+<div class="tab" data-tab-index="1" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "1") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center">
         <span><p>Mailing address</p></span><br />
     </div>
@@ -213,7 +213,8 @@
         </div>
     </div>
 </div>
-<div class="tab">
+<div class="tab" data-tab-index="2" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "2") ? "style='display: block;'" : "style='display: none;'")>
+
     <div class="text-center"><span><p>Disregarded Entity or Branch Receiving Payment</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -295,7 +296,7 @@
         </div>
     </div>
 </div>
-<div class="tab">
+<div class="tab" data-tab-index="3" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "3") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Additional Information</p></span></div>
     <div class="form-box">
         <div class="row">

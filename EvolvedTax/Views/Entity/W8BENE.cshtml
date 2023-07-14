@@ -87,6 +87,7 @@
             </div>
             <!-- Hidden field for isPartialSave -->
             <input type="hidden" asp-for="IsPartialSave" id="isPartialSave" value="true">
+            <input type="hidden" id="activeTabIndex" name="activeTabIndex" value="" />
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -125,6 +126,17 @@
 
 
         $(document).ready(function () {
+
+
+            var activeTabIndex = @Html.Raw(Json.Serialize(Model != null ? Model.activeTabIndex : "0"));
+            // If activeTabIndex is not set, default to the first tab
+            if (!activeTabIndex) {
+                activeTabIndex = 0;
+            }
+            // Show the active tab and hide the others
+            $(".tab").css("display", "none");
+            $(".tab[data-tab-index='" + activeTabIndex + "']").css("display", "block");
+        
 
             $("select").select2({
                 theme: 'bootstrap4',
@@ -392,34 +404,38 @@
             }
         }
         function showTab(n) {
-
-            // This function will display the specified tab of the form ...
+            debugger;
             var x = document.querySelectorAll('.tab:not([hidden])');
-            document.getElementById("nextBtn").innerHTML = "Next Page >>";
-            x[n].style.display = "block";
-            // ... and fix the Previous/Next buttons:
-            if (n == 0) {
-                document.getElementById("prevBtn").style.display = "none";
+            x[n].style.display = 'block';
+            var prevBtn = document.getElementById('prevBtn');
+            var nextBtn = document.getElementById('nextBtn');
+
+            if (n === 0) {
+                prevBtn.disabled = true;
             } else {
-                document.getElementById("prevBtn").style.display = "inline";
+                prevBtn.disabled = false;
             }
-            if (n == (x.length - 1)) {
-                document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN-E >>";
-                // ... and run a function that displays the correct step indicator:
-                fixStepIndicator(n)
+            if (n === x.length - 1) {
+                nextBtn.innerHTML = 'View and Edit Form W-8BEN-E >>';
+            } else {
+                nextBtn.innerHTML = 'Next Page >>';
             }
+
+            fixStepIndicator(n);
         }
         $("#SaveExitBtn").click(function () {
             let form = $('#regForm');
             if (form.valid()) {
                 $('#isPartialSave').val('true');
+                var activeTabIndex = $('.tab[style*="display: block"]').data('tab-index');
+                $('#activeTabIndex').val(activeTabIndex);
                 form.submit();
             }
+
         });
         function nextPrev(n) {
-            // This function will figure out which tab to display
-            // var x = document.getElementsByClassName("tab");
             var x = document.querySelectorAll('.tab:not([hidden])');
+            var currentTab = 0; // Initialize currentTab to 0
 
             if ($('#SamePermAddress').is(':checked')) {
                 //--------------------//
@@ -432,21 +448,18 @@
                 $('#statePerm').val($('#state').val());
                 //--------------------//
             }
-            $('#contentContainer').empty();
-            // Exit the function if any field in the current tab is invalid:
-            //if (n == 1 && !validateForm()) return false;
-            if (n == 1 && !$('#regForm').valid()) return false;
-            if (currentTab < x.length) {
-                // Hide the current tab:
-                x[currentTab].style.display = "none";
-                // Increase or decrease the current tab by 1:
-            }
-            currentTab = currentTab + n;
-            // if you have reached the end of the form... :
-            if (currentTab >= x.length) {
 
-                //...the form gets submitted:
-                // document.getElementById("regForm").submit();
+            $('#contentContainer').empty();
+
+            if (n == 1 && !$('#regForm').valid()) return false;
+
+            currentTab = Array.from(x).findIndex((tab) => tab.style.display === 'block');
+            if (currentTab >= 0) {
+                x[currentTab].style.display = 'none';
+            }
+            currentTab += n;
+
+            if (currentTab >= x.length) {
                 let form = $('#regForm');
                 if (form.valid()) {
                     $('#isPartialSave').val('false');
@@ -455,6 +468,17 @@
                 return false;
             }
 
+            x.forEach((tab) => {
+                tab.style.display = 'none';
+            });
+            x[currentTab].style.display = 'block';
+
+            // Enable "Previous" button
+            if (currentTab > 0) {
+                $('#prevBtn').prop('disabled', false);
+            } else {
+                $('#prevBtn').prop('disabled', true);
+            }
             // Otherwise, display the correct tab:
             showTab(currentTab);
         }

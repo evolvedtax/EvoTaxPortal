@@ -92,6 +92,7 @@
             </div>
             <!-- Hidden field for isPartialSave -->
             <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
+
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                 <span class="step"></span>
@@ -555,6 +556,7 @@
 
 
                 } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
+               
                     //$('#W8ECIEntityDiv').prop('hidden', false);
                     //$('#W8Country').prop('hidden', false);
                     //$('#BackupWithHoldingMainDiv').prop('hidden', false);
@@ -577,13 +579,16 @@
                     //BindEntityForW8ECIGQForm();
                     //BindEntityForW8ECIForm();
                     window.location.href = '@Url.Action("W8ECI", "Entity")';
+                         $('#hdn_FormType').val($(this).val());
                 }
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     //window.location.href = '@Url.Action("W8IMY", "Entity")';
                     $('#hdn_FormType').val($(this).val());
+                 
                 }
                 else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
-                    window.location.href = '@Url.Action("W8BENE", "Entity")';
+                    //window.location.href = '@Url.Action("W8BENE", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
                 }
                 else {
                     // alert('here in w8 different');
@@ -978,6 +983,10 @@
         
             if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
                 window.location.href = '@Url.Action("W8IMY", "Entity")';
+            }
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8BENEForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8BENE", "Entity")';
             }
 
             // This function will figure out which tab to display

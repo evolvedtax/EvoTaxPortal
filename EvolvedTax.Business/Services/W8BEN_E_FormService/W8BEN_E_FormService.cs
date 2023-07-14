@@ -39,6 +39,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             model.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
             model.PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2);
             model.SignatureDateMmDdYyyy = DateTime.Now.ToString("MM-dd-yyyy");
+            model.W8beneemailAddress = request.EmailId;
             //var model = new TblW8ebeneform
             //{
             //    NameOfOrganization = request.NameOfOrganization,
@@ -2234,6 +2235,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
                 model._41cb = w8BENEData._41cb ?? false;
                 model._42tb = w8BENEData._42tb;
                 model._43cb = w8BENEData._43cb ?? false;
+                model.activeTabIndex = w8BENEData.ActiveTabIndex;
             }
             return model;
         }
@@ -2349,6 +2351,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
                 response._41cb = request._41cb;
                 response._42tb = request._42tb;
                 response._43cb = request._43cb;
+                response.ActiveTabIndex = request.activeTabIndex;
                 _evolvedtaxContext.TblW8ebeneforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 if (request.IsPartialSave)
