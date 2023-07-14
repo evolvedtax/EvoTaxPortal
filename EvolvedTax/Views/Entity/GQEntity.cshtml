@@ -578,8 +578,8 @@
 
                     //BindEntityForW8ECIGQForm();
                     //BindEntityForW8ECIForm();
-                    window.location.href = '@Url.Action("W8ECI", "Entity")';
-                         $('#hdn_FormType').val($(this).val());
+                    //window.location.href = '@Url.Action("W8ECI", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
                 }
                 else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
                     //window.location.href = '@Url.Action("W8IMY", "Entity")';
@@ -987,6 +987,10 @@
 
             if ($('#hdn_FormType').val() == '@AppConstants.W8BENEForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
                 window.location.href = '@Url.Action("W8BENE", "Entity")';
+            }
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8ECIForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8ECI", "Entity")';
             }
 
             // This function will figure out which tab to display

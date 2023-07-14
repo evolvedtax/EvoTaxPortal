@@ -239,7 +239,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 DealerCertification = true,
                 Status = "1",
                 W8eciemailAddress = request.EmailId,
-                W8ecionBehalfName = request.W8ECIOnBehalfName
+                W8ecionBehalfName = request.W8ECIOnBehalfName,
+                ActiveTabIndex = request.activeTabIndex
             };
             if (_evolvedtaxContext.TblW8eciforms.Any(p => p.W8eciemailAddress == request.EmailId))
             {
@@ -992,6 +993,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 gQuestionData.EmailId = w8ECIData?.W8eciemailAddress ?? ClientEmailId;
                 gQuestionData.Items = w8ECIData?.Items;
                 gQuestionData.DealerCertification = (bool)w8ECIData.DealerCertification;
+                gQuestionData.activeTabIndex = w8ECIData.ActiveTabIndex;
             }
             return gQuestionData;
         }
@@ -1208,7 +1210,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 response.Status = "1";
                 response.W8eciemailAddress = request.EmailId;
                 response.W8ecionBehalfName = request.W8ECIOnBehalfName;
-
+                response.ActiveTabIndex = request.activeTabIndex;
                 _evolvedtaxContext.TblW8eciforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 if (request.IsPartialSave)

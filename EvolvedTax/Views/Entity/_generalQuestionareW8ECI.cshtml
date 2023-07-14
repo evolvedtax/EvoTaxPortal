@@ -3,7 +3,7 @@
     var fgh = 45;
     var sd = Model;
 }
-<div class="tab">
+<div class="tab" data-tab-index="0" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "0") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center"><span><p>Identification of Beneficial Owner</p></span></div>
     <div class="form-box">
         <div class="row">
@@ -75,7 +75,7 @@
     </div>
 </div>
 
-<div class="tab">
+<div class="tab" data-tab-index="1" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "1") ? "style='display: block;'" : "style='display: none;'")>
     <div class="text-center">
         <span><p>Permanent residence address</p></span><br />
     </div>

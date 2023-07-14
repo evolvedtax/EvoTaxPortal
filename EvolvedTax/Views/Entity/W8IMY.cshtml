@@ -247,7 +247,7 @@
             $(".tab[data-tab-index='" + activeTabIndex + "']").css("display", "block");
            
 
-
+            HideDivs();
 
 
             $("select").select2({
@@ -742,7 +742,6 @@
             }
         }
         function showTab(n) {
-            debugger;
             var x = document.querySelectorAll('.tab:not([hidden])');
             x[n].style.display = 'block';
 
@@ -755,7 +754,7 @@
                 prevBtn.disabled = false;
             }
             if (n === x.length - 1) {
-                nextBtn.innerHTML = 'Preview and Sign Form W-8IMY  >>';
+                nextBtn.innerHTML = 'View and Edit Form W-8IMY >>';
             } else {
                 nextBtn.innerHTML = 'Next Page >>';
             }

@@ -60,4 +60,5 @@ public partial class TblW8eciform
     public string? W8eciemailAddress { get; set; }
 
     public bool? W8ecionBehalfName { get; set; }
+    public string? ActiveTabIndex { get; set; }
 }

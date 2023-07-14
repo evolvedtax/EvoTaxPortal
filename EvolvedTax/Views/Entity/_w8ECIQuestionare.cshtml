@@ -1,6 +1,6 @@
 ﻿@model FormRequest
 
-<div id="W8ECIQuestionareDiv" class="tab">
+<div id="W8ECIQuestionareDiv" class="tab" data-tab-index="2" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "2") ? "style='display: block;'" : "style='display: none;'")>
     <h4>W-8ECI (Certificate of Foreign Person's Claim That Income Is Effectively Connected with the Conduct of a Trade or Business in the United States)</h4>
     <div class="form-box">
         <div class="row">
