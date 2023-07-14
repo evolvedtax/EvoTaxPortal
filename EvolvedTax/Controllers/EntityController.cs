@@ -325,8 +325,9 @@ namespace EvolvedTax.Controllers
             var fullUrl = $"{scheme}://{host}";
             model.Host = fullUrl;
 
-
             model.US1 = "2";
+            model.FormType = AppConstants.W8FormTypes;
+            model.W8FormType = AppConstants.W8ECIForm;
             model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
 
