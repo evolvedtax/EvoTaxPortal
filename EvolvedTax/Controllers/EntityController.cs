@@ -32,7 +32,7 @@ namespace EvolvedTax.Controllers
         public EntityController(IWebHostEnvironment webHostEnvironment, EvolvedtaxContext evolvedtaxContext,
             IW9FormService w9FormService, ICommonService commonService, IInstituteService instituteService,
                             IGeneralQuestionareEntityService generalQuestionareEntityService,
-                            IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService, IW8IMYFormService W8IMYFormService, IW8BEN_E_FormService w8BENEFormService = null, IMapper mapper = null)
+                            IW8EXPFormService W8EXPFormService, IW8ECIFormService w8ECIFormService, IW8IMYFormService W8IMYFormService,IW8BEN_E_FormService w8BENEFormService, IMapper mapper)
         {
             _w9FormService = w9FormService;
             _evolvedtaxContext = evolvedtaxContext;
@@ -499,8 +499,9 @@ namespace EvolvedTax.Controllers
             var fullUrl = $"{scheme}://{host}";
             model.Host = fullUrl;
 
-
             model.US1 = "2";
+            model.FormType = AppConstants.W8FormTypes;
+            model.W8FormType = AppConstants.W8ECIForm;
             model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8ECITemplateFileName);
             HttpContext.Session.SetString("ClientName", model.PrintNameOfSignerW8ECI ?? string.Empty);
 

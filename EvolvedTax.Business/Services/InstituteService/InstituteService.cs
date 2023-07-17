@@ -106,6 +106,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                              ClientEmailId = ic.ClientEmailId,
                              InstituteUserName = ic.PartnerName1 + " " + ic.PartnerName2 ?? "",
                              InstituteName = ie.EntityName ?? "",
+                             EntityId = ie.EntityId
                          };
 
             return result.ToList();
@@ -543,11 +544,11 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
-        public async Task<bool> CheckIfClientRecordExist(string clientEmail)
+        public async Task<bool> CheckIfClientRecordExist(string clientEmail, string entityId)
         {
             var query = from client in _evolvedtaxContext.InstitutesClients
                         join entity in _evolvedtaxContext.InstituteEntities on client.EntityId equals entity.EntityId
-                        where client.ClientEmailId == clientEmail
+                        where client.ClientEmailId == clientEmail && client.EntityId.ToString() == entityId
                         select new { Client = client, Entity = entity };
 
             var result = await query.FirstOrDefaultAsync();
