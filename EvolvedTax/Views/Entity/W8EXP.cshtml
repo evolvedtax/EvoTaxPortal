@@ -76,22 +76,18 @@
               data-ajax-failure="COMMON.ajaxfailure"
               data-ajax-loading="#ajax-loader"
               data-ajax-success="ajaxsuccess"
-              data-ajax-url="@Url.Action("GQEntity","Entity")">
+              data-ajax-url="@Url.Action("W8EXP","Entity")">
 
             <!-- One "tab" for each step in the form: -->
             <div>
 
                 <!--General Questionare View-->
-                <partial name="_generalQuestionare" model="Model" />
+                <partial name="_generalQuestionareW8EXP" model="Model" />
 
-                <!--W8 BEN Questionare View-->
-                <partial name="_w8BenQuestionare" model="Model" />
-
-                <!--W8 ECI Questionare View-->
-                @*<partial name="_w8ECIQuestionare" model="Model" />*@
             </div>
             <!-- Hidden field for isPartialSave -->
             <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
+            <input type="hidden" id="activeTabIndex" name="activeTabIndex" value="" />
 
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
@@ -135,240 +131,15 @@
             let form = $('#regForm');
             if (form.valid()) {
                 $('#isPartialSave').val('true');
+                var activeTabIndex = $('.tab[style*="display: block"]').data('tab-index');
+                $('#activeTabIndex').val(activeTabIndex);
                 form.submit();
             }
 
         });
-        function BindEntityForW8EXPForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
 
 
-                        $.each(result.entitiesListW8, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-        function BindEntityForW8ECIGQForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8ECIGQForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8ECIGQ').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8ECIGQ').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
-
-
-                        $.each(result.entitiesList, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8ECIGQ').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8ECIGQ').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8ECIGQ').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-        function BindEntityForW8ECIForm() {
-            $.ajax({
-                url: '@Url.Action("BindEntityForW8ECIForm", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#EntityTypeW8ECI').empty();
-
-                        // Add "Please Select" option as the first option
-                        var pleaseSelectOption = $('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        });
-                        $('#EntityTypeW8ECI').append(pleaseSelectOption);
-
-                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
-
-
-                        $.each(result.entitiesList, function (index, entity) {
-                            var option = $('<option>', {
-                                value: entity.Value,
-                                text: entity.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (!selectedValue || entity.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-                            $('#EntityTypeW8ECI').append(option);
-                        });
-
-                        // Trigger the change event if selectedValue is empty
-                        if (!selectedValue) {
-                            $('#EntityTypeW8ECI').val('').trigger('change');
-                        } else {
-                            // Trigger the change event after a small delay
-                            setTimeout(function () {
-                                $('#EntityTypeW8ECI').trigger('change');
-                            }, 10);
-                        }
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-
-
-
-        function BindEW8EXPFATCA() {
-            $.ajax({
-                url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
-                type: 'POST',
-                success: function (result) {
-                    // Check if the action was successful
-                    if (result.success) {
-                        // Clear existing options from the dropdown
-                        $('#FatcaW8').empty();
-
-                        // Add "Please Select" option as the first option
-                        $('#FatcaW8').prepend($('<option>', {
-                            value: '',
-                            text: 'Please Select'
-                        }));
-
-                        // Retrieve the value from the hidden field
-                        var selectedValue = $('#W8EXPFatca').val();
-
-                        // Iterate over the updated entities and add new options to the dropdown
-                        $.each(result.W8EXPFATCAList, function (index, FATCA) {
-                            var option = $('<option>', {
-                                value: FATCA.Value,
-                                text: FATCA.Text
-                            });
-
-                            // Check if the current option value matches the selected value
-                            if (FATCA.Value === selectedValue) {
-                                option.prop('selected', true); // Set the selected attribute
-                            }
-
-                            $('#FatcaW8').append(option);
-                        });
-
-                        // Check if selectedValue is not set
-                        if (!selectedValue) {
-                            $('#FatcaW8').val(''); // Clear the selected value
-                        }
-
-                        // Trigger the change event after a small delay
-                        setTimeout(function () {
-                            $('#FatcaW8').trigger('change');
-                        }, 10);
-                    }
-                },
-                error: function () {
-                    console.log('Error occurred.');
-                }
-            });
-        }
-
-        function BindEntityForW9Form() {
-
-            //$.ajax({
-            //    url: '@Url.Action("BindEntityForW9Form", "Entity")',
-            //    type: 'POST',
-            //    success: function (result) {
-            //        // Check if the action was successful
-            //        if (result.success) {
-            //            // Clear existing options from the dropdown
-            //            $('#EntityTypeW9').empty();
-            //            debugger;
-
-            //            // Iterate over the updated entities and add new options to the dropdown
-            //            $.each(result.entitiesList, function (index, entity) {
-            //                debugger;
-            //                $('#EntityTypeW9').append($('<option>', {
-            //                    value: entity.Value,
-            //                    text: entity.Text
-            //                }));
-            //            });
-
-            //        }
-            //    },
-            //    error: function (jqXHR, textStatus, errorThrown) {
-            //        alert('Error: ' + textStatus);
-            //        console.log('AJAX Error:', errorThrown);
-            //    }
-            //});
-        }
+        
         function ChekboxValidationForDropdowns() {
             // Handle checkbox change event
             $('.chkbox-toggle').change(function () {
@@ -451,7 +222,17 @@
 
 
         $(document).ready(function () {
-            $('#SaveExitBtn').prop('hidden', true);
+
+            var activeTabIndex = @Html.Raw(Json.Serialize(Model != null ? Model.activeTabIndex : "0"));
+            // If activeTabIndex is not set, default to the first tab
+            if (!activeTabIndex) {
+                activeTabIndex = 0;
+            }
+
+            // Show the active tab and hide the others
+            $(".tab").css("display", "none");
+            $(".tab[data-tab-index='" + activeTabIndex + "']").css("display", "block");
+
             $("select").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select One",
@@ -531,87 +312,6 @@
             });
 
 
-            $('input[name="W8FormType"]').change(function () {
-                //re-fill the entity dropdown if the user select the W8EXPEntity radio button
-                $('#hdn_FormType').val('');
-
-                if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
-                    $('#hdn_FormType').val($(this).val());
-
-                    $('#hdn_FormType').val($(this).val());
-                    $('#W8EXPFatcaDiv').prop('hidden', false);
-                    $('#W8Entity').prop('hidden', false);
-                    $('#W8Country').prop('hidden', false);
-                    $('#AuthSignatoryNameDiv').prop('hidden', false);
-                    $('#SSNDiv').prop('hidden', false);
-                    $('#QFormDiv').prop('hidden', false);
-
-                    $('#W9Entity').prop('hidden', true);
-                    $('#W9Country').prop('hidden', true);
-                    $('#W8ECIQuestionareDiv').prop('hidden', true);
-                    $('#W8ECIEntityDiv').prop('hidden', true);
-                    $('#SSNDivW8ECI').prop('hidden', true);
-                    $('#DEW8ECIDiv').prop('hidden', true);
-
-                    BindEntityForW8EXPForm();
-                    BindEW8EXPFATCA();
-
-
-                } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
-
-                    //$('#W8ECIEntityDiv').prop('hidden', false);
-                    //$('#W8Country').prop('hidden', false);
-                    //$('#BackupWithHoldingMainDiv').prop('hidden', false);
-                    //$('#W8ECIQuestionareDiv').prop('hidden', false);
-                    //$('#SSNDivW8ECI').prop('hidden', false);
-                    //$('#DEW8ECIDiv').prop('hidden', false);
-                    //$('#AuthSignatoryNameDiv').prop('hidden', false);
-
-                    //$('#W8Entity').prop('hidden', true);
-                    //$('#W9Entity').prop('hidden', true);
-                    //$('#W9Country').prop('hidden', true);
-                    //$('#BackupWithHoldingMainDiv').prop('hidden', true);
-                    //$('.w8EXPDDLSelectedDivs').prop('hidden', true);
-                    //$('.SSNDiv').prop('hidden', true);
-                    //$('#QFormDiv').prop('hidden', true);
-
-                    //$('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
-                    //$('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
-
-                    //BindEntityForW8ECIGQForm();
-                    //BindEntityForW8ECIForm();
-                    //window.location.href = '@Url.Action("W8ECI", "Entity")';
-                    $('#hdn_FormType').val($(this).val());
-                }
-                else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
-                    //window.location.href = '@Url.Action("W8IMY", "Entity")';
-                    $('#hdn_FormType').val($(this).val());
-
-                }
-                else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
-                    //window.location.href = '@Url.Action("W8BENE", "Entity")';
-                    $('#hdn_FormType').val($(this).val());
-                }
-                else {
-                    // alert('here in w8 different');
-                    $('#W8EXPFatcaDiv').prop('hidden', true);
-                    $('#W9Entity').prop('hidden', false);
-                    $('#W9Country').prop('hidden', false);
-                    $('#AuthSignatoryNameDiv').prop('hidden', false);
-                    $('#SSNDiv').prop('hidden', false);
-
-                    $('#W8Country').prop('hidden', true);
-                    $('#W8ECIQuestionareDiv').prop('hidden', true);
-                    $('#W8ECIEntityDiv').prop('hidden', true);
-                    $('#SSNDivW8ECI').prop('hidden', true);
-                    $('#DEW8ECIDiv').prop('hidden', true);
-
-                    BindEntityForW9Form();
-                    HideDivOnDDLEntitySelection();
-                    HideDivOnDDLStatusFATCASelection();
-
-                }
-            });
 
             $('#EntityTypeW8').on('change', function () {
                 var selectedValue = $(this).val();
@@ -859,7 +559,8 @@
             }
         }
 
-        function SelectForm(obj) {
+      
+        /*function SelectForm(obj) {
             $('#SaveExitBtn').prop('hidden', false);
             if (obj.value == '@AppConstants.W8FormTypes') {
                 $('#WFormDiv').prop('hidden', false);
@@ -895,6 +596,8 @@
             }
             showTab(currentTab);
         }
+
+        */
         function ShowHideFTINW8ECI(obj) {
             if (String(obj.value).toLowerCase() == 'true') {
                 $('#FTINW8ECIDiv').prop('hidden', false);
@@ -920,6 +623,7 @@
                 $('#BackupWithHoldingDiv').prop('hidden', false);
             }
         }
+        /*
         function showTab(n) {
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
@@ -929,75 +633,143 @@
             if (n == 0) {
                 document.getElementById("prevBtn").style.display = "none";
 
-                $('#SaveExitBtn').prop('hidden', true);
+                //$('#SaveExitBtn').prop('hidden', true);
 
             }
             else {
                 document.getElementById("prevBtn").style.display = "inline";
-                $('#SaveExitBtn').prop('hidden', false);
+                //$('#SaveExitBtn').prop('hidden', false);
             }
             if (n == (x.length - 1)) {
-
-                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
-                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
-                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
-                        $('#firstNameW8Ben').val($('#firstName').val());
-                        $('#lastNameW8Ben').val($('#lastName').val());
-                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
-                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
-                    } else {
-                        $('#firstNameW8ECI').val($('#firstName').val());
-                        $('#lastNameW8ECI').val($('#lastName').val());
-                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
-                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
-                    }
-                }
-                else if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W9Form') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8ECIForm') {
-                    $('#nameOfOrganizationW8ECI').val($('#GQOrgName').val());
-                    $('#CountryW8ECI').val($('#CountryW8').val()).change();
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8ECI  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8IMYForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
-                }
-                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8EXPForm') {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8EXP  >>";
-                }
-                else {
-                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
-                }
+                document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8EXP >>";
+              
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next Page >>";
             }
             // ... and run a function that displays the correct step indicator:
             fixStepIndicator(n)
         }
+        */
+
+        function showTab(n) {
+            var x = document.querySelectorAll('.tab:not([hidden])');
+            var lastPageIndex = x.length - 1; // Index of the last page
+
+            x.forEach((tab, index) => {
+                if (index === n) {
+                    tab.style.display = 'block';
+                } else {
+                    tab.style.display = 'none';
+                }
+            });
+
+            var prevBtn = document.getElementById('prevBtn');
+            var nextBtn = document.getElementById('nextBtn');
+
+            if (n === 0) {
+                prevBtn.disabled = true;
+            } else {
+                prevBtn.disabled = false;
+            }
+
+                if (n === x.length - 1) {
+                    nextBtn.innerHTML = 'View and Edit Form W-8EXP >>';
+                } else {
+                    nextBtn.innerHTML = 'Next Page >>';
+                }
+            document.addEventListener('DOMContentLoaded', function () {
+                var dataTabIndex2 = document.querySelector('[data-tab-index="2"]');
+                var isDataTabIndex2Visible = dataTabIndex2 && window.getComputedStyle(dataTabIndex2).display === 'block';
+
+                if (isDataTabIndex2Visible) {
+                    nextBtn.innerHTML = 'View and Edit Form W-8EXP >>';
+                } else {
+                    nextBtn.innerHTML = 'Next Page >>';
+                }
+            });
+
+            fixStepIndicator(n);
+        }
+
+
+
+
+        //function showTab(n) {
+        //    debugger;
+        //    var x = document.querySelectorAll('.tab:not([hidden])');
+        //    x[n].style.display = 'block';
+
+        //    var prevBtn = document.getElementById('prevBtn');
+        //    var nextBtn = document.getElementById('nextBtn');
+
+        //    if (n === 0) {
+        //        prevBtn.disabled = true;
+        //    } else {
+        //        prevBtn.disabled = false;
+        //    }
+        //    if (n === x.length - 1) {
+        //        nextBtn.innerHTML = 'View and Edit Form W-8EXP >>';
+        //    } else {
+        //        nextBtn.innerHTML = 'Next Page >>';
+        //    }
+
+        //    fixStepIndicator(n);
+        //}
+
+
 
         function nextPrev(n) {
+            var x = document.querySelectorAll('.tab:not([hidden])');
+            var currentTab = 0; // Initialize currentTab to 0
 
-            if ($('#hdn_FormType').val() == '@AppConstants.W8EXPForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
-                window.location.href = '@Url.Action("W8EXP", "Entity")';
+            if ($('#SamePermAddress').is(':checked')) {
+                //--------------------//
+                $('#countryPerm').val($('#country').val()).change();
+                $('#adreess1Perm').val($('#adreess1').val());
+                $('#adreess2Perm').val($('#adreess2').val());
+                $('#cityPerm').val($('#city').val());
+                $('#provincePerm').val($('#province').val());
+                $('#zipCodePerm').val($('#zipCode').val());
+                $('#statePerm').val($('#state').val());
+                //--------------------//
             }
 
-            if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
-                window.location.href = '@Url.Action("W8IMY", "Entity")';
+            $('#contentContainer').empty();
+
+            if (n == 1 && !$('#regForm').valid()) return false;
+
+            currentTab = Array.from(x).findIndex((tab) => tab.style.display === 'block');
+            if (currentTab >= 0) {
+                x[currentTab].style.display = 'none';
+            }
+            currentTab += n;
+
+            if (currentTab >= x.length) {
+                let form = $('#regForm');
+                if (form.valid()) {
+                    $('#isPartialSave').val('false');
+                    form.submit();
+                }
+                return false;
             }
 
-            if ($('#hdn_FormType').val() == '@AppConstants.W8BENEForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
-                window.location.href = '@Url.Action("W8BENE", "Entity")';
-            }
+            x.forEach((tab) => {
+                tab.style.display = 'none';
+            });
+            x[currentTab].style.display = 'block';
 
-            if ($('#hdn_FormType').val() == '@AppConstants.W8ECIForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
-                window.location.href = '@Url.Action("W8ECI", "Entity")';
+            // Enable "Previous" button
+            if (currentTab > 0) {
+                $('#prevBtn').prop('disabled', false);
+            } else {
+                $('#prevBtn').prop('disabled', true);
             }
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+        }
+
+        /*
+        function nextPrev(n) {
 
             // This function will figure out which tab to display
             // var x = document.getElementsByClassName("tab");
@@ -1040,6 +812,8 @@
             // Otherwise, display the correct tab:
             showTab(currentTab);
         }
+
+        */
 
         function validateForm() {
             // This function deals with validation of the form fields

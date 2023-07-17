@@ -269,6 +269,180 @@ namespace EvolvedTax.Controllers
             return Json(filePathResponse);
         }
 
+
+        #region W8EXP
+        public async Task<IActionResult> W8EXP()
+        {
+            string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
+            {
+                return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
+            }
+            var GQEntitiesResponse = _generalQuestionareEntityService.GetDataByClientEmail(clientEmail);
+
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.CountriesListW8 = items.Where(item => item.Favorite != "5")
+                                 .OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                 .ThenBy(item => item.Country)
+                                 .Select(p => new SelectListItem
+                                 {
+                                     Text = p.Country,
+                                     Value = p.Country,
+                                 });
+            var entitiesListW8 = _evolvedtaxContext.W8expentities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
+            ViewBag.entitiesListW8 = entitiesListW8;
+
+            var W8EXPFATCAList = _evolvedtaxContext.W8expfatcas.Select(p => new SelectListItem
+            {
+                Text = p.Fatca,
+                Value = p.FatcaId.ToString()
+            });
+
+            ViewBag.W8EXPFATCAList = W8EXPFATCAList;
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
+
+
+            var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            if (!string.IsNullOrEmpty(formName))
+            {
+                if (!string.IsNullOrEmpty(clientEmail))
+                {
+                    if (formName == AppConstants.W8EXPForm)
+                    {
+
+                        GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+                        GQEntitiesResponse.activeTabIndex = "0";
+                    }
+
+                    return View(GQEntitiesResponse);
+                }
+            }
+            else
+            {
+                GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+            }
+
+       
+
+
+            /*
+                var formName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            if (!string.IsNullOrEmpty(formName))
+            {
+                if (!string.IsNullOrEmpty(clientEmail))
+                {
+                    if (formName == AppConstants.W9Form)
+                    {
+                        GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else if (formName == AppConstants.W8ECIForm)
+                    {
+                        GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else if (formName == AppConstants.W8EXPForm)
+                    {
+                        GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else if (formName == AppConstants.W8IMYForm)
+                    {
+                        GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
+                        //GQEntitiesResponse.FormType = formName;
+                    }
+                    else
+                    {
+
+                    }
+                    
+                    return View(GQEntitiesResponse);
+                }
+            }
+            */
+            return View(GQEntitiesResponse);
+        }
+        [HttpPost]
+        public IActionResult W8EXP(FormRequest model)
+        {
+            string FormName = string.Empty;
+            string filePathResponse = string.Empty;
+            model.IndividualOrEntityStatus = AppConstants.EntityStatus;
+            model.EmailId = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            model.UserName = model.EmailId;//HttpContext.Session.GetString("UserName") ?? string.Empty;
+            model.BasePath = _webHostEnvironment.WebRootPath;
+
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            model.Host = fullUrl;
+
+           // FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
+            model.FormType = AppConstants.W8FormTypes.ToString();
+            model.W8FormType = AppConstants.W8EXPForm.ToString();
+            FormName = model.W8FormType;
+            #region W8EXPForm save logic
+
+            bool isPartialSave = model.IsPartialSave;
+                FormName = model.W8FormType;
+
+                if (isPartialSave)
+                {
+
+                    var responsePartialForm = _w8EXPFormService.SavePartial(model);
+                    var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
+                    if (responseGQPartialForm == 0 || responsePartialForm == 0)
+                    {
+                        return View(model);
+                    }
+                    // Return a response indicating successful partial save
+                    return Json(new { success = true, message = AppConstants.FormPartiallySave });
+                }
+        
+            model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
+
+                var responsew8EXPForm = _w8EXPFormService.Save(model);
+                var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
+                filePathResponse = responsew8EXPForm;
+
+            
+            #endregion
+            var responseGQForm = _generalQuestionareEntityService.Save(model);
+            if (responseGQForm == 0)
+            {
+                return View(model);
+            }
+            if (filePathResponse == AppConstants.FormPartiallySave)
+            {
+                return Json(new { success = true, message = AppConstants.FormPartiallySave });
+            }
+          
+            HttpContext.Session.SetString("PdfdFileName", filePathResponse);
+            HttpContext.Session.SetString("BaseURL", _webHostEnvironment.WebRootPath);
+            HttpContext.Session.SetString("FormName", FormName);
+            HttpContext.Session.SetString("EntityStatus", AppConstants.EntityStatus);
+            return Json(filePathResponse);
+        }
+
+        #endregion
+
         #region W8ECI
         public async Task<IActionResult> W8ECI()
         {
@@ -540,7 +714,7 @@ namespace EvolvedTax.Controllers
             if (isPartialSave)
             {
                 // string activeTabIndex = model.activeTabIndex;
-                string activeTabIndex = HttpContext.Request.Form["activeTabIndex"];
+                //string activeTabIndex = HttpContext.Request.Form["activeTabIndex"];
                 var responsePartialForm = _W8IMYFormService.SavePartial(model);
                 var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
                 if (responseGQPartialForm == 0 || responsePartialForm == 0)
@@ -554,11 +728,6 @@ namespace EvolvedTax.Controllers
 
 
             FormName = model.W8FormType;
-
-            //if (string.IsNullOrWhiteSpace(_webHostEnvironment.WebRootPath))
-            //{
-            //    _webHostEnvironment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-            //}
             model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8IMYTemplateFileName);
 
             var responsew8EXPForm = _W8IMYFormService.Save(model);

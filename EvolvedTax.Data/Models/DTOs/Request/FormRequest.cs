@@ -17,6 +17,7 @@ public class FormRequest
     public string US1 { get; set; } = string.Empty;
     public string IndividualOrEntityStatus { get; set; } = string.Empty;
     //-----------ENTITY STATUS---------//
+
     public string GQOrgName { get; set; } = string.Empty;
     public string EntityType { get; set; } = string.Empty;
     public string Ccountry { get; set; } = string.Empty;
