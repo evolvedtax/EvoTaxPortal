@@ -73,6 +73,33 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             int numberOfPages = pdfReader.NumberOfPages;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
+            string s1 = string.Empty;
+            string s2 = string.Empty;
+            string s3 = string.Empty;
+
+            if (request._15cTb4?.Length >= 256)
+            {
+                s1 = request._15cTb4.Substring(0, 24);
+                s2 = request._15cTb4.Substring(24, 116);
+                s3 = request._15cTb4.Substring(24 + 116, 116);
+            }
+            else if (request._15cTb4?.Length >= 24)
+            {
+                s1 = request._15cTb4.Substring(0, 24);
+                if (request._15cTb4?.Length >= 140)
+                {
+                    s2 = request._15cTb4.Substring(24, 116);
+                    s3 = request._15cTb4.Substring(24 + 116, 116);
+                }
+                else
+                {
+                    s2 = request._15cTb4 != null ? request._15cTb4.Substring(24) : "";
+                }
+            }
+            else
+            {
+                s1 = request._15cTb4 != null ? request._15cTb4 : "";
+            }
             // set form pdfFormFields  
             // The first worksheet and W8-BEN-E form
 
@@ -1729,9 +1756,9 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_11[0]", request._15cTb1);
             pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_12[0]", request._15cTb2);
             pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_13[0]", request._15cTb3);
-            pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_14[0]", request._15cTb4);
-            //pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_15[0]", Items1stLine);
-            //pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_16[0]", Items2ndLine);
+            pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_14[0]", s1);
+            pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_15[0]", s2);
+            pdfFormFields.SetField("topmostSubform[0].Page2[0].f2_16[0]", s3);
             #endregion
             #region Part_4
 
@@ -2235,7 +2262,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
                 model._41cb = w8BENEData._41cb ?? false;
                 model._42tb = w8BENEData._42tb;
                 model._43cb = w8BENEData._43cb ?? false;
-                model.activeTabIndex = w8BENEData.ActiveTabIndex;
+                model.activeTabIndex = w8BENEData.ActiveTabIndex ?? "";
             }
             return model;
         }
