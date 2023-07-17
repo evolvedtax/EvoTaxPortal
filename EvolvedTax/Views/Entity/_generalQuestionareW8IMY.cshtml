@@ -250,8 +250,9 @@
             </div>
             <div class="col-md-6" id="div_DE4">
                 <div class="form-group">
-                    <label>Address of disregarded entity or branch <span class="text-danger">*</span></label>
-                    <input id="_12Mailing_address" asp-for="_12Mailing_address" type="text" class="form-control" required>
+                    <label>Address of disregarded entity or branch <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
+                    <input asp-for="_12Mailing_address" type="text" class="form-control" required>
+                    <span asp-validation-for="_12Mailing_address" class="text-danger"></span>
                 </div>
             </div>
 

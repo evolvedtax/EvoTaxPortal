@@ -10,9 +10,12 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         #region Signup Form Fields
 
         public int SUInstID { get; set; }
+        [StringLength(40)]
         public string SUFirstName { get; set; } = string.Empty;
+        [StringLength(40)]
         public string SULastName { get; set; } = string.Empty;
         public string SUCountry { get; set; } = string.Empty;
+        [StringLength(40)]
         public string SUInstitutionName { get; set; } = string.Empty;
         public DateTime SURegistrationDate { get; set; }
         public DateTime? SURegistrationExpiryDate { get; set; }
@@ -34,10 +37,13 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [Display(Name = "confirm password")]
         public string SUConfirmPassword { get; set; }
         public string SUPasswordSecuredQ1 { get; set; } = string.Empty;
+        [StringLength(100)]
         public string SUPasswordSecuredA1 { get; set; } = string.Empty;
         public string SUPasswordSecuredQ2 { get; set; } = string.Empty;
+        [StringLength(100)]
         public string SUPasswordSecuredA2 { get; set; } = string.Empty;
         public string SUPasswordSecuredQ3 { get; set; } = string.Empty;
+        [StringLength(100)]
         public string SUPasswordSecuredA3 { get; set; } = string.Empty;
         public string SUTypeofEntity { get; set; } = string.Empty;
         public string SUIDType { get; set; } = string.Empty;
@@ -46,25 +52,38 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SUMCountry { get; set; } = string.Empty;
         [Remote("ValidateAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
         [Display(Name = "Address Line 1")]
+        [StringLength(35)]
         public string SUMMAdd1 { get; set; } = string.Empty;
+        [StringLength(35)]
         public string? SUMMAdd2 { get; set; }
+        [StringLength(22)]
         public string SUMCity { get; set; } = string.Empty;
+        [StringLength(50)]
         public string SUMProvince { get; set; } = string.Empty;
         public string? SUMState { get; set; }
 
+        [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+        [StringLength(9)]
         public string SUMZip { get; set; } = string.Empty;
 
         public string SUPCountry { get; set; } = string.Empty;
         [Remote("ValidatePAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
         [Display(Name = "Address Line 1")]
+        [StringLength(35)]
         public string SUMPAdd1 { get; set; } = string.Empty;
+        [StringLength(35)]
         public string? SUPPAdd2 { get; set; }
+        [StringLength(22)]
         public string SUPCity { get; set; } = string.Empty;
+        [StringLength(50)]
         public string? SUPProvince { get; set; } = string.Empty;
         public string? SUPState { get; set; }
+        [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+        [StringLength(9)]
         public string SUPZip { get; set; } = string.Empty;
 
         public string? SUFTIN { get; set; } = string.Empty;
+        [StringLength(9)]
         public string? SUGIN { get; set; } = string.Empty;
         public string? SUCountryOfIncorporation { get; set; } = string.Empty;
 

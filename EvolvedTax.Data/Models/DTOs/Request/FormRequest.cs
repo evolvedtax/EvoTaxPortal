@@ -17,7 +17,7 @@ public class FormRequest
     public string US1 { get; set; } = string.Empty;
     public string IndividualOrEntityStatus { get; set; } = string.Empty;
     //-----------ENTITY STATUS---------//
-
+    [StringLength(40)]
     public string GQOrgName { get; set; } = string.Empty;
     public string EntityType { get; set; } = string.Empty;
     public string Ccountry { get; set; } = string.Empty;
@@ -26,7 +26,7 @@ public class FormRequest
     public string W9Fatca { get; set; } = string.Empty;
 
     public bool? DE { get; set; } = false;
-
+    [StringLength(121)]
     public string? DEOwnerName { get; set; } = string.Empty;
     public bool DEW8ECI { get; set; } = false;
 
@@ -58,8 +58,11 @@ public class FormRequest
     public bool _13d { get; set; } = false;
     public bool _14 { get; set; } = false;
     public bool _15 { get; set; } = false;
+    [StringLength(104)]
     public string? _15_Text1 { get; set; } = string.Empty;
+    [StringLength(36)]
     public string? _15_Text2 { get; set; } = string.Empty;
+    [StringLength(9)]
     public string? _15_Text3 { get; set; } = string.Empty;
     public bool _16 { get; set; } = false;
     public bool _17 { get; set; } = false;
@@ -69,11 +72,14 @@ public class FormRequest
     public bool _20b { get; set; } = false;
     public bool _20c { get; set; } = false;
     public bool _21 { get; set; } = false;
+    [StringLength(51)]
     public string? _21_Text { get; set; } = string.Empty;
     public int W8ExpId { get; set; } = 0;
     public string W8EXPFatca { get; set; } = string.Empty;
+    [StringLength(9)]
     public string? GIN { get; set; } = string.Empty;
     public string? ForeigntaxIdentifyingNumber { get; set; } = string.Empty;
+    [StringLength(121)]
     public string? Referencenumber { get; set; } = string.Empty;
 
 
@@ -92,26 +98,38 @@ public class FormRequest
     public string MCountry { get; set; } = string.Empty;
     [Remote("ValidateAddress", "Entity", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 1")]
+    [StringLength(35)]
     public string MAddress1 { get; set; } = string.Empty;
     //[Remote("ValidateAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 2")]
+    [StringLength(35)]
     public string? MAddress2 { get; set; }
+    [StringLength(22)]
     public string MCity { get; set; } = string.Empty;
     public string? MState { get; set; }
+    [StringLength(50)]
     public string? MProvince { get; set; }
+    [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+    [StringLength(9)]
     public string MZipCode { get; set; } = string.Empty;
 
     public string PCountry { get; set; } = string.Empty;
 
     [Remote("ValidatePAddress", "Entity", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 1")]
+    [StringLength(35)]
     public string PAddress1 { get; set; } = string.Empty;
     //[Remote("ValidateAddress", "Entity", ErrorMessage = " Do not use a P.O. box or in-care-of address")]
     [Display(Name = "Address Line 2")]
+    [StringLength(35)]
     public string? PAddress2 { get; set; }
+    [StringLength(22)]
     public string PCity { get; set; } = string.Empty;
     public string? PState { get; set; }
+    [StringLength(50)]
     public string? PProvince { get; set; }
+    [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+    [StringLength(9)]
     public string PZipCode { get; set; } = string.Empty;
     public string EmailId { get; set; } = string.Empty;
 
@@ -224,11 +242,17 @@ public class FormRequest
     public string US_TIN { get; set; } = string.Empty;
 
     public string? _11FATCA_CB { get; set; } = string.Empty;
+    [StringLength(22)]
     public string? _12_City { get; set; } = string.Empty;
     public string? _12_Country { get; set; } = string.Empty;
+    [Remote("Validate_Mailing_address", "Entity", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
+    [Display(Name = "Address of disregarded entity or branch ")]
+    [StringLength(35)]
     public string? _12Mailing_address { get; set; } = string.Empty;
     public string? _12_State { get; set; } = string.Empty;
+    [StringLength(50)]
     public string? _12_Province { get; set; } = string.Empty;
+    [StringLength(9)]
     public string? _13GIN { get; set; } = string.Empty;
 
     public bool _14_CB { get; set; } = false;
@@ -269,6 +293,7 @@ public class FormRequest
     public bool _21e { get; set; } = false;
     public bool _21f { get; set; } = false;
     public bool _22 { get; set; } = false;
+    [StringLength(78)]
     public string _23a_text { get; set; } = string.Empty;
     public bool _23b { get; set; } = false;
     public bool _23c { get; set; } = false;
@@ -277,7 +302,7 @@ public class FormRequest
     public bool _24c { get; set; } = false;
     public bool _25 { get; set; } = false;
     public bool _26 { get; set; } = false;
-  
+    [StringLength(85)]
     public string _27a_text { get; set; } = string.Empty;
     public bool _27b { get; set; } = false;
     public bool _28 { get; set; } = false;
@@ -286,9 +311,12 @@ public class FormRequest
     public bool _30b { get; set; } = false;
     public bool _30c { get; set; } = false;
     public bool _31 { get; set; } = false;
+    [StringLength(51)]
     public string _32_Text1 { get; set; } = string.Empty;
     public bool _32_CB1 { get; set; } = false;
+    [StringLength(46)]
     public string _32_Text2 { get; set; } = string.Empty;
+    [StringLength(29)]
     public string _32_Text3 { get; set; } = string.Empty;
     public string _32_CB2 { get; set; } = string.Empty;
     public string _32_CB3 { get; set; } = string.Empty;
@@ -301,17 +329,22 @@ public class FormRequest
     public bool _33f { get; set; } = false;
     public bool _34 { get; set; } = false;
     public bool _35 { get; set; } = false;
+    [StringLength(40)]
     public DateTime? _35_Text { get; set; }
     public bool _36 { get; set; } = false;
     public DateTime? _36_Text { get; set; }
     public bool _37a { get; set; } = false;
+    [StringLength(22)]
     public string _37a_Text { get; set; } = string.Empty;
     public bool _37b { get; set; } = false;
+    [StringLength(24)]
     public string _37b_Text1 { get; set; } = string.Empty;
+    [StringLength(45)]
     public string _37b_Text2 { get; set; } = string.Empty;
     public bool _38 { get; set; } = false;
     public bool _39 { get; set; } = false;
     public bool _40 { get; set; } = false;
+    [StringLength(88)]
     public string _41_Text { get; set; } = string.Empty;
     public bool _42 { get; set; } = false;
     public bool IsPartialSave { get; set; } = false;

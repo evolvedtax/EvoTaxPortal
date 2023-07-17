@@ -777,6 +777,18 @@ namespace EvolvedTax.Controllers
 
             return Json(false); // Address is not valid
         }
+        [HttpGet]
+        public IActionResult Validate_Mailing_address(string _12Mailing_address)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(_12Mailing_address);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
         private bool CheckAddressAgainstForbiddenTerms(string address)
         {
             List<string> forbiddenTerms = _evolvedtaxContext.MasterPoboxWildcards.Select(w => w.WildCard.ToLower()).ToList();
