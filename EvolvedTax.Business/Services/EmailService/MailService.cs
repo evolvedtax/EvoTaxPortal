@@ -62,6 +62,7 @@ namespace EvolvedTax.Business.MailService
             // Email = "mr.owaisalibaig@gmail.com";
             content = AppConstants.EmailToInstitute
                 .Replace("{{Name}}", UserFullName)
+                .Replace("{{email}}", Email)
                 .Replace("{{link}}", string.Concat(URL,EncryptionHelper.Encrypt(Email)));
             // .Replace("{{link}}", string.Concat(URL, "?clientEmail=", email.ClientEmailId));
 
