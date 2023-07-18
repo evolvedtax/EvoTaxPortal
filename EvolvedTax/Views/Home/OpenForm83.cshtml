@@ -1,12 +1,55 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "OpenForm83";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
 
-<object data="~/@ViewBag.FileName"
+@*<object data="~/@ViewBag.FileName"
         type="application/pdf"
         width="100%"
         height="800px">
-</object>
+</object>*@
+<div id="contentContainer"></div>
 
+<div id="formDiv" class="ibox">
+    <div class="ibox-content" style="border: none;">
+        <form asp-action="OpenForm83" asp-controller="Home" method="post">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Number of shares</label>
+                        <input type="number" name="NumberOfShare" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Per share rate</label>
+                        <input type="number" name="PerShareRate" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            if ('@ViewBag.FileName' != '') {
+                document.getElementById("formDiv").style.display = "none";
+                // Create the object element
+                var $pdfObject = $('<object>').attr({
+                    data: '@ViewBag.FileName',
+                    type: 'application/pdf',
+                    width: '100%',
+                    height: '800px'
+                });
+                $('#contentContainer').empty();
+                // Append the object element to the container
+                $('#contentContainer').append($pdfObject);
+            }
+        });
+    </script>
+}

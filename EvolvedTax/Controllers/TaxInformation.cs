@@ -114,8 +114,8 @@ namespace EvolvedTax.Controllers
 
                 var fullUrl = $"{scheme}://{host}";
                 //string URL = Path.Combine(fullUrl, "Account", "login");
-                //string URL = string.Concat(fullUrl, "/Account", "/login");
-                string URL = Path.Combine(fullUrl, "Account", "Verify?s=");
+                string URL = string.Concat(fullUrl, "/Account", "/Verify?s=");
+                //string URL = Path.Combine(fullUrl, "Account", "Verify?s=");
 
                 await _emailService.SendEmailToInstituteAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
 
