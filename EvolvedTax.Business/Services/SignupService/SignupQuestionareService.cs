@@ -28,8 +28,8 @@ namespace EvolvedTax.Business.Services.SignupService
                 FirstName = request.SUFirstName,
                 LastName = request.SULastName,
                 InstitutionName = request.SUInstitutionName,
-                RegistrationDate = request.SURegistrationDate,
-                RegistrationExpiryDate = request.SURegistrationExpiryDate,
+                //RegistrationDate = request.SURegistrationDate,
+                //RegistrationExpiryDate = request.SURegistrationExpiryDate,
 
                 EmailAddress = request.SUEmailAddress,
                 SupportEmail=request.SupportEmailAddress,
@@ -65,7 +65,8 @@ namespace EvolvedTax.Business.Services.SignupService
                 Gin = request.SUGIN,
                 CountryOfIncorporation = request.SUCountryOfIncorporation,
                 Status = "1",
-                StatusDate = DateTime.Now
+                StatusDate = DateTime.Now,
+                Phone=request.Phone
 
 
 

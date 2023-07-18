@@ -22,8 +22,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
 
 
 
-        [Remote("ValidateEmailDomainAddress", "TaxInformation", "Email address is not allow")]
-        [Display(Name = "official email")]
+        [Remote("ValidateEmailDomainAddress", "TaxInformation", "Email address is not allowed")]
+        [Display(Name = "Official Email")]
         public string SUEmailAddress { get; set; } = string.Empty;
 
         public string SupportEmailAddress { get; set; } = string.Empty;
@@ -50,7 +50,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SUIDNumber { get; set; } = string.Empty;
 
         public string SUMCountry { get; set; } = string.Empty;
-        [Remote("ValidateAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
+        //[Remote("ValidateAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
         [Display(Name = "Address Line 1")]
         [StringLength(35)]
         public string SUMMAdd1 { get; set; } = string.Empty;
@@ -67,8 +67,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SUMZip { get; set; } = string.Empty;
 
         public string SUPCountry { get; set; } = string.Empty;
-        [Remote("ValidatePAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
-        [Display(Name = "Address Line 1")]
+        //[Remote("ValidatePAddress", "TaxInformation", ErrorMessage = "Do not use a P.O. box or in-care-of address")]
+        //[Display(Name = "Address Line 1")]
         [StringLength(35)]
         public string SUMPAdd1 { get; set; } = string.Empty;
         [StringLength(35)]
@@ -86,8 +86,8 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [StringLength(9)]
         public string? SUGIN { get; set; } = string.Empty;
         public string? SUCountryOfIncorporation { get; set; } = string.Empty;
-
-
+        [StringLength(15)]
+        public string? Phone { get; set; } = string.Empty;
 
         #endregion
     }

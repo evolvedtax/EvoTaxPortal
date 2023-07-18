@@ -10,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 
@@ -113,7 +114,8 @@ namespace EvolvedTax.Controllers
 
                 var fullUrl = $"{scheme}://{host}";
                 //string URL = Path.Combine(fullUrl, "Account", "login");
-                string URL = string.Concat(fullUrl, "/Account", "/login");
+                //string URL = string.Concat(fullUrl, "/Account", "/login");
+                string URL = Path.Combine(fullUrl, "Account", "Verify?s=");
 
                 await _emailService.SendEmailToInstituteAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
 
@@ -199,9 +201,18 @@ namespace EvolvedTax.Controllers
                 var emails = _evolvedtaxContext.EmailDomains.Where(e => e.EmailDomain1.ToLower().Contains(domainEmail.ToLower())).ToList();
                 if (emails.Any())
                 {
-                    return Json(false);
+                   // return Json(false);
+                    string errorMessage = "<span style='color:red;'>Email address is not allowed</span>";
+                    return Json(errorMessage);
                 }
-                // IPHostEntry entry = Dns.GetHostEntry(domain);
+                bool emailExists = _evolvedtaxContext.InstituteMasters.Any(i => i.EmailAddress == SUEmailAddress);
+
+                if (emailExists)
+                {
+                    string errorMessage = "<span style='color:red;'>Email already exists</span>";
+                    return Json(errorMessage);
+                   
+                }
                 return Json(true);
             }
             catch (Exception ex)

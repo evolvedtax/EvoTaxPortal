@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 
@@ -21,7 +20,7 @@
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
         <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
         <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
-  
+
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -37,15 +36,20 @@
 
 
 </head>
+
 <style>
     /* Mark input boxes that gets an error on validation: */
-    input.invalid {
-        background-color: #ffdddd;
-    }
+    /*    input.invalid {
+                background-color: #ffdddd;
+            }*/
 
     /* Hide all steps by default: */
     .tab {
         display: none;
+    }
+
+    .bordertext {
+        border-radius: 5px;
     }
 
     /* Make circles that indicate the steps of the form: */
@@ -65,32 +69,15 @@
             opacity: 1;
         }
 
-        /* Mark the steps that are finished and valid: */
-        .step.finish {
-            background-color: #04AA6D;
-        }
+    /* Mark the steps that are finished and valid: */
+    /*    .step.finish {
+                    background-color: #04AA6D;
+                }*/
 
     p {
         font-size: large;
         color: white;
     }
-
-    .text-center {
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-        .text-center span {
-            display: inline-block;
-            border-radius: 5px;
-            background-color: #1AB394;
-            /*width: 20%;*/
-        }
-
-            .text-center span p {
-                text-align: center;
-                margin: 10px;
-            }
 
     .form-box {
         border: 1px solid #ccc;
@@ -98,11 +85,13 @@
         border-radius: 4px;
         margin: 20px;
     }
+
 </style>
-<body style="background-color: white">
+
+<body class="gray-bg">
     <partial name="_busyIndicator" />
-    <div class="ibox" style="margin-bottom:15%">
-        <div class="ibox-content" style="border: none;">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
             <div id="contentContainer"></div>
             <form id="regForm"
                   method="post"
@@ -126,7 +115,7 @@
                     <span class="step"></span>
                     <span class="step"></span>
                     <span class="step"></span>
-                    <span class="step"></span>
+
                 </div>
 
             </form>
@@ -134,16 +123,14 @@
     </div>
 
 
-    <div class="footer fixed" style="height:25%">
-        <div style="overflow:auto;">
-            <div style="float:right;">
-                <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
-                <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
-            </div>
-        </div>
+    <div style="margin-top:2%; left: 0; right: 0; bottom: 10px; text-align: center;">
+        <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
+        <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
     </div>
+
     <environment names="Development">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
         <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
@@ -156,9 +143,11 @@
         <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
         <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
 
+
     </environment>
     <environment names="Staging,Production">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
         <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
@@ -174,16 +163,29 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+
+            $('input[type="text"], input[type="email"], input[type="password"]').each(function () {
+                var placeholderText = $(this).attr('placeholder');
+                $(this).hover(function () {
+                    $(this).attr('title', placeholderText);
+                }, function () {
+                    $(this).removeAttr('title');
+                });
+            });
+
+
+            $('.ddl').css('width', '100%');
+            $('.select2-container').css('width', '100%');
             $("select").select2({
                 theme: 'bootstrap4',
                 placeholder: "Select One",
                 //allowClear: true
             });
             // Get the current date
-            var currentDate = new Date().toISOString().split('T')[0];
+            //var currentDate = new Date().toISOString().split('T')[0];
             // Set the max attribute of the date input
-            $('#dateOfBirthW8Ben').attr('max', currentDate);
-            $('#dateOfBirthW8ECI').attr('max', currentDate);
+            //$('#dateOfBirthW8Ben').attr('max', currentDate);
+            //$('#dateOfBirthW8ECI').attr('max', currentDate);
         });
 
 
@@ -218,6 +220,13 @@
 
         }
         function ShowHideProvince(obj) {
+
+            if (obj.value !== null && obj.value.trim() !== '') {
+                $('#AddressFields').prop('hidden', false);
+            }
+            else {
+                $('#AddressFields').prop('hidden', true);
+            }
             if (obj.value == 'United States') {
                 $('#provinceDiv').prop('hidden', true);
                 $('#province').val('');
@@ -270,7 +279,7 @@
         var currentTab = 0; // Current tab is set to be the first tab (0)
         showTab(currentTab); // Display the current tab
 
-  
+
         function ChangeMasking(obj) {
             if (obj.value == 'S') {
                 $('#SUIDNumber').attr('placeholder', '000-00-0000');
@@ -283,9 +292,10 @@
                 $('#SUIDNumber').mask('000-00-0000', { reverse: true });
             }
         }
-     
+
 
         function showTab(n) {
+
             // This function will display the specified tab of the form ...
             var x = document.querySelectorAll('.tab:not([hidden])');
 
@@ -297,24 +307,8 @@
                 document.getElementById("prevBtn").style.display = "inline";
             }
             if (n == (x.length - 1)) {
-                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
-                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
-                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
-                        $('#firstNameW8Ben').val($('#firstName').val());
-                        $('#lastNameW8Ben').val($('#lastName').val());
-                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
-                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
-                    } else {
-                        $('#firstNameW8ECI').val($('#firstName').val());
-                        $('#lastNameW8ECI').val($('#lastName').val());
-                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
-                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
-                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
-                    }
-                } else {
-                    document.getElementById("nextBtn").innerHTML = "Create Account";
-                }
+                document.getElementById("nextBtn").innerHTML = "Create Account";
+
             } else {
                 document.getElementById("nextBtn").innerHTML = "Next Page >>";
             }
@@ -328,18 +322,18 @@
             // var x = document.getElementsByClassName("tab");
             var x = document.querySelectorAll('.tab:not([hidden])');
 
-            if ($('#SamePermAddress').is(':checked')) {
-                //--------------------//
-                $('#countryPerm').val($('#country').val()).change();
-                $('#adreess1Perm').val($('#adreess1').val());
-                $('#adreess2Perm').val($('#adreess2').val());
-                $('#cityPerm').val($('#city').val());
+            //if ($('#SamePermAddress').is(':checked')) {
+            //    //--------------------//
+            //    $('#countryPerm').val($('#country').val()).change();
+            //    $('#adreess1Perm').val($('#adreess1').val());
+            //    $('#adreess2Perm').val($('#adreess2').val());
+            //    $('#cityPerm').val($('#city').val());
 
-                $('#zipCodePerm').val($('#zipCode').val());
-                $('#statePerm').val($('#state').val());
-                $('#provincePerm').val($('#province').val());
-                //--------------------//
-            }
+            //    $('#zipCodePerm').val($('#zipCode').val());
+            //    $('#statePerm').val($('#state').val());
+            //    $('#provincePerm').val($('#province').val());
+            //    //--------------------//
+            //}
             $('#contentContainer').empty();
             // Exit the function if any field in the current tab is invalid:
             //if (n == 1 && !validateForm()) return false;

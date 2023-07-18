@@ -3,220 +3,113 @@
 
 
 <div class="tab">
-    <div class="text-center"><span><p>Institution Information</p></span></div>
-    <div class="form-box">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>First Name <span class="text-danger">*</span></label>
-                    <input id="firstName" asp-for="SUFirstName" type="text" class="form-control" required>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Last Name <span class="text-danger">*</span></label>
-                    <input id="lastName" asp-for="SULastName" type="text" class="form-control" required>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Institution Name <span class="text-danger">*</span></label>
-                    <input id="InstitutionName" asp-for="SUInstitutionName" type="text" class="form-control" required>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Registration Date <span class="text-danger">*</span></label>
-                    <input id="SURegistrationDate" type="date" asp-for="SURegistrationDate" class="form-control" required>
-                    
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Registration Expiry Date</label>
-                    <input id="SURegistrationExpiryDate" type="date" asp-for="SURegistrationExpiryDate" class="form-control">
-
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Official Email <span class="text-danger">*</span></label>
-                    <input id="EmailAddress" asp-for="SUEmailAddress" type="email" class="form-control" required>
-                    <span asp-validation-for="SUEmailAddress"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Password<span class="text-danger">*</span></label>
-                    <input id="Password" asp-for="SUPassword" type="password" class="form-control" required>
-                    <span asp-validation-for="SUPassword" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Confirm Password<span class="text-danger">*</span></label>
-                    <input id="ConfirmPassword" asp-for="SUConfirmPassword" type="password" class="form-control" required>
-                    <span asp-validation-for="SUConfirmPassword" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>Support Email <span class="text-danger">*</span></label>
-                    <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control" required>
-                  
-                </div>
-            </div>
-
-        </div>
+    <div style="margin-bottom:5%">
+        <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
+        <h3>Welcome to EvoTax Portal</h3>
     </div>
+    <div class="form-group">
+      @*  <label><span class="text-danger">*</span></label>*@
+        <input id="firstName" asp-for="SUFirstName" type="text" class="form-control bordertext" required placeholder="First Name">
+    </div>
+
+
+    <div class="form-group">
+  
+        <input id="lastName" asp-for="SULastName" type="text" class="form-control bordertext" required placeholder="Last Name" />
+    </div>
+
+
+    <div class="form-group">
+        
+        <input id="InstitutionName" asp-for="SUInstitutionName" type="text" class="form-control bordertext" required placeholder="Institution Name">
+    </div>
+
+
+    <div class="form-group">
+        <input id="EmailAddress" asp-for="SUEmailAddress" type="email" class="form-control bordertext" required placeholder="Official Email">
+        <span asp-validation-for="SUEmailAddress"></span>
+    </div>
+
+
+    <div class="form-group">
+        <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control bordertext" required placeholder="Support Email">
+    </div>
+
+
+    <div class="form-group">
+        <input id="Phone" asp-for="Phone" type="text" class="form-control bordertext" required placeholder="Phone Number">
+    </div>
+    <div class="form-group">
+ 
+        <input id="Password" asp-for="SUPassword" type="password" class="form-control bordertext" required placeholder="Password">
+        <span asp-validation-for="SUPassword" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <input id="ConfirmPassword" asp-for="SUConfirmPassword" type="password" class="form-control bordertext" required placeholder="Confirm Password">
+        <span asp-validation-for="SUConfirmPassword" class="text-danger"></span>
+    </div>  
+
+
 </div>
 
-<div class="tab">
-    <div class="text-center"><span><p>Institution Information</p></span></div>
-    <div class="form-box">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Question 1:<span class="text-danger">*</span></label>
-                    <select id="SecuredQ1" asp-for="SUPasswordSecuredQ1" asp-items="ViewBag.SecuredQ1" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Answer 1: <span class="text-danger">*</span></label>
-                    <input id="PasswordSecuredA1" asp-for="SUPasswordSecuredA1" type="text" class="form-control" required>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Question 2:<span class="text-danger">*</span></label>
-                    <select id="SecuredQ2" asp-for="SUPasswordSecuredQ2" asp-items="ViewBag.SecuredQ2" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Answer 2: <span class="text-danger">*</span></label>
-                    <input id="PasswordSecuredA2" asp-for="SUPasswordSecuredA2" type="text" class="form-control" required>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Question 3:<span class="text-danger">*</span></label>
-                    <select id="SecuredQ3" asp-for="SUPasswordSecuredQ3" asp-items="ViewBag.SecuredQ3" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Security Answer 3: <span class="text-danger">*</span></label>
-                    <input id="PasswordSecuredA3" asp-for="SUPasswordSecuredA3" type="text" class="form-control" required>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="tab">
-    <div class="text-center"><span><p>Institution Information</p></span></div>
-    <div class="form-box">
-        <div class="row">
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Type of Entity:<span class="text-danger">*</span></label>
-                    <select id="TypeofEntity" asp-for="SUTypeofEntity" asp-items="ViewBag.EntityType" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="SSNDiv" class="col-md-6">
-                <div class="form-group">
-                    <label id="lbl_TypeofTaxNumber">
-                        <div class="form-check abc-radio abc-radio-info form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMasking(this)" asp-for="SUIDType" required>
-                            <label class="form-check-label" for="inlineRadio5">SSN</label>
-                        </div>
-                        <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio6" value="I" onclick="ChangeMasking(this)" asp-for="SUIDType" required>
-                            <label class="form-check-label" for="inlineRadio6">ITIN</label>
-                        </div>
-                        <div class="form-check abc-radio form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMasking(this)" asp-for="SUIDType" required>
-                            <label class="form-check-label" for="inlineRadio7">EIN</label>
-                        </div>
-                        <span class="text-danger"> *</span>
-                    </label>
-                    <input id="SUIDNumber" asp-for="SUIDNumber" type="text" class="form-control" required>
-                </div>
-            </div>
-
-
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Country <span class="text-danger">*</span></label>
-                    <select id="country" asp-for="SUMCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
-                        <option></option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Address Line1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
-                    <input id="adreess1" asp-for="SUMMAdd1" type="text" class="form-control" required>
-            
-                    <span asp-validation-for="SUMMAdd1" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Address Line2</label>
-                    <input id="adreess2" asp-for="SUMMAdd2" type="text" class="form-control">
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>City <span class="text-danger">*</span></label>
-                    <input id="city" asp-for="SUMCity" type="text" class="form-control" required>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div id="stateDiv" class="form-group" hidden>
-                    <label>State </label>
-                    <select id="state" asp-items="ViewBag.StatesList" asp-for="SUMState" class="select2">
-                        <option></option>
-                    </select>
-                </div>
-                <div id="provinceDiv" class="form-group">
-                    <label>Province</label>
-                    <input id="province" asp-for="SUMProvince" type="text" class="form-control">
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label id="lblZipCode">Zip Code <span class="text-danger"> *</span></label>
-                    <input id="zipCode" asp-for="SUMZip" type="text" class="form-control" required>
-                </div>
-            </div>
-        </div>
+    <div class="form-group">
+    
+        <select id="TypeofEntity" asp-for="SUTypeofEntity" asp-items="ViewBag.EntityType" class="select2 ddl" required>
+            <option></option>
+        </select>
     </div>
-    <div class="mt-3 mb-3 ml-3">
+
+
+    <div class="form-group">
+        
+        <select id="country" asp-for="SUMCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+            <option></option>
+        </select>
+    </div>
+
+    <div id="AddressFields" hidden>
+
+        <div class="form-group">
+            <input id="adreess1" asp-for="SUMMAdd1" type="text" class="form-control bordertext" required placeholder="Address Line1">
+            <span asp-validation-for="SUMMAdd1" class="text-danger"></span>
+        </div>
+
+
+        <div class="form-group">
+            <input id="adreess2" asp-for="SUMMAdd2" type="text" class="form-control bordertext" placeholder="Address Line2">
+        </div>
+
+
+        <div class="form-group">
+            <input id="city" asp-for="SUMCity" type="text" class="form-control bordertext" required placeholder="City">
+        </div>
+
+
+        <div id="stateDiv" class="form-group" hidden>
+            <select id="state" asp-items="ViewBag.StatesList" asp-for="SUMState" class="select2">
+                <option></option>
+            </select>
+        </div>
+        <div id="provinceDiv" class="form-group">
+            <input id="province" asp-for="SUMProvince" type="text" class="form-control bordertext" placeholder="Province">
+        </div>
+
+        <div class="form-group">
+            <input id="zipCode" asp-for="SUMZip" type="text" class="form-control bordertext" required placeholder="Zip Code">
+        </div>
+
+    </div>
+
+    <div class="mt-3 mb-3 ml-3" hidden>
         <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Permanent address is the same as the Mailing address
     </div>
     <div id="SamePermAddressDiv" class="form-box" hidden>
-        <div class="row">
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Country <span class="text-danger">*</span></label>
@@ -225,6 +118,8 @@
                     </select>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Address Line1 <span class="text-danger">*</span></label> <b>(Do not use a P.O. box or in-care-of address)</b>
@@ -232,19 +127,24 @@
                     <span asp-validation-for="SUMPAdd1" class="text-danger"></span>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Address Line2</label>
                     <input id="adreess2Perm" asp-for="SUPPAdd2" type="text" class="form-control">
                 </div>
             </div>
-
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>City <span class="text-danger">*</span></label>
                     <input id="cityPerm" asp-for="SUPCity" type="text" class="form-control" required>
                 </div>
             </div>
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div id="statePermDiv" class="form-group" hidden>
                     <label>State </label>
@@ -257,7 +157,8 @@
                     <input id="provincePerm" name="SUPProvince" type="text" class="form-control">
                 </div>
             </div>
-
+        </div>
+        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="form-group">
                     <label id="lblZipCodePerm">Zip Code <span class="text-danger"> *</span></label>
@@ -267,36 +168,51 @@
         </div>
     </div>
 </div>
+
+
 <div class="tab">
-    <div class="text-center"><span><p>Institution Information</p></span></div>
-    <div class="form-box">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Foreign Tax Identification Number(FTIN)</label>
-                    <input id="SUFTIN" asp-for="SUFTIN" type="text" class="form-control">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Global intermediary Identification Number(GIIN)</label>
-                    <input id="SUGIN" asp-for="SUGIN" type="text" class="form-control">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Country of incorporation/organization of country or country of citizenship</label>
-                    <select id="SUCountryOfIncorporation" asp-for="SUCountryOfIncorporation" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2">
-                        <option></option>
-                    </select>
-                </div>
-            </div>
 
 
 
-        </div>
+    <div class="form-group">
+        <select id="SecuredQ1" asp-for="SUPasswordSecuredQ1" asp-items="ViewBag.SecuredQ1" class="select2" required>
+            <option></option>
+        </select>
     </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA1" asp-for="SUPasswordSecuredA1" type="text" class="form-control bordertext" required placeholder="Security Answer 1">
+    </div>
+
+
+    <div class="form-group">
+        <select id="SecuredQ2" asp-for="SUPasswordSecuredQ2" asp-items="ViewBag.SecuredQ2" class="select2" required>
+            <option></option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA2" asp-for="SUPasswordSecuredA2" type="text" class="form-control bordertext" required placeholder="Security Answer 2">
+    </div>
+
+
+    <div class="form-group">
+        <select id="SecuredQ3" asp-for="SUPasswordSecuredQ3" asp-items="ViewBag.SecuredQ3" class="select2" required>
+            <option></option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA3" asp-for="SUPasswordSecuredA3" type="text" class="form-control bordertext" required placeholder="Security Answer 3">
+    </div>
+
+
 </div>
+
+
 
 
 
