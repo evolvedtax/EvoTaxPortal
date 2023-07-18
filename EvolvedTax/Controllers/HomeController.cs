@@ -26,7 +26,15 @@ namespace EvolvedTax.Controllers
         }
         public IActionResult OpenForm83()
         {
-            ViewBag.FileName = Path.Combine("Forms", "83b.pdf");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult OpenForm83(string NumberOfShare, string PerShareRate)
+        {
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+            ViewBag.FileName = string.Concat(fullUrl,"/Forms", "/83b.pdf");
             return View();
         }
         public IActionResult TaxPayerDetails()

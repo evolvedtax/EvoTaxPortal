@@ -45,6 +45,17 @@ namespace EvolvedTax.Controllers
         }
         [HttpGet]
         // GET: AccountController/Login
+        public ActionResult Verify(string s)
+        {
+            if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
+            {
+                s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                ViewBag.Email = s;
+            }
+            return View();
+        }
+        [HttpGet]
+        // GET: AccountController/Login
         public ActionResult Login()
         {
             return View();
@@ -245,7 +256,7 @@ namespace EvolvedTax.Controllers
         public ActionResult LogoutUser()
         {
             HttpContext.Session.Clear();
-           // HttpContext.Session.Remove("FormName");
+            // HttpContext.Session.Remove("FormName");
             return RedirectToAction(nameof(Login));
         }
         public ActionResult AccessDenied(short statusCode)
