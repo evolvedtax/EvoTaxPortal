@@ -11,6 +11,7 @@ using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace EvolvedTax.Controllers
@@ -327,7 +328,11 @@ namespace EvolvedTax.Controllers
                     {
 
                         GQEntitiesResponse = _w8EXPFormService.GetDataByClientEmail(clientEmail);
-                        GQEntitiesResponse.activeTabIndex = "0";
+                        if (GQEntitiesResponse != null)
+                        {
+                            GQEntitiesResponse.activeTabIndex = "0";
+
+                        }
                     }
 
                     return View(GQEntitiesResponse);
@@ -675,7 +680,11 @@ namespace EvolvedTax.Controllers
                     {
 
                         GQEntitiesResponse = _W8IMYFormService.GetDataByClientEmail(clientEmail);
-                        GQEntitiesResponse.activeTabIndex = "0";
+                        if (GQEntitiesResponse != null)
+                        {
+                            GQEntitiesResponse.activeTabIndex = "0";
+                            
+                        }
                     }
 
                     return View(GQEntitiesResponse);
@@ -862,6 +871,73 @@ namespace EvolvedTax.Controllers
             ViewBag.W8EXPFATCAList = W8EXPFATCAList;
 
             return Json(new { success = true, W8EXPFATCAList });
+        }
+        #endregion
+
+        #region Check Existing Record if the user want to delete it 
+
+        [HttpPost]
+        public IActionResult CheckAndDelete()
+        {
+            string emailAddress = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            bool recordExistsInW8EBENEForm = _evolvedtaxContext.TblW8ebeneforms.Any(e => e.W8beneemailAddress == emailAddress);
+            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
+            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
+            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
+
+            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm;
+
+            return Json(new { exists = recordExists });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteRecord()
+        {
+            string emailAddress = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
+            bool recordExistsInW8EBENEForm = _evolvedtaxContext.TblW8ebeneforms.Any(e => e.W8beneemailAddress == emailAddress);
+            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
+            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
+            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
+            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm;
+            var recordGQ = _evolvedtaxContext.GeneralQuestionEntities.FirstOrDefault(p => p.UserName == emailAddress);
+            if (recordExists)
+            {
+                if (recordGQ != null)
+                {
+                    _evolvedtaxContext.GeneralQuestionEntities.Remove(recordGQ);
+                    
+                }
+
+                if (recordExistsInW8EBENEForm)
+                {
+                    var record = _evolvedtaxContext.TblW8ebeneforms.FirstOrDefault(e => e.W8beneemailAddress == emailAddress);
+                    _evolvedtaxContext.TblW8ebeneforms.Remove(record);
+                   
+                }
+                if (recordExistsInW8IMYForm)
+                {
+                    var record = _evolvedtaxContext.TblW8imyforms.FirstOrDefault(e => e.EmailAddress == emailAddress);
+                    _evolvedtaxContext.TblW8imyforms.Remove(record);
+                  
+                }
+                if (recordExistsInW8EXPForm)
+                {
+                    var record = _evolvedtaxContext.TblW8expforms.FirstOrDefault(e => e.EmailAddress == emailAddress);
+                    _evolvedtaxContext.TblW8expforms.Remove(record);
+                  
+                }
+                if (recordExistsInW8ECIForm)
+                {
+                    var record = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(e => e.W8eciemailAddress == emailAddress);
+                    _evolvedtaxContext.TblW8eciforms.Remove(record);
+                
+                }
+
+                _evolvedtaxContext.SaveChanges();
+                return Ok();
+            }
+
+            return BadRequest("Record not found.");
         }
         #endregion
 

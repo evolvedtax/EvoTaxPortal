@@ -5,23 +5,23 @@
 <div class="tab">
     <div style="margin-bottom:5%">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        <h3>Welcome to EvoTax Portal</h3>
+        @*<h3>Welcome to EvoTax Portal</h3>*@
     </div>
     <div class="form-group">
-      @*  <label><span class="text-danger">*</span></label>*@
+        @*  <label><span class="text-danger">*</span></label>*@
         <input id="firstName" asp-for="SUFirstName" type="text" class="form-control bordertext" required placeholder="First Name">
     </div>
 
 
     <div class="form-group">
-  
+
         <input id="lastName" asp-for="SULastName" type="text" class="form-control bordertext" required placeholder="Last Name" />
     </div>
 
 
     <div class="form-group">
-        
-        <input id="InstitutionName" asp-for="SUInstitutionName" type="text" class="form-control bordertext" required placeholder="Institution Name">
+
+        <input id="InstitutionName" asp-for="SUInstitutionName" type="text" class="form-control bordertext" required placeholder="Institution Name/Business Name">
     </div>
 
 
@@ -30,17 +30,8 @@
         <span asp-validation-for="SUEmailAddress"></span>
     </div>
 
-
     <div class="form-group">
-        <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control bordertext" required placeholder="Support Email">
-    </div>
 
-
-    <div class="form-group">
-        <input id="Phone" asp-for="Phone" type="text" class="form-control bordertext" required placeholder="Phone Number">
-    </div>
-    <div class="form-group">
- 
         <input id="Password" asp-for="SUPassword" type="password" class="form-control bordertext" required placeholder="Password">
         <span asp-validation-for="SUPassword" class="text-danger"></span>
     </div>
@@ -49,7 +40,7 @@
     <div class="form-group">
         <input id="ConfirmPassword" asp-for="SUConfirmPassword" type="password" class="form-control bordertext" required placeholder="Confirm Password">
         <span asp-validation-for="SUConfirmPassword" class="text-danger"></span>
-    </div>  
+    </div>
 
 
 </div>
@@ -58,18 +49,17 @@
 <div class="tab">
     <div style="margin-bottom:5%">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        <h3>Welcome to EvoTax Portal</h3>
+        @* <h3>Welcome to EvoTax Portal</h3>*@
     </div>
+
     <div class="form-group">
-    
         <select id="TypeofEntity" asp-for="SUTypeofEntity" asp-items="ViewBag.EntityType" class="select2 ddl" required>
             <option></option>
         </select>
     </div>
 
-
     <div class="form-group">
-        
+
         <select id="country" asp-for="SUMCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
             <option></option>
         </select>
@@ -104,6 +94,13 @@
 
         <div class="form-group">
             <input id="zipCode" asp-for="SUMZip" type="text" class="form-control bordertext" required placeholder="Zip Code">
+        </div>
+
+        <div class="form-group">
+            <input id="Phone" asp-for="Phone" type="text" class="form-control bordertext" required placeholder="Phone Number">
+        </div>
+        <div class="form-group">
+            <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control bordertext" placeholder="Support Email">
         </div>
 
     </div>
@@ -177,7 +174,7 @@
 
     <div style="margin-bottom:5%">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        <h3>Welcome to EvoTax Portal</h3>
+        @* <h3>Welcome to EvoTax Portal</h3>*@
     </div>
 
     <div class="form-group">

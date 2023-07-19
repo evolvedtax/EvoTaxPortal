@@ -131,6 +131,9 @@
 
     <script type="text/javascript">
 
+        var isFirstChange = true; // Flag to track the first change
+
+
         $("#SaveExitBtn").click(function () {
             let form = $('#regForm');
             if (form.valid()) {
@@ -529,11 +532,64 @@
                     }
                 }
             });
+            function CheckExistingRecord() {
+                // Make an AJAX call to check if the record exists in any of the tables
+                $.ajax({
+                    type: 'POST',
+                    url: '/Entity/CheckAndDelete',
+                    success: function (result) {
+                        if (result.exists) {
+                            // Show the confirmation dialog using the built-in confirm function
+                            var deleteConfirmation = confirm('Record already exists. Do you want to delete it?');
+                            if (deleteConfirmation) {
+                                // Make another AJAX call to delete the record
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Entity/DeleteRecord',
+                                    success: function () {
+                                        // Show success notification
+                                        alert('Record deleted successfully!');
+                                    },
+                                    error: function () {
+                                        // Show error notification
+                                        alert('Failed to delete the record.');
+                                    }
+                                });
+                            } else {
+                                // Show cancellation notification
+                                //alert('Record was not deleted.');
+                            }
+                        }
+                    },
+                    error: function () {
+                        // Show error notification
+                        alert('Error checking record existence.');
+                    }
+                });
+            }
 
 
             $('input[name="W8FormType"]').change(function () {
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
                 $('#hdn_FormType').val('');
+
+
+                // still in development phase
+                //if (isFirstChange) {
+                //    var $this = $(this);
+                //    var prevValue = $this.data('prev-value');
+                //    var curValue = $this.val();
+                //    // Check if the change event is due to user interaction
+                //    if (prevValue !== curValue) {
+                //        $this.data('prev-value', curValue); // Update the data attribute with the new value
+                //        CheckExistingRecord();
+                //    }
+                //    isFirstChange = false;
+
+                //}
+                //else {
+                //    CheckExistingRecord();
+                //}
 
                 if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
                     $('#hdn_FormType').val($(this).val());
@@ -725,7 +781,7 @@
             var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
             if (W8FormTypecheckedRadioButton.length > 0) {
                 var selectedValueW8FormType = $("input[type='radio'][name='W8FormType']:checked").val();
-                console.log(selectedValueW8FormType);
+                W8FormTypecheckedRadioButton.data('prev-value', W8FormTypecheckedRadioButton.val());
                 W8FormTypecheckedRadioButton.trigger("change");
             }
             ChekboxValidationForDropdowns();
