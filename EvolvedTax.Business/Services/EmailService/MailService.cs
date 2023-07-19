@@ -27,7 +27,7 @@ namespace EvolvedTax.Business.MailService
                 content = AppConstants.EmailToClient
                     .Replace("{{Name}}", email.InstituteUserName)
                     .Replace("{{InstituteName}}", email.InstituteName)
-                    .Replace("{{Link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
+                    .Replace("{{link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
                 try
                 {
                     MailMessage message = new MailMessage();
