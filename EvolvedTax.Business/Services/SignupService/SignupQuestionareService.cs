@@ -32,7 +32,7 @@ namespace EvolvedTax.Business.Services.SignupService
                 //RegistrationExpiryDate = request.SURegistrationExpiryDate,
 
                 EmailAddress = request.SUEmailAddress,
-                SupportEmail=request.SupportEmailAddress,
+                SupportEmail = string.IsNullOrEmpty(request.SupportEmailAddress) ? request.SUEmailAddress : request.SupportEmailAddress,
                 Password = request.SUPassword,
                 PasswordSecuredQ1 = request.SUPasswordSecuredQ1,
                 PasswordSecuredA1 = request.SUPasswordSecuredA1,
@@ -66,7 +66,7 @@ namespace EvolvedTax.Business.Services.SignupService
                 CountryOfIncorporation = request.SUCountryOfIncorporation,
                 Status = "1",
                 StatusDate = DateTime.Now,
-                Phone=request.Phone
+                Phone = request.Phone
 
 
 

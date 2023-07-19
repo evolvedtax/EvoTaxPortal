@@ -26,7 +26,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [Display(Name = "Official Email")]
         public string SUEmailAddress { get; set; } = string.Empty;
 
-        public string SupportEmailAddress { get; set; } = string.Empty;
+        public string? SupportEmailAddress { get; set; } = null;
 
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$", ErrorMessage = "Password at least one capital letter, one small letter, one number, one special character, and be at least 8 characters long")]
         [Display(Name = "password")]
