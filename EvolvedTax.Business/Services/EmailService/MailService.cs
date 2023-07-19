@@ -35,7 +35,7 @@ namespace EvolvedTax.Business.MailService
                     message.From = new MailAddress(FromEmail);
                     message.To.Add(new MailAddress(email.ClientEmailId));
                     message.Subject = subject;
-                    message.IsBodyHtml = false; //to make message body as html
+                    message.IsBodyHtml = true; //to make message body as html
                     message.Body = content;
                     smtp.Port = Port;
                     smtp.Host = Host;
