@@ -30,12 +30,14 @@
             <div class="ibox ">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-4">
-                            <label>Select Entity for Further Details</label>
-                            <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity">
-                            </select>
+                        <div class="col-md-6">
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto">Select Entity for Further Details</label>
+                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:fit-content">
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <form id="formUpdateEmailFrequency"
                                   method="post"
                                   data-ajax="true"
@@ -45,21 +47,23 @@
                                   data-ajax-loading="#ajax-loader"
                                   data-ajax-success="ajaxsuccessUpdateEmailFrequency"
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
-                                <label>Email Frequency</label>
                                 <div style="display:flex">
+                                    <label class="ml-2 mr-2" style="margin:auto">Send Reminder After Every</label>
                                     <input id="EntityId" name="EntityId" hidden />
-                                    <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:20%; text-align:right" required />
+                                    <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary">Save</button>
                                 </div>
                             </form>
                         </div>
-                        <div id="uploadDataDiv" class="col-md-4 pull-right" hidden>
-                            <label>Upload Data</label>
-                            <div class="input-group">
-                                <div class="custom-file">
-                                    <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
-                                    <label class="custom-file-label" for="uploadClients">Choose file</label>
+                        <div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
+                                        <label class="custom-file-label" for="uploadClients">Choose file</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

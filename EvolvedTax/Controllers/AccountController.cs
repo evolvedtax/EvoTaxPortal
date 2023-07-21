@@ -166,6 +166,7 @@ namespace EvolvedTax.Controllers
             }
             if (Otp == response?.Otp)
             {
+                _userService.UpdateInstituteClientOTP(formVals["clientEmail"], "", DateTime.Now);
                 HttpContext.Session.SetString("ClientEmail", formVals["clientEmail"]);
                 return RedirectToAction("Index", "Status");
                 //return RedirectToAction("Entities", "Institute");
