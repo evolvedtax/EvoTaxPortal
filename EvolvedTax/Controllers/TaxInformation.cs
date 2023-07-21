@@ -90,7 +90,7 @@ namespace EvolvedTax.Controllers
             ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
             {
                 Text = p.StateId,
-                Value = p.Id.ToString()
+                Value = p.StateId.ToString()
             });
             return View();
         }

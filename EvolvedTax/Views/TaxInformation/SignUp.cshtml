@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
         <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
         <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
     </environment>
     <environment names="Staging,Production">
@@ -32,16 +33,69 @@
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
         <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
         <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     </environment>
 
 
 </head>
 
 <style>
-    /* Mark input boxes that gets an error on validation: */
-    /*    input.invalid {
-                background-color: #ffdddd;
-            }*/
+
+    .password-container {
+        position: relative;
+    }
+
+    .password-input {
+        position: relative;
+    }
+
+        .password-input input {
+            padding-right: 35px; /* Adjust the padding to accommodate the eye icon */
+        }
+
+        .password-input::after {
+            content: "\f06e"; /* Unicode for the eye icon (Font Awesome) */
+            font-family: "Font Awesome 6 Free"; /* Use the appropriate font-family for the eye icon */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            pointer-events: auto; /* Make sure the icon is clickable */
+        }
+
+        .password-input.show-password::after {
+            content: "\f070"; /* Unicode for the eye-slash icon (Font Awesome) */
+        }
+
+    .password-container {
+        position: relative;
+    }
+
+    .confirm-input {
+        position: relative;
+    }
+
+        .confirm-input input {
+            padding-right: 35px; /* Adjust the padding to accommodate the eye icon */
+        }
+
+        .confirm-input::after {
+            content: "\f06e"; /* Unicode for the eye icon (Font Awesome) */
+            font-family: "Font Awesome 6 Free"; /* Use the appropriate font-family for the eye icon */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            pointer-events: auto; /* Make sure the icon is clickable */
+        }
+
+        .confirm-input.show-password::after {
+            content: "\f070"; /* Unicode for the eye-slash icon (Font Awesome) */
+        }
+
+
 
     /* Hide all steps by default: */
     .tab {
@@ -50,6 +104,12 @@
 
     .bordertext {
         border-radius: 5px;
+    
+    }
+
+    .textQuest {
+        border-radius: 5px;
+         width: 327.833px;
     }
 
     /* Make circles that indicate the steps of the form: */
@@ -71,8 +131,8 @@
 
     /* Mark the steps that are finished and valid: */
     /*    .step.finish {
-                    background-color: #04AA6D;
-                }*/
+                                    background-color: #04AA6D;
+                                }*/
 
     p {
         font-size: large;
@@ -110,6 +170,8 @@
                     <partial name="_signUpQuestionare" model="Model" />
                 </div>
 
+
+               
                 <!-- Circles which indicates the steps of the form: -->
                 <div id="stepsDiv" style="text-align:center;margin-top:40px;">
                     <span class="step"></span>
@@ -122,7 +184,9 @@
         </div>
     </div>
 
-
+    <div id="responseDiv" class="mt-5 ml-5" hidden>
+        <h3>Thank you for registering for the EvoTax Platform. Please check your email for further process.</h3>
+    </div>
     <div style="margin-top:2%; left: 0; right: 0; bottom: 10px; text-align: center;">
         <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
         <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
@@ -162,6 +226,19 @@
     </environment>
     <script type="text/javascript">
 
+        document.querySelector('.password-input').addEventListener('click', function () {
+            var passwordInput = document.getElementById('Password');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('show-password');
+        });
+
+        document.querySelector('.confirm-input').addEventListener('click', function () {
+            var passwordInput = document.getElementById('ConfirmPassword');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('show-password');
+        });
+
+
         $(document).ready(function () {
 
             $('input[type="text"], input[type="email"], input[type="password"]').each(function () {
@@ -174,13 +251,17 @@
             });
 
 
-            $('.ddl').css('width', '100%');
+            $('.ddl').css('width', '299.167px');
+            $('.ddlQues').css('width', '327.833px');
             $('.select2-container').css('width', '100%');
+
             $("select").select2({
                 theme: 'bootstrap4',
-                placeholder: "Select One",
+                // placeholder: "Select One",
                 //allowClear: true
             });
+
+
             // Get the current date
             //var currentDate = new Date().toISOString().split('T')[0];
             // Set the max attribute of the date input
@@ -215,7 +296,7 @@
             document.getElementById("stepsDiv").style.display = "none";
             document.getElementById("nextBtn").style.display = "none";
             document.getElementById("prevBtn").style.display = "none";
-            // COMMON.notification('@TempData["Type"]', '@TempData["MessageSignup"]');
+            $('#responseDiv').prop('hidden', false);
             window.open('https://outlook.office365.com/', '_blank');
 
         }

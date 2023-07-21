@@ -20,7 +20,6 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
 
         public W8IMYFormService(EvolvedtaxContext evolvedtaxContext)
         {
-
             _evolvedtaxContext = evolvedtaxContext;
         }
         public FormRequest? GetDataByClientEmail(string ClientEmail)
@@ -56,7 +55,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
 
                             // Add the fields from TblW8expforms
 
-                            W8IMYOnBehalfName= w8.OnBehalfName,
+                            W8IMYOnBehalfName = w8.OnBehalfName,
                             CountryOfIncorporation = w8.CountryOfIncorporation,
                             FatcaStatus = w8.FatcaStatus ?? string.Empty,
                             PrintNameOfSignerW8IMY = w8.PrintNameOfSigner ?? string.Empty,
@@ -156,7 +155,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                             _42 = (bool)w8._42Cb,
                             EmailId = w8.EmailAddress,
                             //hard code for testing
-                            activeTabIndex=w8.ActiveTabIndex,
+                            activeTabIndex = w8.ActiveTabIndex,
 
                         };
 
@@ -293,6 +292,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
             {
                 return Update(request);
             }
+
+           
             var model = new TblW8imyform
             {
                 NameOfOrganization = request.GQOrgName,
@@ -398,8 +399,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 _42Cb = request._42,
                 EmailAddress = request.EmailId,
                 PrintNameOfSigner = request.PrintNameOfSignerW8IMY,
-                OnBehalfName=request.W8IMYOnBehalfName,
-                FilePath= request.TemplateFilePath
+                OnBehalfName = request.W8IMYOnBehalfName,
+                FilePath = request.TemplateFilePath
 
 
             };
@@ -777,7 +778,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].RightCol[0].c1_1[2]", "0");
                     //pdfFormFields.SetField("topmostSubform[0].Page1[0].RightCol[0].c1_1[3]", "1");
                     break;
-              
+
 
             }
 
@@ -1900,7 +1901,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 pdfFormFields.SetField("topmostSubform[0].Page6[0].BulletedList3[0].Bullet1[0].c6_7[0]", "0");
                 //pdfFormFields.SetField("topmostSubform[0].Page6[0].BulletedList3[0].Bullet1[0].c6_7[1]", "0");
             }
-            else if (string.IsNullOrEmpty(request._32_CB2)) 
+            else if (string.IsNullOrEmpty(request._32_CB2))
             {
                 pdfFormFields.SetField("topmostSubform[0].Page6[0].BulletedList3[0].Bullet1[0].c6_7[0]", "0");
                 pdfFormFields.SetField("topmostSubform[0].Page6[0].BulletedList3[0].Bullet1[0].c6_7[0]", "0");
@@ -1966,7 +1967,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
             {
                 pdfFormFields.SetField("topmostSubform[0].Page7[0].c7_7[0]", "0");
             }
-         
+
             pdfFormFields.SetField("topmostSubform[0].Page7[0].BulletedList5[0].Bullet1[0].f7_2[0]", request._36_Text?.ToString("MM-dd-yyyy"));
 
 
@@ -2121,6 +2122,6 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
             return true;
         }
 
-      
+
     }
 }
