@@ -136,7 +136,7 @@ namespace EvolvedTax.Controllers
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
 
-            string URL = Path.Combine(fullUrl, "Account", "OTP");
+            string URL = string.Concat(fullUrl, "/Account", "/OTP");
             await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p=>p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
