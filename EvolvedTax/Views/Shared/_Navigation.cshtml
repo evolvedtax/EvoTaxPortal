@@ -15,7 +15,7 @@
                     </ul>
                 </div>
                 <div class="logo-element">
-                    <img src="~/images/evolved_tax_mark_logo.png" width="50px"/>
+                    <img src="~/images/evolved_tax_mark_logo.png" width="50px" />
                 </div>
             </li>
             <li class="@Html.IsSelected(controller: "Individual")">
@@ -30,9 +30,15 @@
             <li class="@Html.IsSelected(controller: "Institute")">
                 <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
-                    @*<li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>*@
-                    <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
-                    <li class="@Html.IsSelected(action: "Client")"><a href="@Url.Action("Client", "Institute")">Client</a></li>
+                    @if (_httpContextAccessor.HttpContext?.Session.GetString("IsAdmin") == true.ToString())
+                    {
+                        <li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>
+                    }
+                    else
+                    {
+                        <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
+                    }
+                    @*<li class="@Html.IsSelected(action: "Client")"><a href="@Url.Action("Client", "Institute")">Client</a></li>*@
                 </ul>
             </li>
         </ul>

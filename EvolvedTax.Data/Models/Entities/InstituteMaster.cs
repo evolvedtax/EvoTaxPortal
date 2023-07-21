@@ -96,4 +96,5 @@ public partial class InstituteMaster
     public DateTime? ResetTokenExpiryTime { get; set; }
 
     public string? Phone { get; set; }
+    public bool IsAdmin { get; set; }
 }

@@ -67,7 +67,7 @@ namespace EvolvedTax.Controllers
             if (ModelState.IsValid)
             {
                 var response = _userService.Login(userDTO);
-                if (response.IsLoggedIn)
+                if (response.IsLoggedIn && !response.IsAdmin)
                 {
                     HttpContext.Session.SetString("EmailId", response.EmailId);
                     var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");

@@ -153,7 +153,10 @@
                                                             <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
                                                             @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>*@
                                                         }
-                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
+                                                        @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
+                                                        {
+                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -415,11 +418,23 @@
                                 COMMON.notification(3, 'No row selected. Please select at least one row.');
                                 return;
                             }
-
+                            swal({
+                                title: "Sending Email...",
+                                text: "Email will send to the clients awaited for form submission",
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#1ab394",
+                                confirmButtonText: "Ok",
+                                //cancelButtonText: "Cancel"
+                            },
+                                function () {
+                                    let params = { selectedValues: selectedValues }
+                                    COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                                });
+                            //let params = { selectedValues: selectedValues }
+                            //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
                             //$('.loading').show();
-                            // Send the selectedValues to the controller using AJAX or a form submission
-                            let params = { selectedValues: selectedValues }
-                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+
                         }
                     }, {
                         extend: 'collection',
@@ -578,9 +593,11 @@
                                     $('<div class="dropdown-menu-horizontal">').append(
                                         (item?.IsLocked ?? false) ?
                                             '' :
-                                            $('<a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="' + item?.ClientId + '">').text('Edit'),
-                                        $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteClient\',\'id=' + item?.ClientId + '\',\'\')">').text('Delete'),
-                                        $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId + '\'})">').text('Send Email')
+                                            ($('<a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="' + item?.ClientId + '">').text('Edit'),
+                                                $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteClient\',\'id=' + item?.ClientId + '\',\'\')">').text('Delete')),
+                                        (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') ?
+                                            '' :
+                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId + '\'})">').text('Send Email')
                                     )
                                 )
                             )

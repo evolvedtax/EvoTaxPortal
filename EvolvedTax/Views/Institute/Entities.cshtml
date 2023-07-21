@@ -67,7 +67,7 @@
                                 {
                                     <tr id="@item.EntityId">
                                         <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
-                                        <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId}) </td>
+                                        <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId, InstituteId = item.InstituteId}) </td>
                                         <td>@item.Ein</td>
                                         <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
                                         <td>@string.Concat(item.Address1," ",item.Address2)</td>
