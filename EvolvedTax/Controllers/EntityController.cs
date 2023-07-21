@@ -162,39 +162,40 @@ namespace EvolvedTax.Controllers
 
             FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;
 
-            #region W8EXPForm save logic
-            if (model.FormType == AppConstants.W8FormTypes && model.W8FormType == AppConstants.W8EXPForm)
-            {
-                bool isPartialSave = model.IsPartialSave;
-                FormName = model.W8FormType;
+            //#region W8EXPForm save logic
+            //if (model.FormType == AppConstants.W8FormTypes && model.W8FormType == AppConstants.W8EXPForm)
+            //{
+            //    bool isPartialSave = model.IsPartialSave;
+            //    FormName = model.W8FormType;
 
-                if (isPartialSave)
-                {
+            //    if (isPartialSave)
+            //    {
 
-                    var responsePartialForm = _w8EXPFormService.SavePartial(model);
-                    var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
-                    if (responseGQPartialForm == 0 || responsePartialForm == 0)
-                    {
-                        return View(model);
-                    }
-                    // Return a response indicating successful partial save
-                    return Json(new { success = true, message = AppConstants.FormPartiallySave });
-                }
+            //        var responsePartialForm = _w8EXPFormService.SavePartial(model);
+            //        var responseGQPartialForm = _generalQuestionareEntityService.Save(model);
+            //        if (responseGQPartialForm == 0 || responsePartialForm == 0)
+            //        {
+            //            return View(model);
+            //        }
+            //        // Return a response indicating successful partial save
+            //        return Json(new { success = true, message = AppConstants.FormPartiallySave });
+            //    }
 
-                model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
+            //    model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W8EXPTemplateFileName);
 
-                var responsew8EXPForm = _w8EXPFormService.Save(model);
-                var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
-                HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
-                filePathResponse = responsew8EXPForm;
+            //    var responsew8EXPForm = _w8EXPFormService.Save(model);
+            //    var clientData = _instituteService.GetClientDataByClientEmailId(model.EmailId);
+            //    HttpContext.Session.SetString("ClientName", model.AuthSignatoryName);
+            //    filePathResponse = responsew8EXPForm;
 
-            }
-            #endregion
+            //}
+            //#endregion
             #region ADD
             if (model.FormType == AppConstants.W9Form) // For W9 form
             {
                 model.USCitizen = "1";
                 FormName = model.FormType;
+                model.W8FormType = "";
                 model.TemplateFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.W9TemplateFileName);
                 var response = _w9FormService.SaveForEntity(model);
                 //filePathResponse = Path.Combine(_webHostEnvironment.WebRootPath, response);
@@ -884,10 +885,19 @@ namespace EvolvedTax.Controllers
             bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
             bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
             bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
+            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress);
 
-            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm;
+            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm || recordExistsInW9Form;
 
-            return Json(new { exists = recordExists });
+            return Json(new
+            {
+                exists = recordExists,
+                recordExistsInW8EBENEForm = recordExistsInW8EBENEForm,
+                recordExistsInW8IMYForm = recordExistsInW8IMYForm,
+                recordExistsInW8EXPForm = recordExistsInW8EXPForm,
+                recordExistsInW8ECIForm = recordExistsInW8ECIForm,
+                recordExistsInW9Form = recordExistsInW9Form
+            });
         }
 
         [HttpPost]
@@ -898,7 +908,9 @@ namespace EvolvedTax.Controllers
             bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
             bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
             bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
-            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm;
+            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress);
+            bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm || recordExistsInW9Form;
+        
             var recordGQ = _evolvedtaxContext.GeneralQuestionEntities.FirstOrDefault(p => p.UserName == emailAddress);
             if (recordExists)
             {
@@ -906,6 +918,12 @@ namespace EvolvedTax.Controllers
                 {
                     _evolvedtaxContext.GeneralQuestionEntities.Remove(recordGQ);
                     
+                }
+                if (recordExistsInW9Form)
+                {
+                    var record = _evolvedtaxContext.TblW9forms.FirstOrDefault(e => e.W9emailAddress == emailAddress);
+                    _evolvedtaxContext.TblW9forms.Remove(record);
+
                 }
 
                 if (recordExistsInW8EBENEForm)

@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
+
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
         background-color: #ffdddd;
@@ -65,6 +66,9 @@
         margin: 20px;
     }
 </style>
+
+
+
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
         <div id="contentContainer"></div>
@@ -91,7 +95,9 @@
                 @*<partial name="_w8ECIQuestionare" model="Model" />*@
             </div>
             <!-- Hidden field for isPartialSave -->
+
             <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
+
 
             <!-- Circles which indicates the steps of the form: -->
             <div id="stepsDiv" style="text-align:center;margin-top:40px;">
@@ -113,6 +119,8 @@
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
             <input type="hidden" id="hdn_FormType" />
+            <input type="hidden" id="hdn_MainSelectionRadioBtn" />
+            <input type="hidden" id="hdn_W8SelectionRadioBtn" />
         </div>
     </div>
 </div>
@@ -132,7 +140,6 @@
     <script type="text/javascript">
 
         var isFirstChange = true; // Flag to track the first change
-
 
         $("#SaveExitBtn").click(function () {
             let form = $('#regForm');
@@ -452,7 +459,91 @@
             }
         }
 
+        function CheckExistingRecord(lastSelectedRadioId = null) {
+            $('#ajax-loader').show();
 
+            $.ajax({
+                type: 'POST',
+                url: '/Entity/CheckAndDelete',
+                success: function (result) {
+                    if (result.exists) {
+
+                        var tableName = '';
+                        if (result.recordExistsInW8EBENEForm) {
+                            tableName = 'W-8BEN-E';
+                        } else if (result.recordExistsInW8IMYForm) {
+                            tableName = 'W-8IMY';
+                        } else if (result.recordExistsInW8EXPForm) {
+                            tableName = 'W-8EXP';
+                        } else if (result.recordExistsInW8ECIForm) {
+                            tableName = 'W-8ECI';
+                        } else if (result.recordExistsInW9Form) {
+                            tableName = 'W9';
+                        }
+
+                        // Show the confirmation dialog using SweetAlert
+                        Swal.fire({
+                            title: 'Your last save form was ' + tableName + '.',
+                            text: 'Do you want to delete and start the new application?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#1ab394',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            confirmButtonColor: '#d33', // "Yes" button color to red
+                            cancelButtonColor: '#1ab394', // "No" button color to green
+                            didOpen: () => {
+                                $('.swal2-title').css('font-size', '22px');
+                            },
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Make another AJAX call to delete the record
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Entity/DeleteRecord',
+                                    success: function () {
+                                        // Show success notification using SweetAlert
+                                        Swal.fire('Record deleted successfully!', '', 'success');
+                                    },
+                                    error: function () {
+                                        // Show error notification using SweetAlert
+                                        Swal.fire('Failed to delete the record.', '', 'error');
+                                    },
+                                    complete: function () {
+                                        $('#ajax-loader').hide();
+                                    }
+                                });
+                            } else {
+                               
+                                // Re-select the last selected radio button using its ID
+                                var MainSelectionRadioBtn= $('#hdn_MainSelectionRadioBtn').val()
+                                var W8SelectionRadioBtn = $('#hdn_W8SelectionRadioBtn').val();
+
+                                if (MainSelectionRadioBtn !== '') {
+                                    $(`#${MainSelectionRadioBtn}`).prop('checked', true);
+                                    var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
+                                    checkedRadioButton.trigger("click");
+                                }
+                                if (W8SelectionRadioBtn !== '') {
+                                    $(`#${W8SelectionRadioBtn}`).prop('checked', true);
+                                }
+                                $('#ajax-loader').hide();
+                            }
+                        });
+                    } else {
+
+                        $('#ajax-loader').hide();
+                    }
+                },
+                error: function () {
+                    // Show error notification using SweetAlert
+                    Swal.fire('Error checking record existence.', '', 'error');
+                    $('#ajax-loader').hide();
+                }
+            });
+
+        }
         $(document).ready(function () {
             $('#SaveExitBtn').prop('hidden', true);
             $("select").select2({
@@ -532,64 +623,35 @@
                     }
                 }
             });
-            function CheckExistingRecord() {
-                // Make an AJAX call to check if the record exists in any of the tables
-                $.ajax({
-                    type: 'POST',
-                    url: '/Entity/CheckAndDelete',
-                    success: function (result) {
-                        if (result.exists) {
-                            // Show the confirmation dialog using the built-in confirm function
-                            var deleteConfirmation = confirm('Record already exists. Do you want to delete it?');
-                            if (deleteConfirmation) {
-                                // Make another AJAX call to delete the record
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/Entity/DeleteRecord',
-                                    success: function () {
-                                        // Show success notification
-                                        alert('Record deleted successfully!');
-                                    },
-                                    error: function () {
-                                        // Show error notification
-                                        alert('Failed to delete the record.');
-                                    }
-                                });
-                            } else {
-                                // Show cancellation notification
-                                //alert('Record was not deleted.');
-                            }
-                        }
-                    },
-                    error: function () {
-                        // Show error notification
-                        alert('Error checking record existence.');
-                    }
-                });
-            }
 
+
+            $('input[name="FormType"]').change(function () {
+
+                CheckExistingRecord();
+                $('#hdn_FormType').val('');
+
+            });
 
             $('input[name="W8FormType"]').change(function () {
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
                 $('#hdn_FormType').val('');
 
-
                 // still in development phase
-                //if (isFirstChange) {
-                //    var $this = $(this);
-                //    var prevValue = $this.data('prev-value');
-                //    var curValue = $this.val();
-                //    // Check if the change event is due to user interaction
-                //    if (prevValue !== curValue) {
-                //        $this.data('prev-value', curValue); // Update the data attribute with the new value
-                //        CheckExistingRecord();
-                //    }
-                //    isFirstChange = false;
+                if (isFirstChange) {
+                    var $this = $(this);
+                    var prevValue = $this.data('prev-value');
+                    var curValue = $this.val();
+                    // Check if the change event is due to user interaction
+                    if (prevValue !== curValue) {
+                        $this.data('prev-value', curValue); // Update the data attribute with the new value
+                        CheckExistingRecord();
+                    }
+                    isFirstChange = false;
 
-                //}
-                //else {
-                //    CheckExistingRecord();
-                //}
+                }
+                else {
+                    CheckExistingRecord();
+                }
 
                 if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
                     $('#hdn_FormType').val($(this).val());
@@ -774,12 +836,18 @@
             $('select').change();
             var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
             if (checkedRadioButton.length > 0) {
+                // var selectedValuecheckedRadioButton = $("input[type='radio'][name='FormType']:checked").val();
+                //checkedRadioButton.data('prev-value', checkedRadioButton.val());
+                const selectedId = checkedRadioButton.attr('id');
+                $('#hdn_MainSelectionRadioBtn').val(selectedId);
                 checkedRadioButton.trigger("click");
             }
 
 
             var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
             if (W8FormTypecheckedRadioButton.length > 0) {
+                const selectedId = W8FormTypecheckedRadioButton.attr('id');
+                $('#hdn_W8SelectionRadioBtn').val(selectedId);
                 var selectedValueW8FormType = $("input[type='radio'][name='W8FormType']:checked").val();
                 W8FormTypecheckedRadioButton.data('prev-value', W8FormTypecheckedRadioButton.val());
                 W8FormTypecheckedRadioButton.trigger("change");
