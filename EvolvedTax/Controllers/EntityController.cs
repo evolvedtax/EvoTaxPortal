@@ -50,6 +50,8 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> GQEntity()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+          
+
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
@@ -103,6 +105,7 @@ namespace EvolvedTax.Controllers
                 }
                 else
                 {
+                    _w9FormService.ActivateRecord(clientEmail);
                     GQEntitiesResponse = _w9FormService.GetDataForEntityByClientEmailId(clientEmail);
                 }
             }
@@ -276,6 +279,8 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> W8EXP()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            _w8EXPFormService.ActivateRecord(clientEmail);
+
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
@@ -453,6 +458,7 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> W8ECI()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            _w8ECIFormService.ActivateRecord(clientEmail);
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
@@ -533,6 +539,7 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> W8BENE()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            _w8BENEFormService.ActivateRecord(clientEmail);
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
@@ -631,6 +638,8 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> W8IMY()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
+            _W8IMYFormService.ActivateRecord(clientEmail);
+
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
                 return RedirectToAction("DownloadForm", "Certification", new { clientEmail = clientEmail });
@@ -881,11 +890,11 @@ namespace EvolvedTax.Controllers
         public IActionResult CheckAndDelete()
         {
             string emailAddress = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
-            bool recordExistsInW8EBENEForm = _evolvedtaxContext.TblW8ebeneforms.Any(e => e.W8beneemailAddress == emailAddress);
-            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
-            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
-            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
-            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress);
+            bool recordExistsInW8EBENEForm = _evolvedtaxContext.TblW8ebeneforms.Any(e => e.W8beneemailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress && e.IsActive == true);
 
             bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm || recordExistsInW9Form;
 
@@ -905,10 +914,10 @@ namespace EvolvedTax.Controllers
         {
             string emailAddress = HttpContext.Session.GetString("ClientEmail") ?? string.Empty;
             bool recordExistsInW8EBENEForm = _evolvedtaxContext.TblW8ebeneforms.Any(e => e.W8beneemailAddress == emailAddress);
-            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress);
-            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress);
-            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress);
-            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress);
+            bool recordExistsInW8IMYForm = _evolvedtaxContext.TblW8imyforms.Any(e => e.EmailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW8EXPForm = _evolvedtaxContext.TblW8expforms.Any(e => e.EmailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW8ECIForm = _evolvedtaxContext.TblW8eciforms.Any(e => e.W8eciemailAddress == emailAddress && e.IsActive == true);
+            bool recordExistsInW9Form = _evolvedtaxContext.TblW9forms.Any(e => e.W9emailAddress == emailAddress && e.IsActive == true);
             bool recordExists = recordExistsInW8EBENEForm || recordExistsInW8IMYForm || recordExistsInW8EXPForm || recordExistsInW8ECIForm || recordExistsInW9Form;
         
             var recordGQ = _evolvedtaxContext.GeneralQuestionEntities.FirstOrDefault(p => p.UserName == emailAddress);
@@ -916,39 +925,56 @@ namespace EvolvedTax.Controllers
             {
                 if (recordGQ != null)
                 {
-                    _evolvedtaxContext.GeneralQuestionEntities.Remove(recordGQ);
-                    
+                    recordGQ.W8formType = string.Empty;
+                    recordGQ.FormType = string.Empty;
+                    recordGQ.W8expId = 0;
+
                 }
                 if (recordExistsInW9Form)
                 {
-                    var record = _evolvedtaxContext.TblW9forms.FirstOrDefault(e => e.W9emailAddress == emailAddress);
-                    _evolvedtaxContext.TblW9forms.Remove(record);
+                    var record = _evolvedtaxContext.TblW9forms.FirstOrDefault(e => e.W9emailAddress == emailAddress && e.IsActive == true);
+                    if (record != null)
+                    {
+                        record.IsActive = false;
+                    }
 
                 }
 
                 if (recordExistsInW8EBENEForm)
                 {
-                    var record = _evolvedtaxContext.TblW8ebeneforms.FirstOrDefault(e => e.W8beneemailAddress == emailAddress);
-                    _evolvedtaxContext.TblW8ebeneforms.Remove(record);
-                   
+                    var record = _evolvedtaxContext.TblW8ebeneforms.FirstOrDefault(e => e.W8beneemailAddress == emailAddress && e.IsActive == true);
+                    if (record != null)
+                    {
+                        record.IsActive = false;
+                    }
+
                 }
                 if (recordExistsInW8IMYForm)
                 {
-                    var record = _evolvedtaxContext.TblW8imyforms.FirstOrDefault(e => e.EmailAddress == emailAddress);
-                    _evolvedtaxContext.TblW8imyforms.Remove(record);
-                  
+                    var record = _evolvedtaxContext.TblW8imyforms.FirstOrDefault(e => e.EmailAddress == emailAddress && e.IsActive == true);
+                    if (record != null)
+                    {
+                        record.IsActive = false;
+                    }
+
                 }
                 if (recordExistsInW8EXPForm)
                 {
-                    var record = _evolvedtaxContext.TblW8expforms.FirstOrDefault(e => e.EmailAddress == emailAddress);
-                    _evolvedtaxContext.TblW8expforms.Remove(record);
-                  
+                    var record = _evolvedtaxContext.TblW8expforms.FirstOrDefault(e => e.EmailAddress == emailAddress && e.IsActive == true);
+                    if (record != null)
+                    {
+                        record.IsActive = false;
+                    }
+
                 }
                 if (recordExistsInW8ECIForm)
                 {
-                    var record = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(e => e.W8eciemailAddress == emailAddress);
-                    _evolvedtaxContext.TblW8eciforms.Remove(record);
-                
+                    var record = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(e => e.W8eciemailAddress == emailAddress && e.IsActive == true);
+                    if (record != null)
+                    {
+                        record.IsActive = false;
+                    }
+
                 }
 
                 _evolvedtaxContext.SaveChanges();

@@ -14,5 +14,6 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
         public string UpdateForEntity(W8BENERequest model);
         public W8BENERequest GetEntityDataByClientEmailId(string ClientEmailId);
         Task<bool> UpdateByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
+        public void ActivateRecord(string ClientEmail);
     }
 }

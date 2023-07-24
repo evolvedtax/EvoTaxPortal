@@ -18,5 +18,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
         public string Update(FormRequest model);
         public int SavePartial(FormRequest request);
         public int UpdatePartial(FormRequest request);
+
+        public void ActivateRecord(string ClientEmail);
     }
 }

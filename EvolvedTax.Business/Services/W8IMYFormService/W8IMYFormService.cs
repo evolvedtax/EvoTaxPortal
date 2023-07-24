@@ -2122,6 +2122,15 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
             return true;
         }
 
-
+        public void ActivateRecord(string ClientEmail)
+        {
+            var record = _evolvedtaxContext.TblW8imyforms.FirstOrDefault(e => e.EmailAddress == ClientEmail && e.IsActive == false);
+            if (record != null)
+            {
+                record.IsActive = true;
+                _evolvedtaxContext.SaveChanges();
+            }
+           
+        }
     }
 }

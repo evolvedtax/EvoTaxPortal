@@ -2389,5 +2389,15 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             }
             return SaveForEntity(request);
         }
+
+        public void ActivateRecord(string ClientEmail)
+        {
+            var record = _evolvedtaxContext.TblW8ebeneforms.FirstOrDefault(e => e.W8beneemailAddress == ClientEmail && e.IsActive == false);
+            if (record != null)
+            {
+                record.IsActive = true;
+                _evolvedtaxContext.SaveChanges();
+            }
+        }
     }
 }

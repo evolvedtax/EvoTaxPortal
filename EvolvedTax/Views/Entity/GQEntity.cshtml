@@ -483,7 +483,7 @@
 
                         // Show the confirmation dialog using SweetAlert
                         Swal.fire({
-                            title: 'Your last save form was ' + tableName + '.',
+                            title: 'Your last saved form was ' + tableName + '.',
                             text: 'Do you want to delete and start the new application?',
                             icon: 'warning',
                             showCancelButton: true,
@@ -627,8 +627,9 @@
 
             $('input[name="FormType"]').change(function () {
 
+                 $('#hdn_FormType').val('');
                 CheckExistingRecord();
-                $('#hdn_FormType').val('');
+              
 
             });
 
