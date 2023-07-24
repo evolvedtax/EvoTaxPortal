@@ -231,4 +231,5 @@ public partial class TblW8ebeneform
 
     public bool? W8beneonBehalfName { get; set; }
     public string? ActiveTabIndex { get; set; }
+    public bool? IsActive { get; set; } = true;
 }

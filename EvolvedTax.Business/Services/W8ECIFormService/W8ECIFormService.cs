@@ -1221,5 +1221,17 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             }
             return SaveForEntity(request);
         }
+
+        public void ActivateRecord(string ClientEmail)
+        {
+            var record = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(e => e.W8eciemailAddress == ClientEmail && e.IsActive == false);
+            if (record != null)
+            {
+                record.IsActive = true;
+                _evolvedtaxContext.SaveChanges();
+            }
+        }
     }
+
+   
 }

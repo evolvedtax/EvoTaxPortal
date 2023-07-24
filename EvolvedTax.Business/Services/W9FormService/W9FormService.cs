@@ -85,6 +85,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                 SsnTin = request.Ssnitnein,
                 W9emailAddress = request.EmailId,
                 W9entryDate = DateTime.Now,
+                IsActive = true,
             };
 
             if (_evolvedtaxContext.TblW9forms.Any(p => p.W9emailAddress == request.EmailId))
@@ -410,6 +411,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                 response.Fatca = request.W9Fatca;
                 response.SsnTin = request.Ssnitnein;
                 response.W9emailAddress = request.EmailId;
+                response.IsActive=true;
                 _evolvedtaxContext.TblW9forms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 if (request.IsPartialSave)
@@ -419,6 +421,16 @@ namespace EvolvedTax.Business.Services.W9FormService
                 return W9Creation(request);
             }
             return SaveForIndividual(request);
+        }
+
+        public void ActivateRecord(string ClientEmail)
+        {
+            var record = _evolvedtaxContext.TblW9forms.FirstOrDefault(e => e.W9emailAddress == ClientEmail && e.IsActive == false);
+            if (record != null)
+            {
+                record.IsActive = true;
+                _evolvedtaxContext.SaveChanges();
+            }
         }
     }
 }

@@ -50,4 +50,5 @@ public partial class TblW9form
     public string? W9fontName { get; set; }
 
     public string? W9emailAddress { get; set; }
+    public bool? IsActive { get; set; } = true;
 }

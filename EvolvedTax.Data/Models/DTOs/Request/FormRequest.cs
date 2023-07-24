@@ -109,7 +109,7 @@ public class FormRequest
     public string? MState { get; set; }
     [StringLength(50)]
     public string? MProvince { get; set; }
-    [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+    //[RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
     [StringLength(9)]
     public string MZipCode { get; set; } = string.Empty;
 
@@ -128,7 +128,7 @@ public class FormRequest
     public string? PState { get; set; }
     [StringLength(50)]
     public string? PProvince { get; set; }
-    [RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
+    //[RegularExpression("^[0-9]+$", ErrorMessage = "ZipCode should contain only numbers.")]
     [StringLength(9)]
     public string PZipCode { get; set; } = string.Empty;
     public string EmailId { get; set; } = string.Empty;

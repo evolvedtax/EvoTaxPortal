@@ -828,7 +828,18 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
         }
 
 
+        public void ActivateRecord(string ClientEmail)
+        {
+            var record = _evolvedtaxContext.TblW8expforms.FirstOrDefault(e => e.EmailAddress == ClientEmail && e.IsActive == false);
+            if (record != null)
+            {
+                record.IsActive = true;
+                _evolvedtaxContext.SaveChanges();
+            }
 
-       
+        }
+
+
+
     }
 }

@@ -61,4 +61,5 @@ public partial class TblW8eciform
 
     public bool? W8ecionBehalfName { get; set; }
     public string? ActiveTabIndex { get; set; }
+    public bool? IsActive { get; set; } = true;
 }

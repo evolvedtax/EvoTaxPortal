@@ -17,5 +17,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
         public FormRequest? GetDataByClientEmail(string ClientEmail);
         public string Update(FormRequest model);
 
+        public void ActivateRecord(string ClientEmail);
+
     }
 }

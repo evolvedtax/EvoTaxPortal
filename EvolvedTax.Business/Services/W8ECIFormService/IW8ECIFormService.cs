@@ -17,5 +17,6 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         public FormRequest GetIndividualDataByClientEmailId(string ClientEmailId);
         public FormRequest GetEntityDataByClientEmailId(string ClientEmailId);
         Task<bool> UpdateByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
+        public void ActivateRecord(string ClientEmail);
     }
 }
