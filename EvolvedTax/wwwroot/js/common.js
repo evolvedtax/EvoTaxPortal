@@ -586,7 +586,7 @@ var COMMON = (function () {
     };
     COMMON.confirmAlertActive = function (message, url, params, gridId) {
         var confirmed = false;
-        
+
         swal({
             title: "Are you sure you want to " + message + " this record?",
             text: "",
@@ -619,7 +619,7 @@ var COMMON = (function () {
     };
     COMMON.confirmAlertActiveAll = function (message, url, params, gridId) {
         var confirmed = false;
-        
+
         swal({
             title: "Are you sure you want to " + message + " these records?",
             text: "",

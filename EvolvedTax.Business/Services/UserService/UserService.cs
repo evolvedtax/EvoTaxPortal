@@ -29,6 +29,7 @@ namespace EvolvedTax.Business.Services.UserService
                 request.EmailId = response.EmailAddress ?? string.Empty;
                 request.InstituteName = response.InstitutionName ?? string.Empty;
                 request.IsLoggedIn = true;
+                request.IsAdmin = response.IsAdmin;
                 return request;
             }
             return request;

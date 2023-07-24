@@ -13,6 +13,7 @@ using Microsoft.Data.SqlClient;
 using SkiaSharp;
 using System.Data;
 using Azure;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -29,8 +30,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteMasterResponse> GetMaster()
         {
-            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters).AsQueryable();
-
+            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters.Where(p=> !p.IsAdmin)).AsQueryable();
         }
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
@@ -106,7 +106,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                              ClientEmailId = ic.ClientEmailId,
                              InstituteUserName = ic.PartnerName1 + " " + ic.PartnerName2 ?? "",
                              InstituteName = ie.EntityName ?? "",
-                             EntityId = ie.EntityId
+                             EntityId = ie.EntityId,
+                             ClientStatus = ic.ClientStatus
                          };
 
             return result.ToList();

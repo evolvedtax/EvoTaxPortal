@@ -18,6 +18,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public bool IsLoggedIn { get; set; }
         public string? OTP { get; set; }
         public DateTime? ExpiryDate { get; set; }
-
+        public bool IsAdmin { get; set; }
     }
 }

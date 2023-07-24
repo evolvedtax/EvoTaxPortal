@@ -36,7 +36,7 @@ namespace EvolvedTax.Controllers
         {
             return View(_instituteService.GetMaster());
         }
-        public IActionResult Entities()
+        public IActionResult Entities(int? instituteId)
         {
             var items = _evolvedtaxContext.MstrCountries.ToList();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
@@ -51,9 +51,31 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
+            if (instituteId != null)
+            {
+                return View(_instituteService.GetEntitiesByInstId(instituteId ?? 0));
+            }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             return View(_instituteService.GetEntitiesByInstId(InstId));
         }
+        //public IActionResult Entities()
+        //{
+        //    var items = _evolvedtaxContext.MstrCountries.ToList();
+        //    ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+        //                          .ThenBy(item => item.Country).Select(p => new SelectListItem
+        //                          {
+        //                              Text = p.Country,
+        //                              Value = p.Country,
+        //                          });
+
+        //    ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+        //    {
+        //        Text = p.StateId,
+        //        Value = p.StateId
+        //    });
+        //    int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+        //    return View(_instituteService.GetEntitiesByInstId(InstId));
+        //}
         public IActionResult EntitiesRecyleBin()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -72,7 +94,7 @@ namespace EvolvedTax.Controllers
         {
             return Json(_instituteService.RestoreClients(selectedValues));
         }
-        public IActionResult Client(int EntityId)
+        public IActionResult Client(int EntityId, int? InstituteId)
         {
             var items = _evolvedtaxContext.MstrCountries.ToList();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
@@ -88,7 +110,7 @@ namespace EvolvedTax.Controllers
                 Value = p.StateId
             });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var entities = _instituteService.GetEntitiesByInstId(InstId);
+            var entities = _instituteService.GetEntitiesByInstId(InstituteId ?? 0);
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
@@ -97,7 +119,7 @@ namespace EvolvedTax.Controllers
             });
             ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
-            return View(_instituteService.GetClientByEntityId(InstId, EntityId));
+            return View(_instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId));
         }
 
         public IActionResult ChangeEntity(int entityId)
@@ -114,8 +136,8 @@ namespace EvolvedTax.Controllers
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
 
-            string URL = Path.Combine(fullUrl, "Account", "OTP");
-            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
+            string URL = string.Concat(fullUrl, "/Account", "/OTP");
+            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p=>p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
         [Route("institute/uploadEntities")]
