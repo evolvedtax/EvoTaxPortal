@@ -119,6 +119,7 @@
             <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
             <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
             <input type="hidden" id="hdn_FormType" />
+            <input type="hidden" id="hdn_PreviousFormType" />
             <input type="hidden" id="hdn_MainSelectionRadioBtn" />
             <input type="hidden" id="hdn_W8SelectionRadioBtn" />
         </div>
@@ -519,6 +520,7 @@
                                 // Re-select the last selected radio button using its ID
                                 var MainSelectionRadioBtn= $('#hdn_MainSelectionRadioBtn').val()
                                 var W8SelectionRadioBtn = $('#hdn_W8SelectionRadioBtn').val();
+                                $('#hdn_FormType').val($('#hdn_PreviousFormType').val());
 
                                 if (MainSelectionRadioBtn !== '') {
                                     $(`#${MainSelectionRadioBtn}`).prop('checked', true);
@@ -637,8 +639,8 @@
                 //re-fill the entity dropdown if the user select the W8EXPEntity radio button
                 $('#hdn_FormType').val('');
 
-                // still in development phase
                 if (isFirstChange) {
+                    $('#hdn_PreviousFormType').val($(this).val());
                     var $this = $(this);
                     var prevValue = $this.data('prev-value');
                     var curValue = $this.val();

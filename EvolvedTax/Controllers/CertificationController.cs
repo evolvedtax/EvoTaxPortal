@@ -12,6 +12,7 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
@@ -57,9 +58,13 @@ namespace EvolvedTax.Controllers
                 }
                 return RedirectToAction("AccessDenied", "Account", new { statusCode = 401 });
             }
+
             var request = new PdfFormDetailsRequest();
             request.FileName = HttpContext.Session.GetString("PdfdFileName") ?? string.Empty;
             request.PrintName = HttpContext.Session.GetString("ClientName") ?? string.Empty;
+            string fontFamilyValue = HttpContext.Session.GetString("fontFamilyValue") ?? string.Empty;
+            ViewBag.FontFamilyValue = fontFamilyValue;
+            string settingSignature = HttpContext.Session.GetString("SettingSignature") ?? string.Empty;
             var model = new List<PdfFormDetailsRequest> {
                 new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_PalaceScriptMT, FontSize = "36px", Text = request.PrintName},
                 new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_VladimirScript, FontSize = "36px", Text = request.PrintName},
@@ -67,6 +72,11 @@ namespace EvolvedTax.Controllers
                 new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_SegoeScript, FontSize = "36px", Text = request.PrintName},
                 new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_BlackadderITC, FontSize = "36px", Text = request.PrintName},
             };
+            //if (!string.IsNullOrEmpty(fontFamilyValue) && settingSignature == "True")
+            //{
+            //    model = model.Where(item => item.FontFamily == fontFamilyValue).ToList();
+            //    HttpContext.Session.SetString("SettingSignature", "false");
+            //}
             request.ButtonRequests = model;
             request.EntryDate = DateTime.Now;
             request.IsSignaturePasted = false;
@@ -224,6 +234,18 @@ namespace EvolvedTax.Controllers
                 ViewBag.PrintName = _w8ECIFormService.GetIndividualDataByClientEmailId(clientEmail).NameOfIndividualW8ECI;
             }
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult SetFontFamilySession(string fontFamilyValue, bool fromSettingSignature = false)
+        {
+            HttpContext.Session.SetString("fontFamilyValue", fontFamilyValue);
+            return Ok(); 
+        }
+        public IActionResult GetFontFamilyValue()
+        {
+            string fontFamilyValue = HttpContext.Session.GetString("fontFamilyValue") ?? string.Empty;
+            return Json(new { fontFamilyValue });
         }
     }
 }
