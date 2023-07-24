@@ -25,6 +25,7 @@ namespace EvolvedTax.Helpers
             //    }
             //}
             CreateMap(typeof(InstituteMasterResponse),typeof(InstituteMaster)).ReverseMap();
+            CreateMap(typeof(InstituteMasterRequest),typeof(InstituteMaster)).ReverseMap();
             CreateMap(typeof(InstituteEntitiesResponse),typeof(InstituteEntity)).ReverseMap();
             CreateMap(typeof(InstituteClientResponse),typeof(InstitutesClient)).ReverseMap();
             CreateMap(typeof(W8BENERequest),typeof(FormRequest)).ReverseMap();

@@ -30,7 +30,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteMasterResponse> GetMaster()
         {
-            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters.Where(p=> !p.IsAdmin)).AsQueryable();
+            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters.Where(p => !p.IsAdmin)).AsQueryable();
         }
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
@@ -572,6 +572,28 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return new MessageResponseModel { Status = true };
             }
             return new MessageResponseModel { Status = false };
+        }
+        public InstituteMasterResponse GetInstituteDataById(int instId)
+        {
+            return _mapper.Map<InstituteMasterResponse>(_evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == instId));
+        }
+        public bool UpdateInstituteMaster(InstituteMasterRequest request)
+        {
+            var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstId);
+            response.FirstName = request.FirstName;
+            response.LastName = request.LastName;
+            response.InstituteLogo = request.InstituteLogo;
+            response.Madd1 = request.Madd1;
+            response.Madd2 = request.Madd2;
+            response.Mcity = request.Mcity;
+            response.Mcountry = request.Mcountry;
+            response.Mprovince = request.Mprovince;
+            response.Mstate = request.Mstate;
+            response.Phone = request.Phone;
+            request.Mzip = request.Mzip;
+            _evolvedtaxContext.InstituteMasters.Update(response);
+            _evolvedtaxContext.SaveChanges();
+            return true;
         }
     }
 }

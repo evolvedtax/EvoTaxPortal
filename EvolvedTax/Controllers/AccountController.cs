@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
@@ -9,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.WebRequestMethods;
@@ -25,15 +27,19 @@ namespace EvolvedTax.Controllers
         readonly IGeneralQuestionareService _generalQuestionareService;
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
+        readonly IWebHostEnvironment _webHostEnvironment;
+        readonly IMapper _mapper;
         private readonly EvolvedtaxContext _evolvedtaxContext;
 
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext)
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
             _instituteService = instituteService;
             _mailService = mailService;
             _evolvedtaxContext = evolvedtaxContext;
+            _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -117,6 +123,7 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("UserName", response.UserName);
                 HttpContext.Session.SetString("EmailId", response.EmailId);
                 HttpContext.Session.SetString("InstituteName", response.InstituteName);
+                HttpContext.Session.SetString("ProfileImage", response.InstituteLogo ?? "");
                 _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
                 return RedirectToAction("Entities", "Institute");
             }
@@ -228,6 +235,58 @@ namespace EvolvedTax.Controllers
                 return Json(response);
             }
             return Json(result);
+        }
+        [HttpGet]
+        public IActionResult UpdateProfile()
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = _instituteService.GetInstituteDataById(instId);
+            var items = _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId.ToString()
+            });
+            return View(_mapper.Map<InstituteMasterRequest>(response));
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(InstituteMasterRequest request)
+        {
+            if (request.ProfileImage != null || request.ProfileImage?.Length > 0)
+            {
+                // Create a unique filename to avoid overwriting existing files
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.ProfileImage?.FileName);
+                var webRootPath = _webHostEnvironment.WebRootPath;
+                // Combine the wwwroot path with the desired file path and filename
+                var filePath = Path.Combine(webRootPath, "ProfileImage", fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await request.ProfileImage?.CopyToAsync(fileStream);
+                }
+                request.InstituteLogo = fileName;
+                HttpContext.Session.SetString("ProfileImage", fileName);
+            }
+            else
+            {
+                HttpContext.Session.SetString("ProfileImage", "");
+            }
+            var response = _instituteService.UpdateInstituteMaster(request);
+            if (response)
+            {
+                TempData["Type"] = ResponseMessageConstants.SuccessStatus;
+                TempData["Message"] = "Profile is updated";
+                return RedirectToAction(nameof(UpdateProfile));
+            }
+            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            TempData["Message"] = "Something went wrong";
+            return View(request);
         }
         [HttpGet]
         public IActionResult ResetPassword(string token)

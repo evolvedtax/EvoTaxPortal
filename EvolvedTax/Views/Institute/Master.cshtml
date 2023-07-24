@@ -85,22 +85,19 @@
                 pageLength: 25,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
-                    { extend: 'copy' },
-                    { extend: 'csv' },
-                    { extend: 'excel', title: 'ExampleFile' },
-                    { extend: 'pdf', title: 'ExampleFile' },
-
                     {
-                        extend: 'print',
-                        customize: function (win) {
-                            $(win.document.body).addClass('white-bg');
-                            $(win.document.body).css('font-size', '10px');
-
-                            $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                        }
-                    }
+                        extend: 'excel',
+                        title: 'EvolvedTax',
+                        text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                        className: 'btn-excel'
+                    },
+                    {
+                        text: '<i class="fa fa-exclamation-circle"></i> Status Change',
+                        className: 'btn-recycle-bin',
+                        //action: function (e, dt, button, config) {
+                        //    window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                        //}
+                    },
                 ]
 
             });

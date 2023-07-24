@@ -78,6 +78,7 @@ namespace EvolvedTax.Business.Services.UserService
                 request.IsLoggedIn = true;
                 request.ExpiryDate = response.OtpexpiryDate;
                 request.OTP = response.OtpexpiryDate >= DateTime.Now ? response.Otp : "";
+                request.InstituteLogo = response.InstituteLogo ?? string.Empty;
                 return request;
             }
             return request;

@@ -1,0 +1,183 @@
+﻿@model InstituteMasterRequest
+@{
+    ViewData["Title"] = "Update Profile";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<div class="ibox-content">
+    <form asp-action="UpdateProfile" asp-controller="Account" method="post" enctype="multipart/form-data">
+        <input asp-for="InstId" hidden />
+        <div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Profile Image</label>
+                    <div style="display:flex">
+                        <div class="form-group mr-4">
+                            @if (!string.IsNullOrEmpty(Model.InstituteLogo))
+                            {
+                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/ProfileImage/@Model.InstituteLogo" />
+                            }
+                            else
+                            {
+                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/images/evolved_tax_mark_logo.png" />
+                            }
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" id="changeBtn">Change</button>
+                            <button type="button" class="btn btn-dark" id="removeBtn">Remove</button>
+                            <div><span>Uploads must be in either jpg or png formats and less than 1 MB.</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input class="form-control" asp-for="FirstName">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input class="form-control" asp-for="LastName">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Institute Name</label>
+                        <input class="form-control" asp-for="InstitutionName" disabled>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input class="form-control" asp-for="Phone">
+                        <span asp-validation-for="Phone"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select asp-for="Mcountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Address Line 1</label>
+                        <input class="form-control" asp-for="Madd1">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Address Line 2</label>
+                        <input class="form-control" asp-for="Madd2">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input class="form-control" asp-for="Mcity">
+                    </div>
+                </div>
+                <div id="stateDiv" class="col-md-6" hidden>
+                    <div class="form-group">
+                        <label>State</label>
+                        <select asp-items="ViewBag.StatesList" asp-for="Mstate" class="select2">
+                            <option></option>
+                        </select>
+                    </div>
+                </div>
+                <div id="provinceDiv" class="col-md-6">
+                    <div class="form-group">
+                        <label>Province</label>
+                        <input class="form-control" asp-for="Mprovince">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label id="lblZipCode">Zip</label>
+                        <input class="form-control" asp-for="Mzip">
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+        <input type="file" id="profileUpload" asp-for="ProfileImage" accept=".jpg, .png" style="display:none">
+    </form>
+</div>
+@section Scripts {
+    <!-- Hidden file input control -->
+
+    <script>
+        COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
+        $(document).ready(function () {
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
+            $('.select2-container').css('width', '100%');
+        });
+        $(window).on('load', function () {
+            $('select').change();
+        });
+        // JavaScript to handle image selection and removal
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileImage = document.getElementById('profileImage');
+            const changeBtn = document.getElementById('changeBtn');
+            const removeBtn = document.getElementById('removeBtn');
+            const profileUpload = document.getElementById('profileUpload');
+
+            // Trigger file input dialog when "Change" button is clicked
+            changeBtn.addEventListener('click', function () {
+                profileUpload.click();
+            });
+
+            // Handle image selection
+            profileUpload.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function () {
+                    profileImage.src = reader.result;
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle image removal
+            removeBtn.addEventListener('click', function () {
+                profileImage.removeAttribute('src');
+                profileUpload.value = ''; // Clear the file input value
+            });
+        });
+
+        function ShowHideProvince(obj) {
+
+            if (obj.value !== null && obj.value.trim() !== '') {
+                $('#AddressFields').prop('hidden', false);
+            }
+            else {
+                $('#AddressFields').prop('hidden', true);
+            }
+            if (obj.value == 'United States') {
+                $('#provinceDiv').prop('hidden', true);
+                $('#province').val('');
+                $('#stateDiv').prop('hidden', false);
+                $('#lblZipCode').text('Zip Code');//.append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provinceDiv').prop('hidden', false);
+                $('#stateDiv').prop('hidden', true);
+                $('#state').val(1);
+                $('#lblZipCode').text('Zip/Postal Code');//.append(`<span class="text-danger"> *</span>`);
+            }
+        }
+    </script>
+
+}

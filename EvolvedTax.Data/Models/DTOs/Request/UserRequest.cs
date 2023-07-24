@@ -19,5 +19,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string? OTP { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public bool IsAdmin { get; set; }
+        public string? InstituteLogo { get; set; }
     }
 }

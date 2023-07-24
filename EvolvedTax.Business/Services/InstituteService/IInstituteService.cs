@@ -39,5 +39,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<MessageResponseModel> TrashEmptyEntity(int[] selectedValues, RecordStatusEnum recordStatusEnum);
         Task<bool> CheckIfClientRecordExist(string clientEmail, string user);
         Task<MessageResponseModel> UpdateEmailFrequncy(int EntityId, int emailFrequency);
+        InstituteMasterResponse GetInstituteDataById(int instId);
+        bool UpdateInstituteMaster(InstituteMasterRequest request);
     }
 }

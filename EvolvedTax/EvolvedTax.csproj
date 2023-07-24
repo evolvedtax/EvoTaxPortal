@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
+    <Folder Include="wwwroot\ProfileImage\" />
   </ItemGroup>
 
   <ItemGroup>

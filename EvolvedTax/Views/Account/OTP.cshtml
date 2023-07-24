@@ -109,6 +109,7 @@
 
 </head>
 <body class="gray-bg">
+    <partial name="_busyIndicator" />
     <div class="container text-center">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
         <h3>Welcome to EvoTax Portal</h3>
@@ -151,6 +152,14 @@
         <!-- Only for demo purpose -->
         <script src="~/js/common.js"></script>
     </environment>
+    <script>
+        function displayBusyIndicator() {
+            $('.loading').show();
+        }
+        $(window).on('beforeunload', function () {
+            displayBusyIndicator();
+        });
+    </script>
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
 
@@ -202,7 +211,7 @@
         });
 
         window.addEventListener("keyup", (e) => {
-            if (inputCount > 5) {
+            if (inputCount === 6) {
                 submitButton.classList.remove("hide");
                 submitButton.classList.add("show");
                 if (e.key == "Backspace") {
@@ -211,6 +220,8 @@
                     inputField.lastElementChild.value = "";
                     inputCount -= 1;
                     submitButton.classList.add("hide");
+                } else {
+                    submitButton.click();
                 }
             }
         });
