@@ -270,6 +270,7 @@
         <input id="certify-isSignaturePasted" asp-for="IsSignaturePasted" hidden />
     </form>
 </div>
+
 <div id="modal-form" class="modal fade" aria-hidden="true" style="left:auto">
     <div class="modal-dialog">
         <div class="modal-content" style="width:max-content">
@@ -303,7 +304,9 @@
                     <input id="signature" asp-for="PrintName" hidden />
                     <input id="fontFamily" asp-for="FontFamily" hidden />
                     <input id="filePath" asp-for="FileName" hidden />
+                 
                 </form>
+             
             </div>
         </div>
     </div>
@@ -322,13 +325,32 @@
             //$('.certifyDiv').prop('hidden', true);
         }
 
+
+        function getFontFamilyValue() {
+            $.ajax({
+                type: 'GET',
+                url: '/Certification/GetFontFamilyValue',
+                success: function (data) {
+                    var fontFamilyValue = data.fontFamilyValue;
+                    if (fontFamilyValue !== null) {
+                        //$('#fontName').val(fontFamilyValue);
+                        $('#fontFamily').val(fontFamilyValue);
+                        $('#form').submit();
+                    }
+                },
+                error: function () {
+                    // Handle the error if needed
+                }
+            });
+        }
+
         $(document).ready(function () {
             HideDivs();
             $('#formDate').on('change', function () {
                 if ($('#signature').val()) {
                     // Submit the form
-                    $('#fontFamily').val($(this).css('font-family').replace(/"/g, ""));
-                    $('#form').submit();
+                    getFontFamilyValue();
+                 
                 }
 
             });
@@ -376,10 +398,25 @@
         function SelectSignature(obj) {
             $('#signature').val(obj.innerText);
             $('#fontFamily').val(obj.style.fontFamily.replace(/"/g, ""));
+            SettingFontFamily($('#fontFamily').val());
             let form = $('#form');
             if (form.valid()) {
                 form.submit();
             }
+        }
+
+        function SettingFontFamily(fontFamilyValue) {
+            $.ajax({
+                type: 'POST',
+                url: '/Certification/SetFontFamilySession',
+                data: { fontFamilyValue: fontFamilyValue },
+                success: function (data) {
+                    // Handle the success response if needed
+                },
+                error: function () {
+                    // Handle the error if needed
+                }
+            });
         }
 
 
