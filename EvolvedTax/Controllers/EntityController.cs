@@ -495,7 +495,7 @@ namespace EvolvedTax.Controllers
 
             var GQEntitiesResponse = _w8ECIFormService.GetEntityDataByClientEmailId(clientEmail);
             //GQEntitiesResponse.FormType = formName;
-            return View(GQEntitiesResponse);
+            return View(GQEntitiesResponse ??  new FormRequest());
         }
         [HttpPost]
         public IActionResult W8ECI(FormRequest model)
@@ -587,7 +587,7 @@ namespace EvolvedTax.Controllers
             //var GQEntitiesResponse = new W8BENERequest();
             var GQEntitiesResponse = _w8BENEFormService.GetEntityDataByClientEmailId(clientEmail);
             //GQEntitiesResponse.FormType = formName;
-            return View(GQEntitiesResponse);
+            return View(GQEntitiesResponse ?? new W8BENERequest());
         }
         [HttpPost]
         public IActionResult W8BENE(W8BENERequest model)
