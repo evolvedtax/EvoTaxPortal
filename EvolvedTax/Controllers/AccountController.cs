@@ -204,12 +204,15 @@ namespace EvolvedTax.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult ForgetPassword(ForgetPasswordRequest request, string email)
+        public IActionResult ForgetPassword(ForgetPasswordRequest request, string email, int PasswordSecuredQ)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
             request.EmailAddress = email;
+            request.PasswordSecuredA1 = request.PasswordSecuredA1 ?? "";
+            request.PasswordSecuredA2 = request.PasswordSecuredA2 ?? "";
+            request.PasswordSecuredA3 = request.PasswordSecuredA3 ?? "";
             var result = _userService.ValidateSecurityQuestions(request);
             if (result)
             {
@@ -218,7 +221,7 @@ namespace EvolvedTax.Controllers
                 var response = _userService.UpdateResetToeknInfo(email, PasswordResetToken, PasswordResetTokenExpiration);
                 if (response)
                 {
-                    string resetUrl = Path.Combine(fullUrl, "Account", "ResetPassword?token=" + PasswordResetToken);
+                    string resetUrl = string.Concat(fullUrl, "/Account", "/ResetPassword?token=" + PasswordResetToken);
                     _mailService.SendResetPassword(request.EmailAddress, "Action Required:Your Password Reset Request with EvoTax Portal", resetUrl);
                     return Json(response);
                 }

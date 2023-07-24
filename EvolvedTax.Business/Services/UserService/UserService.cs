@@ -85,10 +85,11 @@ namespace EvolvedTax.Business.Services.UserService
         public bool ValidateSecurityQuestions(ForgetPasswordRequest request)
         {
             var result = _evolvedtaxContext.InstituteMasters.Where(p => p.EmailAddress == request.EmailAddress
-            && p.PasswordSecuredA1.ToLower() == request.PasswordSecuredA1.Trim().ToLower() && p.PasswordSecuredQ1 == request.PasswordSecuredQ1
-            && p.PasswordSecuredA2.ToLower() == request.PasswordSecuredA2.Trim().ToLower() && p.PasswordSecuredQ2 == request.PasswordSecuredQ2
-            && p.PasswordSecuredA3.ToLower() == request.PasswordSecuredA3.Trim().ToLower() && p.PasswordSecuredQ3 == request.PasswordSecuredQ3
-            );
+            && (
+               (p.PasswordSecuredA1.ToLower() == request.PasswordSecuredA1.Trim().ToLower() && p.PasswordSecuredQ1 == request.PasswordSecuredQ1)
+            || (p.PasswordSecuredA2.ToLower() == request.PasswordSecuredA2.Trim().ToLower() && p.PasswordSecuredQ2 == request.PasswordSecuredQ2)
+            || (p.PasswordSecuredA3.ToLower() == request.PasswordSecuredA3.Trim().ToLower() && p.PasswordSecuredQ3 == request.PasswordSecuredQ3)
+            ));
             return result.Any();
         }
         public bool UpdateResetToeknInfo(string emailAddress, string passwordResetToken, DateTime passwordResetTokenExpiration)
