@@ -16,12 +16,23 @@
         }
 
     .center-dropdown {
-        left: -100% !important;
+        left: -650% !important;
         transform: translateX(-50%) !important;
     }
 
     .hide-counter::-webkit-inner-spin-button {
         display: none;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: none;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -49,7 +60,7 @@
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
                                 <div style="display:flex">
                                     <label class="ml-2 mr-2" style="margin:auto">Send Reminder After Every</label>
-                                    <input id="EntityId" name="EntityId" hidden />
+                                    <input id="EntityIdFreq" name="EntityIdFreq" hidden />
                                     <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary">Save</button>
@@ -74,98 +85,100 @@
                     <div><input id="importData" type="button" class="btn btn-dark" value="Import Client Data" /></div>
                     <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
                     </div>*@
-                    <table id="entity-table" class="table table-striped table-bordered table-hover dataTables-example">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                <th>Partner Name</th>
-                                <th>Address</th>
-                                <th hidden></th>
-                                <th hidden></th>
-                                <th hidden></th>
-                                <th hidden></th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Province (If Applicable)</th>
-                                <th>Zip/Postal Code</th>
-                                <th>Country</th>
-                                <th>Phone Number</th>
-                                <th>Email Address</th>
-                                <th>Status</th>
-                                <th>Form Completion Date</th>
-                                <th>Form Name</th>
-                                <th>Form Completed</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.Any())
-                            {
+                    <div class="table-responsive">
+                        <table id="entity-table" class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>Partner Name</th>
+                                    <th>Address</th>
+                                    <th hidden></th>
+                                    <th hidden></th>
+                                    <th hidden></th>
+                                    <th hidden></th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Province (If Applicable)</th>
+                                    <th>Zip/Postal Code</th>
+                                    <th>Country</th>
+                                    <th>Phone Number</th>
+                                    <th>Email Address</th>
+                                    <th>Status</th>
+                                    <th>Form Completion Date</th>
+                                    <th>Form Name</th>
+                                    <th>Form Completed</th>
+                                    <th>Lock/Unlock</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Any())
+                                {
                                 foreach (var item in Model)
                                 {
-                                    string status = string.Empty;
-                                    @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = ""; }
-                                    //"disabled"; }
-                                    <tr id="@item.ClientId">
-                                        <td><input type="checkbox" class="rowCheckbox" value="@item.ClientId" @status></td>
-                                        <td hidden>@item.PartnerName1</td>
-                                        <td hidden>@item.PartnerName2</td>
-                                        <td hidden>@item.Address1</td>
-                                        <td hidden>@item.Address2</td>
-                                        <td>@string.Concat(item.PartnerName1," ", item.PartnerName2)</td>
-                                        <td>@string.Concat(item.Address1," ", item.Address2)</td>
-                                        <td>@item.City</td>
-                                        <td>@item.State</td>
-                                        <td>@item.Province</td>
-                                        <td>@item.Zip</td>
-                                        <td>@item.Country</td>
-                                        <td>@item.PhoneNumber</td>
-                                        <td>@item.ClientEmailId</td>
-                                        <td>@item.StatusName</td>
-                                        <td>@item.ClientStatusDate?.ToString("MM-dd-yyyy")</td>
-                                        <td>@string.Concat("Form"," ",item.FormName)</td>
-                                        <td><a href="~/@item.FileName">@item.FileName</a></td>
-                                        <td class="text-center">
-                                            @if (item?.IsLocked ?? false)
-                                            {
-                                                <span class="fa fa-lock"></span>
-                                            }
-                                            else
-                                            {
-                                                <span class="fa fa-unlock"></span>
-                                            }
-                                        </td>
-                                        <td class="actions">
-                                            <div class="dropdown">
-                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="fa fa-bars"></span>
-                                                </button>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    <div class="dropdown-menu-horizontal">
-                                                        @if (item?.IsLocked ?? false)
-                                                        {
-                                                            @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>*@
-                                                        }
-                                                        else
-                                                        {
-                                                            <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
-                                                            @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>*@
-                                                        }
-                                                        @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
-                                                        {
-                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
-                                                        }
-                                                    </div>
+                                string status = string.Empty;
+                                @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = ""; }
+                                //"disabled"; }
+                                <tr id="@item.ClientId">
+                                    <td><input type="checkbox" class="rowCheckbox" value="@item.ClientId" @status></td>
+                                    <td hidden>@item.PartnerName1</td>
+                                    <td hidden>@item.PartnerName2</td>
+                                    <td hidden>@item.Address1</td>
+                                    <td hidden>@item.Address2</td>
+                                    <td>@string.Concat(item.PartnerName1," ", item.PartnerName2)</td>
+                                    <td>@string.Concat(item.Address1," ", item.Address2)</td>
+                                    <td>@item.City</td>
+                                    <td>@item.State</td>
+                                    <td>@item.Province</td>
+                                    <td>@item.Zip</td>
+                                    <td>@item.Country</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.ClientEmailId</td>
+                                    <td>@item.StatusName</td>
+                                    <td>@item.ClientStatusDate?.ToString("MM-dd-yyyy")</td>
+                                    <td>@string.Concat("Form"," ",item.FormName)</td>
+                                    <td><a href="~/@item.FileName">@item.FileName</a></td>
+                                    <td class="text-center">
+                                        @if (item?.IsLocked ?? false)
+                                        {
+                                        <span class="fa fa-lock"></span>
+                                        }
+                                        else
+                                        {
+                                        <span class="fa fa-unlock"></span>
+                                        }
+                                    </td>
+                                    <td class="actions">
+                                        <div class="dropdown">
+                                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-bars"></span>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <div class="dropdown-menu-horizontal">
+                                                    @if (item?.IsLocked ?? false)
+                                                    {
+                                                    @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>*@
+                                                    }
+                                                    else
+                                                    {
+                                                    <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
+                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
+                                                    @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>*@
+                                                    }
+                                                    @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
+                                                    {
+                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
+                                                    }
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                                 }
-                            }
-                        </tbody>
-                    </table>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
                     <h3>Dupplicate Records</h3>
@@ -212,13 +225,116 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+<!--Add Modal -->
+<div class="modal inmodal" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add New Client</h4>
+            </div>
+            <div class="modal-body">
+                <form id="addForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessAdd"
+                      data-ajax-url="@Url.Action("AddClient","Institute")">
+                    <input id="entityId" name="EntityId" hidden />
+                    <input id="entityName" name="EntityName" hidden />
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="PartnerName1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="PartnerName2" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Email Address<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="ClientEmailId" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="country">Country<span class="text-danger">*</span></label>
+                                <select asp-items="ViewBag.CountriesList" name="Country" onChange="ShowHideProvince(this)" required>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address1">Address Line 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="Address1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address2">Address Line 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="Address2" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="city">City<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="City" required>
+                            </div>
+                        </div>
+                        <div id="stateDiv" class="col-md-6">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select asp-items="ViewBag.StatesList" name="State">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="provinceDiv" class="col-md-6" hidden>
+                            <div class="form-group">
+                                <label for="province">Province</label>
+                                <input type="text" class="form-control" name="Province" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" name="Zip" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber">PhoneNumber</label>
+                                <input type="text" class="form-control" name="PhoneNumber" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAddBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Edit Modal -->
 <div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Edit Entity</h4>
+                <h4 class="modal-title">Edit Client</h4>
             </div>
             <div class="modal-body">
                 <!-- Form for editing row data -->
@@ -377,70 +493,71 @@
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
-                        text: '<i class="fa fa-download"></i> Download New Client Template',
-                        className: 'btn-template',
-                        action: function (e, dt, button, config) {
-                            let url = 'DownloadExcel';
-                            let params = { fileType: '@AppConstants.Client' }
-                            COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteClientTemplate');
-                        }
-                    },
-                    {
-                        extend: 'excel',
-                        title: 'EvolvedTax',
-                        text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
-                        className: 'btn-excel'
-                    },
-                    {
-                        text: '<i class="fa fa-upload"></i> Import Client Data',
-                        className: 'btn-imp-data',
-                        action: function (e, dt, button, config) {
-                            $('#uploadDataDiv').prop('hidden', false);
-                        }
-                    },
-                    {
-                        text: '<i class="fa fa-trash"></i> Recycle Bin',
-                        className: 'btn-recycle-bin',
-                        action: function (e, dt, button, config) {
-                            window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
-                        }
-                    },
-                    {
-                        text: '<i class="fa fa-envelope"></i> Send Email',
-                        className: 'email-btn',
-                        action: function (e, dt, button, config) {
-                            var selectedValues = [];
-                            $('.rowCheckbox:checked').each(function () {
-                                selectedValues.push($(this).val());
-                            });
-
-                            if (selectedValues.length === 0) {
-                                COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                return;
-                            }
-                            swal({
-                                title: "Sending Email...",
-                                text: "Email will send to the clients awaited for form submission",
-                                type: "info",
-                                showCancelButton: false,
-                                confirmButtonColor: "#1ab394",
-                                confirmButtonText: "Ok",
-                                //cancelButtonText: "Cancel"
-                            },
-                                function () {
-                                    let params = { selectedValues: selectedValues }
-                                    COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                                });
-                            //let params = { selectedValues: selectedValues }
-                            //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                            //$('.loading').show();
-
-                        }
-                    }, {
                         extend: 'collection',
-                        text: '<i class="fa fa-lock"></i>',
+                        text: '<i class="fa fa-ellipsis-h"></i>',
                         className: 'btn-menu-toggle',
                         buttons: [
+                            {
+                                text: '<i class="fa fa-download"></i> Download New Client Template',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    let url = 'DownloadExcel';
+                                    let params = { fileType: '@AppConstants.Client' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteClientTemplate');
+                                }
+                            },
+                            {
+                                extend: 'excel',
+                                title: 'EvolvedTax',
+                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                className: 'btn-excel'
+                            },
+                            {
+                                text: '<i class="fa fa-upload"></i> Import Client Data',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    $('#uploadDataDiv').prop('hidden', false);
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Trash',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-envelope"></i> Send Email',
+                                className: 'email-btn',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+                                    swal({
+                                        title: "Sending Email...",
+                                        text: "Email will send to the clients awaited for form submission",
+                                        type: "info",
+                                        showCancelButton: false,
+                                        confirmButtonColor: "#1ab394",
+                                        confirmButtonText: "Ok",
+                                        //cancelButtonText: "Cancel"
+                                    },
+                                        function () {
+                                            let params = { selectedValues: selectedValues }
+                                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                                        });
+                                    //let params = { selectedValues: selectedValues }
+                                    //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                                    //$('.loading').show();
+
+                                }
+                            },
                             {
                                 text: '<i class="fa fa-unlock"></i> Unlock All',
                                 className: 'btn-imp-data',
@@ -480,11 +597,18 @@
                                 }
                             }
                         ],
-                    }
+                    },
+                    {
+                        text: 'New <i class="fa fa-plus"></i>',
+                        className: 'new-btn',
+                        action: function (e, dt, button, config) {
+                            $("#addModal").modal("show");
+                        }
+                    },
                 ],
                 initComplete: function () {
                     $('.dataTables_length').hide(); // Hide the original page length dropdown
-                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Lock/Unlock All').tooltip();
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
                     // Add custom CSS class to the dropdown list container
                     $('.btn-menu-toggle').on('click', function () {
                         var dropdown = $(this).siblings('.dt-button-collection');
@@ -637,10 +761,29 @@
             $("#editModal").modal("hide");
             window.location.reload();
         }
+        $('#saveAddBtn').click(function () {
+            let form = $('#addForm');
+            if (form.valid()) {
+                $('#entityId').val($('#changeEntity').val());
+                $('#entityName').val($('#changeEntity option:selected').text());
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessAdd(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, response.Message);
+                $("#addModal").modal("hide");
+                window.location.reload();
+            } else {
+                COMMON.notification(2, response.Message);
+            }
+           
+        }
         $('#submitEmFreq').click(function () {
             let form = $('#formUpdateEmailFrequency');
             if (form.valid()) {
-                $('#EntityId').val($('#changeEntity').val());
+                $('#EntityIdFreq').val($('#changeEntity').val());
                 form.submit();
             }
             return false;

@@ -41,5 +41,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<MessageResponseModel> UpdateEmailFrequncy(int EntityId, int emailFrequency);
         InstituteMasterResponse GetInstituteDataById(int instId);
         bool UpdateInstituteMaster(InstituteMasterRequest request);
+        Task<MessageResponseModel> AddClient(InstituteClientRequest request);
+        Task<MessageResponseModel> AddEntity(InstituteEntityRequest request);
     }
 }
