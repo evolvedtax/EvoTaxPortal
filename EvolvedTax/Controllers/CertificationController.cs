@@ -154,10 +154,12 @@ namespace EvolvedTax.Controllers
             else if (request.FormName == AppConstants.W8EXPForm)
             {
                 await _w8ExpFormService.UpdateByClientEmailId(clientEmail, request);
+                await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
             else if (request.FormName == AppConstants.W8IMYForm)
             {
                 await _w8IMYFormService.UpdateByClientEmailId(clientEmail, request);
+                await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
             }
             else if (request.FormName == AppConstants.W8BENForm)
             {

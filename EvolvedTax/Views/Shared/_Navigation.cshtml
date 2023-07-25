@@ -33,15 +33,36 @@
                     <img src="~/images/evolved_tax_mark_logo.png" width="50px" />
                 </div>
             </li>
-            <li class="@Html.IsSelected(controller: "Individual")">
+            <li>
                 <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Report", "Form")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
+              
+            </li>
+            <li>
+                <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span> <span class="fa arrow"></span></a>
+            </li>
+            <li>
+                <a href="@Url.Action("OpenForm83", "Home")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span> <span class="fa arrow"></span></a>
+            </li>
+            <li>
+                <a href="@Url.Action("UpdateProfile", "Account")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
+                    <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
+                </ul>
+            </li>
+           
+         @*   <li class="@Html.IsSelected(controller: "Individual")">
+
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Individual")">GQ Individual</a></li>
                     <li class="@Html.IsSelected(action: "TaxPayerDetails")"><a href="@Url.Action("TaxPayerDetails", "Home")">TaxPayerDetails</a></li>
                     <li class="@Html.IsSelected(action: "OpenForm83")"><a href="@Url.Action("OpenForm83", "Home")">Form 83(b)</a></li>
                     <li class="@Html.IsSelected(action: "EmailFrequency")"><a href="@Url.Action("EmailFrequency", "Home")">Email Frequency</a></li>
                 </ul>
-            </li>
+            </li>*@
+
             <li class="@Html.IsSelected(controller: "Institute")">
                 <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
@@ -56,6 +77,7 @@
                     @*<li class="@Html.IsSelected(action: "Client")"><a href="@Url.Action("Client", "Institute")">Client</a></li>*@
                 </ul>
             </li>
+
         </ul>
     </div>
 </nav>
