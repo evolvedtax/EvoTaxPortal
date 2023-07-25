@@ -53,6 +53,7 @@ namespace EvolvedTax.Controllers
             });
             if (instituteId != null)
             {
+                ViewBag.InstituteId = instituteId;
                 return View(_instituteService.GetEntitiesByInstId(instituteId ?? 0));
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -137,7 +138,7 @@ namespace EvolvedTax.Controllers
             var fullUrl = $"{scheme}://{host}";
 
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
-            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p=>p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
+            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
         [Route("institute/uploadEntities")]
@@ -194,6 +195,24 @@ namespace EvolvedTax.Controllers
             }
 
         }
+        [Route("institute/AddEntity")]
+        [HttpPost]
+        public async Task<IActionResult> AddEntity(InstituteEntityRequest request)
+        {
+
+            if (request.InstituteId == 0)
+            {
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                request.InstituteId = (short)instId;
+                request.InstituteName = HttpContext.Session.GetString("InstituteName");
+            }
+            else
+            {
+                request.InstituteName = _instituteService.GetInstituteDataById(request.InstituteId).InstitutionName;
+            }
+            var response = await _instituteService.AddEntity(request);
+            return Json(response);
+        }
         [Route("institute/UpdateEntity")]
         [HttpPost]
         public async Task<IActionResult> UpdateEntity(InstituteEntityRequest request)
@@ -234,6 +253,15 @@ namespace EvolvedTax.Controllers
             var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
             return Json(response);
         }
+        [Route("institute/AddClient")]
+        [HttpPost]
+        public async Task<IActionResult> AddClient(InstituteClientRequest request)
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            request.InstituteId = (short)instId;
+            var response = await _instituteService.AddClient(request);
+            return Json(response);
+        }
         [Route("institute/UpdateClient")]
         [HttpPost]
         public async Task<IActionResult> UpdateClient(InstituteClientRequest request)
@@ -247,13 +275,13 @@ namespace EvolvedTax.Controllers
         }
         [Route("institute/UpdateEmailFrequency")]
         [HttpPost]
-        public async Task<IActionResult> UpdateEmailFrequency(int EntityId, int EmailFrequency)
+        public async Task<IActionResult> UpdateEmailFrequency(int EntityIdFreq, int EmailFrequency)
         {
-            if (EntityId == 0)
+            if (EntityIdFreq == 0)
             {
                 return Json(false);
             }
-            var response = await _instituteService.UpdateEmailFrequncy(EntityId, EmailFrequency);
+            var response = await _instituteService.UpdateEmailFrequncy(EntityIdFreq, EmailFrequency);
             return Json(response);
         }
         [Route("institute/DeleteClient")]

@@ -9,8 +9,10 @@ namespace EvolvedTax.Data.Models.DTOs.Request
     public class InstituteEntityRequest
     {
         public int EntityId { get; set; }
+        public short InstituteId { get; set; }
 
         public string? EntityName { get; set; }
+        public string? InstituteName { get; set; }
 
         public string? Ein { get; set; }
 

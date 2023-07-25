@@ -172,13 +172,16 @@ namespace EvolvedTax.Business.Services.InstituteService
                 IWorkbook workbook = new XSSFWorkbook(stream);
                 ISheet sheet = workbook.GetSheetAt(0); // Assuming the data is in the first sheet
 
+                HashSet<string> uniqueClientEmailIds = new HashSet<string>();
+                HashSet<string> uniqueEntityNames = new HashSet<string>();
+
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
 
                     var client = new InstitutesClient
                     {
-                        EntityName = excelRow.GetCell(0)?.ToString() ?? string.Empty,
+                        EntityName = excelRow.GetCell(0)?.ToString()?.Trim() ?? string.Empty,
                         PartnerName1 = excelRow.GetCell(1)?.ToString() ?? string.Empty,
                         PartnerName2 = excelRow.GetCell(2)?.ToString() ?? string.Empty,
                         Address1 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
@@ -189,7 +192,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         Zip = excelRow.GetCell(8)?.ToString() ?? string.Empty,
                         Country = excelRow.GetCell(9)?.ToString() ?? string.Empty,
                         PhoneNumber = excelRow.GetCell(10)?.ToString() ?? string.Empty,
-                        ClientEmailId = excelRow.GetCell(11)?.ToString() ?? string.Empty,
+                        ClientEmailId = excelRow.GetCell(11)?.ToString()?.Trim() ?? string.Empty,
                         ClientStatus = 1,
                         FileName = "",
                         InstituteId = (short)InstId,
@@ -198,11 +201,30 @@ namespace EvolvedTax.Business.Services.InstituteService
                         IsLocked = false,
                     };
 
+                    string clientEmailId = client.ClientEmailId;
+                    string entityName = client.EntityName;
+
+                    // Check for duplicate records within the Excel sheet
+                    //if (uniqueClientEmailIds.Contains(clientEmailId) || uniqueEntityNames.Contains(entityName))
+                    //{
+                    //    // This client is a duplicate within the Excel sheet
+                    //    response.Add(client);
+                    //    Status = true;
+                    //}
+                    //else
+                    //{
+                    //    // Add the values to the HashSet to track duplicates
+                    //    uniqueClientEmailIds.Add(clientEmailId);
+                    //    uniqueEntityNames.Add(entityName);
+                    //    clientList.Add(client);
+                    //}
                     // Check for duplicate records based on ClientEmailId in the database
                     if (await _evolvedtaxContext.InstitutesClients.AnyAsync(p =>
                         p.ClientEmailId == client.ClientEmailId &&
                         p.InstituteId == client.InstituteId &&
-                        p.EntityId == client.EntityId))
+                        p.EntityId == client.EntityId
+                        //&& p.EntityName == client.EntityName
+                        ))
                     {
                         response.Add(client);
                         Status = true;
@@ -594,6 +616,61 @@ namespace EvolvedTax.Business.Services.InstituteService
             _evolvedtaxContext.InstituteMasters.Update(response);
             _evolvedtaxContext.SaveChanges();
             return true;
+        }
+        public async Task<MessageResponseModel> AddClient(InstituteClientRequest request)
+        {
+            if (_evolvedtaxContext.InstitutesClients.Any(p => p.ClientEmailId.Trim() == request.ClientEmailId.Trim()))
+            {
+                return new MessageResponseModel { Status = false, Message = "Data already exist against given email." };
+            }
+            var model = new InstitutesClient
+            {
+                PartnerName1 = request.PartnerName1,
+                PartnerName2 = request.PartnerName2,
+                Address1 = request.Address1,
+                Address2 = request.Address2,
+                City = request.City,
+                State = request.State,
+                Province = request.Province,
+                Zip = request.Zip,
+                Country = request.Country,
+                PhoneNumber = request.PhoneNumber,
+                ClientEmailId = request.ClientEmailId,
+                ClientStatus = 1,
+                EntityId = request.EntityId,
+                EntityName = request.EntityName,
+                InstituteId = request.InstituteId,
+                IsActive = RecordStatusEnum.Active,
+            };
+            await _evolvedtaxContext.AddAsync(model);
+            await _evolvedtaxContext.SaveChangesAsync();
+            return new MessageResponseModel { Status = true, Message = "Record inserted" };
+        }
+        public async Task<MessageResponseModel> AddEntity(InstituteEntityRequest request)
+        {
+            if (_evolvedtaxContext.InstituteEntities.Any(p => p.Ein.Trim() == request.Ein.Trim()))
+            {
+                return new MessageResponseModel { Status = false, Message = "Data already exist against given EIN." };
+            }
+            var model = new InstituteEntity
+            {
+                EntityName = request.EntityName,
+                Ein = request.Ein,
+                EntityRegistrationDate = request.EntityRegistrationDate,
+                Address1 = request.Address1,
+                Address2 = request.Address2,
+                City = request.City,
+                State = request.State,
+                Province = request.Province,
+                Zip = request.Zip,
+                Country = request.Country,
+                InstituteId = request.InstituteId,
+                InstituteName = request.InstituteName,
+                IsActive = RecordStatusEnum.Active,
+            };
+            await _evolvedtaxContext.AddAsync(model);
+            await _evolvedtaxContext.SaveChangesAsync();
+            return new MessageResponseModel { Status = true, Message = "Record inserted" };
         }
     }
 }
