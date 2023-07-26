@@ -20,7 +20,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId);
         InstituteClientResponse? GetClientDataByClientEmailId(string ClientEmailId);
         Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName);
-        Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId);
+        Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId, string entityName);
         Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
         InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId);

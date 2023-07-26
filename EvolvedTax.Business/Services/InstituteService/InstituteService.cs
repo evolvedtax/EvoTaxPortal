@@ -14,6 +14,7 @@ using SkiaSharp;
 using System.Data;
 using Azure;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Linq;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -123,6 +124,9 @@ namespace EvolvedTax.Business.Services.InstituteService
                 IWorkbook workbook = new XSSFWorkbook(stream);
                 ISheet sheet = workbook.GetSheetAt(0); // Assuming the data is in the first sheet
 
+                HashSet<string> uniqueEINNumber = new HashSet<string>();
+                HashSet<string> uniqueEntityNames = new HashSet<string>();
+
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
@@ -144,9 +148,24 @@ namespace EvolvedTax.Business.Services.InstituteService
                         IsActive = RecordStatusEnum.Active,
                         IsLocked = false,
                     };
-                    // Check for duplicate records based on ClientEmailId in the database
+                    string clientEmailEINNumber = entity.Ein ?? string.Empty;
+                    string entityNameExcel = entity.EntityName ?? string.Empty;
+                    if (uniqueEINNumber.Contains(clientEmailEINNumber) || uniqueEntityNames.Contains(entityNameExcel))
+                    {
+                        // This entity is a duplicate within the Excel sheet
+                        Status = false;
+                        return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Client" };
+                    }
+                    else
+                    {
+                        // Add the values to the HashSet to track dzuplicates
+                        uniqueEINNumber.Add(clientEmailEINNumber);
+                        uniqueEntityNames.Add(entityNameExcel);
+                    }
+                    // Check for duplicate records based on entityName in the database
                     if (await _evolvedtaxContext.InstituteEntities.AnyAsync(p =>
                         p.Ein == entity.Ein &&
+                        p.EntityName == entity.EntityName &&
                         p.InstituteId == entity.InstituteId))
                     {
                         response.Add(entity);
@@ -162,7 +181,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
         }
-        public async Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId)
+        public async Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId, string entityName)
         {
             bool Status = false;
             var response = new List<InstitutesClient>();
@@ -202,28 +221,32 @@ namespace EvolvedTax.Business.Services.InstituteService
                     };
 
                     string clientEmailId = client.ClientEmailId;
-                    string entityName = client.EntityName;
-
+                    string entityNameExcel = client.EntityName;
+                    if (entityNameExcel != entityName)
+                    {
+                        Status = false;
+                        return new MessageResponseModel { Status = Status, Message = new { Title = entityNameExcel + " " + "entity not available", TagLine = "Name of the selected entity does not available in the uploaded excel sheet" }, Param = "Client" };
+                    }
                     // Check for duplicate records within the Excel sheet
-                    //if (uniqueClientEmailIds.Contains(clientEmailId) || uniqueEntityNames.Contains(entityName))
-                    //{
-                    //    // This client is a duplicate within the Excel sheet
-                    //    response.Add(client);
-                    //    Status = true;
-                    //}
-                    //else
-                    //{
-                    //    // Add the values to the HashSet to track duplicates
-                    //    uniqueClientEmailIds.Add(clientEmailId);
-                    //    uniqueEntityNames.Add(entityName);
-                    //    clientList.Add(client);
-                    //}
+                    if (uniqueClientEmailIds.Contains(clientEmailId) || uniqueEntityNames.Contains(entityNameExcel))
+                    {
+                        // This client is a duplicate within the Excel sheet
+                        Status = false;
+                        return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Client" };
+                    }
+                    else
+                    {
+                        // Add the values to the HashSet to track dzuplicates
+                        uniqueClientEmailIds.Add(clientEmailId);
+                        uniqueEntityNames.Add(entityNameExcel);
+                        clientList.Add(client);
+                    }
                     // Check for duplicate records based on ClientEmailId in the database
                     if (await _evolvedtaxContext.InstitutesClients.AnyAsync(p =>
                         p.ClientEmailId == client.ClientEmailId &&
                         p.InstituteId == client.InstituteId &&
                         p.EntityId == client.EntityId
-                        //&& p.EntityName == client.EntityName
+                        && p.EntityName == client.EntityName
                         ))
                     {
                         response.Add(client);
