@@ -28,20 +28,34 @@ namespace EvolvedTax.Business.Services.FormReport
         //    throw new NotImplementedException();
         //}
 
-        public IQueryable<InstituteClientResponse> GetClientByInstituteId(int InstId, string formType = null)
+        public IQueryable<InstituteClientResponse> GetClientByInstituteId(int InstId, string formType = null, string Entity=null, string Status = null)
         {
             // Fetch all MasterClientStatus records
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active && p.ClientStatus == AppConstants.ClientStatusFormSubmitted);
+                .Where(p => p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active);
 
             if (!string.IsNullOrEmpty(formType))
             {
                 response = response.Where(p =>  p.FormName == formType);
             }
 
-            return response.Select(p => new InstituteClientResponse
+            if (!string.IsNullOrEmpty(Entity))
+            {
+                response = response.Where(p => p.EntityId == Convert.ToInt32(Entity));
+            }
+            if (Status=="3")
+            {
+                response = response.Where(p => p.ClientStatus == AppConstants.ClientStatusFormSubmitted);
+            }
+            if (!string.IsNullOrEmpty(Status) && Status != "3")
+            {
+                response = response.Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted);
+            }
+
+
+                return response.Select(p => new InstituteClientResponse
             {
                 Address1 = p.Address1,
                 Address2 = p.Address2,

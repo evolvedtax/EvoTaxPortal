@@ -34,17 +34,17 @@
                 </div>
             </li>
             <li>
-                <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
+                <a><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
             </li>
             <li>
                 <a href="@Url.Action("Report", "Form")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
               
             </li>
             <li>
-                <a href="@Url.Action("GQIndividual", "Individual")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span> <span class="fa arrow"></span></a>
+                <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span> <span class="fa arrow"></span></a>
             </li>
             <li>
-                <a href="@Url.Action("OpenForm83", "Home")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span> <span class="fa arrow"></span></a>
+                <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span> <span class="fa arrow"></span></a>
             </li>
             <li>
                 <a href="@Url.Action("UpdateProfile", "Account")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span> <span class="fa arrow"></span></a>
@@ -63,7 +63,7 @@
                 </ul>
             </li>*@
 
-            <li class="@Html.IsSelected(controller: "Institute")">
+      @*      <li class="@Html.IsSelected(controller: "Institute")">
                 <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
                     @if (_httpContextAccessor.HttpContext?.Session.GetString("IsAdmin") == true.ToString())
@@ -74,10 +74,17 @@
                     {
                         <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
                     }
-                    @*<li class="@Html.IsSelected(action: "Client")"><a href="@Url.Action("Client", "Institute")">Client</a></li>*@
+                  
                 </ul>
-            </li>
+            </li>*@
 
         </ul>
     </div>
 </nav>
+<style>
+    .disabled-link {
+        color: #999; /* You can change the color to your desired disabled style */
+        pointer-events: none;
+        cursor: default;
+    }
+</style>

@@ -37,6 +37,12 @@ namespace EvolvedTax.Controllers
         {
 
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+
+            ViewBag.EntitiesList = _evolvedtaxContext.InstituteEntities.Where(p =>p.IsActive== RecordStatusEnum.Active).Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
             ViewBag.FormTypes = new List<string>
             {
                 AppConstants.W9Form,
@@ -50,8 +56,10 @@ namespace EvolvedTax.Controllers
 
         }
         [HttpPost]
-        public IActionResult Report(string formType)
+        public IActionResult Report(string formType,string Entities,string Status)
         {
+
+           
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             ViewBag.FormTypes = new List<string>
         {
@@ -62,10 +70,16 @@ namespace EvolvedTax.Controllers
             AppConstants.W8IMYForm,
             AppConstants.W8EXPForm
         };
-
+            ViewBag.EntitiesList = _evolvedtaxContext.InstituteEntities.Where(p => p.IsActive == RecordStatusEnum.Active).Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
             // Load filtered data on POST request (after the form is submitted)
-            var filteredData = _formReportService.GetClientByInstituteId(InstId, formType);
+            var filteredData = _formReportService.GetClientByInstituteId(InstId, formType, Entities,Status);
             TempData["LastSelectedFormType"] = formType;
+            TempData["LastSelectedEntities"] = Entities;
+            TempData["LastSelectedStatus"] = Status;
             return View(filteredData);
         }
     }

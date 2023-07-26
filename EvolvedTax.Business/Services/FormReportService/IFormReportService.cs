@@ -14,6 +14,6 @@ namespace EvolvedTax.Business.Services.FormReport
 {
     public interface IFormReportService
     {
-        IQueryable<InstituteClientResponse> GetClientByInstituteId(int InstId, string formType = null);
+        IQueryable<InstituteClientResponse> GetClientByInstituteId(int InstId, string formType = null,string Entities = null, string Status = null);
     }
 }
