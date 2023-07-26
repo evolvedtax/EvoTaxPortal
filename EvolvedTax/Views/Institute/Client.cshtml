@@ -740,7 +740,8 @@
             fileInput.addEventListener('change', uploadData);
             function uploadData(event) {
                 let entityId = $('#changeEntity').val();
-                COMMON.uploadFile(event, '/Institute/uploadClients', entityId);
+                let entityName = $('#changeEntity option:selected').text();
+                COMMON.uploadFile(event, '/Institute/uploadClients', {entityId,entityName});
                 $('#changeEntity').change();
             }
             bsCustomFileInput.init();

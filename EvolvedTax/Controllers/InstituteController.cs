@@ -143,24 +143,33 @@ namespace EvolvedTax.Controllers
         }
         [Route("institute/uploadEntities")]
         [HttpPost]
-        public async Task<IActionResult> UploadEntities(IFormFile file)
+        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
         {
-            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var instName = HttpContext.Session.GetString("InstituteName") ?? string.Empty;
-            var response = await _instituteService.UploadEntityData(file, instId, instName);
+            string InstituteName = string.Empty;
+            if (InstituteId == 0)
+            {
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                InstituteId = (short)instId;
+                InstituteName = HttpContext.Session.GetString("InstituteName") ?? string.Empty;
+            }
+            else
+            {
+                InstituteName = _instituteService.GetInstituteDataById(InstituteId).InstitutionName ?? string.Empty; 
+            }
+            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName);
             return Json(response);
         }
 
         [Route("institute/uploadClients")]
         [HttpPost]
-        public async Task<IActionResult> UploadClients(IFormFile file, int EntityId)
+        public async Task<IActionResult> UploadClients(IFormFile file, int EntityId, string entityName)
         {
             if (file == null)
             {
                 return Json(false);
             }
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var response = await _instituteService.UploadClientData(file, instId, EntityId);
+            var response = await _instituteService.UploadClientData(file, instId, EntityId, entityName.Trim());
             return Json(response);
         }
 

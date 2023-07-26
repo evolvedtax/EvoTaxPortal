@@ -266,7 +266,9 @@ var COMMON = (function () {
         // Create a FormData object and append the file to it
         var formData = new FormData();
         formData.append('file', file);
-        formData.append('EntityId', obj); // Here obj is Entity Id
+        formData.append('EntityId', obj.entityId); // Here obj is Entity Id
+        formData.append('entityName', obj.entityName); // Here obj is Entity Id
+        formData.append('InstituteId', obj); // Here obj is Institute Id
         // Configure the XMLHttpRequest object
         xhr.upload.onprogress = function (e) {
             if (e.lengthComputable) {
@@ -284,6 +286,11 @@ var COMMON = (function () {
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
                 if (response.Status) {
+                    
+                    // Show the progress bar
+                    var progressDiv = document.getElementById('progress');
+                    progressDiv.style.display = 'block';
+
                     if (response.Param == "Client" && response.Message.length > 0) {
                         $('#dupplication-ibox').prop('hidden', false);
                         //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
@@ -335,32 +342,17 @@ var COMMON = (function () {
 
                         // Iterate over the response data and populate the table
                         $.each(response.Message, function (index, item) {
-                            let ClientStatus = '';
-                            if (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') {
-                                ClientStatus = 'disabled';
-                            }
-                            let status = '';
-                            if (item.ClientStatus == '@AppConstants.ClientStatusActive') {
-                                status = '<span class="fa fa-unlock"></span>';
-                            } else {
-                                status = '<span class="fa fa-lock"></span>';
-                            }
+                            
                             let row = [
-                                '<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '"' + ClientStatus + '>',
-                                item.PartnerName1 + ' ' + item.PartnerName2,
+                                item.EntityName,
+                                item.Ein,
+                                COMMON.GetDateMMddyyyFormat(item.EntityRegistrationDate),
                                 item.Address1 + ' ' + item.Address2,
                                 item.City,
                                 item.State,
                                 item.Province,
                                 item.Zip,
                                 item.Country,
-                                item.PhoneNumber,
-                                item.ClientEmailId,
-                                item.StatusName,
-                                COMMON.GetDateMMddyyyFormat(item.ClientStatusDate),
-                                'Form' + ' ' + item.FormName,
-                                '<a href="~/' + item.FileName + '">' + item.FileName + '</a>',
-                                status
                             ];
                             dataTable.rows.add([row]);
                         });
@@ -371,7 +363,7 @@ var COMMON = (function () {
                     console.log('Upload completed successfully');
                 } else {
                     // Continue showing the progress bar until completion record is received
-                    console.log('Upload is in progress');
+                    COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
                 }
             } else {
                 // File upload failed
@@ -382,9 +374,7 @@ var COMMON = (function () {
         // Send the AJAX request
         xhr.send(formData);
 
-        // Show the progress bar
-        var progressDiv = document.getElementById('progress');
-        progressDiv.style.display = 'block';
+        
     }
     COMMON.doAjaxToDownloadFile = function (url, params, fileName) {
         $.ajax({
