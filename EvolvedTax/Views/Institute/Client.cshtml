@@ -1,4 +1,4 @@
-﻿@model IQueryable<InstituteClientResponse>
+﻿@model InstituteClientViewModel
 @{
     ViewData["Title"] = "Client";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
@@ -112,9 +112,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.Any())
+                                @if (Model.InstituteClientsResponse.Any())
                                 {
-                                foreach (var item in Model)
+                                    foreach (var item in Model.InstituteClientsResponse)
                                 {
                                 string status = string.Empty;
                                 @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = ""; }
@@ -181,45 +181,47 @@
                     </div>
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
-                    <h3>Dupplicate Records</h3>
-                    <table id="entity-table-dupplication" class="table table-striped table-bordered table-hover dataTables-example-1">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                <th>Partner Name</th>
-                                <th>Address</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Province (If Applicable)</th>
-                                <th>Zip/Postal Code</th>
-                                <th>Country</th>
-                                <th>Phone Number</th>
-                                <th>Email Address</th>
-                                <th>Status</th>
-                                <th>Form Completion Date</th>
-                                <th>Form Name</th>
-                                <th>Form Completed</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h3>Duplicate Records</h3>
+                    <div class="table-responsive">
+                        <table id="entity-table-dupplication" class="table table-striped table-bordered table-hover dataTables-example-1">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>Partner Name</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Province (If Applicable)</th>
+                                    <th>Zip/Postal Code</th>
+                                    <th>Country</th>
+                                    <th>Phone Number</th>
+                                    <th>Email Address</th>
+                                    <th>Status</th>
+                                    <th>Form Completion Date</th>
+                                    <th>Form Name</th>
+                                    <th>Form Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -243,33 +245,34 @@
                       data-ajax-loading="#ajax-loader"
                       data-ajax-success="ajaxsuccessAdd"
                       data-ajax-url="@Url.Action("AddClient","Institute")">
-                    <input id="entityId" name="EntityId" hidden />
-                    <input id="entityName" name="EntityName" hidden />
+                    <input id="entityId" asp-for="InstituteClientsRequest.EntityId" hidden />
+                    <input id="entityName" asp-for="InstituteClientsRequest.EntityName" hidden />
                     <div class="row col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="PartnerName1" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PartnerName1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="PartnerName2" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PartnerName2" required>
                             </div>
                         </div>
                         
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="partnerName1">Email Address<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="ClientEmailId" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.ClientEmailId" required>
+                                <span asp-validation-for="InstituteClientsRequest.ClientEmailId"></span>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="country">Country<span class="text-danger">*</span></label>
-                                <select asp-items="ViewBag.CountriesList" name="Country" onChange="ShowHideProvince(this)" required>
+                                <select asp-items="ViewBag.CountriesList" asp-for="InstituteClientsRequest.Country" onChange="ShowHideProvince(this)" required>
                                     <option></option>
                                 </select>
                             </div>
@@ -277,45 +280,45 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address1">Address Line 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="Address1" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Address1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address2">Address Line 2<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="Address2" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Address2" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">City<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="City" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.City" required>
                             </div>
                         </div>
-                        <div id="stateDiv" class="col-md-6">
+                        <div id="stateDiv" class="col-md-6 stateDiv">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <select asp-items="ViewBag.StatesList" name="State">
+                                <select class="state" asp-items="ViewBag.StatesList" asp-for="InstituteClientsRequest.State">
                                     <option></option>
                                 </select>
                             </div>
                         </div>
-                        <div id="provinceDiv" class="col-md-6" hidden>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <input type="text" class="form-control" name="Province" required>
+                                <input type="text" class="form-control province" asp-for="InstituteClientsRequest.Province" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="lblZipCode" for="zip">Zip</label>
-                                <input type="text" class="form-control" name="Zip" required>
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Zip" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phoneNumber">PhoneNumber</label>
-                                <input type="text" class="form-control" name="PhoneNumber" required>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PhoneNumber" required>
                             </div>
                         </div>
                     </div>
@@ -348,25 +351,25 @@
                       data-ajax-success="ajaxsuccess"
                       data-ajax-url="@Url.Action("UpdateClient","Institute")">
                     <!-- Add input fields here for each column you want to edit -->
-                    <input id="clientId" name="ClientId" hidden />
+                    <input id="clientId" asp-for="InstituteClientsRequest.ClientId" hidden />
                     <div class="row col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="partnerName1" name="PartnerName1" required>
+                                <input type="text" class="form-control" id="partnerName1" asp-for="InstituteClientsRequest.PartnerName1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="partnerName2" name="PartnerName2" required>
+                                <input type="text" class="form-control" id="partnerName2" asp-for="InstituteClientsRequest.PartnerName2" required>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="country">Country<span class="text-danger">*</span></label>
-                                <select id="country" asp-items="ViewBag.CountriesList" name="Country" onChange="ShowHideProvince(this)" required>
+                                <select id="country" asp-items="ViewBag.CountriesList" asp-for="InstituteClientsRequest.Country" onChange="ShowHideProvince(this)" required>
                                     <option></option>
                                 </select>
                             </div>
@@ -374,45 +377,45 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address1">Address Line 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="address1" name="Address1" required>
+                                <input type="text" class="form-control" id="address1" asp-for="InstituteClientsRequest.Address1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address2">Address Line 2<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="address2" name="Address2" required>
+                                <input type="text" class="form-control" id="address2" asp-for="InstituteClientsRequest.Address2" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">City<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="city" name="City" required>
+                                <input type="text" class="form-control" id="city" asp-for="InstituteClientsRequest.City" required>
                             </div>
                         </div>
-                        <div id="stateDiv" class="col-md-6">
+                        <div id="stateDiv" class="col-md-6 stateDiv">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <select id="state" asp-items="ViewBag.StatesList" name="State">
+                                <select id="state" class="state" asp-items="ViewBag.StatesList" asp-for="InstituteClientsRequest.State">
                                     <option></option>
                                 </select>
                             </div>
                         </div>
-                        <div id="provinceDiv" class="col-md-6" hidden>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <input type="text" class="form-control" id="province" name="Province" required>
+                                <input type="text" class="form-control province" id="province" asp-for="InstituteClientsRequest.Province" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="lblZipCode" for="zip">Zip</label>
-                                <input type="text" class="form-control" id="zip" name="Zip" required>
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" id="zip" asp-for="InstituteClientsRequest.Zip" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="phoneNumber">PhoneNumber</label>
-                                <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber" required>
+                                <input type="text" class="form-control" id="phoneNumber" asp-for="InstituteClientsRequest.PhoneNumber" required>
                             </div>
                         </div>
                     </div>
@@ -490,7 +493,7 @@
             });
             $('.dataTables-example').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>lTgitp',
                 buttons: [
                     {
                         extend: 'collection',
@@ -615,6 +618,29 @@
 
                         dropdown.addClass('center-dropdown');
                     });
+                    this.api()
+                        .columns([1, 13]) 
+                        .every(function () {
+                            let column = this;
+                            let title = column.header().textContent;
+
+                            // Create input element
+                            let input = document.createElement('input');
+                            input.placeholder = title;
+                            column.header().replaceChildren(input);
+
+                            // Event listener for user input
+                            input.addEventListener('keyup', () => {
+                                if (column.search() !== input.value) {
+                                    column.search(input.value).draw();
+                                }
+                            });
+
+                            // Event listener for click on the input element
+                            input.addEventListener('click', (event) => {
+                                event.stopPropagation();
+                            });
+                        });
                 }
             });
 
@@ -798,15 +824,15 @@
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
-                $('#provinceDiv').prop('hidden', true);
-                $('#province').val('');
-                $('#stateDiv').prop('hidden', false);
-                $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+                $('.provinceDiv').prop('hidden', true);
+                $('.province').val('');
+                $('.stateDiv').prop('hidden', false);
+                $('.lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
-                $('#provinceDiv').prop('hidden', false);
-                $('#stateDiv').prop('hidden', true);
-                $('#state').val(1);
-                $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+                $('.provinceDiv').prop('hidden', false);
+                $('.stateDiv').prop('hidden', true);
+                $('.state').val(1);
+                $('.lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
             }
         }
     </script>

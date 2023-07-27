@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,12 @@ namespace EvolvedTax.Data.Models.DTOs.Request
     {
         public int EntityId { get; set; }
         public short InstituteId { get; set; }
-
-        public string? EntityName { get; set; }
+        [Remote("IsEntityNameExist", "Institute", AdditionalFields = "EntityId", ErrorMessage = "Entity name is already exist.")]
+        public string EntityName { get; set; } = string.Empty;
         public string? InstituteName { get; set; }
 
-        public string? Ein { get; set; }
+        [Remote("IsEINExist", "Institute", AdditionalFields = "EntityId", ErrorMessage = "EIN is already exist.")]
+        public string Ein { get; set; } = string.Empty;
 
         public DateTime? EntityRegistrationDate { get; set; }
 

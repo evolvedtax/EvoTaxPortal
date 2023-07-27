@@ -225,7 +225,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                     if (entityNameExcel != entityName)
                     {
                         Status = false;
-                        return new MessageResponseModel { Status = Status, Message = new { Title = entityNameExcel + " " + "entity not available", TagLine = "Name of the selected entity does not available in the uploaded excel sheet" }, Param = "Client" };
+                        return new MessageResponseModel { Status = Status, Message = new { Title = entityNameExcel + " " + "entity does not appear", TagLine = "Name of the selected entity does not appear in the uploaded excel sheet" }, Param = "Client" };
                     }
                     // Check for duplicate records within the Excel sheet
                     if (uniqueClientEmailIds.Contains(clientEmailId) || uniqueEntityNames.Contains(entityNameExcel))
@@ -694,6 +694,28 @@ namespace EvolvedTax.Business.Services.InstituteService
             await _evolvedtaxContext.AddAsync(model);
             await _evolvedtaxContext.SaveChangesAsync();
             return new MessageResponseModel { Status = true, Message = "Record inserted" };
+        }
+        public bool IsEntityNameExist(string entityName, int entityId, int institueId)
+        {
+            if (entityId == 0 || !_evolvedtaxContext.InstituteEntities.Any(p => p.InstituteId == institueId && p.EntityId == entityId && p.EntityName == entityName.Trim()))
+            {
+                return !_evolvedtaxContext.InstituteEntities.Any(p => p.InstituteId == institueId && p.EntityName == entityName.Trim());
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public bool IsEINExist(string ein, int entityId, int institueId)
+        {
+            if (entityId == 0 || !_evolvedtaxContext.InstituteEntities.Any(p => p.InstituteId == institueId && p.EntityId == entityId && p.Ein == ein.Trim()))
+            {
+                return !_evolvedtaxContext.InstituteEntities.Any(p => p.InstituteId == institueId && p.Ein == ein.Trim());
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

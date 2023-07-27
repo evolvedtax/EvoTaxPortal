@@ -5,6 +5,8 @@ using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.DTOs.Response;
+using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using Newtonsoft.Json.Converters;
@@ -36,8 +38,10 @@ namespace EvolvedTax.Controllers
         {
             return View(_instituteService.GetMaster());
         }
+        #region Entities
         public IActionResult Entities(int? instituteId)
         {
+            var model = new InstituteEntityViewModel();
             var items = _evolvedtaxContext.MstrCountries.ToList();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
@@ -54,29 +58,15 @@ namespace EvolvedTax.Controllers
             if (instituteId != null)
             {
                 ViewBag.InstituteId = instituteId;
-                return View(_instituteService.GetEntitiesByInstId(instituteId ?? 0));
+                HttpContext.Session.SetInt32("SelectedInstitute", instituteId ?? 0);
+                model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                return View(model);
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            return View(_instituteService.GetEntitiesByInstId(InstId));
+            HttpContext.Session.SetInt32("SelectedInstitute", InstId);
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId);
+            return View(model);
         }
-        //public IActionResult Entities()
-        //{
-        //    var items = _evolvedtaxContext.MstrCountries.ToList();
-        //    ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
-        //                          .ThenBy(item => item.Country).Select(p => new SelectListItem
-        //                          {
-        //                              Text = p.Country,
-        //                              Value = p.Country,
-        //                          });
-
-        //    ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
-        //    {
-        //        Text = p.StateId,
-        //        Value = p.StateId
-        //    });
-        //    int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-        //    return View(_instituteService.GetEntitiesByInstId(InstId));
-        //}
         public IActionResult EntitiesRecyleBin()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -86,6 +76,108 @@ namespace EvolvedTax.Controllers
         {
             return Json(_instituteService.RestoreEntities(selectedValues));
         }
+        public IActionResult ChangeEntity(int entityId)
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = _instituteService.GetClientByEntityId(InstId, entityId);
+            var EmailFrequency = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == entityId)?.EmailFrequency;
+            return Json(new { Data = response, EmailFrequency = EmailFrequency });
+        }
+        [Route("institute/uploadEntities")]
+        [HttpPost]
+        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
+        {
+            string InstituteName = string.Empty;
+            if (InstituteId == 0)
+            {
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                InstituteId = (short)instId;
+                InstituteName = HttpContext.Session.GetString("InstituteName") ?? string.Empty;
+            }
+            else
+            {
+                InstituteName = _instituteService.GetInstituteDataById(InstituteId).InstitutionName ?? string.Empty;
+            }
+            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName);
+            return Json(response);
+        }
+        [Route("institute/AddEntity")]
+        [HttpPost]
+        public async Task<IActionResult> AddEntity(InstituteEntityViewModel request)
+        {
+
+            if (request.InstituteEntityRequest.InstituteId == 0)
+            {
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                request.InstituteEntityRequest.InstituteId = (short)instId;
+                request.InstituteEntityRequest.InstituteName = HttpContext.Session.GetString("InstituteName");
+            }
+            else
+            {
+                request.InstituteEntityRequest.InstituteName = _instituteService.GetInstituteDataById(request.InstituteEntityRequest.InstituteId).InstitutionName;
+            }
+            var response = await _instituteService.AddEntity(request.InstituteEntityRequest);
+            return Json(response);
+        }
+        [Route("institute/UpdateEntity")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntity(InstituteEntityViewModel request)
+        {
+            if (request.InstituteEntityRequest.EntityId == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.UpdateEntity(request.InstituteEntityRequest);
+            return Json(response);
+        }
+        [Route("institute/DeleteEntity")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteEntity(int id)
+        {
+            if (id == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+        [Route("institute/EmptyRecycleBinEntity")]
+        [HttpPost]
+        public async Task<IActionResult> EmptyRecycleBinEntity(int[] selectedValues)
+        {
+            if (selectedValues.Length == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.TrashEmptyEntity(selectedValues, RecordStatusEnum.EmptyTrash);
+            return Json(response);
+        }
+        [Route("institute/LockUnlockEntity")]
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
+            return Json(response);
+        }
+        [Route("institute/IsEntityNameExist")]
+        [HttpGet]
+        public IActionResult IsEntityNameExist(InstituteEntityViewModel model)
+        {
+            var institueId = HttpContext.Session.GetInt32("SelectedInstitute") ?? 0;
+            var response = _instituteService.IsEntityNameExist(model.InstituteEntityRequest.EntityName, model.InstituteEntityRequest.EntityId, institueId);
+            return Json(response);
+        }
+        [Route("institute/IsEINExist")]
+        [HttpGet]
+        public IActionResult IsEINExist(InstituteEntityViewModel model)
+        {
+            var institueId = HttpContext.Session.GetInt32("SelectedInstitute") ?? 0;
+            var response = _instituteService.IsEINExist(model.InstituteEntityRequest.Ein,model.InstituteEntityRequest.EntityId, institueId);
+            return Json(response);
+        }
+        #endregion
+
+        #region Clients
         public IActionResult ClientsRecyleBin(int entityId)
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -120,17 +212,9 @@ namespace EvolvedTax.Controllers
             });
             ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
-            return View(_instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId));
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId) };
+            return View(model);
         }
-
-        public IActionResult ChangeEntity(int entityId)
-        {
-            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var response = _instituteService.GetClientByEntityId(InstId, entityId);
-            var EmailFrequency = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == entityId)?.EmailFrequency;
-            return Json(new { Data = response, EmailFrequency = EmailFrequency });
-        }
-
         public async Task<IActionResult> SendEmail(int[] selectedValues)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
@@ -141,25 +225,6 @@ namespace EvolvedTax.Controllers
             await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
-        [Route("institute/uploadEntities")]
-        [HttpPost]
-        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
-        {
-            string InstituteName = string.Empty;
-            if (InstituteId == 0)
-            {
-                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-                InstituteId = (short)instId;
-                InstituteName = HttpContext.Session.GetString("InstituteName") ?? string.Empty;
-            }
-            else
-            {
-                InstituteName = _instituteService.GetInstituteDataById(InstituteId).InstitutionName ?? string.Empty; 
-            }
-            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName);
-            return Json(response);
-        }
-
         [Route("institute/uploadClients")]
         [HttpPost]
         public async Task<IActionResult> UploadClients(IFormFile file, int EntityId, string entityName)
@@ -172,114 +237,24 @@ namespace EvolvedTax.Controllers
             var response = await _instituteService.UploadClientData(file, instId, EntityId, entityName.Trim());
             return Json(response);
         }
-
-        [HttpGet]
-        public IActionResult DownloadExcel(string fileType)
-        {
-            string fileName;
-            string filePath;
-
-            switch (fileType)
-            {
-                case AppConstants.Entity:
-                    fileName = AppConstants.InstituteEntityTemplate;
-                    break;
-                case AppConstants.Client:
-                    fileName = AppConstants.InstituteClientTemplate;
-                    break;
-                default:
-                    return NotFound();
-            }
-
-            filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Templates", fileName);
-
-            if (System.IO.File.Exists(filePath))
-            {
-                var memoryStream = _commonService.DownloadFile(filePath);
-                return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-            }
-            else
-            {
-                return NotFound();
-            }
-
-        }
-        [Route("institute/AddEntity")]
-        [HttpPost]
-        public async Task<IActionResult> AddEntity(InstituteEntityRequest request)
-        {
-
-            if (request.InstituteId == 0)
-            {
-                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-                request.InstituteId = (short)instId;
-                request.InstituteName = HttpContext.Session.GetString("InstituteName");
-            }
-            else
-            {
-                request.InstituteName = _instituteService.GetInstituteDataById(request.InstituteId).InstitutionName;
-            }
-            var response = await _instituteService.AddEntity(request);
-            return Json(response);
-        }
-        [Route("institute/UpdateEntity")]
-        [HttpPost]
-        public async Task<IActionResult> UpdateEntity(InstituteEntityRequest request)
-        {
-            if (request.EntityId == 0)
-            {
-                return Json(false);
-            }
-            var response = await _instituteService.UpdateEntity(request);
-            return Json(response);
-        }
-        [Route("institute/DeleteEntity")]
-        [HttpPost]
-        public async Task<IActionResult> DeleteEntity(int id)
-        {
-            if (id == 0)
-            {
-                return Json(false);
-            }
-            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash);
-            return Json(response);
-        }
-        [Route("institute/EmptyRecycleBinEntity")]
-        [HttpPost]
-        public async Task<IActionResult> EmptyRecycleBinEntity(int[] selectedValues)
-        {
-            if (selectedValues.Length == 0)
-            {
-                return Json(false);
-            }
-            var response = await _instituteService.TrashEmptyEntity(selectedValues, RecordStatusEnum.EmptyTrash);
-            return Json(response);
-        }
-        [Route("institute/LockUnlockEntity")]
-        [HttpPost]
-        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
-        {
-            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
-            return Json(response);
-        }
         [Route("institute/AddClient")]
         [HttpPost]
-        public async Task<IActionResult> AddClient(InstituteClientRequest request)
+        public async Task<IActionResult> AddClient(InstituteClientViewModel request)
         {
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            request.InstituteId = (short)instId;
-            var response = await _instituteService.AddClient(request);
+            request.InstituteClientsRequest.InstituteId = (short)instId;
+            var response = await _instituteService.AddClient(request.InstituteClientsRequest);
             return Json(response);
         }
         [Route("institute/UpdateClient")]
         [HttpPost]
-        public async Task<IActionResult> UpdateClient(InstituteClientRequest request)
+        public async Task<IActionResult> UpdateClient(InstituteClientViewModel request)
         {
-            if (request.ClientId == 0)
+            if (request.InstituteClientsRequest.ClientId == 0)
             {
                 return Json(false);
             }
-            var response = await _instituteService.UpdateClient(request);
+            var response = await _instituteService.UpdateClient(request.InstituteClientsRequest);
             return Json(response);
         }
         [Route("institute/UpdateEmailFrequency")]
@@ -321,6 +296,38 @@ namespace EvolvedTax.Controllers
         {
             var response = await _instituteService.LockUnlockClient(selectedValues, isLocked);
             return Json(response);
+        }
+        #endregion
+        [HttpGet]
+        public IActionResult DownloadExcel(string fileType)
+        {
+            string fileName;
+            string filePath;
+
+            switch (fileType)
+            {
+                case AppConstants.Entity:
+                    fileName = AppConstants.InstituteEntityTemplate;
+                    break;
+                case AppConstants.Client:
+                    fileName = AppConstants.InstituteClientTemplate;
+                    break;
+                default:
+                    return NotFound();
+            }
+
+            filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Templates", fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var memoryStream = _commonService.DownloadFile(filePath);
+                return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
     }
 }

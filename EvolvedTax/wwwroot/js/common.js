@@ -342,7 +342,7 @@ var COMMON = (function () {
 
                         // Iterate over the response data and populate the table
                         $.each(response.Message, function (index, item) {
-                            
+                            debugger
                             let row = [
                                 item.EntityName,
                                 item.Ein,

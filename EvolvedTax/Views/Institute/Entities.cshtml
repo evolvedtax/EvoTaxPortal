@@ -1,4 +1,4 @@
-﻿@model IQueryable<InstituteEntitiesResponse>
+﻿@model InstituteEntityViewModel
 @{
     ViewData["Title"] = "Entity";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
@@ -70,7 +70,7 @@
                                     <th hidden></th>
                                     <th>City</th>
                                     <th>State</th>
-                                    <th>Province (If Applicable)</th>
+                                    <th hidden>Province (If Applicable)</th>
                                     <th>Zip</th>
                                     <th>Country of Incorporation</th>
                                     <th>Lock/Unlock</th>
@@ -78,9 +78,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (Model.Any())
+                                @if (Model.InstituteEntitiesResponse.Any())
                                 {
-                                    foreach (var item in Model)
+                                    foreach (var item in Model.InstituteEntitiesResponse)
                                     {
                                         <tr id="@item.EntityId">
                                             <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
@@ -92,7 +92,7 @@
                                             <td hidden>@item.Address2</td>
                                             <td>@item.City</td>
                                             <td>@item.State</td>
-                                            <td>@item.Province</td>
+                                            <td hidden>@item.Province</td>
                                             <td>@item.Zip</td>
                                             <td>@item.Country</td>
                                             <td class="text-center">
@@ -135,35 +135,37 @@
 
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
-                    @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
-                    <table class="table table-striped table-bordered table-hover dataTables-example">
-                        <thead>
-                            <tr>
-                                <th>Entity Name</th>
-                                <th>EIN</th>
-                                <th>Entity Registration Date</th>
-                                <th>Address</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Province (If Applicable)</th>
-                                <th>Zip</th>
-                                <th>Country of Incorporation</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h3>Duplicate Records</h3>
+                    <div class="table-responsive">
+                        <table id="entity-table-dupplication" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Entity Name</th>
+                                    <th>EIN</th>
+                                    <th>Entity Registration Date</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Province (If Applicable)</th>
+                                    <th>Zip</th>
+                                    <th>Country of Incorporation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             </div>
@@ -188,30 +190,31 @@
                       data-ajax-loading="#ajax-loader"
                       data-ajax-success="ajaxsuccessAdd"
                       data-ajax-url="@Url.Action("AddEntity","Institute")">
-                    <input id="InstituteId" name="InstituteId" value="@ViewBag.InstituteId" hidden />
+                    <input id="InstituteId" asp-for="InstituteEntityRequest.InstituteId" value="@ViewBag.InstituteId" hidden />
                     <div class="row col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="enitytName">Entity Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="EntityName" required>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.EntityName" required>
+                                <span asp-validation-for="InstituteEntityRequest.EntityName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="ein">EIN<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control ein" name="Ein" required>
+                                <input type="text" class="form-control ein" asp-for="InstituteEntityRequest.Ein" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="EntityRegistrationDate" required>
+                                <input type="date" class="form-control" asp-for="InstituteEntityRequest.EntityRegistrationDate" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="country">Country<span class="text-danger">*</span></label>
-                                <select asp-items="ViewBag.CountriesList" name="Country" onChange="ShowHideProvince(this)" required>
+                                <select asp-items="ViewBag.CountriesList" asp-for="InstituteEntityRequest.Country" onChange="ShowHideProvince(this)" required>
                                     <option></option>
                                 </select>
                             </div>
@@ -219,39 +222,39 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address1">Address 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="Address1" required>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Address1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address2">Address 2</label>
-                                <input type="text" class="form-control" name="Address2">
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Address2">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">City<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="City" required>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.City" required>
                             </div>
                         </div>
-                        <div id="stateDiv" class="col-md-6">
+                        <div id="stateDiv" class="col-md-6 stateDiv">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <select asp-items="ViewBag.StatesList" name="State">
+                                <select class="state" asp-items="ViewBag.StatesList" asp-for="InstituteEntityRequest.State">
                                     <option></option>
                                 </select>
                             </div>
                         </div>
-                        <div id="provinceDiv" class="col-md-6" hidden>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <input type="text" class="form-control" name="Province" required>
+                                <input type="text" class="form-control province" asp-for="InstituteEntityRequest.Province" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="lblZipCode" for="zip">Zip</label>
-                                <input type="text" class="form-control" name="Zip" required>
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Zip" required>
                             </div>
                         </div>
                     </div>
@@ -284,30 +287,38 @@
                       data-ajax-success="ajaxsuccess"
                       data-ajax-url="@Url.Action("UpdateEntity","Institute")">
                     <!-- Add input fields here for each column you want to edit -->
-                    <input id="entityId" name="EntityId" hidden />
+                    <input id="entityId" asp-for="InstituteEntityRequest.EntityId" hidden />
                     <div class="row col-md-12">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="enitytName">Entity Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="enitytName" name="EntityName" required>
+                                <div style="display:flex">
+                                    <input type="text" class="form-control" id="enitytName" asp-for="InstituteEntityRequest.EntityName" readonly required>
+                                    <button type="button" id="editEntityName" class="btn btn-white"><span class="fa fa-edit"></span></button>
+                                </div>
+                                <span asp-validation-for="InstituteEntityRequest.EntityName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="ein">EIN<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control ein" id="ein" name="Ein" required>
+                                <div style="display:flex">
+                                    <input type="text" class="form-control ein" id="ein" asp-for="InstituteEntityRequest.Ein" readonly required>
+                                    <button type="button" id="editEIN" class="btn btn-white"><span class="fa fa-edit"></span></button>
+                                </div>
+                                <span asp-validation-for="InstituteEntityRequest.Ein" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="entityRegistrationDate" name="EntityRegistrationDate" required>
+                                <input type="date" class="form-control" id="entityRegistrationDate" asp-for="InstituteEntityRequest.EntityRegistrationDate" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="country">Country<span class="text-danger">*</span></label>
-                                <select id="country" asp-items="ViewBag.CountriesList" name="Country" onChange="ShowHideProvince(this)" required>
+                                <select id="country" asp-items="ViewBag.CountriesList" asp-for="InstituteEntityRequest.Country" onChange="ShowHideProvince(this)" required>
                                     <option></option>
                                 </select>
                             </div>
@@ -315,39 +326,39 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address1">Address 1<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="address1" name="Address1" required>
+                                <input type="text" class="form-control" id="address1" asp-for="InstituteEntityRequest.Address1" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="address2">Address 2</label>
-                                <input type="text" class="form-control" id="address2" name="Address2">
+                                <input type="text" class="form-control" id="address2" asp-for="InstituteEntityRequest.Address2">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">City<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="city" name="City" required>
+                                <input type="text" class="form-control" id="city" asp-for="InstituteEntityRequest.City" required>
                             </div>
                         </div>
-                        <div id="stateDiv" class="col-md-6">
+                        <div id="stateDiv" class="col-md-6 stateDiv">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <select id="state" asp-items="ViewBag.StatesList" name="State">
+                                <select id="state" class="state" asp-items="ViewBag.StatesList" asp-for="InstituteEntityRequest.State">
                                     <option></option>
                                 </select>
                             </div>
                         </div>
-                        <div id="provinceDiv" class="col-md-6" hidden>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <input type="text" class="form-control" id="province" name="Province" required>
+                                <input type="text" class="form-control province" id="province" asp-for="InstituteEntityRequest.Province" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label id="lblZipCode" for="zip">Zip</label>
-                                <input type="text" class="form-control" id="zip" name="Zip" required>
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control zip" id="zip" asp-for="InstituteEntityRequest.Zip" required>
                             </div>
                         </div>
                     </div>
@@ -377,7 +388,6 @@
             $('.ein').mask('00-0000000', { reverse: true });
             // Handle Edit button click event
             $('.edit-row').click(function () {
-                debugger
                 // Get the row ID from the data attribute
                 var rowId = $(this).data('row-id');
 
@@ -392,37 +402,39 @@
                 var row = $("#" + rowId); // Select the row by its ID
                 var rowData = {
                     EntityId: rowId,
-                    EntityName: row.find("td:nth-child(1)").text(),
-                    Ein: row.find("td:nth-child(2)").text(),
-                    EntityRegistrationDate: row.find("td:nth-child(3)").text(),
-                    Address1: row.find("td:nth-child(5)").text(),
-                    Address2: row.find("td:nth-child(6)").text(),
-                    City: row.find("td:nth-child(7)").text(),
-                    State: row.find("td:nth-child(8)").text(),
-                    Province: row.find("td:nth-child(9)").text(),
-                    Zip: row.find("td:nth-child(10)").text(),
-                    Country: row.find("td:nth-child(11)").text(),
+                    EntityName: row.find("td:nth-child(2)").text(),
+                    Ein: row.find("td:nth-child(3)").text(),
+                    EntityRegistrationDate: row.find("td:nth-child(4)").text(),
+                    Address1: row.find("td:nth-child(6)").text(),
+                    Address2: row.find("td:nth-child(7)").text(),
+                    City: row.find("td:nth-child(8)").text(),
+                    State: row.find("td:nth-child(9)").text(),
+                    Province: row.find("td:nth-child(10)").text(),
+                    Zip: row.find("td:nth-child(11)").text(),
+                    Country: row.find("td:nth-child(12)").text(),
                 };
 
                 return rowData;
             }
             // Function to populate modal input fields with row data
             function populateModalFields(rowData) {
+                debugger
+                var parts = rowData.EntityRegistrationDate.split('-');
                 $('#entityId').val(rowData.EntityId);
                 $('#enitytName').val(rowData.EntityName);
                 $('#ein').val(rowData.Ein);
-                $('#entityRegistrationDate').val(rowData.EntityRegistrationDate);
+                $('#entityRegistrationDate').val(parts[2] + '-' + parts[0] + '-' + parts[1]);
                 $('#address1').val(rowData.Address1);
                 $('#address2').val(rowData.Address2);
                 $('#city').val(rowData.City);
+                $('#country').val(rowData.Country).change();
                 $('#state').val(rowData.State).change();
                 $('#province').val(rowData.Province);
                 $('#zip').val(rowData.Zip);
-                $('#country').val(rowData.Country).change();
             }
             var table = $('.dataTables-example').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>lTgitp',
                 buttons: [
                     {
                         extend: 'collection',
@@ -515,6 +527,29 @@
 
                         dropdown.addClass('center-dropdown');
                     });
+                    this.api()
+                        .columns([1,2])
+                        .every(function () {
+                            let column = this;
+                            let title = column.header().textContent;
+
+                            // Create input element
+                            let input = document.createElement('input');
+                            input.placeholder = title;
+                            column.header().replaceChildren(input);
+
+                            // Event listener for user input
+                            input.addEventListener('keyup', () => {
+                                if (column.search() !== input.value) {
+                                    column.search(input.value).draw();
+                                }
+                            });
+
+                            // Event listener for click on the input element
+                            input.addEventListener('click', (event) => {
+                                event.stopPropagation();
+                            });
+                        });
                 }
             });
             // Get the file input element
@@ -560,6 +595,8 @@
         $('#saveBtn').click(function () {
             let form = $('#regForm');
             if (form.valid()) {
+                $('#enitytName').prop('disabled',false);
+                $('#ein').prop('disabled',false);
                 form.submit();
             }
             return false;
@@ -580,6 +617,12 @@
             }
             return false;
         });
+        $('#editEntityName').click(function () {
+            $('#enitytName').prop('readonly',false);
+        });
+        $('#editEIN').click(function () {
+            $('#ein').prop('readonly', false);
+        });
         function ajaxsuccessAdd(response) {
             if (response.Status == true) {
                 COMMON.notification(1, response.Message);
@@ -592,15 +635,15 @@
         }
         function ShowHideProvince(obj) {
             if (obj.value == 'United States') {
-                $('#provinceDiv').prop('hidden', true);
-                $('#province').val('');
-                $('#stateDiv').prop('hidden', false);
-                $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+                $('.provinceDiv').prop('hidden', true);
+                $('.province').val('');
+                $('.stateDiv').prop('hidden', false);
+                $('.lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
             } else {
-                $('#provinceDiv').prop('hidden', false);
-                $('#stateDiv').prop('hidden', true);
-                $('#state').val(1);
-                $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+                $('.provinceDiv').prop('hidden', false);
+                $('.stateDiv').prop('hidden', true);
+                $('.state').val(1);
+                $('.lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
             }
         }
 
