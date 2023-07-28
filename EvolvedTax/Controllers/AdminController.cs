@@ -54,7 +54,7 @@ namespace EvolvedTax.Controllers
                     HttpContext.Session.SetString("EmailId", response.EmailId);
                     HttpContext.Session.SetInt32("InstId", response.InstId);
                     HttpContext.Session.SetString("IsAdmin", response.IsAdmin.ToString());
-                    return RedirectToAction("Master","Institute");
+                    return RedirectToAction("Index","Dashboard");
                 }
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error

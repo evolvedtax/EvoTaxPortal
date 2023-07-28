@@ -125,7 +125,7 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("InstituteName", response.InstituteName);
                 HttpContext.Session.SetString("ProfileImage", response.InstituteLogo ?? "");
                 _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
-                return RedirectToAction("Entities", "Institute");
+                return RedirectToAction("Index", "Dashboard");
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus;
             TempData["Message"] = "Please enter correct OTP";

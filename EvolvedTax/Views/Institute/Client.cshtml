@@ -59,7 +59,7 @@
                                   data-ajax-success="ajaxsuccessUpdateEmailFrequency"
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
                                 <div style="display:flex">
-                                    <label class="ml-2 mr-2" style="margin:auto">Send Reminder After Every</label>
+                                    <label class="ml-2 mr-2" style="margin:auto">Send Email Reminder After Every</label>
                                     <input id="EntityIdFreq" name="EntityIdFreq" hidden />
                                     <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
@@ -619,7 +619,7 @@
                         dropdown.addClass('center-dropdown');
                     });
                     this.api()
-                        .columns([1, 13]) 
+                        .columns([1, 13, 16]) 
                         .every(function () {
                             let column = this;
                             let title = column.header().textContent;
