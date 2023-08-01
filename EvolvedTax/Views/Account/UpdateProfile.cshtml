@@ -101,7 +101,22 @@
                         <input class="form-control" asp-for="Mzip">
                     </div>
                 </div>
+                <div class="col-md-12">
+                <h3>Time Setting</h3>
+                </div>
+                <div class="col-md-6">
+                    <label>Date Format</label>
+                    <select asp-items="ViewBag.DateFormats" asp-for="DateFormat" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
             </div>
+
+
+
+        
+
+
             <div style="text-align:end">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>

@@ -1,0 +1,46 @@
+﻿@model List<AnnouncementRequest>
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+
+<style>
+    /* Style for the announcement box */
+    .announcement-box {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        max-height: 150px;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-bottom: 10px;
+    }
+
+    /* Style for the announcement container with vertical scrolling */
+    .announcement-container {
+        max-height: 300px; /* Set a fixed height for the container */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+</style>
+
+<div class="container mt-4">
+    <!-- Display valid announcements -->
+    <h2>Announcements</h2>
+    <div class="announcement-container">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var announcement in Model)
+            {
+                string shortMessage = announcement.Message.Length > 100 ? announcement.Message.Substring(0, 100) + "..." : announcement.Message;
+                <div class="announcement-box">
+                    <h3>@announcement.Title</h3>
+                    <p>@shortMessage <a href="@Url.Action("ViewAnnouncement", "Announcement", new { id = announcement.Id })">Read more</a></p>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No announcements found.</p>
+        }
+    </div>
+</div>

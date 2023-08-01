@@ -254,6 +254,28 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId.ToString()
             });
+
+            List<string> dateFormats = new List<string>
+    {
+         "MM/DD/YYYY",
+        "MM-DD-YYYY",
+        "MM DD YYYY",
+        "MM.DD.YYYY",
+        "DD/MM/YYYY",
+        "DD-MM-YYYY",
+        "DD MM YYYY",
+        "DD.MM.YYYY",
+        "YYYY-MM-DD",
+        "YYYY/MM/DD",
+        "YYYY MM DD",
+        "YYYY.MM.DD",
+        "YYYY-DD-MM",
+        "YYYY/DD/MM",
+        "YYYY DD MM",
+        "YYYY.DD.MM"
+    };
+
+            ViewBag.DateFormats = new SelectList(dateFormats);
             return View(_mapper.Map<InstituteMasterRequest>(response));
         }
         [HttpPost]

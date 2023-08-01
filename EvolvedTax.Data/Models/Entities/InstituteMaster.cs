@@ -92,9 +92,14 @@ public partial class InstituteMaster
     public string? RequestIp { get; set; }
 
     public string? SupportEmail { get; set; }
+
     public string? ResetToken { get; set; }
+
     public DateTime? ResetTokenExpiryTime { get; set; }
 
     public string? Phone { get; set; }
+
     public bool IsAdmin { get; set; }
+
+    public string? DateFormat { get; set; }
 }

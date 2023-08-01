@@ -612,7 +612,8 @@ namespace EvolvedTax.Business.Services.InstituteService
             response.Mprovince = request.Mprovince;
             response.Mstate = request.Mstate;
             response.Phone = request.Phone;
-            request.Mzip = request.Mzip;
+            response.Mzip = request.Mzip;
+            response.DateFormat = request.DateFormat;
             _evolvedtaxContext.InstituteMasters.Update(response);
             _evolvedtaxContext.SaveChanges();
             return true;

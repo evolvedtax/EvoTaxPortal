@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
 builder.Services.Configure<FormOptions>(x =>
 {
     x.ValueLengthLimit = int.MaxValue;
@@ -40,6 +41,7 @@ var configuration = builder.Configuration
     .Build();
 var environment = builder.Environment;
 builder.Services.ConfigureApplicationServices(configuration, environment);
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 
@@ -64,6 +66,7 @@ app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<AnnouncementHub>("/announcementHub"); // Map the SignalR hub
 
 app.UseStatusCodePagesWithRedirects("~/Account/AccessDenied?statusCode={0}");
 
