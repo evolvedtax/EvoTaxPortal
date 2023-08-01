@@ -234,6 +234,8 @@ public partial class TblW8imyform
     public string? OnBehalfName { get; set; }
 
     public string? FilePath { get; set; }
+
     public string? ActiveTabIndex { get; set; }
-    public bool? IsActive { get; set; } = true;
+
+    public bool? IsActive { get; set; }
 }
