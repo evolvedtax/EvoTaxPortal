@@ -44,4 +44,5 @@ public partial class InstituteEntity
     public DateTime? InActiveDate { get; set; }
 
     public int? EmailFrequency { get; set; }
+    public int? LastUpdatedBy { get; set; }
 }

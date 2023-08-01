@@ -88,6 +88,7 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
         {
             string InstituteName = string.Empty;
+            
             if (InstituteId == 0)
             {
                 var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -106,9 +107,9 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> AddEntity(InstituteEntityViewModel request)
         {
 
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             if (request.InstituteEntityRequest.InstituteId == 0)
             {
-                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
                 request.InstituteEntityRequest.InstituteId = (short)instId;
                 request.InstituteEntityRequest.InstituteName = HttpContext.Session.GetString("InstituteName");
             }
@@ -116,6 +117,7 @@ namespace EvolvedTax.Controllers
             {
                 request.InstituteEntityRequest.InstituteName = _instituteService.GetInstituteDataById(request.InstituteEntityRequest.InstituteId).InstitutionName;
             }
+            request.InstituteEntityRequest.LastUpdatedBy = (short)instId;
             var response = await _instituteService.AddEntity(request.InstituteEntityRequest);
             return Json(response);
         }
@@ -127,6 +129,8 @@ namespace EvolvedTax.Controllers
             {
                 return Json(false);
             }
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            request.InstituteEntityRequest.InstituteId = (short)instId;
             var response = await _instituteService.UpdateEntity(request.InstituteEntityRequest);
             return Json(response);
         }
@@ -243,6 +247,7 @@ namespace EvolvedTax.Controllers
         {
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             request.InstituteClientsRequest.InstituteId = (short)instId;
+            request.InstituteClientsRequest.LastUpdatedBy = (short)instId;
             var response = await _instituteService.AddClient(request.InstituteClientsRequest);
             return Json(response);
         }
@@ -254,6 +259,8 @@ namespace EvolvedTax.Controllers
             {
                 return Json(false);
             }
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            request.InstituteClientsRequest.LastUpdatedBy = (short)instId;
             var response = await _instituteService.UpdateClient(request.InstituteClientsRequest);
             return Json(response);
         }

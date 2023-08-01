@@ -10,5 +10,6 @@ namespace EvolvedTax.Data.Models.DTOs.Response
 {
     public class InstituteEntitiesResponse : InstituteEntity
     {
+        public string LastUpdatedByName { get; set; } = string.Empty;
     }
 }
