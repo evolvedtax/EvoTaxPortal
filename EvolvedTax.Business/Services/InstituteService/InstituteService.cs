@@ -57,6 +57,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             IsActive = p.IsActive,
                             IsLocked = p.IsLocked,
                             EmailFrequency = p.EmailFrequency,
+                            LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x=>x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
                         };
 
             return query;
@@ -69,6 +70,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             var response = _evolvedtaxContext.InstitutesClients
                 .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active)
+                .OrderByDescending(p=>p.IsDuplicated)
                 .Select(p => new InstituteClientResponse
                 {
                     Address1 = p.Address1,
@@ -92,7 +94,10 @@ namespace EvolvedTax.Business.Services.InstituteService
                     Zip = p.Zip,
                     IsActive = p.IsActive,
                     IsLocked = p.IsLocked,
-                    StatusName = clientStatuses[(short)p.ClientStatus].StatusName ?? ""
+                    IsDuplicated = p.IsDuplicated,
+                    StatusName = clientStatuses[(short)p.ClientStatus].StatusName ?? "",
+                    LastUpdatedOn = p.LastUpdatedOn,
+                    LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
                 });
             return response;
         }
@@ -147,6 +152,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                         InstituteName = InstituteName,
                         IsActive = RecordStatusEnum.Active,
                         IsLocked = false,
+                        LastUpdatedDate = DateTime.Now.Date,
+                        LastUpdatedBy = InstId
                     };
                     string clientEmailEINNumber = entity.Ein ?? string.Empty;
                     string entityNameExcel = entity.EntityName ?? string.Empty;
@@ -218,6 +225,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                         EntityId = EntityId,
                         IsActive = RecordStatusEnum.Active,
                         IsLocked = false,
+                        LastUpdatedBy = InstId,
+                        LastUpdatedOn = DateTime.Now.Date
                     };
 
                     string clientEmailId = client.ClientEmailId;
@@ -236,10 +245,10 @@ namespace EvolvedTax.Business.Services.InstituteService
                     }
                     else
                     {
-                        // Add the values to the HashSet to track dzuplicates
+                        // Add the values to the HashSet to track duplicates
                         uniqueClientEmailIds.Add(clientEmailId);
                         uniqueEntityNames.Add(entityNameExcel);
-                        clientList.Add(client);
+                        //clientList.Add(client);
                     }
                     // Check for duplicate records based on ClientEmailId in the database
                     if (await _evolvedtaxContext.InstitutesClients.AnyAsync(p =>
@@ -249,13 +258,15 @@ namespace EvolvedTax.Business.Services.InstituteService
                         && p.EntityName == client.EntityName
                         ))
                     {
-                        response.Add(client);
-                        Status = true;
+                        //response.Add(client);
+                        client.IsDuplicated = true;
                     }
                     else
                     {
-                        clientList.Add(client);
+                        //clientList.Add(client);
+                        client.IsDuplicated = false;
                     }
+                    clientList.Add(client);
                 }
 
                 await _evolvedtaxContext.InstitutesClients.AddRangeAsync(clientList);
@@ -371,7 +382,10 @@ namespace EvolvedTax.Business.Services.InstituteService
             {request.State},
             {request.Province},
             {request.Zip},
-            {request.Country}");
+            {request.Country},
+            {DateTime.Now.Date},
+            {request.InstituteId}
+            ");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -528,7 +542,10 @@ namespace EvolvedTax.Business.Services.InstituteService
             {request.Province},
             {request.Zip},
             {request.Country},
-            {request.PhoneNumber}");
+            {request.PhoneNumber},
+            {DateTime.Now.Date},
+            {request.LastUpdatedBy}
+            ");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -664,6 +681,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 EntityName = request.EntityName,
                 InstituteId = request.InstituteId,
                 IsActive = RecordStatusEnum.Active,
+                LastUpdatedOn = DateTime.Now.Date,
+                LastUpdatedBy = request.LastUpdatedBy
             };
             await _evolvedtaxContext.AddAsync(model);
             await _evolvedtaxContext.SaveChangesAsync();
@@ -690,6 +709,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 InstituteId = request.InstituteId,
                 InstituteName = request.InstituteName,
                 IsActive = RecordStatusEnum.Active,
+                LastUpdatedBy = request.LastUpdatedBy,
+                LastUpdatedDate = DateTime.Now.Date,
             };
             await _evolvedtaxContext.AddAsync(model);
             await _evolvedtaxContext.SaveChangesAsync();

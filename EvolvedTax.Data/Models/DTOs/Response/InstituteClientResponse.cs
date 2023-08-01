@@ -14,5 +14,6 @@ namespace EvolvedTax.Data.Models.DTOs.Response
         public string InstituteUserName { get; set; } = string.Empty;
         public string InstituteName { get; set; } = string.Empty;
         public string StatusName { get; set; } = string.Empty;
+        public string LastUpdatedByName { get; set; } = string.Empty;
     }
 }

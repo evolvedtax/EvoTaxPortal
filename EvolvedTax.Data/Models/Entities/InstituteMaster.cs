@@ -97,4 +97,6 @@ public partial class InstituteMaster
 
     public string? Phone { get; set; }
     public bool IsAdmin { get; set; }
+    public DateTime? LastUpdatedOn { get; set; }
+    public int? LastUpdatedBy { get; set; }
 }

@@ -73,6 +73,8 @@
                                     <th hidden>Province (If Applicable)</th>
                                     <th>Zip</th>
                                     <th>Country of Incorporation</th>
+                                    <th>Last Updated By</th>
+                                    <th>Last Updated On</th>
                                     <th>Lock/Unlock</th>
                                     <th>Action</th>
                                 </tr>
@@ -95,6 +97,8 @@
                                             <td hidden>@item.Province</td>
                                             <td>@item.Zip</td>
                                             <td>@item.Country</td>
+                                            <td>@item.LastUpdatedByName</td>
+                                            <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
                                             <td class="text-center">
                                                 @if (item?.IsLocked ?? false)
                                                 {

@@ -50,5 +50,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string? FormName { get; set; }
         public bool? IsLocked { get; set; }
         public bool? IsActive { get; set; }
+        public short? LastUpdatedBy { get; set; }
     }
 }

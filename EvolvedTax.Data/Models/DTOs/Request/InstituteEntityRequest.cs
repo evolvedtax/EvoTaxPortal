@@ -36,6 +36,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
 
         public DateTime? LastUpdatedDate { get; set; }
         public int? EmailFrequency { get; set; }
+        public short? LastUpdatedBy { get; set; }
 
     }
 }

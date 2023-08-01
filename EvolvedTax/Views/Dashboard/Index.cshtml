@@ -2,6 +2,15 @@
     ViewData["Title"] = "Master";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
+<style>
+    .ibox-title {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+    }
+
+    .ibox-content {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
+    }
+</style>
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-lg-12">
@@ -277,55 +286,56 @@
     <script src="~/lib/chartJs/Chart.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-
             var barData = {
                 labels: ["Email Sent", "Pending", "Submitted"],
                 datasets: [
                     {
                         label: "W9",
-                        backgroundColor: 'rgba(220, 220, 220, 0.5)',
-                        pointBorderColor: "#fff",
+                        backgroundColor: '#115f9a',
+                        borderColor: '#115f9a',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(251, 170, 140, 1)',
                         data: [65, 59, 80, 81, 56, 55, 40]
                     },
                     {
                         label: "W8-EXP",
-                        backgroundColor: 'rgba(26,179,148,0.5)',
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
+                        backgroundColor: '#1984c5',
+                        borderColor: '#1984c5',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(177, 224, 185, 1)',
                         data: [28, 48, 40, 19, 86, 27, 90]
                     },
                     {
                         label: "W8-ECI",
-                        backgroundColor: 'rgba(26,179,148,0.5)',
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        backgroundColor: '#22a7f0',
+                        borderColor: '#22a7f0',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(165, 206, 255, 1)',
+                        data: [35, 28, 49, 78, 29, 54, 61]
                     },
                     {
                         label: "W8-BEN",
-                        backgroundColor: 'rgba(26,179,148,0.5)',
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        backgroundColor: '#48b5c4',
+                        borderColor: '#48b5c4',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(239, 179, 221, 1)',
+                        data: [40, 12, 75, 30, 62, 42, 28]
                     },
                     {
                         label: "W8-BEN-E",
-                        backgroundColor: 'rgba(26,179,148,0.5)',
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        backgroundColor: '#76c68f',
+                        borderColor: '#76c68f',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(253, 225, 123, 1)', 
+                        data: [80, 35, 62, 45, 91, 74, 23]
                     },
                     {
                         label: "W8-IMY",
-                        backgroundColor: 'rgba(26,179,148,0.5)',
-                        borderColor: "rgba(26,179,148,0.7)",
-                        pointBackgroundColor: "rgba(26,179,148,1)",
-                        pointBorderColor: "#fff",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        backgroundColor: '"#a6d75b',
+                        borderColor: '"#a6d75b',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(220, 220, 220, 1)',
+                        data: [57, 19, 34, 68, 12, 83, 46]
                     }
                 ]
             };
