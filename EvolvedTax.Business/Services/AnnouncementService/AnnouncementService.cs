@@ -18,6 +18,24 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             _evolvedtaxContext = evolvedtaxContext;
         }
 
+        public List<AlertRequest> GetAlerts(int instituteId)
+        {
+ 
+            var alerts = _evolvedtaxContext.Alert
+                .Where(a => a.InstituteID == instituteId)
+                   .OrderByDescending(a => a.Id)
+                     .Take(20)
+                .Select(a => new AlertRequest
+                {
+                    Title = a.Title,
+                    AlertText = a.AlertText,
+                    CreatedDate = (DateTime)a.CreatedDate
+                })
+                .ToList();
+
+            return alerts;
+        }
+
         public List<AnnouncementRequest> GetAnnouncements()
         {
           
@@ -25,12 +43,14 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             var announcements = _evolvedtaxContext.Announcements
                 .Where(a => a.EndDate >= currentDate)
                    .OrderByDescending(a => a.Id)
+                     .Take(20)
                 .Select(a => new AnnouncementRequest
                 {
                     Id = a.Id,
                     Title = a.Title,
                     Message = a.Message,
-                    EndDate = (DateTime)a.EndDate
+                    EndDate = (DateTime)a.EndDate,
+                    CreatedDate = (DateTime)a.CreatedDate
                 })
                 .ToList();
 
@@ -60,5 +80,7 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             _evolvedtaxContext.Announcements.Add(model);
             _evolvedtaxContext.SaveChanges();
         }
+
+        
     }
 }

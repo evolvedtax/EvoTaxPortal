@@ -12,6 +12,7 @@ namespace EvolvedTax.Business.Services.AnnouncementService
     {
         public void SaveAnnouncement(AnnouncementRequest request);
         public List<AnnouncementRequest> GetAnnouncements();
+        public List<AlertRequest> GetAlerts(int instituteId);
         public Announcement GetAnnouncementByID(int id);
     }
 }

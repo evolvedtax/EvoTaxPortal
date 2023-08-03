@@ -332,6 +332,7 @@ var COMMON = (function () {
 
                         // Draw the updated DataTable
                         dataTable.draw();
+                        alert('here');
                     }
                     if (response.Param == "Entity" && response.Message.length > 0) {
                         $('#dupplication-ibox').prop('hidden', false);

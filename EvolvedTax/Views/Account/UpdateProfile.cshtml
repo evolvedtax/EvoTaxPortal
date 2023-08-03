@@ -44,6 +44,12 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label>Position</label>
+                        <input class="form-control" asp-for="Position">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
                         <label>Institute Name</label>
                         <input class="form-control" asp-for="InstitutionName" disabled>
                     </div>
@@ -101,12 +107,15 @@
                         <input class="form-control" asp-for="Mzip">
                     </div>
                 </div>
-                <div class="col-md-12">
-                <h3>Time Setting</h3>
-                </div>
                 <div class="col-md-6">
                     <label>Date Format</label>
                     <select asp-items="ViewBag.DateFormats" asp-for="DateFormat" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Time zone</label>
+                    <select asp-items="ViewBag.TimezonList" asp-for="Timezone" class="select2">
                         <option></option>
                     </select>
                 </div>

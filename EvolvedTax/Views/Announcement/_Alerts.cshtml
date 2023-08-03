@@ -1,17 +1,18 @@
-﻿@model List<AnnouncementRequest>
+﻿@model List<AlertRequest>
 
 <div class="feed-activity-list">
     @if (Model != null && Model.Count > 0)
     {
-        foreach (var announcement in Model)
+        foreach (var alert in Model)
         {
-            string shortMessage = announcement.Message.Length > 100 ? announcement.Message.Substring(0, 100) + "..." : announcement.Message;
+            string shortMessage = alert.AlertText.Length > 100 ? alert.AlertText.Substring(0, 100) + "..." : alert.AlertText;
 
             var currentDate = DateTime.Now;
-            var announcementDate = announcement.CreatedDate;
+            var alertDate = alert.CreatedDate;
 
             // Calculate the absolute time difference in minutes
-            var timeDifference = (int)Math.Abs((currentDate - announcementDate).TotalMinutes);
+            var timeDifference = (int)Math.Abs((currentDate - alertDate).TotalMinutes);
+            
 
             string timestamp;
 
@@ -28,17 +29,17 @@
             else
             {
                 // Older than a day, display the full date and time
-                timestamp = announcement.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy");
+                timestamp = alert.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy");
             }
 
             <div class="feed-element">
                 <div>
                     <small class="float-right text-navy">@timestamp</small>
-                    <strong>@announcement.Title</strong>
+                    <strong>@alert.Title</strong>
                     <div>@shortMessage</div>
                     <small class="text-muted">
-                        @announcement.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy") -
-                        <a href="@Url.Action("ViewAnnouncement", "Announcement", new { id = announcement.Id })">Read more</a>
+                        @alert.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy") -
+                        
                     </small>
                 </div>
             </div>
@@ -46,7 +47,7 @@
     }
     else
     {
-        <p>No announcements found.</p>
+        <p>No alerts found.</p>
     }
 </div>
 

@@ -9,14 +9,17 @@ using System.Threading.Tasks;
 
 namespace EvolvedTax.Data.Models.DTOs.Request
 {
-    public class AnnouncementRequest
+    public class AlertRequest
     {
-        public int Id { get; set; }
-        [StringLength(100)]
-        public string Title { get; set; } = string.Empty;
-        public string Message { get; set; } = string.Empty;
-        public DateTime EndDate { get; set; }
+
+        public int ClientId { get; set; }
+        public int InstituteID { get; set; }
+
+        public string AlertText { get; set; }
+
         public DateTime CreatedDate { get; set; }
+        public string Title { get; set; }
+        public int EntityID { get; set; }
 
     }
 }

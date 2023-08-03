@@ -1,0 +1,78 @@
+﻿@model InstituteMasterRequest
+@{
+    ViewData["Title"] = "Email Reminder";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<div class="ibox-content">
+    <form asp-action="EmailReminder" asp-controller="Account" method="post" enctype="multipart/form-data">
+
+
+        <!-- Email Reminder Settings -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                  @*  <label>Set email reminder for all entity</label>*@
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="IsEmailFrequency"  />
+                            Set email reminder for all entity
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Frequency Setting -->
+        <div class="row" id="emailFrequencyDiv">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Email Reminder Frequency</label>
+                    <input class="form-control" asp-for="EmailFrequency">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Submit Button -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <!-- Hidden file input control -->
+
+    <script>
+        $(document).ready(function () {
+            // Function to toggle EmailFrequency textbox and its parent div based on checkbox status
+            function toggleEmailFrequencyTextbox() {
+                var checkbox = $("#IsEmailFrequency");
+                var emailFrequencyTextbox = $("#EmailFrequency");
+                var emailFrequencyDiv = $("#emailFrequencyDiv"); // Add the ID of the parent div here
+
+                if (checkbox.is(":checked")) {
+                    emailFrequencyTextbox.prop("disabled", false);
+                    emailFrequencyDiv.show();
+                } else {
+                    emailFrequencyTextbox.prop("disabled", true);
+                    emailFrequencyDiv.hide();
+                }
+            }
+
+            // Call the toggle function on page load
+            toggleEmailFrequencyTextbox();
+
+            // Bind the function to the checkbox change event
+            $("#IsEmailFrequency").on("change", function () {
+                toggleEmailFrequencyTextbox();
+            });
+        });
+    </script>
+
+
+}

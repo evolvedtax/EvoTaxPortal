@@ -49,5 +49,10 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string? Phone { get; set; } = string.Empty;
         public IFormFile? ProfileImage { get; set; }
         public string? DateFormat { get; set; } = string.Empty; 
+        public string? Position { get; set; } = string.Empty; 
+        public string? Timezone { get; set; } = string.Empty;
+
+        public int EmailFrequency { get; set; }
+        public bool IsEmailFrequency { get; set; }
     }
 }

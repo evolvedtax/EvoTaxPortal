@@ -60,7 +60,10 @@ public partial class InstitutesClient
     public DateTime? RequestDate { get; set; }
 
     public string? RequestIp { get; set; }
+
     public DateTime? LastUpdatedOn { get; set; }
+
     public int? LastUpdatedBy { get; set; }
+
     public bool IsDuplicated { get; set; }
 }
