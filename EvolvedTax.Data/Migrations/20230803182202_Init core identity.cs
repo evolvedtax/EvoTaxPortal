@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EvolvedTax.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class identityinit : Migration
+    public partial class Initcoreidentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -32,6 +30,28 @@ namespace EvolvedTax.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PasswordSecuredQ1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordSecuredA1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordSecuredQ2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordSecuredA2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordSecuredQ3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordSecuredA3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zip = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Province = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OTP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OTPExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsSuperAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateFormat = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TimeZone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InstituteId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -52,7 +72,6 @@ namespace EvolvedTax.Data.Migrations
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
-    
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
@@ -197,14 +216,11 @@ namespace EvolvedTax.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-           
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -225,6 +241,9 @@ namespace EvolvedTax.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "tblUsers");
         }
     }
 }

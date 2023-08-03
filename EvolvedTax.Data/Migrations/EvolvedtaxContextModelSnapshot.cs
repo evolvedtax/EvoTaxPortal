@@ -17,10 +17,41 @@ namespace EvolvedTax.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EvolvedTax.Data.Models.Entities.Alert", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AlertText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntityID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstituteID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Alert");
+                });
 
             modelBuilder.Entity("EvolvedTax.Data.Models.Entities.Announcement", b =>
                 {
@@ -974,7 +1005,10 @@ namespace EvolvedTax.Data.Migrations
 
                     b.HasKey("EntityId", "InstituteId");
 
-                    b.ToTable("InstituteEntities");
+                    b.ToTable("InstituteEntities", t =>
+                        {
+                            t.HasTrigger("trg_InstituteEntitiesUpdate");
+                        });
                 });
 
             modelBuilder.Entity("EvolvedTax.Data.Models.Entities.InstituteMaster", b =>
@@ -1007,6 +1041,9 @@ namespace EvolvedTax.Data.Migrations
                         .IsRequired()
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
+
+                    b.Property<int?>("EmailFrequency")
+                        .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsUnicode(false)
@@ -1041,6 +1078,9 @@ namespace EvolvedTax.Data.Migrations
                         .HasColumnType("varchar(max)");
 
                     b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsEmailFrequency")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -1152,6 +1192,11 @@ namespace EvolvedTax.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("Position")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
                     b.Property<string>("Pprovince")
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)")
@@ -1203,6 +1248,11 @@ namespace EvolvedTax.Data.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(500)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("TypeofEntity")
                         .IsUnicode(false)
@@ -1460,6 +1510,43 @@ namespace EvolvedTax.Data.Migrations
                         .HasName("PK_MasterStatus");
 
                     b.ToTable("Master_Status", (string)null);
+                });
+
+            modelBuilder.Entity("EvolvedTax.Data.Models.Entities.MasterTimezone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CountryCode")
+                        .HasMaxLength(2)
+                        .IsUnicode(false)
+                        .HasColumnType("char(2)")
+                        .HasColumnName("Country Code")
+                        .IsFixedLength();
+
+                    b.Property<string>("CountryName")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)")
+                        .HasColumnName("Country Name");
+
+                    b.Property<string>("GmtOffset")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("GMT Offset");
+
+                    b.Property<string>("TimeZone")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)")
+                        .HasColumnName("Time Zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Master_Timezone", (string)null);
                 });
 
             modelBuilder.Entity("EvolvedTax.Data.Models.Entities.MasterUser", b =>

@@ -45,5 +45,8 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<MessageResponseModel> AddEntity(InstituteEntityRequest request);
         bool IsEntityNameExist(string entityName, int institueId, int institueId1);
         bool IsEINExist(string ein, int institueId, int institueId1);
+
+        bool SetEmailReminder(InstituteMasterRequest request);
+     
     }
 }

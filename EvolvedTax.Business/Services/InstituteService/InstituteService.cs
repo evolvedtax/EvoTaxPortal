@@ -15,6 +15,7 @@ using System.Data;
 using Azure;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
+using NPOI.OpenXmlFormats.Dml;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -69,7 +70,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active)
+                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active && p.InstituteId== InstId)
                 .OrderByDescending(p=>p.IsDuplicated)
                 .Select(p => new InstituteClientResponse
                 {
@@ -544,7 +545,8 @@ namespace EvolvedTax.Business.Services.InstituteService
             {request.Country},
             {request.PhoneNumber},
             {DateTime.Now.Date},
-            {request.LastUpdatedBy}
+            {request.LastUpdatedBy},
+            {request.ClientEmailId}
             ");
             if (result > 0)
             {
@@ -652,7 +654,11 @@ namespace EvolvedTax.Business.Services.InstituteService
             response.Mprovince = request.Mprovince;
             response.Mstate = request.Mstate;
             response.Phone = request.Phone;
-            request.Mzip = request.Mzip;
+            response.Mzip = request.Mzip;
+            response.DateFormat = request.DateFormat;
+            response.Position = request.Position;
+            response.Timezone = request.Timezone;
+
             _evolvedtaxContext.InstituteMasters.Update(response);
             _evolvedtaxContext.SaveChanges();
             return true;
@@ -738,5 +744,37 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return true;
             }
         }
+
+        public bool SetEmailReminder(InstituteMasterRequest request)
+        {
+            var responseMaster = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstId);
+            if (responseMaster != null)
+            {
+                responseMaster.EmailFrequency = request.EmailFrequency;
+                responseMaster.IsEmailFrequency = request.IsEmailFrequency;
+                _evolvedtaxContext.InstituteMasters.Update(responseMaster);
+
+                if ((bool)responseMaster.IsEmailFrequency)
+                {
+                    var responses = _evolvedtaxContext.InstituteEntities.Where(p => p.InstituteId == request.InstId).ToList();
+                    if (responses.Any())
+                    {
+                        foreach (var response in responses)
+                        {
+                            response.EmailFrequency = request.EmailFrequency;
+                            _evolvedtaxContext.InstituteEntities.Update(response);
+                        }
+                    }
+                }
+              
+            }
+
+            _evolvedtaxContext.SaveChanges();
+            return true;
+        }
+   
+
+
+
     }
 }

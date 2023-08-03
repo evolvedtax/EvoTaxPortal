@@ -208,6 +208,9 @@ namespace EvolvedTax.Controllers
             });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstituteId ?? 0);
+            var IntMaster = _instituteService.GetInstituteDataById(InstituteId ?? 0);
+
+            ViewBag.IsEnableEmailFrequency = IntMaster.IsEmailFrequency ?? false;
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,

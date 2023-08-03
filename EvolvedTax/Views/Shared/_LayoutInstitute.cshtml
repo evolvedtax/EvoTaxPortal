@@ -31,6 +31,9 @@
         <link rel="stylesheet" href="~/lib/steps/jquery.steps.css" />
         <link rel="stylesheet" href="~/css/loader.css" />
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -110,7 +113,8 @@
 
             <!-- Top Navbar -->
             <partial name="_TopNavbarInstitiute" />
-
+        @*    <partial name="_Testing" />
+*@
             <!-- Main view  -->
             @RenderBody()
 
@@ -196,7 +200,49 @@
         $(window).on('beforeunload', function () {
             displayBusyIndicator();
         });
+
     </script>
+  
+@*    <script>
+        Object.defineProperty(WebSocket, 'OPEN', { value: 1 });
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/announcementHub")
+            .build();
+
+        // List to store announcements received through SignalR
+        const signalRAnnouncements = [];
+
+
+        connection.on("ReceiveAnnouncement", function (message) {
+            console.log("Received announcement:", message);
+            // Add the received announcement to the SignalR list
+            signalRAnnouncements.push(message);
+            displaySignalRAnnouncements();
+        });
+
+        connection.start()
+            .catch(err => console.error(err));
+
+        // Function to display SignalR announcements as alerts using SweetAlert
+        function displaySignalRAnnouncements() {
+            if (signalRAnnouncements.length > 0) {
+                const message = signalRAnnouncements.shift();
+                // Show announcement using SweetAlert
+                Swal.fire({
+                    title: "New Announcement",
+                    text: message,
+                    icon: "info",
+                    timer: 60000, // Auto close after 1 minute 
+                    timerProgressBar: true,
+                    showConfirmButton: true// Show close button to allow manual close
+          
+                }).then(() => {
+                    // Schedule the next notification after a delay (e.g., 1 minute)
+                    setTimeout(displaySignalRAnnouncements, 60000);
+                });
+            }
+        }
+    </script>*@
     @RenderSection("Scripts", required: false)
 </body>
 </html>

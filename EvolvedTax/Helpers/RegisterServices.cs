@@ -1,4 +1,5 @@
 ﻿using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.FormReport;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
@@ -12,6 +13,7 @@ using EvolvedTax.Business.Services.W8ECIFormService;
 using EvolvedTax.Business.Services.W8EXPFormService;
 using EvolvedTax.Business.Services.W8IMYFormService;
 using EvolvedTax.Business.Services.W9FormService;
+
 using EvolvedTax.Data.EFRepository;
 using EvolvedTax.Data.Models.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -87,6 +89,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IW8IMYFormService, W8IMYFormService>();
             services.AddScoped<IW8BEN_E_FormService, W8BEN_E_FormService>();
             services.AddScoped<IFormReportService, FormReportService>();
+            services.AddScoped<IAnnouncementService, AnnouncementService>();
             #endregion
 
             #region @@@[------Repository]

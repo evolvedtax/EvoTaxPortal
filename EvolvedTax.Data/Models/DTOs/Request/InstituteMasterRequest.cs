@@ -48,5 +48,11 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [RegularExpression("^[0-9]+$", ErrorMessage = "Phone number only contain digits.")]
         public string? Phone { get; set; } = string.Empty;
         public IFormFile? ProfileImage { get; set; }
+        public string? DateFormat { get; set; } = string.Empty; 
+        public string? Position { get; set; } = string.Empty; 
+        public string? Timezone { get; set; } = string.Empty;
+
+        public int EmailFrequency { get; set; }
+        public bool IsEmailFrequency { get; set; }
     }
 }

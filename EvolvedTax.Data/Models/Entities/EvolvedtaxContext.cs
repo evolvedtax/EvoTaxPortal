@@ -18,6 +18,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     }
 
     public virtual DbSet<Announcement> Announcements { get; set; }
+    public virtual DbSet<Alert> Alert { get; set; }
 
     public virtual DbSet<AvailabilityMaster> AvailabilityMasters { get; set; }
 
@@ -60,6 +61,8 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public virtual DbSet<MasterState> MasterStates { get; set; }
 
     public virtual DbSet<MasterStatus> MasterStatuses { get; set; }
+
+    public virtual DbSet<MasterTimezone> MasterTimezones { get; set; }
 
     public virtual DbSet<MasterUser> MasterUsers { get; set; }
 
@@ -138,7 +141,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
+     
         modelBuilder.Entity<Announcement>(entity =>
         {
             entity.Property(e => e.CreatedDate)
@@ -632,9 +635,10 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
 
         modelBuilder.Entity<InstituteEntity>(entity =>
         {
+            entity.ToTable(tb => tb.HasTrigger("trg_InstituteEntitiesUpdate"));
             entity.HasKey(e => new { e.EntityId, e.InstituteId });
 
-            entity.Property(e => e.EntityId)
+            entity.Property(e => e.EntityId)    
                 .ValueGeneratedOnAdd()
                 .HasComment("EntityID")
                 .HasColumnName("EntityID");
@@ -742,6 +746,9 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.Property(e => e.Phone)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Position)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Pprovince)
                 .IsUnicode(false)
                 .HasColumnName("PProvince");
@@ -768,6 +775,9 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.Property(e => e.StatusDate).HasColumnType("date");
             entity.Property(e => e.SupportEmail)
                 .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Timezone)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.TypeofEntity).IsUnicode(false);
         });
@@ -898,6 +908,28 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.Property(e => e.StatusName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<MasterTimezone>(entity =>
+        {
+            entity.ToTable("Master_Timezone");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CountryCode)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Country Code");
+            entity.Property(e => e.CountryName)
+                .IsUnicode(false)
+                .HasColumnName("Country Name");
+            entity.Property(e => e.GmtOffset)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("GMT Offset");
+            entity.Property(e => e.TimeZone)
+                .IsUnicode(false)
+                .HasColumnName("Time Zone");
         });
 
         modelBuilder.Entity<MasterUser>(entity =>

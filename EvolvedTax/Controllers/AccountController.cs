@@ -401,6 +401,40 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId.ToString()
             });
+
+
+            var timezones = _evolvedtaxContext.MasterTimezones
+                 .OrderBy(p => p.Id)
+        .Select(p => new
+        {
+            Text = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone),
+            Value = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone)
+        })
+        .ToList();
+
+            ViewBag.TimezonList = new SelectList(timezones, "Text", "Value");
+
+            List<string> dateFormats = new List<string>
+    {
+         "MM/DD/YYYY",
+        "MM-DD-YYYY",
+        "MM DD YYYY",
+        "MM.DD.YYYY",
+        "DD/MM/YYYY",
+        "DD-MM-YYYY",
+        "DD MM YYYY",
+        "DD.MM.YYYY",
+        "YYYY-MM-DD",
+        "YYYY/MM/DD",
+        "YYYY MM DD",
+        "YYYY.MM.DD",
+        "YYYY-DD-MM",
+        "YYYY/DD/MM",
+        "YYYY DD MM",
+        "YYYY.DD.MM"
+    };
+
+            ViewBag.DateFormats = new SelectList(dateFormats);
             return View(_mapper.Map<InstituteMasterRequest>(response));
         }
         [HttpPost]
@@ -472,6 +506,23 @@ namespace EvolvedTax.Controllers
         public ActionResult AccessDenied(short statusCode)
         {
             ViewBag.StatusCode = statusCode;
+            return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult EmailReminder()
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = _instituteService.GetInstituteDataById(instId);
+            return View(_mapper.Map<InstituteMasterRequest>(response));
+        }
+        [HttpPost]
+        public IActionResult EmailReminder(InstituteMasterRequest request)
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            request.InstId = instId;
+            var response = _instituteService.SetEmailReminder(request);
             return View();
         }
         #endregion
