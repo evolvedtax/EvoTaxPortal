@@ -12,7 +12,10 @@ using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Common;
+using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 
 namespace EvolvedTax.Controllers
@@ -28,10 +31,11 @@ namespace EvolvedTax.Controllers
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
         readonly IWebHostEnvironment _webHostEnvironment;
+        readonly UserManager<User> _userManager;
         readonly IMapper _mapper;
         private readonly EvolvedtaxContext _evolvedtaxContext;
 
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null)
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null, UserManager<User> userManager = null)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
@@ -40,6 +44,7 @@ namespace EvolvedTax.Controllers
             _evolvedtaxContext = evolvedtaxContext;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
         #endregion
 
@@ -49,17 +54,7 @@ namespace EvolvedTax.Controllers
         {
             return View();
         }
-        [HttpGet]
-        // GET: AccountController/Login
-        public ActionResult Verify(string s)
-        {
-            if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
-            {
-                s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
-                ViewBag.Email = s;
-            }
-            return View();
-        }
+        
         [HttpGet]
         // GET: AccountController/Login
         public ActionResult Login()
@@ -68,11 +63,11 @@ namespace EvolvedTax.Controllers
         }
         [HttpPost]
         // POST: AccountController/Login
-        public ActionResult Login(LoginRequest userDTO, string? returnUrl = null)
+        public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                var response = _userService.Login(userDTO);
+                var response = await _userService.Login(userDTO);
                 if (response.IsLoggedIn && !response.IsAdmin)
                 {
                     HttpContext.Session.SetString("EmailId", response.EmailId);
@@ -90,6 +85,158 @@ namespace EvolvedTax.Controllers
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
+        #region Signup
+        public async Task<IActionResult> SignUp()
+        {
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.SecuredQ1 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ2 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ3 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+
+            ViewBag.EntityType = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityType
+            });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId.ToString()
+            });
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(UserRequest model)
+        {
+            var responseForm = await _userService.Save(model);
+            if (responseForm.Succeeded)
+            {
+                var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                string fullnaame = model.SUFirstName + " " + model.SULastName;
+                string email = model.SUEmailAddress;
+
+                var userModel = new User { UserName = model.SUEmailAddress, Email = model.SUEmailAddress };
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(userModel);
+                var confirmationLink = Url.Action(nameof(Verify), "Account", new { s = token, e = model.SUEmailAddress }, Request.Scheme) ?? "";
+                await _mailService.EmailVerificationAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", confirmationLink);
+                return View("Index");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+        [HttpGet]
+        // GET: AccountController/Login
+        public async Task<ActionResult> Verify(string s, string e)
+        {
+            var user = await _userManager.FindByEmailAsync(e);
+            if (user == null)
+                return View("Error");
+            var result = await _userManager.ConfirmEmailAsync(user, s);
+            return View(result.Succeeded ? nameof(ConfirmEmail) : "Error");
+        }
+        [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult ConfirmEmail()
+        {
+            return View();
+        }
+        #region P.O BOX validation
+        [HttpGet]
+        public IActionResult ValidateAddress(string SUMMAdd1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(SUMMAdd1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        [HttpGet]
+        public IActionResult ValidatePAddress(string SUMPAdd1)
+        {
+            bool isValid = CheckAddressAgainstForbiddenTerms(SUMPAdd1);
+
+            if (isValid)
+            {
+                return Json(true); // Address is valid
+            }
+
+            return Json(false); // Address is not valid
+        }
+        private bool CheckAddressAgainstForbiddenTerms(string address)
+        {
+            List<string> forbiddenTerms = _evolvedtaxContext.MasterPoboxWildcards.Select(w => w.WildCard.ToLower()).ToList();
+
+            //bool containsForbiddenTerm = forbiddenTerms.Any(term => address.ToLower().Contains(term));
+            bool containsForbiddenTerm = forbiddenTerms.Any(term => Regex.IsMatch(address.ToLower(), $@"\b{Regex.Escape(term)}(?:[.]|\b|$)"));
+
+            return !containsForbiddenTerm;
+        }
+        #endregion
+
+        [HttpGet]
+        public ActionResult ValidateEmailDomainAddress(string SUEmailAddress)
+        {
+
+            try
+            {
+                string domainEmail = SUEmailAddress.Split('@')[1];
+                var emails = _evolvedtaxContext.EmailDomains.Where(e => e.EmailDomain1.ToLower().Contains(domainEmail.ToLower())).ToList();
+                if (emails.Any())
+                {
+                    // return Json(false);
+                    string errorMessage = "<span style='color:red;'>Email address is not allowed</span>";
+                    return Json(errorMessage);
+                }
+                bool emailExists = _userService.IsEmailExist(SUEmailAddress);
+
+                if (emailExists)
+                {
+                    string errorMessage = "<span style='color:red;'>Email already exists</span>";
+                    return Json(errorMessage);
+
+                }
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+        #endregion
         public IActionResult Auth()
         {
             var emailId = HttpContext.Session.GetString("EmailId");

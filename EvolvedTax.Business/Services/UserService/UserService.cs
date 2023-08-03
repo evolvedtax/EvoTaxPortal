@@ -7,21 +7,33 @@ using System.Globalization;
 using iTextSharp.text;
 using EvolvedTax.Data.Models.DTOs.Request;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.Identity;
+using EvolvedTax.Data.Enums;
+using System.Security.Policy;
+using System;
 
 namespace EvolvedTax.Business.Services.UserService
 {
     public class UserService : IUserService
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
-        public UserService(EvolvedtaxContext evolvedtaxContext)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public UserService(EvolvedtaxContext evolvedtaxContext, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _evolvedtaxContext = evolvedtaxContext;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
-        public UserRequest Login(LoginRequest model)
+        public async Task<UserRequest> Login(LoginRequest model)
         {
             var request = new UserRequest();
             var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == model.UserName && p.Password == model.Password);
+            //var repsonse = await _signInManager.SignInAsync(new User { UserName = model.UserName, Email = model.UserName }, false);
             if (response != null)
             {
                 request.UserName = response.FirstName + " " + response.LastName;
@@ -61,9 +73,88 @@ namespace EvolvedTax.Business.Services.UserService
             return false;
         }
 
-        public string Save(UserRequest model)
+        public async Task<IdentityResult> Save(UserRequest request)
         {
-            throw new NotImplementedException();
+            if (request.SURegistrationExpiryDate == null)
+            {
+                request.SURegistrationExpiryDate = request.SURegistrationDate.AddDays(365);
+            }
+            var model = new InstituteMaster
+            {
+                InstitutionName = request.SUInstitutionName,
+
+                SupportEmail = string.IsNullOrEmpty(request.SupportEmailAddress) ? request.SUEmailAddress : request.SupportEmailAddress,
+                Idtype = request.SUIDType,
+                Idnumber = request.SUIDNumber,
+                TypeofEntity = request.SUTypeofEntity,
+
+                Mcountry = request.SUMCountry,
+                Madd1 = request.SUMMAdd1,
+                Madd2 = request.SUMMAdd2,
+                Mcity = request.SUMCity,
+                Mstate = request.SUMState,
+                Mzip = request.SUMZip,
+                Mprovince = request.SUMProvince,
+
+                Pcountry = request.SUPCountry,
+                Padd1 = request.SUMPAdd1,
+                Padd2 = request.SUPPAdd2,
+                Pcity = request.SUPCity,
+                Pstate = request.SUPState,
+                Pzip = request.SUPZip,
+                Pprovince = request.SUPProvince,
+
+                Ftin = request.SUFTIN,
+                Gin = request.SUGIN,
+                CountryOfIncorporation = request.SUCountryOfIncorporation,
+                Status = "1",
+                StatusDate = DateTime.Now,
+                Phone = request.Phone
+            };
+
+            var userModel = new User
+            {
+                FirstName = request.SUFirstName, 
+                LastName = request.SULastName,
+                Email = request.SUEmailAddress,
+                UserName = request.SUEmailAddress,
+                Position = request.SUPosition,
+                InstituteId = model.InstId,
+                IsSuperAdmin = false,
+                PasswordSecuredA1 = request.SUPasswordSecuredA1,
+                PasswordSecuredA2 = request.SUPasswordSecuredA2,
+                PasswordSecuredA3 = request.SUPasswordSecuredA3,
+                PasswordSecuredQ1 = request.SUPasswordSecuredQ1,
+                PasswordSecuredQ2 = request.SUPasswordSecuredQ2,
+                PasswordSecuredQ3 = request.SUPasswordSecuredQ3,
+                Country = request.SUMCountry,
+                Address1 = request.SUMMAdd1,
+                Address2 = request.SUMMAdd2,
+                City = request.SUMCity,
+                State = request.SUMState,
+                Zip = request.SUMZip,
+                Province = request.SUMProvince,
+            };
+
+            await _evolvedtaxContext.InstituteMasters.AddAsync(model);
+            await _evolvedtaxContext.SaveChangesAsync();
+            var user = await _userManager.FindByEmailAsync(userModel.Email);
+            var response = new IdentityResult ();
+            if (user == null)
+            {
+                response = await _userManager.CreateAsync(userModel, request.SUPassword);
+                await _userManager.AddToRoleAsync(userModel, Roles.Admin.ToString());
+            }
+            
+            return response;
+        }
+        public async Task<bool> AddRoles()
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Contributor.ToString()));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Viewer.ToString()));
+            return true;
         }
         public UserRequest GetUserbyEmailId(string emailId)
         {
@@ -121,6 +212,14 @@ namespace EvolvedTax.Business.Services.UserService
         public InstituteMaster? GetSecurityQuestionsByInstituteEmail(string emailAddress)
         {
             return _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == emailAddress);
+        }
+        public bool IsEmailExist(string sUEmailAddress)
+        {
+            if (_userManager.FindByEmailAsync(sUEmailAddress).Result == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

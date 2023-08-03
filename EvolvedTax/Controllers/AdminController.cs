@@ -44,17 +44,17 @@ namespace EvolvedTax.Controllers
         }
         [HttpPost]
         // POST: AccountController/Login
-        public ActionResult Login(LoginRequest userDTO, string? returnUrl = null)
+        public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
             if (ModelState.IsValid)
             {
-                var response = _userService.Login(userDTO);
+                var response = await _userService.Login(userDTO);
                 if (response.IsLoggedIn && response.IsAdmin)
                 {
                     HttpContext.Session.SetString("EmailId", response.EmailId);
                     HttpContext.Session.SetInt32("InstId", response.InstId);
                     HttpContext.Session.SetString("IsAdmin", response.IsAdmin.ToString());
-                    return RedirectToAction("Index","Dashboard");
+                    return RedirectToAction("Index", "Dashboard");
                 }
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error

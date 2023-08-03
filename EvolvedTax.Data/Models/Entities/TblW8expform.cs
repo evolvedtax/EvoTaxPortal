@@ -102,6 +102,8 @@ public partial class TblW8expform
     public int? PrintSize { get; set; }
 
     public string? FontName { get; set; }
+
     public string? ActiveTabIndex { get; set; }
-    public bool? IsActive { get; set; } = true;
+
+    public bool? IsActive { get; set; }
 }

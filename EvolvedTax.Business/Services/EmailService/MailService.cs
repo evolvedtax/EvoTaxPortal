@@ -1,9 +1,12 @@
 ﻿using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Helpers;
+using System.Data.SqlTypes;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Policy;
 
 namespace EvolvedTax.Business.MailService
 {
@@ -52,6 +55,40 @@ namespace EvolvedTax.Business.MailService
                     // Exception Details
                 }
             }
+        }
+        public async Task EmailVerificationAsync(string UserFullName, String Email, string subject, string token, string URL)
+        {
+            var FromEmail = "technology@evolvedtax.com";
+            var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            var Host = "smtp.office365.com";
+            var Port = 587;
+            var content = AppConstants.EmailForEmailVerification
+                .Replace("{{Name}}", UserFullName)
+                .Replace("{{email}}", Email)
+                .Replace("{{link}}", URL);
+
+            try
+            {
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(FromEmail);
+                message.To.Add(new MailAddress(Email));
+                message.Subject = subject;
+                message.IsBodyHtml = true; //to make message body as html
+                message.Body = content;
+                smtp.Port = Port;
+                smtp.Host = Host;
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                await smtp.SendMailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                // Exception Details
+            }
+
         }
         public async Task SendEmailToInstituteAsync(string UserFullName, String Email, string subject, string content, string URL)
         {
@@ -145,6 +182,43 @@ namespace EvolvedTax.Business.MailService
             smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Send(message);
 
+        }
+        public void SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL)
+        {
+            //var FromEmail = "technology@evolvedtax.com";
+            //var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            //var Host = "smtp.office365.com";
+            //var Port = 587;
+            //foreach (var email in invitationEmailDetails)
+            //{
+            //    var content = AppConstants.EmailToClient
+            //        .Replace("{{Name}}", email.InstituteUserName)
+            //        .Replace("{{InstituteName}}", email.InstituteName)
+            //        .Replace("{{link}}", uRL. string.Concat(, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
+            //    try
+            //    {
+            //        MailMessage message = new MailMessage();
+            //        SmtpClient smtp = new SmtpClient();
+            //        message.From = new MailAddress(FromEmail);
+            //        message.To.Add(new MailAddress(email.ClientEmailId));
+            //        message.Subject = subject;
+            //        message.IsBodyHtml = true; //to make message body as html
+            //        message.Body = content;
+            //        smtp.Port = Port;
+            //        smtp.Host = Host;
+            //        smtp.EnableSsl = true;
+            //        smtp.UseDefaultCredentials = false;
+            //        smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+            //        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            //        await smtp.SendMailAsync(message);
+
+            //        await _instituteService.UpdateClientStatusByClientEmailId(email.ClientEmailId, 2);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // Exception Details
+            //    }
+            //}
         }
     }
 }

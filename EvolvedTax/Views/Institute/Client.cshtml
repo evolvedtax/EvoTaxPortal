@@ -34,7 +34,13 @@
         border-bottom: 0;
         border-left: 0.3em solid transparent;
     }
-
+        .dataTables_filter {
+        /*position: absolute;
+                    top: 0;
+                    left: 15%;*/
+        padding: 0;
+        padding-right: 70%
+    }
     .actions {
         text-align: center;
     }
@@ -65,7 +71,7 @@
                                 <div style="display:flex">
                                     <label class="ml-2 mr-2" style="margin:auto">Send Email Reminder After Every</label>
                                     <input id="EntityIdFreq" name="EntityIdFreq" hidden />
-                                    <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary">Save</button>
                                 </div>
@@ -529,7 +535,7 @@
                     right: 1
                 },
                 fixedHeader: true,
-                dom: '<"html5buttons"B>lTgitp',
+                dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
                         extend: 'collection',

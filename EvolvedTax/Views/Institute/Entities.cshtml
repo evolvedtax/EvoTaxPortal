@@ -35,6 +35,13 @@
         border-left: 0.3em solid transparent;
     }
 
+    .dataTables_filter {
+        /*position: absolute;
+                top: 0;
+                left: 15%;*/
+        padding: 0;
+        padding-right: 70%
+    }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -438,7 +445,7 @@
             }
             var table = $('.dataTables-example').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>lTgitp',
+                dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
                         extend: 'collection',
@@ -523,7 +530,7 @@
                     },
                 ],
                 initComplete: function () {
-                    $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
                     $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
                     // Add custom CSS class to the dropdown list container
                     $('.btn-menu-toggle').on('click', function () {

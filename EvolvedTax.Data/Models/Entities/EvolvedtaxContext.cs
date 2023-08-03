@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EvolvedTax.Data.Models.Entities;
 
-public partial class EvolvedtaxContext : DbContext
+public partial class EvolvedtaxContext : IdentityDbContext<User>
 {
     public EvolvedtaxContext()
     {
@@ -15,7 +17,23 @@ public partial class EvolvedtaxContext : DbContext
     {
     }
 
+    public virtual DbSet<Announcement> Announcements { get; set; }
+
+    public virtual DbSet<AvailabilityMaster> AvailabilityMasters { get; set; }
+
+    public virtual DbSet<ContactDetail> ContactDetails { get; set; }
+
     public virtual DbSet<EmailDomain> EmailDomains { get; set; }
+
+    public virtual DbSet<EmployeesMaster> EmployeesMasters { get; set; }
+
+    public virtual DbSet<EvoClientsMaster> EvoClientsMasters { get; set; }
+
+    public virtual DbSet<EvoProjectsMaster> EvoProjectsMasters { get; set; }
+
+    public virtual DbSet<EvoTaskMaster> EvoTaskMasters { get; set; }
+
+    public virtual DbSet<EvoTeam> EvoTeams { get; set; }
 
     public virtual DbSet<ExemptPayeeCode> ExemptPayeeCodes { get; set; }
 
@@ -46,6 +64,8 @@ public partial class EvolvedtaxContext : DbContext
     public virtual DbSet<MasterUser> MasterUsers { get; set; }
 
     public virtual DbSet<MasterUserType> MasterUserTypes { get; set; }
+
+    public virtual DbSet<Menu> Menus { get; set; }
 
     public virtual DbSet<MstrCountry> MstrCountries { get; set; }
 
@@ -115,10 +135,68 @@ public partial class EvolvedtaxContext : DbContext
 
     public virtual DbSet<W91> W91s { get; set; }
 
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Announcement>(entity =>
+        {
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.Message).IsUnicode(false);
+            entity.Property(e => e.Title)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<AvailabilityMaster>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("AvailabilityMaster");
+
+            entity.Property(e => e.AvailabilityDate).HasColumnType("date");
+            entity.Property(e => e.AvailabilityId)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("AvailabilityID");
+            entity.Property(e => e.EmpId).HasColumnName("EmpID");
+        });
+
+        modelBuilder.Entity<ContactDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ContactDetails");
+
+            entity.Property(e => e.BusinessAddress)
+                .IsUnicode(false)
+                .HasColumnName("Business Address");
+            entity.Property(e => e.BusinessContact)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Business Contact");
+            entity.Property(e => e.Country).IsUnicode(false);
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FullName)
+                .IsUnicode(false)
+                .HasColumnName("Full Name");
+            entity.Property(e => e.JobTitle)
+                .IsUnicode(false)
+                .HasColumnName("Job Title");
+            entity.Property(e => e.Manager).IsUnicode(false);
+            entity.Property(e => e.MobileContact)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Mobile Contact");
+            entity.Property(e => e.StateZip)
+                .IsUnicode(false)
+                .HasColumnName("State Zip");
+        });
+
         modelBuilder.Entity<EmailDomain>(entity =>
         {
             entity.ToTable("EmailDomain");
@@ -128,6 +206,105 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("EmailDomain");
+        });
+
+        modelBuilder.Entity<EmployeesMaster>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("EmployeesMaster");
+
+            entity.Property(e => e.BusinessAddress)
+                .IsUnicode(false)
+                .HasColumnName("Business Address");
+            entity.Property(e => e.BusinessContact)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Business Contact");
+            entity.Property(e => e.Country).IsUnicode(false);
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EmpId).HasColumnName("EmpID");
+            entity.Property(e => e.FullName)
+                .IsUnicode(false)
+                .HasColumnName("Full Name");
+            entity.Property(e => e.JobTitle)
+                .IsUnicode(false)
+                .HasColumnName("Job Title");
+            entity.Property(e => e.MobileContact)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Mobile Contact");
+            entity.Property(e => e.StateZip)
+                .IsUnicode(false)
+                .HasColumnName("State Zip");
+        });
+
+        modelBuilder.Entity<EvoClientsMaster>(entity =>
+        {
+            entity.ToTable("EvoClientsMaster");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ClientAddress).IsUnicode(false);
+            entity.Property(e => e.ClientCityStateZip).IsUnicode(false);
+            entity.Property(e => e.ClientContactNumber).IsUnicode(false);
+            entity.Property(e => e.ClientEmailAddress).IsUnicode(false);
+            entity.Property(e => e.ClientId)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("ClientID");
+            entity.Property(e => e.ClientName).IsUnicode(false);
+            entity.Property(e => e.ClientNotes).IsUnicode(false);
+            entity.Property(e => e.ContactPerson).IsUnicode(false);
+            entity.Property(e => e.ContactPersonDesignation).IsUnicode(false);
+        });
+
+        modelBuilder.Entity<EvoProjectsMaster>(entity =>
+        {
+            entity.ToTable("EvoProjectsMaster");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ProjectEndDate).HasColumnType("date");
+            entity.Property(e => e.ProjectId)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("ProjectID");
+            entity.Property(e => e.ProjectName).IsUnicode(false);
+            entity.Property(e => e.ProjectStartDate).HasColumnType("date");
+            entity.Property(e => e.ProjectStatus)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<EvoTaskMaster>(entity =>
+        {
+            entity.HasKey(e => e.TaskId);
+
+            entity.ToTable("EvoTaskMaster");
+
+            entity.Property(e => e.TaskId).HasColumnName("TaskID");
+            entity.Property(e => e.TaskName).IsUnicode(false);
+        });
+
+        modelBuilder.Entity<EvoTeam>(entity =>
+        {
+            entity.ToTable("EvoTeam");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Location)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.TeamMember)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.TeamMemberId)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasColumnName("TeamMemberID");
         });
 
         modelBuilder.Entity<ExemptPayeeCode>(entity =>
@@ -494,6 +671,9 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.ApprovedOn).HasColumnType("datetime");
             entity.Property(e => e.CountryOfIncorporation).IsUnicode(false);
+            entity.Property(e => e.DateFormat)
+                .HasMaxLength(200)
+                .IsUnicode(false);
             entity.Property(e => e.EmailAddress).IsUnicode(false);
             entity.Property(e => e.FirstName).IsUnicode(false);
             entity.Property(e => e.Ftin)
@@ -511,6 +691,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.InstituteLogo).IsUnicode(false);
             entity.Property(e => e.InstitutionName).IsUnicode(false);
             entity.Property(e => e.LastName).IsUnicode(false);
+            entity.Property(e => e.LastUpdatedOn).HasColumnType("datetime");
             entity.Property(e => e.Madd1)
                 .IsUnicode(false)
                 .HasColumnName("MAdd1");
@@ -558,6 +739,9 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Pcountry)
                 .IsUnicode(false)
                 .HasColumnName("PCountry");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Pprovince)
                 .IsUnicode(false)
                 .HasColumnName("PProvince");
@@ -576,6 +760,10 @@ public partial class EvolvedtaxContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("RequestIP");
+            entity.Property(e => e.ResetToken)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.ResetTokenExpiryTime).HasColumnType("datetime");
             entity.Property(e => e.Status).IsUnicode(false);
             entity.Property(e => e.StatusDate).HasColumnType("date");
             entity.Property(e => e.SupportEmail)
@@ -613,6 +801,8 @@ public partial class EvolvedtaxContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.InActiveDate).HasColumnType("date");
             entity.Property(e => e.InstituteId).HasColumnName("InstituteID");
+            entity.Property(e => e.IsDuplicated).HasDefaultValueSql("((0))");
+            entity.Property(e => e.LastUpdatedOn).HasColumnType("datetime");
             entity.Property(e => e.Otp)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -776,6 +966,21 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.TypeId).HasColumnName("TypeID");
             entity.Property(e => e.Type)
                 .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Menu>(entity =>
+        {
+            entity.ToTable("Menu");
+
+            entity.Property(e => e.IconClass)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Link)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(500)
                 .IsUnicode(false);
         });
 
@@ -1091,6 +1296,9 @@ public partial class EvolvedtaxContext : DbContext
             entity.ToTable("tblW8EBENEForm");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ActiveTabIndex)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.AddressRow1).IsUnicode(false);
             entity.Property(e => e.AddressRow2).IsUnicode(false);
             entity.Property(e => e.AddressRow3).IsUnicode(false);
@@ -1115,6 +1323,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Gin)
                 .IsUnicode(false)
                 .HasColumnName("GIN");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.MCity)
                 .IsUnicode(false)
                 .HasColumnName("M_City");
@@ -1654,6 +1863,9 @@ public partial class EvolvedtaxContext : DbContext
             entity.ToTable("tblW8ECIForm");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ActiveTabIndex)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.CheckIfFtinNotLegallyRequiredYN).HasColumnName("Check if FTIN not legally required (Y/N)");
             entity.Property(e => e.City).IsUnicode(false);
             entity.Property(e => e.Country).IsUnicode(false);
@@ -1669,6 +1881,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.ForeignTaxIdentifyingNumber)
                 .IsUnicode(false)
                 .HasColumnName("Foreign tax identifying number");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.Items).IsUnicode(false);
             entity.Property(e => e.MCity)
                 .IsUnicode(false)
@@ -1733,7 +1946,12 @@ public partial class EvolvedtaxContext : DbContext
 
             entity.ToTable("tblW8EXPForm");
 
+            entity.HasIndex(e => e.EmailAddress, "idx_W8EXpEmailAddress");
+
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ActiveTabIndex)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.CheckIfFtinNotLegallyRequiredYN).HasColumnName("Check if FTIN not legally required (Y/N)");
             entity.Property(e => e.City).IsUnicode(false);
             entity.Property(e => e.Country).IsUnicode(false);
@@ -1842,7 +2060,10 @@ public partial class EvolvedtaxContext : DbContext
 
             entity.ToTable("tblW8IMYForm");
 
+            entity.HasIndex(e => e.EmailAddress, "idx_ImyEmailAddress");
+
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ActiveTabIndex).IsUnicode(false);
             entity.Property(e => e.City).IsUnicode(false);
             entity.Property(e => e.Country).IsUnicode(false);
             entity.Property(e => e.CountryOfIncorporation)
@@ -1866,6 +2087,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.Gin)
                 .IsUnicode(false)
                 .HasColumnName("GIN");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.MCity)
                 .IsUnicode(false)
                 .HasColumnName("M_City");
@@ -2456,6 +2678,7 @@ public partial class EvolvedtaxContext : DbContext
             entity.Property(e => e.FederalTaxClassification)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
             entity.Property(e => e.ListofAccounts)
                 .HasMaxLength(50)
                 .IsUnicode(false);

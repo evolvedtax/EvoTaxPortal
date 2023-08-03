@@ -32,6 +32,17 @@ namespace EvolvedTax.Helpers
             services.AddDbContext<EvolvedtaxContext>(options =>
               options.UseSqlServer(
                   configuration.GetConnectionString("EvolvedTaxConnection")));
+            services.AddIdentity<User, IdentityRole>(option=> {
+                        option.Password.RequiredLength = 7;
+                        option.Password.RequireDigit = false;
+                        option.Password.RequireUppercase = false;
+
+                        option.User.RequireUniqueEmail = true;
+
+                        option.SignIn.RequireConfirmedEmail = true;
+                     })
+                    .AddEntityFrameworkStores<EvolvedtaxContext>()
+                    .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
 
