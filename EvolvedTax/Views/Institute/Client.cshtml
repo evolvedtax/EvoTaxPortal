@@ -78,10 +78,11 @@
                                     <label class="ml-2 mr-2" style="margin:auto">Send Email Reminder After Every</label>
                                     <input id="EntityIdFreq" name="EntityIdFreq" hidden />
                                     <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
-                                    <input min="0" type="number" id="EmailFrequency" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                    
+                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set email reminder for all entity' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required  />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top" >Save</button>
-                                    <span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>
+                                    @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
 
                                 </div>
                             </form>
@@ -496,23 +497,25 @@
 
 
             if (!isEnableEmailFrequency) {
-                $emailFrequency.prop('disabled', true);
+                $emailFrequency.prop('readonly', true);
                 $submitEmFreq.prop('disabled', true);
    
             }
             else
             {
-                $('#Infoicon').hide();
+                //$('#Infoicon').hide();
+                $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
 
 
         $(document).ready(function () {
-            CheckIsEmailFrequencyEditable();
+         
 
             $('[data-toggle="tooltip"]').tooltip({
                 placement: 'top'
             });
+            CheckIsEmailFrequencyEditable();
 
             $("select").select2({
                 theme: 'bootstrap4',
