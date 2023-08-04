@@ -289,6 +289,30 @@ namespace EvolvedTax.Controllers
             var response = await _instituteService.DeleteClient(id, RecordStatusEnum.Trash);
             return Json(response);
         }
+
+        [Route("institute/DeleteClienRecord")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteClienRecord(int id)
+        {
+            if (id == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.DeleteClientPermeant(id);
+            return Json(response);
+        }
+
+        [Route("institute/KeepClienRecord")]
+        [HttpPost]
+        public async Task<IActionResult> KeepClienRecord(int id)
+        {
+            if (id == 0)
+            {
+                return Json(false);
+            }
+            var response = await _instituteService.KeepClienRecord(id);
+            return Json(response);
+        }
         [Route("institute/EmptyRecycleBinClient")]
         [HttpPost]
         public async Task<IActionResult> EmptyRecycleBinClient(int[] selectedValues)

@@ -529,6 +529,36 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
+
+        public async Task<MessageResponseModel> DeleteClientPermeant(int id)
+        {
+
+            var recordToDelete = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId ==id);
+            if (recordToDelete != null)
+            {
+                _evolvedtaxContext.InstitutesClients.Remove(recordToDelete);
+                await _evolvedtaxContext.SaveChangesAsync();
+                return new MessageResponseModel { Status = true };
+            }
+
+            return new MessageResponseModel { Status = false };
+        }
+
+        public async Task<MessageResponseModel> KeepClienRecord(int id)
+        {
+
+            var recordToUpdate = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId == id);
+            if (recordToUpdate != null)
+            {
+                recordToUpdate.IsDuplicated = false;
+                await _evolvedtaxContext.SaveChangesAsync();
+                return new MessageResponseModel { Status = true,Message= "The record has been kept" };
+            }
+
+            return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
+        }
+
+        
         public async Task<MessageResponseModel> UpdateClient(InstituteClientRequest request)
         {
             var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"

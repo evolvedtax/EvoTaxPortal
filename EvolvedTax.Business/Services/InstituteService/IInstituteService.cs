@@ -33,6 +33,8 @@ namespace EvolvedTax.Business.Services.InstituteService
         IQueryable<InstituteClientResponse> GetRecyleBinClientsByEntityId(int instId, int entityId);
         MessageResponseModel RestoreClients(int[] selectedValues);
         Task<MessageResponseModel> DeleteClient(int id, RecordStatusEnum RecordStatus);
+        Task<MessageResponseModel> DeleteClientPermeant(int id);
+        Task<MessageResponseModel> KeepClienRecord(int id);
         Task<MessageResponseModel> UpdateClient(InstituteClientRequest request);
         Task<MessageResponseModel> LockUnlockClient(int[] selectedValues, bool isLocked);
         Task<MessageResponseModel> TrashEmptyClient(int[] selectedValues, RecordStatusEnum recordStatusEnum);

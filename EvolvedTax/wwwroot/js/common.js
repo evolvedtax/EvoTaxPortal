@@ -539,6 +539,7 @@ var COMMON = (function () {
             });
         return confirmed;
     };
+
     COMMON.confirmAlert = function (message, url, params, gridId) {
         var confirmed = false;
 
