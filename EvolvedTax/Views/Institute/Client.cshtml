@@ -554,6 +554,7 @@
                     Country: row.find("td:nth-child(12)").text(),
                     PhoneNumber: row.find("td:nth-child(13)").text(),
                     ClientEmailId: row.find("td:nth-child(14)").text(),
+                    Status: row.find("td:nth-child(15)").text(),
                 };
 
                 return rowData;
@@ -572,6 +573,16 @@
                 $('#country').val(rowData.Country).change();
                 $('#phoneNumber').val(rowData.PhoneNumber);
                 $('#ClientEmailId').val(rowData.ClientEmailId);
+
+                if (rowData.Status != 'Active') {
+                    $('#ClientEmailId').prop('disabled', true);
+                }
+                else
+                {
+;
+                    $('#ClientEmailId').prop('disabled', false);
+                }
+              
             }
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
