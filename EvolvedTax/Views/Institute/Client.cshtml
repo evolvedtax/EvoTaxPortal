@@ -105,12 +105,12 @@
                     </div>*@
                     <div class="table-container">
                         <div class="table-responsive">
-                            <div class="form-group" style="margin-bottom:-2rem">
+                           @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
                                 <label for="pageLengthInput">Show</label>
                                 <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
                                 <label for="pageLengthInput">entries</label>
-                            </div>
+                            </div>*@
                             <table id="entity-table" class="table table-striped table-bordered table-hover dataTables-example">
                                 <thead>
                                     <tr>
@@ -597,7 +597,7 @@
             });
             $('.dataTables-example').DataTable({
                 "order": [[0, "desc"]],
-                pageLength: 25,
+                pageLength: 10,
                 fixedColumns: {
                     left: 2,
                     right: 1
@@ -720,20 +720,20 @@
                         }
                     },
                 ],
-                "drawCallback": function () {
-                    var pageInfo = this.api().page.info();
-                    $('#pageLengthInput').val(pageInfo.length);
-                },
+                //"drawCallback": function () {
+                //    var pageInfo = this.api().page.info();
+                //    $('#pageLengthInput').val(pageInfo.length);
+                //},
                 initComplete: function () {
 
-                    var api = this.api();
-                    $('#pageLengthInput').on('keyup change', function () {
-                        var value = parseInt($(this).val(), 10);
-                        if (!isNaN(value)) {
-                            api.page.len(value).draw();
-                        }
-                    });
-                    $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    //var api = this.api();
+                    //$('#pageLengthInput').on('keyup change', function () {
+                    //    var value = parseInt($(this).val(), 10);
+                    //    if (!isNaN(value)) {
+                    //        api.page.len(value).draw();
+                    //    }
+                    //});
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
                     $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
                     // Add custom CSS class to the dropdown list container
                     $('.btn-menu-toggle').on('click', function () {
