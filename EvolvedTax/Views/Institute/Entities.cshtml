@@ -37,8 +37,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                top: 0;
-                left: 15%;*/
+                    top: 0;
+                    left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -623,8 +623,8 @@
         $('#saveBtn').click(function () {
             let form = $('#regForm');
             if (form.valid()) {
-                $('#enitytName').prop('disabled',false);
-                $('#ein').prop('disabled',false);
+                $('#enitytName').prop('disabled', false);
+                $('#ein').prop('disabled', false);
                 form.submit();
             }
             return false;
@@ -646,7 +646,7 @@
             return false;
         });
         $('#editEntityName').click(function () {
-            $('#enitytName').prop('readonly',false);
+            $('#enitytName').prop('readonly', false);
         });
         $('#editEIN').click(function () {
             $('#ein').prop('readonly', false);

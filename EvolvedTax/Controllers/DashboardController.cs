@@ -1,12 +1,12 @@
 ﻿using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
+using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax.Controllers
 {
-    [SessionTimeout]
-    public class DashboardController : Controller
+    public class DashboardController : BaseController
     {
         readonly IAnnouncementService _announcementService;
         public DashboardController(IAnnouncementService announcementService)

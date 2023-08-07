@@ -10,6 +10,6 @@ namespace EvolvedTax.Business.MailService
         Task EmailVerificationAsync(string UserFullName, String Email, string subject, string token, string URL);
         Task SendOTPAsync(string OTP, string Email, string subject,string UserName, string URL);
         void SendResetPassword(string emailAddress, string str, string resetUrl);
-        void SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL);
+        Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator);
     }
 }

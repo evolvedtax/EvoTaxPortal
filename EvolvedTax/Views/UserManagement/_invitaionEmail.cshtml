@@ -3,17 +3,18 @@
 <tr class="add-remove-item">
     @using (Html.BeginCollectionItem("InvitationEmailDetails"))
     {
+        <td style="width:89%">
+            <input class="form-control" asp-for="InvitaionEmail" data-toggle="tooltip" data-placement="right" title="Enter the email of the user of that you want to invite" placeholder="Enter email" required />
+            <span asp-validation-for="InvitaionEmail" class="text-danger"></span>
+        </td>
         <td style="width:11%">
             @*<button type="button" class="btn btn-dark" onclick="addNewEmail(this)" title="AddNewEmail"><span class="fa fa-plus"></span></button>*@
-            <span class="btn btn-danger removeItem" title="RemoveEmail" style="cursor:pointer;">
-                <i class="fa fa-minus"></i>
-            </span>
             <span class="btn btn-primary addItem" onclick="addNewEmail(this)" title="addNewEmail" style="cursor:pointer;">
                 <i class="fa fa-plus"></i>
             </span>
-        </td>
-        <td style="width:100%">
-            <input class="form-control" asp-for="InvitaionEmail" data-toggle="tooltip" data-placement="right" title="Enter the email of the user of that you want to invite" placeholder="Enter email" required />
+            <span class="btn btn-danger removeItem" title="RemoveEmail" style="cursor:pointer;">
+                <i class="fa fa-minus"></i>
+            </span>
         </td>
     }
 </tr>

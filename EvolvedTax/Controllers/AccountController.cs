@@ -20,22 +20,22 @@ using static System.Net.WebRequestMethods;
 
 namespace EvolvedTax.Controllers
 {
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
         #region Fields
-        #endregion
-
-        #region Ctor
         readonly IUserService _userService;
         readonly IGeneralQuestionareService _generalQuestionareService;
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
         readonly IWebHostEnvironment _webHostEnvironment;
         readonly UserManager<User> _userManager;
+        readonly SignInManager<User> _signInManager;
         readonly IMapper _mapper;
         private readonly EvolvedtaxContext _evolvedtaxContext;
+        #endregion
 
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null, UserManager<User> userManager = null)
+        #region Ctor
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null, UserManager<User> userManager = null, SignInManager<User> signInManager = null)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
@@ -45,16 +45,17 @@ namespace EvolvedTax.Controllers
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
         #endregion
 
         #region Methods
-        [SessionTimeout]
+        [Authorize]
         public ActionResult Index()
         {
             return View();
         }
-        
+
         [HttpGet]
         // GET: AccountController/Login
         public ActionResult Login()
@@ -65,27 +66,102 @@ namespace EvolvedTax.Controllers
         // POST: AccountController/Login
         public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
+            //await _userService.AddRoles();
             if (ModelState.IsValid)
             {
-                var response = await _userService.Login(userDTO);
-                if (response.IsLoggedIn && !response.IsAdmin)
+                //var response = await _userService.Login(userDTO);
+                var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
+                if (result.Succeeded)
                 {
-                    HttpContext.Session.SetString("EmailId", response.EmailId);
-                    var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
-                    var totp = new Totp(bytes);
-                    var otp = totp.ComputeTotp();
-
-                    _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoTax Portal", response.UserName, "");
-                    _userService.UpdateInstituteMasterOTP(response.EmailId, otp, DateTime.Now.AddMinutes(60));
-
-                    return RedirectToAction(nameof(Auth));
+                    //return RedirectToLocal(returnUrl);
                 }
+                if (result.RequiresTwoFactor)
+                {
+                    HttpContext.Session.SetString("EmailId", userDTO.UserName);
+                    return RedirectToAction(nameof(Auth), new { returnUrl = returnUrl });
+                }
+                //if (result.Succeeded)
+                //{
+                //    HttpContext.Session.SetString("EmailId", response.EmailId);
+                //    var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+                //    var totp = new Totp(bytes);
+                //    var otp = totp.ComputeTotp();
+
+                //    await _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoTax Portal", response.UserName, "");
+                //    _userService.UpdateInstituteMasterOTP(response.EmailId, otp, DateTime.Now.AddMinutes(60));
+
+                //    return RedirectToAction(nameof(Auth));
+                //}
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
         #region Signup
+        public async Task<IActionResult> SignUpForInvite(string i, string e)
+        {
+            i = EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+            e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+            var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.SecuredQ1 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ2 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+            ViewBag.SecuredQ3 = _evolvedtaxContext.PasswordSecurityQuestions.Select(p => new SelectListItem
+            {
+                Text = p.SecurityQuestion,
+                Value = p.PasswordSecurityQuestionId.ToString(),
+            });
+
+
+            ViewBag.EntityType = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
+            {
+                Text = p.EntityType,
+                Value = p.EntityType
+            });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId.ToString()
+            });
+            var InstituteName = _instituteService.GetInstituteDataById(Convert.ToInt32(i)).InstitutionName;
+            var model = new UserRequest { SUEmailAddress = e, InstId = Convert.ToInt32(i), SUInstitutionName = InstituteName ?? "" };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SignUpForInvite(UserRequest model)
+        {
+            var responseForm = await _userService.SaveInvitedUser(model);
+            if (responseForm.Succeeded)
+            {
+                var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                string fullnaame = model.SUFirstName + " " + model.SULastName;
+                string email = model.SUEmailAddress;
+
+                return Json(new { Status = true, Message = "An email has been sent to administrator for signup request. Once approved, you will be notified by email." });
+            }
+            else
+            {
+                return View(new { Status = false, Message = "Something went wrong. Please try again." });
+            }
+        }
         public async Task<IActionResult> SignUp()
         {
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
@@ -237,20 +313,33 @@ namespace EvolvedTax.Controllers
             }
         }
         #endregion
-        public IActionResult Auth()
+        public async Task<IActionResult> Auth(string? returnUrl = null)
         {
             var emailId = HttpContext.Session.GetString("EmailId");
-            if (string.IsNullOrEmpty(emailId))
+            //if (string.IsNullOrEmpty(emailId))
+            //{
+            //    return RedirectToAction(nameof(Login));
+            //}
+            var user = await _userManager.FindByEmailAsync(emailId);
+            if (user == null)
             {
-                return RedirectToAction(nameof(Login));
+                return View(nameof(Error));
             }
+            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
+            if (!providers.Contains("Email"))
+            {
+                return View(nameof(Error));
+            }
+            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
         [HttpPost]
-        public IActionResult Auth(IFormCollection formVals)
+        public async Task<IActionResult> Auth(IFormCollection formVals)
         {
             var emailId = HttpContext.Session.GetString("EmailId");
-            var response = _userService.GetUserbyEmailId(emailId ?? "");
+            //var response = _userService.GetUserbyEmailId(emailId ?? "");
             string Otp = string.Concat(
                 formVals["Otp1"].ToString(),
                 formVals["Otp2"].ToString(),
@@ -258,22 +347,42 @@ namespace EvolvedTax.Controllers
                 formVals["Otp4"].ToString(),
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
-            if (response.OTP == "")
+            //if (response.OTP == "")
+            //{
+            //    TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            //    TempData["Message"] = "OTP has expired";
+            //    return View(nameof(Auth));
+            //}
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
             {
                 TempData["Type"] = ResponseMessageConstants.ErrorStatus;
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(Auth));
             }
-            if (Otp == response.OTP)
+            var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
+            if (result.Succeeded)
             {
-                HttpContext.Session.SetInt32("InstId", response.InstId);
-                HttpContext.Session.SetString("UserName", response.UserName);
-                HttpContext.Session.SetString("EmailId", response.EmailId);
-                HttpContext.Session.SetString("InstituteName", response.InstituteName);
-                HttpContext.Session.SetString("ProfileImage", response.InstituteLogo ?? "");
-                _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
                 return RedirectToAction("Index", "Dashboard");
             }
+            else if (result.IsLockedOut)
+            {
+                //Same logic as in the Login action
+                ModelState.AddModelError("", "The account is locked out");
+                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                TempData["Message"] = "The account is locked out";
+                return View();
+            }
+            //if (Otp == response.OTP)
+            //{
+            //    HttpContext.Session.SetInt32("InstId", response.InstId);
+            //    HttpContext.Session.SetString("UserName", response.UserName);
+            //    HttpContext.Session.SetString("EmailId", response.EmailId);
+            //    HttpContext.Session.SetString("InstituteName", response.InstituteName);
+            //    HttpContext.Session.SetString("ProfileImage", response.InstituteLogo ?? "");
+            //    _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
+            //    return RedirectToAction("Index", "Dashboard");
+            //}
             TempData["Type"] = ResponseMessageConstants.ErrorStatus;
             TempData["Message"] = "Please enter correct OTP";
             return View(nameof(Auth));
@@ -416,22 +525,22 @@ namespace EvolvedTax.Controllers
 
             List<string> dateFormats = new List<string>
     {
-         "MM/DD/YYYY",
-        "MM-DD-YYYY",
-        "MM DD YYYY",
-        "MM.DD.YYYY",
-        "DD/MM/YYYY",
-        "DD-MM-YYYY",
-        "DD MM YYYY",
-        "DD.MM.YYYY",
-        "YYYY-MM-DD",
-        "YYYY/MM/DD",
-        "YYYY MM DD",
-        "YYYY.MM.DD",
-        "YYYY-DD-MM",
-        "YYYY/DD/MM",
-        "YYYY DD MM",
-        "YYYY.DD.MM"
+                             "MM/DD/YYYY",
+                            "MM-DD-YYYY",
+                            "MM DD YYYY",
+                            "MM.DD.YYYY",
+                            "DD/MM/YYYY",
+                            "DD-MM-YYYY",
+                            "DD MM YYYY",
+                            "DD.MM.YYYY",
+                            "YYYY-MM-DD",
+                            "YYYY/MM/DD",
+                            "YYYY MM DD",
+                            "YYYY.MM.DD",
+                            "YYYY-DD-MM",
+                            "YYYY/DD/MM",
+                            "YYYY DD MM",
+                            "YYYY.DD.MM"
     };
 
             ViewBag.DateFormats = new SelectList(dateFormats);
@@ -490,10 +599,11 @@ namespace EvolvedTax.Controllers
             var result = _userService.ResetPassword(request);
             return Json(result);
         }
-        [SessionTimeout]
-        public ActionResult Logout()
+        [Authorize]
+        public async Task<ActionResult> Logout()
         {
             HttpContext.Session.Clear();
+            await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login));
         }
         [UserSession]

@@ -11,6 +11,7 @@ namespace EvolvedTax.Data.Enums
         SuperAdmin = 1,
         Admin,
         Contributor,
-        Viewer
+        Viewer,
+        Invited
     }
 }

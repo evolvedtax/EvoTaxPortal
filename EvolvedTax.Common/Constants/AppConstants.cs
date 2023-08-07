@@ -94,6 +94,50 @@ We appreciate your prompt attention to this important task.
 Regards,
 <br/><br/>
 Technology Team at Evolved LLC";
+        public static string InvitationEmailForSignUp = @"Dear {{Name}},
+                                                        <br /><br />
+                                                        We hope this email finds you well. <strong>{{administrator}}</strong> invited you to register with EvoTax Portal.
+                                                        <br /><br />
+                                                        To access the EvoTax Portal, please follow the instructions below:
+                                                        <br /><br />
+                                                        <!--[if mso]>
+                                                          <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
+                                                            <tr>
+                                                              <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+                                                                <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
+                                                                  <w:anchorlock/>
+                                                                  <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
+                                                                    Accept Invite
+                                                                  </center>
+                                                                </v:roundrect>
+                                                              </td>
+                                                            </tr>
+                                                          </table>
+                                                        <![endif]-->
+                                                        <!--[if !mso]><!-->
+                                                        <table cellspacing="" 0"" cellpadding="" 0"" border="" 0"" align="" center"" style="" margin: 0 auto;"">
+                                                            <tr>
+                                                                <td align="" center"" bgcolor="" #1ab394"" style="" border-radius: 4px;"">
+                                                                    <a href="" {{link}}"" target="" _blank"" style="" font-size: 16px; font-family: Arial, sans-serif; color:
+                                                                        #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
+                                                                        Accept Invite
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!--<![endif]-->
+                                                        
+                                                        <br /><br />
+                                                        Follow the prompts to complete your registration.
+                                                        <br /><br />
+                                                        Should you have any questions or concerns, please do not hesitate to reach out to our support team at
+                                                        technology@evolvedtax.com.
+                                                        <br /><br />
+                                                        Thank you for your cooperation in this matter.
+                                                        <br /><br />
+                                                        Regards,
+                                                        <br /><br />
+                                                        Technology Team at Evolved LLC";
 
         public static string EmailToInstitute = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoTax Platform. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their registration before they can access the full features of the platform. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your identity, kindly click on the verification link provided below. You will be directed to a secure login page where you will need to enter your login credentials.<br/><br/> <!--[if mso]>
   <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">

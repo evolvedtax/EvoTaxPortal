@@ -12,6 +12,7 @@ namespace EvolvedTax.Business.Services.UserService
     public interface IUserService
     {
         public Task<IdentityResult> Save(UserRequest model);
+        Task<IdentityResult> SaveInvitedUser(UserRequest request);
         public Task<UserRequest> Login(LoginRequest model);
         bool UpdateInstituteMasterOTP(string emailId, string otp, DateTime expiryDate);
         bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate);

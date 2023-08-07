@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
     }
     public class InvitationEmailDetalsRequest
     {
+        //[Remote("ValidateEmailDomainAddress", "UserManagement", AdditionalFields = "InvitaionEmail")]
         public string InvitaionEmail { get; set; } = string.Empty;
     }
 }
