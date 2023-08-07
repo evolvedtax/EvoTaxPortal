@@ -586,6 +586,7 @@
                     right: 1
                 },
                 fixedHeader: true,
+                scrollX: true,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
@@ -712,28 +713,51 @@
                         dropdown.addClass('center-dropdown');
                     });
                     this.api()
-                        .columns([1, 13, 16])
-                        .every(function () {
-                            let column = this;
-                            let title = column.header().textContent;
+                        //.columns([1, 13, 16])
+                        //.every(function () {
+                        //    let column = this;
+                        //    let title = column.header().textContent;
 
-                            // Create input element
-                            let input = document.createElement('input');
-                            input.placeholder = title;
-                            column.header().replaceChildren(input);
+                        //    // Create input element
+                        //    let input = document.createElement('input');
+                        //    input.placeholder = title;
+                        //    column.header().replaceChildren(input);
 
-                            // Event listener for user input
-                            input.addEventListener('keyup', () => {
-                                if (column.search() !== input.value) {
-                                    column.search(input.value).draw();
-                                }
-                            });
+                        //    // Event listener for user input
+                        //    input.addEventListener('keyup', () => {
+                        //        if (column.search() !== input.value) {
+                        //            column.search(input.value).draw();
+                        //        }
+                        //    });
 
-                            // Event listener for click on the input element
-                            input.addEventListener('click', (event) => {
-                                event.stopPropagation();
-                            });
-                        });
+                        //    // Event listener for click on the input element
+                        //    input.addEventListener('click', (event) => {
+                        //        event.stopPropagation();
+                        //    });
+                        //});
+                        //.columns([1, 13, 16])
+                        //.every(function () {
+                        //    var column = this;
+                        //    var select = $('<select><option value=""></option></select>')
+                        //        .appendTo($(column.header()).empty())
+                        //        .on('change', function () {
+                        //            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                        //            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        //        });
+
+                        //    column
+                        //        .data()
+                        //        .unique()
+                        //        .sort()
+                        //        .each(function (d, j) {
+                        //            select.append('<option value="' + d + '">' + d + '</option>');
+                        //        });
+                        //    // Event listener for click on the input element
+                        //    //select.addEventListener('click', (event) => {
+                        //    //    event.stopPropagation();
+                        //    //});
+                        //});
                 }
             });
 

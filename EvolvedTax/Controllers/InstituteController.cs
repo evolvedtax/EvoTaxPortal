@@ -9,12 +9,12 @@ using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
+using EvolvedTax.Web.Controllers;
 using Newtonsoft.Json.Converters;
 
 namespace EvolvedTax.Controllers
 {
-    [SessionTimeout]
-    public class InstituteController : Controller
+    public class InstituteController : BaseController
     {
         readonly private IInstituteService _instituteService;
         readonly private IWebHostEnvironment _webHostEnvironment;

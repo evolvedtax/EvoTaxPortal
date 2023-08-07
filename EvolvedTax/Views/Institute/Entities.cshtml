@@ -37,8 +37,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                top: 0;
-                left: 15%;*/
+                    top: 0;
+                    left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -538,29 +538,53 @@
 
                         dropdown.addClass('center-dropdown');
                     });
-                    this.api()
-                        .columns([1,2])
-                        .every(function () {
-                            let column = this;
-                            let title = column.header().textContent;
+                    //this.api()
+                    //    .columns([1,2])
+                    //    .every(function () {
+                    //        let column = this;
+                    //        let title = column.header().textContent;
 
-                            // Create input element
-                            let input = document.createElement('input');
-                            input.placeholder = title;
-                            column.header().replaceChildren(input);
+                    //        // Create input element
+                    //        let input = document.createElement('input');
+                    //        input.placeholder = title;
+                    //        column.header().replaceChildren(input);
 
-                            // Event listener for user input
-                            input.addEventListener('keyup', () => {
-                                if (column.search() !== input.value) {
-                                    column.search(input.value).draw();
-                                }
-                            });
+                    //        // Event listener for user input
+                    //        input.addEventListener('keyup', () => {
+                    //            if (column.search() !== input.value) {
+                    //                column.search(input.value).draw();
+                    //            }
+                    //        });
 
-                            // Event listener for click on the input element
-                            input.addEventListener('click', (event) => {
-                                event.stopPropagation();
-                            });
-                        });
+                    //        // Event listener for click on the input element
+                    //        input.addEventListener('click', (event) => {
+                    //            event.stopPropagation();
+                    //        });
+                    //    });
+                    //this.api()
+                    //    .columns([1, 2])
+                    //    .every(function () {
+                    //        var column = this;
+                    //        var select = $('<select><option value=""></option></select>')
+                    //            .appendTo($(column.header()).empty())
+                    //            .on('change', function () {
+                    //                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    //                column.search(val ? '^' + val + '$' : '', true, false).draw();
+                    //            });
+
+                    //        column
+                    //            .data()
+                    //            .unique()
+                    //            .sort()
+                    //            .each(function (d, j) {
+                    //                select.append('<option value="' + d + '">' + d + '</option>');
+                    //            });
+                    //        // Event listener for click on the input element
+                    //        //select.addEventListener('click', (event) => {
+                    //        //    event.stopPropagation();
+                    //        //});
+                    //    });
                 }
             });
             // Get the file input element
@@ -606,8 +630,8 @@
         $('#saveBtn').click(function () {
             let form = $('#regForm');
             if (form.valid()) {
-                $('#enitytName').prop('disabled',false);
-                $('#ein').prop('disabled',false);
+                $('#enitytName').prop('disabled', false);
+                $('#ein').prop('disabled', false);
                 form.submit();
             }
             return false;
@@ -629,7 +653,7 @@
             return false;
         });
         $('#editEntityName').click(function () {
-            $('#enitytName').prop('readonly',false);
+            $('#enitytName').prop('readonly', false);
         });
         $('#editEIN').click(function () {
             $('#ein').prop('readonly', false);

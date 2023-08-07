@@ -11,10 +11,11 @@ using static System.Net.WebRequestMethods;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using EvolvedTax.Web.Controllers;
 
 namespace EvolvedTax.Controllers
 {
-    public class AnnouncementController : Controller
+    public class AnnouncementController : BaseController
     {
         readonly IWebHostEnvironment _webHostEnvironment;
         readonly EvolvedtaxContext _evolvedtaxContext;

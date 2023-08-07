@@ -37,10 +37,14 @@
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
+    
     <div class="col-lg-12">
         <div class="ibox">
             <div class="ibox-title">
                 User Management
+                @*<div class="pull-right">
+                    <button class="btn btn-primary">Share</button>
+                </div>*@
             </div>
             <div class="ibox-content">
                 <div class="col-lg-12">
@@ -97,7 +101,9 @@
                                                             <tr>
                                                                 <td>@item.FirstName @item.LastName</td>
                                                                 <td>@item.Email</td>
-                                                                <td></td>
+                                                                <td>
+                                                                    <select asp-items="ViewBag.Roles" class="form-control"></select>
+                                                                </td>
                                                                 <td class="actions">
                                                                     <div class="dropdown">
                                                                         <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -105,7 +111,7 @@
                                                                         </button>
                                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                             <div class="dropdown-menu-horizontal">
-                                                                                <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.Id">Manage Roles</a>
+                                                                                <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.Id">Save</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -127,7 +133,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
-                                                        <th>Permissions</th>
+                                                        <th>Description</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -138,7 +144,7 @@
                                                         {
                                                             <tr>
                                                                 <td>@item.Name</td>
-                                                                <td></td>
+                                                                <td>Description here</td>
                                                                 <td class="actions">
                                                                     <div class="dropdown">
                                                                         <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -251,7 +257,7 @@
             });
             $('#roleTable').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>frTfgitp',
+                dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
                         extend: 'collection',
@@ -286,7 +292,7 @@
             });
             $('#entityTable').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>frTfgitp',
+                dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
                         extend: 'collection',
