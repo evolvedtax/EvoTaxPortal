@@ -363,6 +363,12 @@ namespace EvolvedTax.Controllers
             var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
             if (result.Succeeded)
             {
+                var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+                HttpContext.Session.SetInt32("InstId", user.InstituteId);
+                HttpContext.Session.SetString("UserName", user.UserName);
+                HttpContext.Session.SetString("EmailId", user.Email);
+                HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
+                HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
                 return RedirectToAction("Index", "Dashboard");
             }
             else if (result.IsLockedOut)
@@ -375,11 +381,12 @@ namespace EvolvedTax.Controllers
             }
             //if (Otp == response.OTP)
             //{
-            //    HttpContext.Session.SetInt32("InstId", response.InstId);
-            //    HttpContext.Session.SetString("UserName", response.UserName);
-            //    HttpContext.Session.SetString("EmailId", response.EmailId);
-            //    HttpContext.Session.SetString("InstituteName", response.InstituteName);
-            //    HttpContext.Session.SetString("ProfileImage", response.InstituteLogo ?? "");
+            //var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+            //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
+            //    HttpContext.Session.SetString("UserName", user.UserName);
+            //    HttpContext.Session.SetString("EmailId", user.Email);
+            //    HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
+            //    HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
             //    _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
             //    return RedirectToAction("Index", "Dashboard");
             //}
