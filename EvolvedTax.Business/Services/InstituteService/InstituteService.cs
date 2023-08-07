@@ -863,7 +863,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var currentDate = DateTime.Now;
             //valid starting from 7 days after their CreatedDate and until the EndDate.
             var announcements = _evolvedtaxContext.Announcements
-            .Where(a => a.EndDate >= currentDate && a.CreatedDate <=a.CreatedDate.Value.AddDays(7)  )
+            .Where(a => a.EndDate >= currentDate && currentDate <= a.CreatedDate.Value.AddDays(7)  )
                 .OrderByDescending(a => a.Id)
                 .Take(20)
                 .Select(a => new AnnouncementRequest
