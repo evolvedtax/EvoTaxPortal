@@ -49,6 +49,12 @@ namespace EvolvedTax.Business.Services.InstituteService
         bool IsEINExist(string ein, int institueId, int institueId1);
 
         bool SetEmailReminder(InstituteMasterRequest request);
-     
+
+        public List<AlertRequest> GetAlertsNotification(int instituteId);
+        bool MarkAlertAsRead(int id);
+        public bool MarkAllAlertsAsRead(int instituteId);
+
+        public List<AnnouncementRequest> GetAnnouncements();
+
     }
 }

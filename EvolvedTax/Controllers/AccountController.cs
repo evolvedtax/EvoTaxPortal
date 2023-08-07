@@ -525,6 +525,34 @@ namespace EvolvedTax.Controllers
             var response = _instituteService.SetEmailReminder(request);
             return View();
         }
+
+        public IActionResult GetAlertsNotification()
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId);
+            return Json(alerts);
+        }
+
+        [HttpPost]
+        public IActionResult MarkAlertAsRead(int alertId)
+        {
+            var response = _instituteService.MarkAlertAsRead(alertId);
+            return Json(new { success = response });
+        }
+
+        public IActionResult MarkAllAlertsAsRead()
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = _instituteService.MarkAllAlertsAsRead(instId);
+            return Json(new { success = response });
+        }
+
+        public IActionResult GetAnnouncements()
+        {
+  
+            List<AnnouncementRequest> announcement = _instituteService.GetAnnouncements();
+            return Json(announcement);
+        }
         #endregion
 
         #region Utilities

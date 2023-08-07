@@ -54,6 +54,28 @@
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
     </environment>
     <style>
+
+        #alertDropdown li {
+            padding: 10px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+    /* Hover effect */
+            #alertDropdown li:hover {
+                background-color: #f2f2f2; /* Change to any color you prefer for the hover effect */
+                cursor: pointer; /* Change cursor to a pointer when hovering over the alert item */
+            }
+
+        #alertAnncoument li {
+            padding: 10px;
+            border-bottom: 1px solid #e9e9e9;
+        }
+
+            /* Hover effect */
+            #alertAnncoument li:hover {
+                background-color: #f2f2f2; /* Change to any color you prefer for the hover effect */
+                cursor: pointer; /* Change cursor to a pointer when hovering over the alert item */
+            }
+
         .btn-excel {
             background-color: #384a50;
             border-color: white;
@@ -200,6 +222,271 @@
         $(window).on('beforeunload', function () {
             displayBusyIndicator();
         });
+
+        
+        function updateNewAlertCount(count) {
+         $('#newAlertCount').text(count);
+        }
+
+        function updateNewAnncoumentCount(count) {
+            $('#newAnncoumentCount').text(count);
+        }
+        
+
+        function markFirstTwoAlertsAsRead() {
+            // Select the first two alert items 
+            var $alertsToMarkAsRead = $('#alertDropdown li:lt(2)');
+            $alertsToMarkAsRead.each(function () {
+                var alertId = $(this).data('alertid');
+                if (alertId) {
+                    // Mark the alert as read
+                    markAlertAsRead(alertId);
+                }
+            });
+        }
+
+        // Function to mark a single alert as read when clicked
+        function markAlertAsRead(alertId) {
+            $.ajax({
+                url: '/Account/MarkAlertAsRead',
+                method: 'POST',
+                data: { alertId: alertId },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        // The alert marked as read, refresh the alert list
+                        loadAlerts();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+
+        function loadAnncoument() {
+            $.ajax({
+                url: '/Account/GetAnnouncements',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    // Clear the dropdown
+                    $('#alertAnncoument').empty();
+
+                    if (response.length === 0) {
+                        var $noAlertsItem = $('<li>No New Anncoument</li>');
+                        $('#alertAnncoument').append($noAlertsItem);
+                        $('#newAnncoumentCount').hide();
+                    } else {
+                        // Limit the number of alerts to be displayed
+                        var maxAlertsToShow = 2;
+                        var displayedAlertsCount = 0;
+                        var newAnncoumentCount = response.length;
+                        $('#newAnncoumentCount').show();
+                        updateNewAnncoumentCount(newAnncoumentCount);
+
+                        for (var i = 0; i < response.length && displayedAlertsCount < maxAlertsToShow; i++) {
+                            var alertItem = response[i];
+                            var alertId = alertItem.Id;
+
+                            // Calculate the time difference between the current date and alert date
+                            var currentDate = new Date();
+                            var alertDate = new Date(alertItem.CreatedDate);
+                            var timeDifference = Math.floor((currentDate - alertDate) / (1000 * 60)); // Time difference in minutes
+
+                            // Generate the timestamp based on the time difference
+                            var timestamp;
+                            if (timeDifference < 60) {
+                                timestamp = `${timeDifference}m ago`;
+                            } else if (timeDifference < 1440) {
+                                timestamp = `${Math.floor(timeDifference / 60)}h ago`;
+                            } else {
+                                var options = { hour: '2-digit', minute: '2-digit', month: '2-digit', day: '2-digit', year: 'numeric' };
+                                timestamp = alertDate.toLocaleString(undefined, options);
+                            }
+
+
+                            var $alertLi = $('<li></li>');
+                            var $alertDiv = $('<div class="dropdown-messages-box"></div>');
+                            var $alertMediaBody = $('<div class="media-body"></div>');
+                            var $alertStrong = $('<strong></strong>').text(alertItem.Title);
+                            var $alertSmall = $('<small class="float-right"></small>').text(timestamp);
+
+                            var maxCharacters = 50;
+                            var message = alertItem.Message;
+
+                            // Check if the message length exceeds the character limit
+                            if (message.length > maxCharacters) {
+                                message = message.substring(0, maxCharacters) + "...";
+                            }
+                            var $alertContent = $('<div></div>').text(message);
+
+                            $alertMediaBody.append($alertStrong, $alertSmall, $alertContent);
+
+
+                            $alertDiv.append($alertMediaBody);
+                            $alertLi.append($alertDiv);
+
+
+                            // Append the alert item to the dropdown
+                            $('#alertAnncoument').append($alertLi);
+
+                            displayedAlertsCount++;
+                        }
+
+                        // Add the "See More" link if there are more alerts to show
+                        if (response.length > displayedAlertsCount) {
+                            var $seeMoreLink = $('<li><a href="#" id="seeMoreLink">Read All</a></li>');
+                            $seeMoreLink.on('click', function (e) {
+                                e.preventDefault();
+                                window.location.href = '/Dashboard/Index';
+
+                            });
+
+                            $('#alertAnncoument').append($seeMoreLink);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function loadAlerts() {
+            $.ajax({
+                url: '/Account/GetAlertsNotification',
+                method: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    // Clear the dropdown
+                    $('#alertDropdown').empty();
+
+                    if (response.length === 0) {
+                        var $noAlertsItem = $('<li>No New Alert</li>');
+                        $('#alertDropdown').append($noAlertsItem);
+                        $('#newAlertCount').hide();
+                    } else {
+                        // Limit the number of alerts to be displayed
+                        var maxAlertsToShow = 2;
+                        var displayedAlertsCount = 0;
+                        var newAlertCount = response.length;
+                        $('#newAlertCount').show();
+                        updateNewAlertCount(newAlertCount);
+
+                        for (var i = 0; i < response.length && displayedAlertsCount < maxAlertsToShow; i++) {
+                            var alertItem = response[i];
+                            var alertId = alertItem.Id;
+
+                            debugger;
+                            // Calculate the time difference between the current date and alert date
+                            var currentDate = new Date();
+                            var alertDate = new Date(alertItem.CreatedDate);
+                            var timeDifference = Math.floor((currentDate - alertDate) / (1000 * 60)); // Time difference in minutes
+
+                            // Generate the timestamp based on the time difference
+                            var timestamp;
+                            if (timeDifference < 60) {
+                                timestamp = `${timeDifference}m ago`;
+                            } else if (timeDifference < 1440) {
+                                timestamp = `${Math.floor(timeDifference / 60)}h ago`;
+                            } else {
+                                var options = { hour: '2-digit', minute: '2-digit', month: '2-digit', day: '2-digit', year: 'numeric' };
+                                timestamp = alertDate.toLocaleString(undefined, options);
+                            }
+
+
+                            var $alertLi = $('<li></li>');
+                            var $alertDiv = $('<div class="dropdown-messages-box"></div>');
+                            var $alertMediaBody = $('<div class="media-body"></div>');
+                            var $alertStrong = $('<strong></strong>').text(alertItem.Title);
+                            var $alertSmall = $('<small class="float-right"></small>').text(timestamp);
+                            var $alertContent = $('<div></div>').text(alertItem.AlertText);
+
+                            $alertMediaBody.append($alertStrong, $alertSmall, $alertContent);
+
+
+                            $alertDiv.append($alertMediaBody);
+                            $alertLi.append($alertDiv);
+
+                            // Add the data attribute for the alertId
+                            $alertLi.data('alertid', alertId);
+
+                            // Add event handler for clicking on an alert item
+                            $alertLi.on('click', function () {
+                                var alertId = $(this).data('alertid'); // Get the alertId from the data attribute
+                                if (alertId) {
+                                    // Mark the alert as read when clicked
+                                    markAlertAsRead(alertId);
+                                }
+                            });
+
+
+                            // Append the alert item to the dropdown
+                            $('#alertDropdown').append($alertLi);
+
+                            displayedAlertsCount++;
+                        }
+
+                        // Add the "See More" link if there are more alerts to show
+                        if (response.length > displayedAlertsCount) {
+                            var $seeMoreLink = $('<li><a href="#" id="seeMoreLink">Read All</a></li>');
+                            $seeMoreLink.on('click', function (e) {
+                                e.preventDefault();
+
+                                // Mark all alerts as read and redirect to dashboard
+                                markAllAlertsAsReadAndRedirect();
+                            });
+
+                            $('#alertDropdown').append($seeMoreLink);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+        
+
+ 
+            loadAlerts();
+            loadAnncoument();
+            setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
+
+            $(document).on('click', function (event) {
+                // Check if the clicked element is outside the alertDropdown
+                if (!$(event.target).closest('#alertDropdown').length) {
+                    // Mark the first two items as read
+                    markFirstTwoAlertsAsRead();
+                }
+            });
+
+
+        });
+    
+
+        // Function to mark all alerts as read
+        function markAllAlertsAsReadAndRedirect() {
+            $.ajax({
+                url: '/Account/MarkAllAlertsAsRead', 
+                method: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        // All alerts marked as read, redirect to dashboard
+                        window.location.href = '/Dashboard/Index';
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    
 
     </script>
   

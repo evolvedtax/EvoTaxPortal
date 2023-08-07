@@ -34,7 +34,7 @@
                 </div>
             </li>
             <li>
-                <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboards</span> <span class="fa arrow"></span></a>
+                <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span> <span class="fa arrow"></span></a>
             </li>
             <li>
                 @if (_httpContextAccessor.HttpContext?.Session.GetString("InstituteName") != null)

@@ -14,4 +14,5 @@ public partial class Alert
     public DateTime? CreatedDate { get; set; }
     public string? Title { get; set; }
     public int EntityID { get; set; }
+    public bool IsRead { get; set; }
 }

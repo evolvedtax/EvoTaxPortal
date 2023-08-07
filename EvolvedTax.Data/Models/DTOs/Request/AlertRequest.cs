@@ -11,8 +11,9 @@ namespace EvolvedTax.Data.Models.DTOs.Request
 {
     public class AlertRequest
     {
-
+        public int Id { get; set; }
         public int ClientId { get; set; }
+  
         public int InstituteID { get; set; }
 
         public string AlertText { get; set; }

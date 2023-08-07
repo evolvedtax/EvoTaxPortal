@@ -10,17 +10,32 @@
     }
 </style>
 <div class="ibox-content">
-    <form asp-action="EmailReminder" asp-controller="Account" method="post" enctype="multipart/form-data">
+    <!-- User Guidance -->
+    <p>
+        This feature is a powerful tool designed to streamline the process of collecting tax-related information from investors. This feature aims to alleviate the administrative burden and ensure compliance by automatically sending reminder emails to investors who haven't yet completed or submitted the requested tax forms.
+    </p>
+    <p>
+        If you wish to customize the frequency of reminder emails for each entity, please follow these steps:
+    </p>
+    <ol>
+        <li>Uncheck the box here to disable the automatic reminder emails for all entities.</li>
+        <li>Go inside each entity individually and set the frequency of reminder emails.</li>
+    </ol>
+    <p>
+        This allows you to customize the reminder schedule for each entity according to your preferences and ensure a personalized approach to your communication.
+    </p>
 
+    <!-- Email Reminder Settings Form -->
+    <form asp-action="EmailReminder" asp-controller="Account" method="post" enctype="multipart/form-data">
 
         <!-- Email Reminder Settings -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                  @*  <label>Set email reminder for all entity</label>*@
+                    @*<label>Set email reminder for all entity</label>*@
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" asp-for="IsEmailFrequency"  />
+                            <input type="checkbox" asp-for="IsEmailFrequency" />
                             Set Email Reminders For All Entities
                         </label>
                     </div>
@@ -37,8 +52,6 @@
             </div>
         </div>
 
-
-
         <!-- Submit Button -->
         <div class="row">
             <div class="col-md-12">
@@ -49,6 +62,7 @@
         </div>
     </form>
 </div>
+
 
 @section Scripts {
     <!-- Hidden file input control -->

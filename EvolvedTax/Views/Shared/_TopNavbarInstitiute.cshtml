@@ -1,4 +1,5 @@
-﻿<div class="row border-bottom">
+﻿
+<div class="row border-bottom">
     <nav class="navbar navbar-static-top" role="navigation">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
@@ -10,44 +11,26 @@
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-bullhorn"></i>  <span class="label label-warning">1</span>
+                    <i class="fa fa-bell"></i>  <span class="label label-primary" id="newAlertCount">0</span>
                     @*<i class="fa fa-microphone"></i>  <span class="label label-warning">1</span>*@
                 </a>
-                <ul class="dropdown-menu dropdown-messages">
-                    <li>
-                        <div class="dropdown-messages-box">
-                            
-                            <div class="media-body">
-                                <small class="float-right">46h ago</small>
-                                <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="dropdown-messages-box">
-                           
-                            <div class="media-body ">
-                                <small class="float-right text-navy">5h ago</small>
-                                <strong>Chris Johnatan Overtunk</strong> started following <strong>Monica Smith</strong>. <br>
-                                <small class="text-muted">Yesterday 1:21 pm - 11.06.2014</small>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="dropdown-divider"></li>
-                    <li>
-                        <div class="text-center link-block">
-                            <a href="#">
-                                <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                            </a>
-                        </div>
-                    </li>
+                <ul class="dropdown-menu dropdown-messages" id="alertDropdown">
+                    <!-- Alert items will be loaded here -->
                 </ul>
             </li>
+
             <li class="dropdown">
                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                    <i class="fa fa-bell"></i>  <span class="label label-primary">8</span>
+                    <i class="fa fa-bullhorn"></i>  <span class="label label-warning" id="newAnncoumentCount">0</span>
+                    @*<i class="fa fa-microphone"></i>  <span class="label label-warning">1</span>*@
+                </a>
+                <ul class="dropdown-menu dropdown-messages" id="alertAnncoument">
+                    <!-- Anncoument items will be loaded here -->
+                </ul>
+            </li>
+          @*  <li class="dropdown">
+                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bullhorn"></i>  <span class="label label-warning">8</span>
                 </a>
                 <ul class="dropdown-menu dropdown-alerts">
                     <li>
@@ -77,7 +60,7 @@
                         </div>
                     </li>
                 </ul>
-            </li>
+            </li>*@
            
             <li class="pull-right">
                 <a href="@Url.Action("Logout", "Account")">
@@ -87,6 +70,3 @@
         </ul>
     </nav>
 </div>
-
-
-

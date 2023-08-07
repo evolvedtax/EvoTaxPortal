@@ -802,8 +802,82 @@ namespace EvolvedTax.Business.Services.InstituteService
             _evolvedtaxContext.SaveChanges();
             return true;
         }
-   
 
+        public List<AlertRequest> GetAlertsNotification(int instituteId)
+        {
+
+            var alerts = _evolvedtaxContext.Alert
+                .Where(a => a.InstituteID == instituteId && a.IsRead==false)
+                   .OrderByDescending(a => a.Id)
+                     .Take(20)
+                .Select(a => new AlertRequest
+                {
+                    Id=a.Id,
+                    Title = a.Title,
+                    AlertText = a.AlertText,
+                    CreatedDate = (DateTime)a.CreatedDate
+                })
+                .ToList();
+
+            return alerts;
+        }
+
+
+        public bool MarkAlertAsRead(int id)
+        {
+            var response = _evolvedtaxContext.Alert.FirstOrDefault(p => p.Id == id);
+            if (response != null)
+            {
+                response.IsRead = true;
+                _evolvedtaxContext.Alert.Update(response);
+                _evolvedtaxContext.SaveChanges();
+                return true;
+
+            }
+            return false;
+
+          
+        }
+
+        public bool MarkAllAlertsAsRead(int instituteId)
+        {
+          
+            var unreadAlerts = _evolvedtaxContext.Alert.Where(a => !a.IsRead && a.InstituteID == instituteId).ToList();
+            if (unreadAlerts != null)
+            {
+                foreach (var alert in unreadAlerts)
+                {
+                    alert.IsRead = true;
+                }
+                _evolvedtaxContext.SaveChanges();
+                return true;
+            }
+            return false;
+       
+        }
+
+
+        public List<AnnouncementRequest> GetAnnouncements()
+        {
+
+            var currentDate = DateTime.Now;
+            //valid starting from 7 days after their CreatedDate and until the EndDate.
+            var announcements = _evolvedtaxContext.Announcements
+            .Where(a => a.EndDate >= currentDate && a.CreatedDate <=a.CreatedDate.Value.AddDays(7)  )
+                .OrderByDescending(a => a.Id)
+                .Take(20)
+                .Select(a => new AnnouncementRequest
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Message = a.Message,
+                    EndDate = (DateTime)a.EndDate,
+                    CreatedDate = (DateTime)a.CreatedDate
+                })
+                .ToList();
+
+            return announcements;
+        }
 
 
     }
