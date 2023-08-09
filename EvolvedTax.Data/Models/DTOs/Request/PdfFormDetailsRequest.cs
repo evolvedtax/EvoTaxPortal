@@ -22,5 +22,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public bool Agreement1 { get; set; } = false;
         public bool Agreement2 { get; set; } = false;
         public List<PdfFormDetailsRequest> ButtonRequests { get; set; } = new List<PdfFormDetailsRequest>();
+        public bool? IsDate { get; set; } = false;
     }
 }

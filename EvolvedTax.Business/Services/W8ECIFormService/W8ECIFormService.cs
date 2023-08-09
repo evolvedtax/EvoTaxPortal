@@ -113,7 +113,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN,
                 Country = request.PCountry,
                 Ssnitnein = "0",
-                DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyy,
+                DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyyW8ECI,
                 ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", ""),
                 MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2),
                 MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode),
@@ -266,7 +266,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             // set form pdfFormFields  
 
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_1[0]", request.NameOfIndividualW8ECI);
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_2[0]", "");
+            //pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_2[0]", "");
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_2[0]", request.GQCountry);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_3[0]", request.DisregardedEntity);
             if (request.TypeOfEntity == "1")
             {
@@ -484,7 +485,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_1[0]", request.NameOfIndividualW8ECI);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_4[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_5[0]", request.City);
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_6[0]", request.Country);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_6[0]", request.MCountry);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_7[0]", request.MAddress1 + " " + request.MAddress2);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_8[0]", request.City);
             //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_2[0]", GlobalVariables.Globals.SSNITNEIN1);
@@ -507,11 +508,16 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_14[0]", Items2ndLine);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_15[0]", Items3rdLine);
 
-            //     pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_4[0]", GlobalVariables.Globals.DealerCertification1);
+            if (request.DealerCertification == false)
+            {
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_4[0]", "0");
+            }
+
+           // pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_4[0]" );
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_16[0]", request.PrintNameOfSignerW8ECI);
             //pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_17[0]", DateTime.Now.ToString("MM-dd-yyyy"));
             // I certify check
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_4[0]", "1");
+            //pdfFormFields.SetField("topmostSubform[0].Page1[0].c1_4[0]", "1");
             string sTmp = "W8-ECI Completed for " + request.NameOfIndividualW8ECI + " " + request.Ssnitnein;
             // flatten the form To remove editting options, set it to false  
             // to leave the form open to subsequent manual edits  
@@ -536,7 +542,9 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent1.Rectangle(rectangle1);
             PdfAnnotation annotation1;
-            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            bool IsDate = true;
+            string methodName = "Index?IsDate=" + IsDate.ToString();
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", methodName)));
             pdfStamper.AddAnnotation(annotation1, 1);
             #region Pasting Date Picture
             // Load the image file using SkiaSharp
@@ -970,6 +978,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             gQuestionData.EmailId = w8ECIData?.W8eciemailAddress ?? ClientEmailId;
             gQuestionData.Items = w8ECIData?.Items;
             gQuestionData.DealerCertification = (bool)w8ECIData.DealerCertification;
+            gQuestionData.W8ECIOnBehalfName = (bool)w8ECIData.W8ecionBehalfName;
             return gQuestionData;
         }
         public FormRequest GetEntityDataByClientEmailId(string ClientEmailId)
@@ -1084,7 +1093,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 response.CheckIfFtinNotLegallyRequiredYN = request.CheckIfFtinNotLegallyRequiredYN;
                 response.Country = request.PCountry;
                 response.Ssnitnein = "0";
-                response.DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyy;
+                response.DateOfBirthMmDdYyyy = request.DateOfBirthMmDdYyyyW8ECI;
                 response.ForeignTaxIdentifyingNumber = request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", "");
                 response.MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2);
                 response.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);

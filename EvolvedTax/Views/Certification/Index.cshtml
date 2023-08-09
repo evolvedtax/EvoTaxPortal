@@ -273,28 +273,35 @@
 
 <div id="modal-form" class="modal fade" aria-hidden="true" style="left:auto">
     <div class="modal-dialog">
-        <div class="modal-content" style="width:max-content">
+        <div class="modal-content" style="width:max-content" id="signpopup">
             <div class="modal-body">
 
                 <form id="form" asp-action="Index" asp-controller="Certification" method="post">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="tbl">
                         <thead>
                             <tr>
-                                <th>Select Signature</th>
+                                @if (!(bool)Model.IsDate)
+                                {
+                                    <th>Select Signature</th>
+                                }
                                 <th>Select Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                    @if (Model != null)
-                                    {
-                                        foreach (var item in Model.ButtonRequests)
+                                @if (!(bool)Model.IsDate)
+                                {
+                                    <td>
+                                        @if (Model != null)
                                         {
-                                            <div><button type="button" class="form-control btn btn-primary" onclick="SelectSignature(this)" style="font-family:@item.FontFamily;font-size:@item.FontSize">@item.Text</button></div>
+                                            foreach (var item in Model.ButtonRequests)
+                                            {
+                                                <div><button type="button" class="form-control btn btn-primary" onclick="SelectSignature(this)" style="font-family:@item.FontFamily;font-size:@item.FontSize">@item.Text</button></div>
+                                            }
                                         }
-                                    }
-                                </td>
+                                    </td>
+                                }
+
                                 <td>
                                     <input id="formDate" type="date" asp-for="EntryDate" class="form-control" />
                                 </td>
@@ -346,7 +353,14 @@
 
         $(document).ready(function () {
             HideDivs();
+
+        
+            if ($('#signpopup td:only-child').length === 1 && $('#signpopup tr:only-child').length === 2) {
+                $('#signpopup').removeAttr('style');
+              
+            }
             $('#formDate').on('change', function () {
+    
                 if ($('#signature').val()) {
                     // Submit the form
                     getFontFamilyValue();
@@ -396,6 +410,8 @@
             $('#formDate').attr('max', currentDate);
         });
         function SelectSignature(obj) {
+            $('#tbl tbody tr td:first-child').show();
+            $('#tbl th:first-child').show();
             $('#signature').val(obj.innerText);
             $('#fontFamily').val(obj.style.fontFamily.replace(/"/g, ""));
             SettingFontFamily($('#fontFamily').val());

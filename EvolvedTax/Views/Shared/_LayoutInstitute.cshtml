@@ -54,6 +54,7 @@
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
     </environment>
     <style>
+    
 
         #alertDropdown li {
             padding: 10px;
@@ -65,13 +66,18 @@
                 cursor: pointer; /* Change cursor to a pointer when hovering over the alert item */
             }
 
-        #alertAnncoument li {
+        #alertAnnouncement a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        #alertAnnouncement li {
             padding: 10px;
             border-bottom: 1px solid #e9e9e9;
         }
 
             /* Hover effect */
-            #alertAnncoument li:hover {
+            #alertAnnouncement li:hover {
                 background-color: #f2f2f2; /* Change to any color you prefer for the hover effect */
                 cursor: pointer; /* Change cursor to a pointer when hovering over the alert item */
             }
@@ -228,8 +234,8 @@
          $('#newAlertCount').text(count);
         }
 
-        function updateNewAnncoumentCount(count) {
-            $('#newAnncoumentCount').text(count);
+        function updateNewAnnouncementCount(count) {
+            $('#newAnnouncementCount').text(count);
         }
         
 
@@ -265,26 +271,26 @@
         }
 
 
-        function loadAnncoument() {
+        function loadAnnouncement() {
             $.ajax({
                 url: '/Account/GetAnnouncements',
                 method: 'GET',
                 dataType: 'json',
                 success: function (response) {
                     // Clear the dropdown
-                    $('#alertAnncoument').empty();
+                    $('#alertAnnouncement').empty();
 
                     if (response.length === 0) {
-                        var $noAlertsItem = $('<li>No New Anncoument</li>');
-                        $('#alertAnncoument').append($noAlertsItem);
-                        $('#newAnncoumentCount').hide();
+                        var $noAlertsItem = $('<li>No New Announcement</li>');
+                        $('#alertAnnouncement').append($noAlertsItem);
+                        $('#newAnnouncementCount').hide();
                     } else {
                         // Limit the number of alerts to be displayed
                         var maxAlertsToShow = 2;
                         var displayedAlertsCount = 0;
-                        var newAnncoumentCount = response.length;
-                        $('#newAnncoumentCount').show();
-                        updateNewAnncoumentCount(newAnncoumentCount);
+                        var newAnnouncementCount = response.length;
+                        $('#newAnnouncementCount').show();
+                        updateNewAnnouncementCount(newAnnouncementCount);
 
                         for (var i = 0; i < response.length && displayedAlertsCount < maxAlertsToShow; i++) {
                             var alertItem = response[i];
@@ -330,7 +336,12 @@
 
 
                             // Append the alert item to the dropdown
-                            $('#alertAnncoument').append($alertLi);
+                            $('#alertAnnouncement').append($alertLi);
+
+                            var $alertLink = $('<a></a>').attr('href', '/Announcement/ViewAnnouncement?id=' + alertId);
+
+                            $alertLink.append($alertLi); // Append the list item to the anchor tag
+                            $('#alertAnnouncement').append($alertLink); // Append the anchor tag to the list
 
                             displayedAlertsCount++;
                         }
@@ -344,7 +355,7 @@
 
                             });
 
-                            $('#alertAnncoument').append($seeMoreLink);
+                            $('#alertAnnouncement').append($seeMoreLink);
                         }
                     }
                 },
@@ -454,7 +465,7 @@
 
  
             loadAlerts();
-            loadAnncoument();
+            loadAnnouncement();
             setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
 
             $(document).on('click', function (event) {

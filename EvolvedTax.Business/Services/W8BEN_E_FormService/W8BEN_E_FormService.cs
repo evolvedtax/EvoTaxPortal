@@ -2119,7 +2119,9 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             pdfStamper.AddAnnotation(annotation, numberOfPages);
 
             PdfAnnotation annotation1;
-            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            bool IsDate = true;
+            string methodName = "Index?IsDate=" + IsDate.ToString();
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", methodName)));
             pdfStamper.AddAnnotation(annotation1, numberOfPages);
 
 

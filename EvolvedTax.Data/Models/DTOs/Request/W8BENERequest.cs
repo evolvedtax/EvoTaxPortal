@@ -21,6 +21,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         //--------------------------------
         //public int Id { get; set; }
         [MaxLength(40)]
+        [RegularExpression(@"^[^0-9].*", ErrorMessage = "The first character of name cannot be a number.")]
         public string? NameOfOrganization { get; set; }
 
         //public string? CountryOfIncorporation { get; set; }
