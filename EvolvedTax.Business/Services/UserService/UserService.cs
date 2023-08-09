@@ -148,12 +148,49 @@ namespace EvolvedTax.Business.Services.UserService
             
             return response;
         }
+        public async Task<IdentityResult> SaveInvitedUser(UserRequest request)
+        {
+            var userModel = new User
+            {
+                FirstName = request.SUFirstName, 
+                LastName = request.SULastName,
+                Email = request.SUEmailAddress,
+                UserName = request.SUEmailAddress,
+                Position = request.SUPosition,
+                InstituteId = request.InstId,
+                IsSuperAdmin = false,
+                PasswordSecuredA1 = request.SUPasswordSecuredA1,
+                PasswordSecuredA2 = request.SUPasswordSecuredA2,
+                PasswordSecuredA3 = request.SUPasswordSecuredA3,
+                PasswordSecuredQ1 = request.SUPasswordSecuredQ1,
+                PasswordSecuredQ2 = request.SUPasswordSecuredQ2,
+                PasswordSecuredQ3 = request.SUPasswordSecuredQ3,
+                Country = request.SUMCountry,
+                Address1 = request.SUMMAdd1,
+                Address2 = request.SUMMAdd2,
+                City = request.SUMCity,
+                State = request.SUMState,
+                Zip = request.SUMZip,
+                Province = request.SUMProvince,
+            };
+
+            var user = await _userManager.FindByEmailAsync(userModel.Email);
+            var response = new IdentityResult ();
+            if (user == null)
+            {
+                response = await _userManager.CreateAsync(userModel, request.SUPassword);
+                await _userManager.AddToRoleAsync(userModel, Roles.Invited.ToString());
+            }
+            
+            return response;
+        }
         public async Task<bool> AddRoles()
         {
             await _roleManager.CreateAsync(new IdentityRole(Roles.SuperAdmin.ToString()));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Contributor.ToString()));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Viewer.ToString()));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Invited.ToString()));
             return true;
         }
         public UserRequest GetUserbyEmailId(string emailId)

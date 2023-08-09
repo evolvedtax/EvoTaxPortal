@@ -4,11 +4,11 @@ using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
+using EvolvedTax.Web.Controllers;
 
 namespace EvolvedTax.Controllers
 {
-    [SessionTimeout]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly EvolvedtaxContext _evolvedtaxContext;
