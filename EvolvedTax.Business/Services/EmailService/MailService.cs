@@ -219,5 +219,44 @@ namespace EvolvedTax.Business.MailService
                 }
             }
         }
+        public async Task SendShareInvitaionEmail(List<string> invitationEmails, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role)
+        {
+            var FromEmail = "technology@evolvedtax.com";
+            var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            var Host = "smtp.office365.com";
+            var Port = 587;
+            foreach (var email in invitationEmails)
+            {
+                var content = AppConstants.InvitationEmailForShare
+                    .Replace("{{Name}}", "User")
+                    .Replace("{{administrator}}", administrator)
+                    .Replace("{{business}}", businessName)
+                    .Replace("{{entity}}", nameOfEntity)
+                    .Replace("{{role}}", role)
+                    .Replace("{{InstituteName}}", "Default")
+                    .Replace("{{link}}", uRL.Replace("id", userId).Replace("email", EncryptionHelper.Encrypt(email)));
+                try
+                {
+                    MailMessage message = new MailMessage();
+                    SmtpClient smtp = new SmtpClient();
+                    message.From = new MailAddress(FromEmail);
+                    message.To.Add(new MailAddress(email));
+                    message.Subject = subject;
+                    message.IsBodyHtml = true; //to make message body as html
+                    message.Body = content;
+                    smtp.Port = Port;
+                    smtp.Host = Host;
+                    smtp.EnableSsl = true;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    await smtp.SendMailAsync(message);
+                }
+                catch (Exception ex)
+                {
+                    // Exception Details
+                }
+            }
+        }
     }
 }

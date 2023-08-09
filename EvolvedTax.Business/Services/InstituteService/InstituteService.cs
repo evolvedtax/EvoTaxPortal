@@ -58,7 +58,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             IsActive = p.IsActive,
                             IsLocked = p.IsLocked,
                             EmailFrequency = p.EmailFrequency,
-                            LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x=>x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
+                            LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
                         };
 
             return query;
@@ -70,8 +70,8 @@ namespace EvolvedTax.Business.Services.InstituteService
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active && p.InstituteId== InstId)
-                .OrderByDescending(p=>p.IsDuplicated)
+                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId)
+                .OrderByDescending(p => p.IsDuplicated)
                 .Select(p => new InstituteClientResponse
                 {
                     Address1 = p.Address1,
@@ -533,7 +533,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public async Task<MessageResponseModel> DeleteClientPermeant(int id)
         {
 
-            var recordToDelete = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId ==id);
+            var recordToDelete = _evolvedtaxContext.InstitutesClients.First(p => p.ClientId == id);
             if (recordToDelete != null)
             {
                 _evolvedtaxContext.InstitutesClients.Remove(recordToDelete);
@@ -552,13 +552,13 @@ namespace EvolvedTax.Business.Services.InstituteService
             {
                 recordToUpdate.IsDuplicated = false;
                 await _evolvedtaxContext.SaveChangesAsync();
-                return new MessageResponseModel { Status = true,Message= "The record has been kept" };
+                return new MessageResponseModel { Status = true, Message = "The record has been kept" };
             }
 
             return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
         }
 
-        
+
         public async Task<MessageResponseModel> UpdateClient(InstituteClientRequest request)
         {
             var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
@@ -796,7 +796,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         }
                     }
                 }
-              
+
             }
 
             _evolvedtaxContext.SaveChanges();
@@ -807,12 +807,12 @@ namespace EvolvedTax.Business.Services.InstituteService
         {
 
             var alerts = _evolvedtaxContext.Alert
-                .Where(a => a.InstituteID == instituteId && a.IsRead==false)
+                .Where(a => a.InstituteID == instituteId && a.IsRead == false)
                    .OrderByDescending(a => a.Id)
                      .Take(20)
                 .Select(a => new AlertRequest
                 {
-                    Id=a.Id,
+                    Id = a.Id,
                     Title = a.Title,
                     AlertText = a.AlertText,
                     CreatedDate = (DateTime)a.CreatedDate
@@ -836,12 +836,12 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return false;
 
-          
+
         }
 
         public bool MarkAllAlertsAsRead(int instituteId)
         {
-          
+
             var unreadAlerts = _evolvedtaxContext.Alert.Where(a => !a.IsRead && a.InstituteID == instituteId).ToList();
             if (unreadAlerts != null)
             {
@@ -853,7 +853,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return true;
             }
             return false;
-       
+
         }
 
 
@@ -863,7 +863,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             var currentDate = DateTime.Now;
             //valid starting from 7 days after their CreatedDate and until the EndDate.
             var announcements = _evolvedtaxContext.Announcements
-            .Where(a => a.EndDate >= currentDate && currentDate <= a.CreatedDate.Value.AddDays(7)  )
+            .Where(a => a.EndDate >= currentDate && currentDate <= a.CreatedDate.Value.AddDays(7))
                 .OrderByDescending(a => a.Id)
                 .Take(20)
                 .Select(a => new AnnouncementRequest
@@ -878,7 +878,14 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             return announcements;
         }
-
-
+        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, Guid UserId)
+        {
+            var result = (from eu in _evolvedtaxContext.EntitiesUsers
+                          join ie in _evolvedtaxContext.InstituteEntities on eu.EntityId equals ie.EntityId
+                          where eu.UserId == UserId && ie.InstituteId == value
+                          select ie);
+            
+            return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
+        }
     }
 }

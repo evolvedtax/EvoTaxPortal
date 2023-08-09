@@ -39,6 +39,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public virtual DbSet<ExemptPayeeCode> ExemptPayeeCodes { get; set; }
 
     public virtual DbSet<FatcaCode> FatcaCodes { get; set; }
+    public virtual DbSet<EntitiesUsers> EntitiesUsers { get; set; }
 
     public virtual DbSet<GeneralQuestionEntitiesBckup> GeneralQuestionEntitiesBckups { get; set; }
 
