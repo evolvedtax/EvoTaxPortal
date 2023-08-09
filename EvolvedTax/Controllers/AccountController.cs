@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NuGet.Common;
 using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
@@ -98,10 +99,11 @@ namespace EvolvedTax.Controllers
             return RedirectToAction(nameof(Login));
         }
         #region Signup
-        public async Task<IActionResult> SignUpForInvite(string i, string e)
+        public async Task<IActionResult> SignUpForInvite(string e, string? i = null, string? s = null)
         {
-            i = EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+            i = i ?? EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
             e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+            //s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
@@ -141,12 +143,32 @@ namespace EvolvedTax.Controllers
                 Value = p.StateId.ToString()
             });
             var InstituteName = _instituteService.GetInstituteDataById(Convert.ToInt32(i)).InstitutionName;
+            if (!string.IsNullOrEmpty(s) && s == "share")
+            {
+                var model1 = new UserRequest { SUEmailAddress = e, SUInstitutionName = InstituteName ?? "" };
+                return View(model1);
+            }
             var model = new UserRequest { SUEmailAddress = e, InstId = Convert.ToInt32(i), SUInstitutionName = InstituteName ?? "" };
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> SignUpForInvite(UserRequest model)
         {
+            if (model.InstId == 0)
+            {
+                var responseFormShare = await _userService.UpdateInvitedUserForShare(model);
+                if (responseFormShare.Succeeded)
+                {
+                    string fullnaame = model.SUFirstName + " " + model.SULastName;
+                    string email = model.SUEmailAddress;
+
+                    return Json(new { Status = true, Message = "Please sign in with your account" });
+                }
+                else
+                {
+                    return View(new { Status = false, Message = "Something went wrong. Please try again." });
+                }
+            }
             var responseForm = await _userService.SaveInvitedUser(model);
             if (responseForm.Succeeded)
             {
@@ -156,6 +178,25 @@ namespace EvolvedTax.Controllers
                 string email = model.SUEmailAddress;
 
                 return Json(new { Status = true, Message = "An email has been sent to administrator for signup request. Once approved, you will be notified by email." });
+            }
+            else
+            {
+                return View(new { Status = false, Message = "Something went wrong. Please try again." });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> InviteUserForEntity(string role, int EntityId, string EntityName, string emailAddresses)
+        {
+            List<string> emails = JsonConvert.DeserializeObject<List<string>>(emailAddresses);
+            int InstituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var responseForm = await _userService.SaveInvitedUserForShare(role, EntityId, emails, InstituteId);
+            if (responseForm.Succeeded)
+            {
+                var instituteName = HttpContext.Session.GetString("InstituteName");
+                var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
+                var user = await _userManager.GetUserAsync(User);
+                await _mailService.SendShareInvitaionEmail(emails, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
+                return Json(new { Status = true, Message = "Invited link has been sent." });
             }
             else
             {
@@ -304,6 +345,29 @@ namespace EvolvedTax.Controllers
                     string errorMessage = "<span style='color:red;'>Email already exists</span>";
                     return Json(errorMessage);
 
+                }
+                return Json(true);
+            }
+            catch (Exception ex)
+            {
+                return Json(false);
+            }
+        }
+        [HttpGet]
+        public async Task<ActionResult> ValidateEmailDomainAddressOnInvitation(string SUEmailAddress)
+        {
+            try
+            {
+                string domainEmail = SUEmailAddress.Split('@')[1];
+                var emails = _evolvedtaxContext.EmailDomains.Where(e => e.EmailDomain1.ToLower().Contains(domainEmail.ToLower())).ToList();
+                if (emails.Any())
+                {
+                    return Json(false);
+                }
+                var emailExists = await _userManager.FindByEmailAsync(SUEmailAddress);
+                if (emailExists != null)
+                {
+                    return Json(false);
                 }
                 return Json(true);
             }
@@ -666,7 +730,7 @@ namespace EvolvedTax.Controllers
 
         public IActionResult GetAnnouncements()
         {
-  
+
             List<AnnouncementRequest> announcement = _instituteService.GetAnnouncements();
             return Json(announcement);
         }

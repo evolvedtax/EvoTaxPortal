@@ -10,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Converters;
 
 namespace EvolvedTax.Controllers
@@ -20,14 +21,16 @@ namespace EvolvedTax.Controllers
         readonly private IWebHostEnvironment _webHostEnvironment;
         readonly private IMailService _emailService;
         readonly ICommonService _commonService;
+        readonly RoleManager<IdentityRole> _identityRoles;
         readonly EvolvedtaxContext _evolvedtaxContext;
-        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext)
+        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext, RoleManager<IdentityRole> identityRoles)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _commonService = commonService;
             _instituteService = instituteService;
             _emailService = emailService;
             _webHostEnvironment = webHostEnvironment;
+            _identityRoles = identityRoles;
         }
 
         public IActionResult Index()
@@ -59,7 +62,15 @@ namespace EvolvedTax.Controllers
             {
                 ViewBag.InstituteId = instituteId;
                 HttpContext.Session.SetInt32("SelectedInstitute", instituteId ?? 0);
-                model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
+                {
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                }
+                else
+                {
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                    //model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstIdRole(instituteId ?? 0);
+                }
                 return View(model);
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -88,7 +99,7 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
         {
             string InstituteName = string.Empty;
-            
+
             if (InstituteId == 0)
             {
                 var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -107,7 +118,7 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> AddEntity(InstituteEntityViewModel request)
         {
 
-                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             if (request.InstituteEntityRequest.InstituteId == 0)
             {
                 request.InstituteEntityRequest.InstituteId = (short)instId;
@@ -176,7 +187,7 @@ namespace EvolvedTax.Controllers
         public IActionResult IsEINExist(InstituteEntityViewModel model)
         {
             var institueId = HttpContext.Session.GetInt32("SelectedInstitute") ?? 0;
-            var response = _instituteService.IsEINExist(model.InstituteEntityRequest.Ein,model.InstituteEntityRequest.EntityId, institueId);
+            var response = _instituteService.IsEINExist(model.InstituteEntityRequest.Ein, model.InstituteEntityRequest.EntityId, institueId);
             return Json(response);
         }
         #endregion
@@ -206,6 +217,13 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
+            ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin")
+                .Select(p => new SelectListItem
+                {
+                    Text = "Invite as " + p.Name,
+                    Value = p.Name,
+                    Selected = p.Name == "Viewer"
+                });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstituteId ?? 0);
             var IntMaster = _instituteService.GetInstituteDataById(InstituteId ?? 0);
