@@ -985,5 +985,39 @@ namespace EvolvedTax.Controllers
         }
         #endregion
 
+        [HttpGet]
+        public IActionResult IsSsnitneinValid(string Ssnitnein)
+        {
+            // Perform your custom validation here.
+            bool isValid = !string.IsNullOrEmpty(Ssnitnein) && (Ssnitnein.Length ==10 || Ssnitnein.Length == 11) ;
+
+            return Json(isValid);
+        }
+        [HttpGet]
+        public IActionResult IsUSTinValid(string US_TIN)
+        {
+            // Perform your custom validation here.
+            bool isValid = !string.IsNullOrEmpty(US_TIN) && (US_TIN.Length == 10 || US_TIN.Length == 11);
+
+            return Json(isValid);
+        }
+        [HttpGet]
+        public IActionResult IsValueValid(string propertyName, string value)
+        {
+            bool isValid = false;
+
+            if (!string.IsNullOrEmpty(propertyName) && !string.IsNullOrEmpty(value))
+            {
+                // Perform custom validation based on propertyName and value
+                if (propertyName == "US_TIN")
+                {
+                    isValid = value.Length >= 11;
+                }
+                // Add more cases for other property names if needed
+            }
+
+            return Json(isValid);
+        }
+
     }
 }

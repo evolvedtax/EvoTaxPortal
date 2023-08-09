@@ -39,7 +39,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Date of Birth <span class="text-danger">*</span></label>
-                    <input id="dateOfBirthW8ECI" type="date" asp-for=DateOfBirthMmDdYyyyW8ECI class="form-control" required>
+                    <input id="dateOfBirthW8ECI" type="date" asp-for=DateOfBirthMmDdYyyyW8ECI class="form-control" required min="1901-01-01">
                 </div>
             </div>
             <div class="col-md-6">
@@ -64,8 +64,8 @@
             
             <div class="col-md-12">
                 <div class="form-group">
-                    <label>Specify each item of income that is, or is expected to be, recieved from the payer that is effectively connected with the conduct of a trade or business in the United States.</label>
-                    <textarea id="Items" asp-for=Items class="form-control" maxlength="342"></textarea>
+                    <label>Specify each item of income that is, or is expected to be, received from the payer that is effectively connected with the conduct of a trade or business in the United States.  <span class="text-danger">*</span></label>
+                    <textarea id="Items" asp-for=Items class="form-control" maxlength="342" required ></textarea>
                     <span id="textCounter" style="color:crimson"></span>
                 </div>
             </div>
@@ -84,7 +84,7 @@
     </div>
     <div class="form-box">
         <div class="col-md-12">
-            <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
+            <label>Are you signing this form on behalf of another person? If so, are you certified to do so? <span class="text-danger"> *</span></label>
             <div class="form-group">
                 <div class="form-check abc-radio abc-radio-info form-check-inline">
                     <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="True" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required>

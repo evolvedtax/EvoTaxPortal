@@ -317,7 +317,9 @@ namespace EvolvedTax.Business.Services.W9FormService
             pdfStamper.AddAnnotation(annotation, 1);
 
             PdfAnnotation annotation1;
-            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+            bool IsDate = true;
+            string methodName = "Index?IsDate=" + IsDate.ToString();
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", methodName)));
             pdfStamper.AddAnnotation(annotation1, 1);
 
             pdfStamper.Close();

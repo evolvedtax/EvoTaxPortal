@@ -14,6 +14,7 @@ using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static NPOI.SS.Format.CellNumberFormatter;
 
 namespace EvolvedTax.Controllers
 {
@@ -47,7 +48,7 @@ namespace EvolvedTax.Controllers
             _w8IMYFormService = w8IMYFormService;
             _w8BeneFormService = w8BeneFormService;
         }
-        public IActionResult Index()
+        public IActionResult Index(bool? IsDate)
         {
             if (string.IsNullOrEmpty(HttpContext.Session.GetString("FormName")))
             {
@@ -58,8 +59,18 @@ namespace EvolvedTax.Controllers
                 }
                 return RedirectToAction("AccessDenied", "Account", new { statusCode = 401 });
             }
+        
 
             var request = new PdfFormDetailsRequest();
+            if (IsDate.HasValue)
+            {
+                request.IsDate = IsDate.Value;
+               
+            }
+            else
+            {
+                request.IsDate = false;
+            }
             request.FileName = HttpContext.Session.GetString("PdfdFileName") ?? string.Empty;
             request.PrintName = HttpContext.Session.GetString("ClientName") ?? string.Empty;
             string fontFamilyValue = HttpContext.Session.GetString("fontFamilyValue") ?? string.Empty;

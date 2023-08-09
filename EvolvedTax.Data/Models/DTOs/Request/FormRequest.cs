@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,7 @@ public class FormRequest
     public string IndividualOrEntityStatus { get; set; } = string.Empty;
     //-----------ENTITY STATUS---------//
     [StringLength(40)]
+    [RegularExpression(@"^[^0-9].*", ErrorMessage = "The first character of name cannot be a number.")]
     public string GQOrgName { get; set; } = string.Empty;
     public string EntityType { get; set; } = string.Empty;
     public string Ccountry { get; set; } = string.Empty;
@@ -78,6 +80,7 @@ public class FormRequest
     public string W8EXPFatca { get; set; } = string.Empty;
     [StringLength(9)]
     public string? GIN { get; set; } = string.Empty;
+    [StringLength(9)]
     public string? ForeigntaxIdentifyingNumber { get; set; } = string.Empty;
     [StringLength(121)]
     public string? Referencenumber { get; set; } = string.Empty;
@@ -90,7 +93,11 @@ public class FormRequest
     //-----------W9-------------------//
     public int Id { get; set; }
 
+    [StringLength(40)]
+    [RegularExpression(@"^[^0-9].*", ErrorMessage = "The first character of name cannot be a number.")]
     public string GQFirstName { get; set; } = string.Empty;
+    [StringLength(40)]
+    [RegularExpression(@"^[^0-9].*", ErrorMessage = "The first character of name cannot be a number.")]
     public string GQLastName { get; set; } = string.Empty;
     public string GQCountry { get; set; } = string.Empty;
     public string SSN { get; set; } = string.Empty;
@@ -226,7 +233,9 @@ public class FormRequest
 
     public string? TypeOfEntity { get; set; }
 
-    public string? Ssnitnein { get; set; }
+    [Remote(action: "IsSsnitneinValid", controller: "Entity", ErrorMessage = "The number must be at least 11 digits long.")]
+    [StringLength(11, ErrorMessage = "The value cannot exceed 9 digits.")]
+    public string Ssnitnein { get; set; }
 
     public string? Items { get; set; }
 
@@ -239,6 +248,10 @@ public class FormRequest
     public string FatcaStatus { get; set; } = string.Empty;
 
     public string? US_TIN_CB { get; set; } = string.Empty;
+
+
+    [Remote(action: "IsUSTinValid", controller: "Entity", ErrorMessage = "The number must be at least 11 digits long.")]
+    [StringLength(11, ErrorMessage = "The value cannot exceed 11 digits.")]
     public string US_TIN { get; set; } = string.Empty;
 
     public string? _11FATCA_CB { get; set; } = string.Empty;
@@ -353,3 +366,4 @@ public class FormRequest
     public string? W8IMYOnBehalfName { get; set; } = string.Empty;
     #endregion
 }
+

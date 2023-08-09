@@ -89,9 +89,15 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_3[0]", string.Concat(request.PAddress1, " ", request.PAddress2));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_4[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_5[0]", request.PCountry);
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f_6[0]", string.Concat(request.MAddress1, " ", request.MAddress2));
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f_7[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
+            if (request.PAddress1 != request.MAddress1 && request.PAddress2 != request.MAddress2)
+            {
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].f_6[0]", string.Concat(request.MAddress1, " ", request.MAddress2));
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].f_7[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
+               
+            }
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_8[0]", request.MCountry);
+
+
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_9[0]", request.Ssnitnein ?? "");
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_10[0]", request.ForeignTaxIdentifyingNumber?.Replace("&nbsp;", ""));
             if (request.CheckIfFtinNotLegallyRequiredYN == true)
@@ -128,7 +134,11 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent1.Rectangle(rectangle1);
             PdfAnnotation annotation1;
-            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
+
+            bool IsDate = true;
+            string methodName = "Index?IsDate=" + IsDate.ToString();
+            annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", methodName)));
+            //annotation1 = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle1, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation1, 1);
 
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");
@@ -183,6 +193,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             over2.AddImage(image2);
             #endregion
             PdfAnnotation annotation;
+
             annotation = PdfAnnotation.CreateLink(pdfStamper.Writer, rectangle, PdfAnnotation.HIGHLIGHT_INVERT, new PdfAction(Path.Combine(request.Host, "Certification", "Index")));
             pdfStamper.AddAnnotation(annotation, 1);
 
