@@ -23,7 +23,7 @@ namespace EvolvedTax.Business.Services.UserService
         InstituteMaster? GetSecurityQuestionsByInstituteEmail(string emailAddress);
         bool IsEmailExist(string sUEmailAddress);
         Task<bool> AddRoles();
-        Task<IdentityResult> SaveInvitedUserForShare(string role, int entityId, List<string> emails, int instituteId);
+        Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId);
         Task<IdentityResult> UpdateInvitedUserForShare(UserRequest model);
     }
 }

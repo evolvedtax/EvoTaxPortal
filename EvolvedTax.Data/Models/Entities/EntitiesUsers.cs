@@ -10,6 +10,7 @@ namespace EvolvedTax.Data.Models.Entities
     {
         public int Id { get; set; }
         public int EntityId { get; set; }
-        public Guid UserId { get; set; }
+        public string? UserId { get; set; }
+        public string? Role { get; set; }
     }
 }

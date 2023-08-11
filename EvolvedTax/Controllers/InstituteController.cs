@@ -22,8 +22,9 @@ namespace EvolvedTax.Controllers
         readonly private IMailService _emailService;
         readonly ICommonService _commonService;
         readonly RoleManager<IdentityRole> _identityRoles;
+        readonly UserManager<User> _userManager;
         readonly EvolvedtaxContext _evolvedtaxContext;
-        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext, RoleManager<IdentityRole> identityRoles)
+        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext, RoleManager<IdentityRole> identityRoles, UserManager<User> userManager)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _commonService = commonService;
@@ -31,6 +32,7 @@ namespace EvolvedTax.Controllers
             _emailService = emailService;
             _webHostEnvironment = webHostEnvironment;
             _identityRoles = identityRoles;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -217,7 +219,7 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-            ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin")
+            ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin" && p.Name != "Co-Admin")
                 .Select(p => new SelectListItem
                 {
                     Text = "Invite as " + p.Name,
@@ -237,7 +239,19 @@ namespace EvolvedTax.Controllers
             });
             ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId) };
+            var users = _userManager.Users.ToList();
+            var usersData = _evolvedtaxContext.EntitiesUsers
+                        .Where(p => p.EntityId == EntityId)
+                        .ToList(); // Fetch data from the database
+
+            var sharedUsersResponse = usersData
+                .Select(p => new SharedUsersResponse
+                {
+                    UserName = users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.FirstName + " " + users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.LastName,
+                    Role = p.Role.Trim(),
+                })
+                .ToList();
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId),SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
         public async Task<IActionResult> SendEmail(int[] selectedValues)
