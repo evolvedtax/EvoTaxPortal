@@ -65,11 +65,11 @@
                 <div class="ibox-content">
                     @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
                     <div class="table-responsive">
-                        <div class="form-group" style="margin-bottom:-2rem">
+                       @* <div class="form-group" style="margin-bottom:-2rem">
                             <label for="pageLengthInput">Show</label>
                             <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
                             <label for="pageLengthInput">entries</label>
-                        </div>
+                        </div>*@
                         <table class="table table-striped table-bordered table-hover dataTables-example">
                             <thead>
                                 <tr>
@@ -449,7 +449,7 @@
                 $('#zip').val(rowData.Zip);
             }
             var table = $('.dataTables-example').DataTable({
-                pageLength: 25,
+                pageLength: 10,
                 dom: '<"html5buttons"B>lTfgitp',
                 buttons: [
                     {
@@ -533,21 +533,28 @@
                             $("#addModal").modal("show");
                         }
                     },
+                    {
+                        text: 'share <i class="fa fa-share"></i>',
+                        className: 'email-btn',
+                        //action: function (e, dt, button, config) {
+                        //    $("#addModal").modal("show");
+                        //}
+                    },
                 ],
-                "drawCallback": function () {
-                    var pageInfo = this.api().page.info();
-                    $('#pageLengthInput').val(pageInfo.length);
-                },
+                //"drawCallback": function () {
+                //    var pageInfo = this.api().page.info();
+                //    $('#pageLengthInput').val(pageInfo.length);
+                //},
                 initComplete: function () {
 
-                    var api = this.api();
-                    $('#pageLengthInput').on('keyup change', function () {
-                        var value = parseInt($(this).val(), 10);
-                        if (!isNaN(value)) {
-                            api.page.len(value).draw();
-                        }
-                    });
-                    $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    //var api = this.api();
+                    //$('#pageLengthInput').on('keyup change', function () {
+                    //    var value = parseInt($(this).val(), 10);
+                    //    if (!isNaN(value)) {
+                    //        api.page.len(value).draw();
+                    //    }
+                    //});
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
                     $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
                     // Add custom CSS class to the dropdown list container
                     $('.btn-menu-toggle').on('click', function () {

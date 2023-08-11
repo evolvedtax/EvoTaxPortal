@@ -55,6 +55,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public bool MarkAllAlertsAsRead(int instituteId);
 
         public List<AnnouncementRequest> GetAnnouncements();
+        IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, string UserId);
 
     }
 }

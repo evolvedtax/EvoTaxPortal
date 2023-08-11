@@ -11,5 +11,7 @@ namespace EvolvedTax.Business.MailService
         Task SendOTPAsync(string OTP, string Email, string subject,string UserName, string URL);
         void SendResetPassword(string emailAddress, string str, string resetUrl);
         Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator);
+        Task SendShareInvitaionEmailSignUp(string invitationEmails, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role);
+        Task SendShareInvitaionEmail(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role);
     }
 }

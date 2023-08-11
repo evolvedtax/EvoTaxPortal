@@ -114,7 +114,7 @@ namespace EvolvedTax.Business.Services.UserService
 
             var userModel = new User
             {
-                FirstName = request.SUFirstName, 
+                FirstName = request.SUFirstName,
                 LastName = request.SULastName,
                 Email = request.SUEmailAddress,
                 UserName = request.SUEmailAddress,
@@ -139,20 +139,20 @@ namespace EvolvedTax.Business.Services.UserService
             await _evolvedtaxContext.InstituteMasters.AddAsync(model);
             await _evolvedtaxContext.SaveChangesAsync();
             var user = await _userManager.FindByEmailAsync(userModel.Email);
-            var response = new IdentityResult ();
+            var response = new IdentityResult();
             if (user == null)
             {
                 response = await _userManager.CreateAsync(userModel, request.SUPassword);
                 await _userManager.AddToRoleAsync(userModel, Roles.Admin.ToString());
             }
-            
+
             return response;
         }
         public async Task<IdentityResult> SaveInvitedUser(UserRequest request)
         {
             var userModel = new User
             {
-                FirstName = request.SUFirstName, 
+                FirstName = request.SUFirstName,
                 LastName = request.SULastName,
                 Email = request.SUEmailAddress,
                 UserName = request.SUEmailAddress,
@@ -175,13 +175,13 @@ namespace EvolvedTax.Business.Services.UserService
             };
 
             var user = await _userManager.FindByEmailAsync(userModel.Email);
-            var response = new IdentityResult ();
+            var response = new IdentityResult();
             if (user == null)
             {
                 response = await _userManager.CreateAsync(userModel, request.SUPassword);
-                await _userManager.AddToRoleAsync(userModel, Roles.Invited.ToString());
+                await _userManager.AddToRoleAsync(userModel, Roles.CoAdmin.ToString());
             }
-            
+
             return response;
         }
         public async Task<bool> AddRoles()
@@ -190,7 +190,7 @@ namespace EvolvedTax.Business.Services.UserService
             await _roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Contributor.ToString()));
             await _roleManager.CreateAsync(new IdentityRole(Roles.Viewer.ToString()));
-            await _roleManager.CreateAsync(new IdentityRole(Roles.Invited.ToString()));
+            await _roleManager.CreateAsync(new IdentityRole(Roles.CoAdmin.ToString()));
             return true;
         }
         public UserRequest GetUserbyEmailId(string emailId)
@@ -257,6 +257,60 @@ namespace EvolvedTax.Business.Services.UserService
                 return false;
             }
             return true;
+        }
+        public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId)
+        {
+            var result = false;
+            var userModel = new User
+            {
+                UserName = email,
+                Email = email,
+                InstituteId = instituteId,
+                IsSuperAdmin = false,
+                TwoFactorEnabled = true,
+            };
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                var response = await _userManager.CreateAsync(userModel, "User@123!@#");
+                result = response.Succeeded;
+                await _userManager.AddToRoleAsync(userModel, role);
+            }
+            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role });
+            await _evolvedtaxContext.SaveChangesAsync();
+            return result;
+        }
+        public async Task<IdentityResult> UpdateInvitedUserForShare(UserRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.SUEmailAddress);
+            int id = user.InstituteId;
+            user.FirstName = request.SUFirstName;
+            user.LastName = request.SULastName;
+            user.Position = request.SUPosition;
+            user.IsSuperAdmin = false;
+            user.PasswordSecuredA1 = request.SUPasswordSecuredA1;
+            user.PasswordSecuredA2 = request.SUPasswordSecuredA2;
+            user.PasswordSecuredA3 = request.SUPasswordSecuredA3;
+            user.PasswordSecuredQ1 = request.SUPasswordSecuredQ1;
+            user.PasswordSecuredQ2 = request.SUPasswordSecuredQ2;
+            user.PasswordSecuredQ3 = request.SUPasswordSecuredQ3;
+            user.Country = request.SUMCountry;
+            user.Address1 = request.SUMMAdd1;
+            user.Address2 = request.SUMMAdd2;
+            user.City = request.SUMCity;
+            user.State = request.SUMState;
+            user.Zip = request.SUMZip;
+            user.Province = request.SUMProvince;
+            user.EmailConfirmed = true;
+            user.InstituteId = id;
+            var response = new IdentityResult();
+            if (user != null)
+            {
+                response = await _userManager.UpdateAsync(user);
+                await _userManager.ChangePasswordAsync(user, "User@123!@#", request.SUPassword);
+            }
+            return response;
         }
     }
 }

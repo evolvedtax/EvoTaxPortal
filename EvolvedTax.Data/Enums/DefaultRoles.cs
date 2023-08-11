@@ -12,6 +12,6 @@ namespace EvolvedTax.Data.Enums
         Admin,
         Contributor,
         Viewer,
-        Invited
+        CoAdmin
     }
 }

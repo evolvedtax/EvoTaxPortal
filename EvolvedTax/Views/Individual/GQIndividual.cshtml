@@ -67,6 +67,9 @@
 </style>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
+        <div id="readTitleDiv" class="text-center" style=" color:#951c1c" hidden>
+            <text style="display: inline-flex;font-size: xx-large;">Please read and scroll down to sign this form</text> <img src="~/images/scroll-down.gif" width="50" height="30" style="color:white" />
+        </div>
         <div id="contentContainer"></div>
         <form id="regForm"
               method="post"
@@ -166,22 +169,23 @@
         });
         function ajaxsuccess(response) {
             if (response.message != '@AppConstants.FormPartiallySave') {
-            document.getElementById("stepsDiv").style.display = "none";
-            let pdfUrl = window.location.origin + '//' + response;
-            // Create the object element
-            var $pdfObject = $('<object>').attr({
-                data: pdfUrl,
-                type: 'application/pdf',
-                width: '100%',
-                height: '800px'
-            });
+                document.getElementById("stepsDiv").style.display = "none";
+                let pdfUrl = window.location.origin + '//' + response;
+                // Create the object element
+                var $pdfObject = $('<object>').attr({
+                    data: pdfUrl,
+                    type: 'application/pdf',
+                    width: '100%',
+                    height: '800px'
+                });
 
-            $('#contentContainer').empty();
-            // Append the object element to the container
-            $('#contentContainer').append($pdfObject);
-            $('#editBtn').prop('hidden', false);
-            $('#prevBtn').prop('hidden', true);
-            $('#nextBtn').prop('hidden', true);
+                $('#contentContainer').empty();
+                $('#readTitleDiv').prop('hidden', false);
+                // Append the object element to the container
+                $('#contentContainer').append($pdfObject);
+                $('#editBtn').prop('hidden', false);
+                $('#prevBtn').prop('hidden', true);
+                $('#nextBtn').prop('hidden', true);
                 $('#SaveExitBtn').prop('hidden', true);
             }
             else if (response.message == '@AppConstants.FormPartiallySave') {
@@ -400,6 +404,7 @@
                 $('#statePerm').val($('#state').val());
                 //--------------------//
             }
+            $('#readTitleDiv').prop('hidden', true);
             $('#contentContainer').empty();
             // Exit the function if any field in the current tab is invalid:
             //if (n == 1 && !validateForm()) return false;
