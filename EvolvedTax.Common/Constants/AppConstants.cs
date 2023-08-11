@@ -36,11 +36,16 @@ namespace EvolvedTax.Common.Constants
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
         //-----------BUTTON CONSTANTS--------------------//
-        public const string F_Family_PalaceScriptMT = "Palace Script MT";
-        public const string F_Family_VladimirScript = "Vladimir Script";
-        public const string F_Family_FrenchScriptMT = "French Script MT";
+        //public const string F_Family_PalaceScriptMT = "Palace Script MT";
+        //public const string F_Family_VladimirScript = "Vladimir Script";
+        //public const string F_Family_FrenchScriptMT = "French Script MT";
+        //public const string F_Family_SegoeScript = "Segoe Script";
+        //public const string F_Family_BlackadderITC = "Blackadder ITC";
+        public const string F_Family_DancingScript_Bold = "DancingScript-Bold";
+        public const string F_Family_Yellowtail_Regular = "Yellowtail-Regular";
+        public const string F_Family_VLADIMIR = "VLADIMIR";
         public const string F_Family_SegoeScript = "Segoe Script";
-        public const string F_Family_BlackadderITC = "Blackadder ITC";
+        public const string F_Family_Sugar_Garden = "Sugar Garden";
         //-----------EMAIL TEMPLATE---------------------//
         public static string EmailToClient = @"Dear {{Name}},
 <br/><br/>
@@ -138,7 +143,7 @@ Technology Team at Evolved LLC";
                                                         Regards,
                                                         <br /><br />
                                                         Technology Team at Evolved LLC";
-        public static string InvitationEmailForShare = @"Dear {{Name}},
+        public static string InvitationEmailForShareSignUp = @"Dear {{Name}},
                                                         <br /><br />
                                                         We hope this email finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to register with EvoTax Portal and access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
                                                         <br /><br />
@@ -178,6 +183,46 @@ Technology Team at Evolved LLC";
                                                         technology@evolvedtax.com.
                                                         <br /><br />
                                                         Thank you for your cooperation in this matter.
+                                                        <br /><br />
+                                                        Regards,
+                                                        <br /><br />
+                                                        Technology Team at Evolved LLC";
+        public static string InvitationEmailForShare = @"Dear {{Name}},
+                                                        <br /><br />
+                                                        We hope this email finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
+                                                        <br /><br />
+                                                        To access the EvoTax Portal, please follow the instructions below:
+                                                        <br /><br />
+                                                        <!--[if mso]>
+                                                          <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
+                                                            <tr>
+                                                              <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+                                                                <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
+                                                                  <w:anchorlock/>
+                                                                  <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
+                                                                    Click to Access
+                                                                  </center>
+                                                                </v:roundrect>
+                                                              </td>
+                                                            </tr>
+                                                          </table>
+                                                        <![endif]-->
+                                                        <!--[if !mso]><!-->
+                                                        <table cellspacing="" 0"" cellpadding="" 0"" border="" 0"" align="" center"" style="" margin: 0 auto;"">
+                                                            <tr>
+                                                                <td align="" center"" bgcolor="" #1ab394"" style="" border-radius: 4px;"">
+                                                                    <a href="" {{link}}"" target="" _blank"" style="" font-size: 16px; font-family: Arial, sans-serif; color:
+                                                                        #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
+                                                                        Click to Access
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <!--<![endif]-->
+                                                        
+                                                        <br /><br />
+                                                        Should you have any questions or concerns, please do not hesitate to reach out to our support team at
+                                                        technology@evolvedtax.com.
                                                         <br /><br />
                                                         Regards,
                                                         <br /><br />

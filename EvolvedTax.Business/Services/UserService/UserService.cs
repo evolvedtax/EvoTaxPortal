@@ -258,33 +258,28 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return true;
         }
-        public async Task<IdentityResult> SaveInvitedUserForShare(string role, int entityId, List<string> emails, int instituteId)
+        public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId)
         {
-            var response = new IdentityResult();
-            var toBeSentEmails = new List<string>();
-            foreach (var email in emails)
+            var result = false;
+            var userModel = new User
             {
-                var userModel = new User
-                {
-                    UserName = email,
-                    Email = email,
-                    InstituteId = instituteId,
-                    IsSuperAdmin = false,
-                    TwoFactorEnabled = true,
-                };
+                UserName = email,
+                Email = email,
+                InstituteId = instituteId,
+                IsSuperAdmin = false,
+                TwoFactorEnabled = true,
+            };
 
-                var user = await _userManager.FindByEmailAsync(userModel.Email);
-                if (user == null)
-                {
-                    response = await _userManager.CreateAsync(userModel, "User@123!@#");
-                    await _userManager.AddToRoleAsync(userModel, role);
-                    toBeSentEmails.Add(userModel.Email);
-
-                    await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId = Guid.Parse(_userManager.FindByEmailAsync(email).Result.Id) });
-                    await _evolvedtaxContext.SaveChangesAsync();
-                }
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                var response = await _userManager.CreateAsync(userModel, "User@123!@#");
+                result = response.Succeeded;
+                await _userManager.AddToRoleAsync(userModel, role);
             }
-            return response;
+            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role });
+            await _evolvedtaxContext.SaveChangesAsync();
+            return result;
         }
         public async Task<IdentityResult> UpdateInvitedUserForShare(UserRequest request)
         {

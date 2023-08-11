@@ -878,7 +878,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             return announcements;
         }
-        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, Guid UserId)
+        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, string UserId)
         {
             var result = (from eu in _evolvedtaxContext.EntitiesUsers
                           join ie in _evolvedtaxContext.InstituteEntities on eu.EntityId equals ie.EntityId

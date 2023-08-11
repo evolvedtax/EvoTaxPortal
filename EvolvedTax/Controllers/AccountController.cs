@@ -189,19 +189,31 @@ namespace EvolvedTax.Controllers
         {
             List<string> emails = JsonConvert.DeserializeObject<List<string>>(emailAddresses);
             int InstituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var responseForm = await _userService.SaveInvitedUserForShare(role, EntityId, emails, InstituteId);
-            if (responseForm.Succeeded)
+            var instituteName = HttpContext.Session.GetString("InstituteName");
+            foreach (var email in emails)
             {
-                var instituteName = HttpContext.Session.GetString("InstituteName");
-                var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
-                var user = await _userManager.GetUserAsync(User);
-                await _mailService.SendShareInvitaionEmail(emails, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
-                return Json(new { Status = true, Message = "Invited link has been sent." });
+                var responseForm = await _userService.SaveInvitedUserForShare(role, EntityId, email, InstituteId);
+                if (responseForm)
+                {
+                    var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
+                    var user = await _userManager.GetUserAsync(User);
+                    var invitee = await _userManager.GetUserAsync(User);
+                    await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
+                }
+                else
+                {
+                    var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                    var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                    var fullUrl = $"{scheme}://{host}";
+                    var URL = string.Concat(fullUrl, "Account/", "Login");
+                    var user = await _userManager.GetUserAsync(User);
+                    var invitee = await _userManager.GetUserAsync(User);
+                    await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName," ",invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
+                }
             }
-            else
-            {
-                return View(new { Status = false, Message = "Something went wrong. Please try again." });
-            }
+            return Json(new { Status = true, Message = "Invited link has been sent." });
+
+            //return View(new { Status = false, Message = "Something went wrong. Please try again." });
         }
         public async Task<IActionResult> SignUp()
         {
@@ -354,7 +366,7 @@ namespace EvolvedTax.Controllers
             }
         }
         [HttpGet]
-        public async Task<ActionResult> ValidateEmailDomainAddressOnInvitation(string SUEmailAddress)
+        public async Task<ActionResult> ValidateEmailDomainAddressOnInvitation(string SUEmailAddress, int EntityId)
         {
             try
             {
@@ -364,10 +376,13 @@ namespace EvolvedTax.Controllers
                 {
                     return Json(false);
                 }
-                var emailExists = await _userManager.FindByEmailAsync(SUEmailAddress);
-                if (emailExists != null)
-                {
-                    return Json(false);
+                var user = await _userManager.FindByEmailAsync(SUEmailAddress);
+                if (user != null) {
+                    var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p=>p.UserId.ToString() == user.Id && p.EntityId == EntityId);
+                    if (emailExists)
+                    {
+                        return Json(false);
+                    }
                 }
                 return Json(true);
             }
@@ -478,13 +493,25 @@ namespace EvolvedTax.Controllers
                 await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
                 _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60));
                 ViewBag.ClientEmail = s;
+                HttpContext.Session.SetString("OTPClientEmail", s);
             }
             return View();
         }
         [HttpPost]
         public IActionResult OTP(IFormCollection formVals)
         {
-            var response = _instituteService.GetClientDataByClientEmailId(formVals["clientEmail"]);
+            string clientEmail;
+            if (!string.IsNullOrEmpty(formVals["clientEmail"]))
+            {
+                clientEmail = formVals["clientEmail"];
+            }
+            else
+            {
+               
+                clientEmail = HttpContext.Session.GetString("OTPClientEmail");
+            }
+
+            var response = _instituteService.GetClientDataByClientEmailId(clientEmail);
             string Otp = string.Concat(
                 formVals["Otp1"].ToString(),
                 formVals["Otp2"].ToString(),

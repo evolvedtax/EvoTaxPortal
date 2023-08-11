@@ -88,14 +88,15 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_2[0]", request.CountryOfCitizenship);
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_3[0]", string.Concat(request.PAddress1, " ", request.PAddress2));
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_4[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f_5[0]", request.PCountry);
+            pdfFormFields.SetField("topmostSubform[0].Page1[0].f_5[0]", request.MCountry);
             if (request.PAddress1 != request.MAddress1 && request.PAddress2 != request.MAddress2)
             {
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].f_6[0]", string.Concat(request.MAddress1, " ", request.MAddress2));
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].f_7[0]", string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode));
-               
+                pdfFormFields.SetField("topmostSubform[0].Page1[0].f_8[0]", request.PCountry);
+
             }
-            pdfFormFields.SetField("topmostSubform[0].Page1[0].f_8[0]", request.MCountry);
+         
 
 
             pdfFormFields.SetField("topmostSubform[0].Page1[0].f_9[0]", request.Ssnitnein ?? "");

@@ -5,6 +5,7 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using SkiaSharp;
 using EvolvedTax.Common.Constants;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EvolvedTax.Business.Services.CommonService
 {
@@ -13,16 +14,21 @@ namespace EvolvedTax.Business.Services.CommonService
         readonly EvolvedtaxContext _evolvedtaxContext;
         private string BaseUrl;
         private readonly HttpContext _httpContext;
-        public CommonService(EvolvedtaxContext evolvedtaxContext, IHttpContextAccessor httpContextAccessor)
+        private readonly IHostingEnvironment _env;
+
+        public CommonService(EvolvedtaxContext evolvedtaxContext, IHttpContextAccessor httpContextAccessor, IHostingEnvironment env=null)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _httpContext = httpContextAccessor.HttpContext;
             BaseUrl = _httpContext.Session.GetString("BaseURL") ?? string.Empty;
+            _env = env;
         }
         public string AssignSignature(PdfFormDetailsRequest request, string filePath)
         {
             string imageFilePath = Path.Combine(Directory.GetCurrentDirectory(), "pictureText.bmp");
-
+            string fontsFolderPath = Path.Combine(_env.WebRootPath, "fonts");
+            string ext = ".ttf";
+            string fontPath = string.Empty;
             // Load the image file using SkiaSharp
             using (SKBitmap bitmap = SKBitmap.Decode(imageFilePath))
             {
@@ -31,10 +37,45 @@ namespace EvolvedTax.Business.Services.CommonService
                     using (SKPaint paint = new SKPaint())
                     {
                         paint.Color = SKColors.Black;
-                        paint.TextSize = (float)Convert.ToDecimal(request.FontSize);
-
+                         paint.TextSize = (float)Convert.ToDecimal(request.FontSize);
+                     
+                        
                         string text = request.Text;
-                        paint.Typeface = SKTypeface.FromFamilyName(request.FontFamily);
+                        switch (request.FontFamily)
+                        {
+                            case AppConstants.F_Family_DancingScript_Bold:
+                                fontPath = Path.Combine(fontsFolderPath, AppConstants.F_Family_DancingScript_Bold + ext);
+                                break;
+                            case AppConstants.F_Family_Yellowtail_Regular:
+                                fontPath = Path.Combine(fontsFolderPath, AppConstants.F_Family_Yellowtail_Regular+ext);
+                                break;
+                            case AppConstants.F_Family_VLADIMIR:
+                                fontPath = Path.Combine(fontsFolderPath, AppConstants.F_Family_VLADIMIR+ext);
+                                break;
+                     
+                            case AppConstants.F_Family_SegoeScript:
+                                fontPath = Path.Combine(fontsFolderPath, AppConstants.F_Family_SegoeScript + ext);
+
+                                break;
+
+                            case AppConstants.F_Family_Sugar_Garden:
+                                fontPath = Path.Combine(fontsFolderPath, AppConstants.F_Family_Sugar_Garden + ext);
+
+                                break;
+
+
+                            default:
+                                break;
+                        }
+
+                        if (!string.IsNullOrEmpty(fontPath))
+                        {
+                            paint.Typeface = SKTypeface.FromFile(fontPath, 0);
+                       
+                        }
+                        
+                
+                        //paint.Typeface = SKTypeface.FromFamilyName(request.FontFamily);
                         paint.IsAntialias = true; // Enable anti-aliasing
                         SKRect textBounds = new SKRect();
                         paint.MeasureText(text, ref textBounds);
@@ -66,7 +107,9 @@ namespace EvolvedTax.Business.Services.CommonService
                         paint.TextSize = 9;
 
                         string text = request.EntryDate?.ToString("MM-dd-yyyy") ?? string.Empty;
-                        paint.Typeface = SKTypeface.FromFamilyName("Times New Roman");
+                        fontPath = Path.Combine(fontsFolderPath, "Times New Roman.TTF");
+                        //paint.Typeface = SKTypeface.FromFamilyName("Times New Roman");
+                        paint.Typeface = SKTypeface.FromFile(fontPath, 0);
                         paint.IsAntialias = true; // Enable anti-aliasing
                         SKRect textBounds = new SKRect();
                         paint.MeasureText(text, ref textBounds);
