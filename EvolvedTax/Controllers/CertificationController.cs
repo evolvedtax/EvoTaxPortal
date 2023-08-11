@@ -77,11 +77,11 @@ namespace EvolvedTax.Controllers
             ViewBag.FontFamilyValue = fontFamilyValue;
             string settingSignature = HttpContext.Session.GetString("SettingSignature") ?? string.Empty;
             var model = new List<PdfFormDetailsRequest> {
-                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_PalaceScriptMT, FontSize = "36px", Text = request.PrintName},
-                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_VladimirScript, FontSize = "36px", Text = request.PrintName},
-                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_FrenchScriptMT, FontSize = "36px", Text = request.PrintName},
+                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_DancingScript_Bold, FontSize = "36px", Text = request.PrintName},
+                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_Yellowtail_Regular, FontSize = "36px", Text = request.PrintName},
+                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_VLADIMIR, FontSize = "36px", Text = request.PrintName},
                 new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_SegoeScript, FontSize = "36px", Text = request.PrintName},
-                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_BlackadderITC, FontSize = "36px", Text = request.PrintName},
+                new PdfFormDetailsRequest { FontFamily = AppConstants.F_Family_Sugar_Garden, FontSize = "36px", Text = request.PrintName},
             };
             //if (!string.IsNullOrEmpty(fontFamilyValue) && settingSignature == "True")
             //{
@@ -107,6 +107,48 @@ namespace EvolvedTax.Controllers
                 return RedirectToAction("AccessDenied", "Account", new { statusCode = 401 });
             }
             var buttonRequest = new PdfFormDetailsRequest();
+
+
+            if (request.FontFamily == null)
+            {
+                request.FontFamily = AppConstants.F_Family_SegoeScript;
+            }
+            if (request.FontFamily.Trim() == AppConstants.F_Family_DancingScript_Bold)
+            {
+                buttonRequest.Text = request.PrintName;
+                buttonRequest.FontFamily = request.FontFamily;
+                buttonRequest.FontSize = "15";
+            }
+            else if (request.FontFamily == AppConstants.F_Family_Yellowtail_Regular)
+            {
+                buttonRequest.Text = request.PrintName;
+                buttonRequest.FontFamily = request.FontFamily;
+                buttonRequest.FontSize = "15";
+            }
+            else if (request.FontFamily == AppConstants.F_Family_VLADIMIR)
+            {
+                buttonRequest.Text = request.PrintName;
+                buttonRequest.FontFamily = request.FontFamily;
+                buttonRequest.FontSize = "15";
+            }
+            else if (request.FontFamily == AppConstants.F_Family_SegoeScript)
+            {
+                buttonRequest.Text = request.PrintName;
+                buttonRequest.FontFamily = request.FontFamily;
+                buttonRequest.FontSize = "15";
+            }
+            else
+            {
+                buttonRequest.Text = request.PrintName;
+                buttonRequest.FontFamily = request.FontFamily;
+                buttonRequest.FontSize = "15";
+            }
+            #region Old Fonts
+            /*
+            if (request.FontFamily == null)
+            {
+                request.FontFamily = AppConstants.F_Family_PalaceScriptMT;
+            }
             if (request.FontFamily.Trim() == AppConstants.F_Family_PalaceScriptMT)
             {
                 buttonRequest.Text = request.PrintName;
@@ -136,7 +178,9 @@ namespace EvolvedTax.Controllers
                 buttonRequest.Text = request.PrintName;
                 buttonRequest.FontFamily = request.FontFamily;
                 buttonRequest.FontSize = "10";
-            }
+            } 
+            */
+            #endregion
             buttonRequest.IsSignaturePasted = true;
             buttonRequest.BaseUrl = HttpContext.Session.GetString("BaseURL") ?? string.Empty;
             buttonRequest.FormName = HttpContext.Session.GetString("FormName") ?? string.Empty;

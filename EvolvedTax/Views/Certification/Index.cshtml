@@ -3,79 +3,106 @@
     ViewData["Title"] = "Certification";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
 
-    [type="checkbox"] {
-        vertical-align: middle;
-    }
+    <style>
 
-    .form-check.abc-radio .form-check-input {
-        vertical-align: middle;
-    }
-
-    .form-check.abc-radio .form-check-label {
-        display: inline;
-        vertical-align: middle;
-    }
-    /* Mark input boxes that gets an error on validation: */
-    input.invalid {
-        background-color: #ffdddd;
-    }
-
-    /* Hide all steps by default: */
-    .tab {
-        display: none;
-    }
-
-    /* Make circles that indicate the steps of the form: */
-    .step {
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbbbbb;
-        border: none;
-        border-radius: 50%;
-        display: inline-block;
-        opacity: 0.5;
-    }
-
-        /* Mark the active step: */
-        .step.active {
-            opacity: 1;
+        @@font-face {
+            font-family: 'DancingScript-Bold';
+            src: url('../fonts/DancingScript-Bold.ttf') format('truetype');
         }
 
-        /* Mark the steps that are finished and valid: */
-        .step.finish {
-            background-color: #04AA6D;
+        @@font-face {
+            font-family: 'Yellowtail-Regular';
+            src: url('../fonts/Yellowtail-Regular.ttf') format('truetype');
         }
 
-    .text-center {
-        text-align: center;
-        margin-bottom: 30px;
-    }
+        @@font-face {
+            font-family: 'VLADIMIR';
+            src: url('../fonts/VLADIMIR.ttf') format('truetype');
+        }
 
-        .text-center span {
+        @@font-face {
+            font-family: 'Segoe Script';
+            src: url('../fonts/SegoeScript.ttf') format('truetype');
+        }
+
+        @@font-face {
+        font-family: 'Sugar Garden';
+        src: url('../fonts/Sugar Garden.ttf') format('truetype');
+        }
+
+        [type="checkbox"] {
+            vertical-align: middle;
+        }
+
+        .form-check.abc-radio .form-check-input {
+            vertical-align: middle;
+        }
+
+        .form-check.abc-radio .form-check-label {
+            display: inline;
+            vertical-align: middle;
+        }
+        /* Mark input boxes that gets an error on validation: */
+        input.invalid {
+            background-color: #ffdddd;
+        }
+
+        /* Hide all steps by default: */
+        .tab {
+            display: none;
+        }
+
+        /* Make circles that indicate the steps of the form: */
+        .step {
+            height: 15px;
+            width: 15px;
+            margin: 0 2px;
+            background-color: #bbbbbb;
+            border: none;
+            border-radius: 50%;
             display: inline-block;
-            border-radius: 5px;
-            background-color: #1AB394;
-            /*width: 20%;*/
+            opacity: 0.5;
         }
 
-            .text-center span p {
-                text-align: center;
-                margin: 10px;
+            /* Mark the active step: */
+            .step.active {
+                opacity: 1;
             }
 
-    .form-box {
-        border: 1px solid #ccc;
-        padding: 20px;
-        border-radius: 4px;
-        margin: 20px;
-    }
-</style>
+            /* Mark the steps that are finished and valid: */
+            .step.finish {
+                background-color: #04AA6D;
+            }
+
+        .text-center {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .text-center span {
+                display: inline-block;
+                border-radius: 5px;
+                background-color: #1AB394;
+                /*width: 20%;*/
+            }
+
+                .text-center span p {
+                    text-align: center;
+                    margin: 10px;
+                }
+
+        .form-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px;
+        }
+    </style>
+
 <div id="readTitleDiv" class="text-center" style="background: #18A689; color:white">
-    <img src="~/images/scroll-down.gif" width="50" height="30" style="color:white"/> <text style="display: inline-flex;font-size: large;">Please read and scroll down to sign this form</text>
-</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+    <img src="~/images/scroll-down.gif" width="50" height="30" style="color:white" /> <text style="display: inline-flex;font-size: large;">Please read and scroll down to sign this form</text>
+</div>
 <div class="ibox" style="margin-bottom:15%">
     <div class="ibox-content" style="border: none;">
         <div id="contentContainer">
@@ -299,7 +326,13 @@
                                         {
                                             foreach (var item in Model.ButtonRequests)
                                             {
-                                                <div><button type="button" class="form-control btn btn-primary" onclick="SelectSignature(this)" style="font-family:@item.FontFamily;font-size:@item.FontSize">@item.Text</button></div>
+                                                <div>
+                                                    <button type="button" class="form-control btn btn-primary"
+                                                            onclick="SelectSignature(this)"
+                                                            style="font-family: '@item.FontFamily'; font-size: @item.FontSize;">
+                                                        @item.Text
+                                                    </button>
+                                                </div>
                                             }
                                         }
                                     </td>
@@ -314,9 +347,9 @@
                     <input id="signature" asp-for="PrintName" hidden />
                     <input id="fontFamily" asp-for="FontFamily" hidden />
                     <input id="filePath" asp-for="FileName" hidden />
-                 
+
                 </form>
-             
+
             </div>
         </div>
     </div>
@@ -358,17 +391,17 @@
             //$('#readTitleDiv').text("");
             HideDivs();
 
-        
+
             if ($('#signpopup td:only-child').length === 1 && $('#signpopup tr:only-child').length === 2) {
                 $('#signpopup').removeAttr('style');
-              
+
             }
             $('#formDate').on('change', function () {
-    
+
                 if ($('#signature').val()) {
                     // Submit the form
                     getFontFamilyValue();
-                 
+
                 }
 
             });
@@ -501,14 +534,14 @@
             document.body.removeChild(link);
         }
 
-                                                                                                                                // Disable back and forward navigation
-                                                                                                                                //window.onbeforeunload = function () {
-                                                                                                                                //    return "Are you sure you want to leave this page?";
-                                                                                                                                //};
+                                                                                                                                        // Disable back and forward navigation
+                                                                                                                                        //window.onbeforeunload = function () {
+                                                                                                                                        //    return "Are you sure you want to leave this page?";
+                                                                                                                                        //};
 
-                                                                                                                                //window.addEventListener("popstate", function (event) {
-                                                                                                                                //    history.pushState(null, document.title, location.href);
-                                                                                                                                //});
+                                                                                                                                        //window.addEventListener("popstate", function (event) {
+                                                                                                                                        //    history.pushState(null, document.title, location.href);
+                                                                                                                                        //});
 
     </script>
 }

@@ -36,11 +36,16 @@ namespace EvolvedTax.Common.Constants
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
         //-----------BUTTON CONSTANTS--------------------//
-        public const string F_Family_PalaceScriptMT = "Palace Script MT";
-        public const string F_Family_VladimirScript = "Vladimir Script";
-        public const string F_Family_FrenchScriptMT = "French Script MT";
+        //public const string F_Family_PalaceScriptMT = "Palace Script MT";
+        //public const string F_Family_VladimirScript = "Vladimir Script";
+        //public const string F_Family_FrenchScriptMT = "French Script MT";
+        //public const string F_Family_SegoeScript = "Segoe Script";
+        //public const string F_Family_BlackadderITC = "Blackadder ITC";
+        public const string F_Family_DancingScript_Bold = "DancingScript-Bold";
+        public const string F_Family_Yellowtail_Regular = "Yellowtail-Regular";
+        public const string F_Family_VLADIMIR = "VLADIMIR";
         public const string F_Family_SegoeScript = "Segoe Script";
-        public const string F_Family_BlackadderITC = "Blackadder ITC";
+        public const string F_Family_Sugar_Garden = "Sugar Garden";
         //-----------EMAIL TEMPLATE---------------------//
         public static string EmailToClient = @"Dear {{Name}},
 <br/><br/>
