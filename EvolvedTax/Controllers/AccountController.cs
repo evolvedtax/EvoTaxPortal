@@ -410,6 +410,9 @@ namespace EvolvedTax.Controllers
                 return View(nameof(Error));
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            // for local email otp testing
+            user.Email = "niqbal@mailinator.com";
+
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
             return View();
@@ -448,6 +451,13 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("EmailId", user.Email);
                 HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
                 HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
+
+                // Retrieve user roles
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Any())
+                {
+                    HttpContext.Session.SetString("UserRole", roles.First()); 
+                }
                 return RedirectToAction("Index", "Dashboard");
             }
             else if (result.IsLockedOut)

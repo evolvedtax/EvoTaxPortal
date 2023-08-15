@@ -245,7 +245,7 @@
                             </div>
                         </div>
                         <div class="table-container col-md-2" style="margin-top:5%">
-                            <div class="pull-right"><button class="btn btn-primary">Share <i class="fa fa-share"></i></button></div>
+                            <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
                             <h3>Shared with:</h3>
                             <div class="table-responsive">
                                 <table id="" class="table">
@@ -579,7 +579,7 @@
                     <div class="col-md-12">
                         <div>
                             <label>Invite People</label>
-                            <input class="tagsinput form-control" type="email" />
+                            <input class="tagsinput form-control" type="email" placeholder="Enter email address" />
                         </div>
                         <div class="mt-2">
                             <select asp-items="ViewBag.Roles" name="role" class="selec2" style="width:25%">
@@ -624,6 +624,11 @@
         }
 
         $(document).ready(function () {
+
+            $("#openModalButton").click(function () {
+                $('#shareModelHeader').html('Share access to \'' + $("#changeEntity option:selected").text() + '\'');
+                $("#shareModal").modal("show");
+            });
 
             $('.tagsinput').tagsinput({
                 tagClass: 'label label-primary'
@@ -761,38 +766,38 @@
                                     window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
                                 }
                             },
-                            {
-                                text: '<i class="fa fa-envelope"></i> Send Email',
-                                className: 'email-btn',
-                                action: function (e, dt, button, config) {
-                                    var selectedValues = [];
-                                    $('.rowCheckbox:checked').each(function () {
-                                        selectedValues.push($(this).val());
-                                    });
+                            //{
+                            //    text: '<i class="fa fa-envelope"></i> Send Email',
+                            //    className: 'email-btn',
+                            //    action: function (e, dt, button, config) {
+                            //        var selectedValues = [];
+                            //        $('.rowCheckbox:checked').each(function () {
+                            //            selectedValues.push($(this).val());
+                            //        });
 
-                                    if (selectedValues.length === 0) {
-                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                        return;
-                                    }
-                                    swal({
-                                        title: "Sending Email...",
-                                        text: "Email will send to the clients awaited for form submission",
-                                        type: "info",
-                                        showCancelButton: false,
-                                        confirmButtonColor: "#1ab394",
-                                        confirmButtonText: "Ok",
-                                        //cancelButtonText: "Cancel"
-                                    },
-                                        function () {
-                                            let params = { selectedValues: selectedValues }
-                                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                                        });
-                                    //let params = { selectedValues: selectedValues }
-                                    //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                                    //$('.loading').show();
+                            //        if (selectedValues.length === 0) {
+                            //            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                            //            return;
+                            //        }
+                            //        swal({
+                            //            title: "Sending Email...",
+                            //            text: "Email will send to the clients awaited for form submission",
+                            //            type: "info",
+                            //            showCancelButton: false,
+                            //            confirmButtonColor: "#1ab394",
+                            //            confirmButtonText: "Ok",
+                            //            //cancelButtonText: "Cancel"
+                            //        },
+                            //            function () {
+                            //                let params = { selectedValues: selectedValues }
+                            //                COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //            });
+                            //        //let params = { selectedValues: selectedValues }
+                            //        //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //        //$('.loading').show();
 
-                                }
-                            },
+                            //    }
+                            //},
                             {
                                 text: '<i class="fa fa-unlock"></i> Unlock All',
                                 className: 'btn-imp-data',
@@ -840,14 +845,14 @@
                             $("#addModal").modal("show");
                         }
                     },
-                    {
-                        text: 'Share <i class="fa fa-share"></i>',
-                        className: 'email-btn',
-                        action: function (e, dt, button, config) {
-                            $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
-                            $("#shareModal").modal("show");
-                        }
-                    },
+                    //{
+                    //    text: 'Share <i class="fa fa-share"></i>',
+                    //    className: 'email-btn',
+                    //    action: function (e, dt, button, config) {
+                    //        $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
+                    //        $("#shareModal").modal("show");
+                    //    }
+                    //},
                 ],
                 //"drawCallback": function () {
                 //    var pageInfo = this.api().page.info();

@@ -219,13 +219,35 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-            ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin" && p.Name != "Co-Admin")
+
+            string userRole = HttpContext.Session.GetString("UserRole");
+
+            // Define a dictionary to represent the role hierarchy
+            var roleHierarchy = new Dictionary<string, List<string>>
+            {
+                { "Viewer", new List<string>() },
+                { "Editor", new List<string> { "Viewer" } },
+                { "Co-Admin", new List<string> { "Viewer", "Editor" } },
+                { "Admin", new List<string> { "Viewer", "Editor", "Co-Admin" } }
+            };
+
+            // Filter and construct SelectListItem based on user's role
+            ViewBag.Roles = _identityRoles.Roles
+                //.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin" && p.Name != "Co-Admin")
+                .Where(p => roleHierarchy[userRole].Contains(p.Name))
                 .Select(p => new SelectListItem
                 {
                     Text = "Invite as " + p.Name,
                     Value = p.Name,
                     Selected = p.Name == "Viewer"
                 });
+            //ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin" && p.Name != "Co-Admin")
+            //    .Select(p => new SelectListItem
+            //    {
+            //        Text = "Invite as " + p.Name,
+            //        Value = p.Name,
+            //        Selected = p.Name == "Viewer"
+            //    });
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstituteId ?? 0);
             var IntMaster = _instituteService.GetInstituteDataById(InstituteId ?? 0);
@@ -251,7 +273,7 @@ namespace EvolvedTax.Controllers
                     Role = p.Role.Trim(),
                 })
                 .ToList();
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId),SharedUsersResponse = sharedUsersResponse.AsQueryable() };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
         public async Task<IActionResult> SendEmail(int[] selectedValues)
