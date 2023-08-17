@@ -14,6 +14,7 @@ namespace EvolvedTax.Common.Constants
         public const string RecordLock = @"This record is locked. You're not able to update.";
         public const string FormCompleted = @"This Form is completed. You're not able to update.";
         public const string SuccessEmailSend = @"Emails Sent Successfully.";
+        public const string SuccessRoleChange = @"Role has been successfully changed.";
 
         public const int SuccessStatus = 1;
         public const int ErrorStatus = 2;

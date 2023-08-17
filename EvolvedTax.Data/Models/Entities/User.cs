@@ -32,5 +32,6 @@ namespace EvolvedTax.Data.Models.Entities
         public string? DateFormat { get; set; }
         public string? TimeZone { get; set; }
         public int InstituteId { get; set; } = 0;
+
     }
 }

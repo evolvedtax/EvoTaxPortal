@@ -111,8 +111,8 @@
                     <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
                     </div>*@
                     <div class="row">
-                        <div class="table-container col-md-10">
-                            <div class="table-responsive">
+                      <div class="table-container col-md-10">
+                            <div class="table-responsive" id="maintable">
                                 @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
                                 <label for="pageLengthInput">Show</label>
@@ -243,60 +243,65 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="table-container col-md-2" style="margin-top:5%">
-                            <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
-                            <h3>Shared with:</h3>
-                            <div class="table-responsive">
-                                <table id="" class="table">
-                                    @*<thead>
+                       </div>
+                        @{
+                            var userRole = ViewBag.UserRole as string;
+                        }
+                        @if (userRole != "Viewer")
+                        {
+                            <div class="table-container col-md-2" style="margin-top:5%">
+                                <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
+                                <h3>Shared with:</h3>
+                                <div class="table-responsive">
+                                    <table id="" class="table">
+                                        @*<thead>
                                     <tr>
                                     <th></th>
                                     <th></th>
                                     </tr>
                                     </thead>*@
-                                    <tbody>
-                                        @if (Model.SharedUsersResponse.Any())
-                                        {
-                                            foreach (var item in Model.SharedUsersResponse)
+                                        <tbody>
+                                            @if (Model.SharedUsersResponse.Any())
                                             {
-                                                <tr style="height:70px">
-                                                    <td>@item.UserName</td>
-                                                    <td class="actions">
-                                                        <div class="dropdown">
-                                                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="fa fa-ellipsis-h"></span>
-                                                            </button>
-                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <div class="dropdown-menu-horizontal">
-                                                                    @if (item.Role == "Viewer")
-                                                                    {
-                                                                        <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@><span class="fa fa-check"></span> Viewer</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Viewer</a>
-                                                                    }
-                                                                    @if (item.Role == "Editor")
-                                                                    {
-                                                                        <a class="dropdown-item" href="javascript:void()" @* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@><span class="fa fa-check"></span> Editor</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Editor</a>
-                                                                    }
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Remove</a>
+                                                foreach (var item in Model.SharedUsersResponse)
+                                                {
+                                                    <tr style="height:70px">
+                                                        <td>@item.UserName</td>
+                                                        <td class="actions">
+                                                            <div class="dropdown">
+                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-ellipsis-h"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <div class="dropdown-menu-horizontal">
+                                                                        @foreach (var role in ViewBag.AvailableRoles)
+                                                                        {
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', { Id: '@item?.Id', role: '@role' })">
+                                                                                @if (item.Role == role)
+                                                                                {
+                                                                                    <span class="fa fa-check"></span> @role
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @role
+                                                                                }
+                                                                            </a>
+
+                                                                        }
+                                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', {Id:'@item?.Id', role: 'Remove'})">Remove</a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             }
-                                        }
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     </div>
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
@@ -622,11 +627,49 @@
                 $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
+        var roleHierarchy = {
+            "Viewer": [],
+            "Editor": ["Viewer"],
+            "Co-Admin": ["Viewer", "Editor"],
+            "Admin": ["Viewer", "Editor", "Co-Admin"]
+        };
+
+        function DisableUnAvilableRole() {
+            var userRole = "@ViewBag.UserRole";
+
+            var selectElement = $('select[name="role"]');
+            var options = selectElement.find('option');
+
+            options.each(function () {
+                var roleText = $(this).html();
+                roleText = roleText.replace("Invite as ", "").trim();
+
+                if (!roleHierarchy[userRole].includes(roleText)) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
+
+            // Refresh the Select2 UI after modifying the options
+            selectElement.trigger('change');
+        }
+
 
         $(document).ready(function () {
 
+    
+            var userRole = "@ViewBag.UserRole";
+
+            // Check if the userRole is "Viewer"
+            if (userRole === "Viewer") {
+                // Remove the parent div with id "maintable"
+                $("#maintable").unwrap();
+            }
+
             $("#openModalButton").click(function () {
-                $('#shareModelHeader').html('Share access to \'' + $("#changeEntity option:selected").text() + '\'');
+                $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
+                DisableUnAvilableRole();
                 $("#shareModal").modal("show");
             });
 

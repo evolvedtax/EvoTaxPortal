@@ -291,5 +291,50 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
+
+        public async Task SendEmailForExpireSignUp(string email,string entityEmail, string Entity, string Role, DateTime? InviteDate,string InviteeName, string LoginUrl)
+        {
+            var FromEmail = "technology@evolvedtax.com";
+            var FromPassword = "rme*E3&9PI@4c!f6aZng1cTc";
+            var Host = "smtp.office365.com";
+            var Port = 587;
+
+
+            try
+            {
+                var userInviteeData = $@"
+            <tr>
+                <td>{entityEmail}</td>
+                <td>{Entity.Trim()}</td>
+                <td>{Role.Trim()}</td>
+              <td>{InviteDate:MM/dd/yyyy}</td>
+            </tr>";
+
+                var content = AppConstants.EmailForExpireSignUp
+                    .Replace("{{InviteeName}}", InviteeName) 
+                    .Replace("{{UserInviteeData}}", userInviteeData) 
+                    .Replace("{{LoginUrl}}", LoginUrl); 
+
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(FromEmail);
+                message.To.Add(new MailAddress(email));
+                message.Subject = "Expired Sign-Up Invitation";
+                message.IsBodyHtml = true; //to make message body as html
+                message.Body = content;
+                smtp.Port = Port;
+                smtp.Host = Host;
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                await smtp.SendMailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+            }
+        }
+
     }
 }

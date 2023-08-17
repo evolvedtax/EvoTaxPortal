@@ -219,8 +219,10 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-
-            string userRole = HttpContext.Session.GetString("UserRole");
+            string UserId = HttpContext.Session.GetString("UserId");
+             string userRole =_evolvedtaxContext.EntitiesUsers.FirstOrDefault(p=>p.UserId== UserId && p.EntityId== EntityId)?.Role.Trim();
+            //HttpContext.Session.SetString("UserRole", userRole);
+            ViewBag.UserRole = userRole;
 
             // Define a dictionary to represent the role hierarchy
             var roleHierarchy = new Dictionary<string, List<string>>
@@ -266,12 +268,20 @@ namespace EvolvedTax.Controllers
                         .Where(p => p.EntityId == EntityId)
                         .ToList(); // Fetch data from the database
 
+
+            var availableRoles = roleHierarchy[userRole];
+            ViewBag.availableRoles = availableRoles;
+            //var availableRoles = roleHierarchy.ContainsKey(userRole) ? roleHierarchy[userRole] : new List<string>();
+
             var sharedUsersResponse = usersData
                 .Select(p => new SharedUsersResponse
                 {
                     UserName = users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.FirstName + " " + users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.LastName,
                     Role = p.Role.Trim(),
+                    Id=p.Id.ToString(),
+                    
                 })
+       //.Where(p => availableRoles.Contains(p.Role)) // Filter out roles not in availableRoles
                 .ToList();
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
@@ -417,5 +427,7 @@ namespace EvolvedTax.Controllers
             }
 
         }
+
+  
     }
 }

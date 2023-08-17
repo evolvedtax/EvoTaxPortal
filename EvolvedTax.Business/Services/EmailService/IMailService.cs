@@ -13,5 +13,6 @@ namespace EvolvedTax.Business.MailService
         Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator);
         Task SendShareInvitaionEmailSignUp(string invitationEmails, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role);
         Task SendShareInvitaionEmail(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role);
+        Task SendEmailForExpireSignUp(string email, string entityEmail, string Entity, string Role, DateTime? InviteDate, string InviteeName,string LoginUrl);
     }
 }

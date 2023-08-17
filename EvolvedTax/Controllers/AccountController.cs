@@ -99,11 +99,88 @@ namespace EvolvedTax.Controllers
             return RedirectToAction(nameof(Login));
         }
         #region Signup
+
+        public async Task<IActionResult> SendEmailToInstitueMaster(string e, string? i = null, string? s = null)
+        {
+            i = i ?? EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+            e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+
+
+            var user = _evolvedtaxContext.Users.FirstOrDefault(p => p.Email == e && p.InstituteId == Convert.ToInt32(i));
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            int InstituteId = user.InstituteId;
+            string userId = user.Id;
+
+           var Institute = _evolvedtaxContext.InstituteMasters.FirstOrDefault(e => e.InstId == InstituteId);
+            string Institutename= Institute.FirstName + " " + Institute.LastName;
+
+            var currentDate = DateTime.Now;
+
+      
+            var expiredEntityUserData = _evolvedtaxContext.EntitiesUsers
+                .Where(ue => ue.UserId == user.Id && ue.ExpirySignupDatetime.HasValue && ue.ExpirySignupDatetime.Value < currentDate)
+                .ToList();
+
+            foreach (var entityUserData in expiredEntityUserData)
+            {
+                var entity = _evolvedtaxContext.InstituteEntities.FirstOrDefault(e => e.EntityId == entityUserData.EntityId);
+                if (entity != null)
+                {
+                    string entityName = entity.EntityName;
+                    string entityEmail = user.Email;
+                    string Role = entityUserData.Role.Trim();
+
+                    var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                    var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+
+                    var fullUrl = $"{scheme}://{host}";
+                    await _mailService.SendEmailForExpireSignUp(Institute.EmailAddress, entityEmail, entityName, Role, entityUserData.EntryDatetime, Institutename, fullUrl);
+                }
+            }
+
+            var userData = await _userManager.FindByEmailAsync(e);
+            if (userData != null)
+            {
+                // Delete the user
+                await _userManager.DeleteAsync(userData);
+
+                // Delete related roles
+                var userRoles = await _userManager.GetRolesAsync(user);
+                foreach (var roleName in userRoles)
+                {
+                    await _userManager.RemoveFromRoleAsync(user, roleName);
+                }
+
+                var entitiesToDelete = _evolvedtaxContext.EntitiesUsers
+                  .Where(ue => ue.UserId == user.Id && ue.ExpirySignupDatetime.HasValue && ue.ExpirySignupDatetime.Value < currentDate);
+                _evolvedtaxContext.EntitiesUsers.RemoveRange(entitiesToDelete);
+
+                await _evolvedtaxContext.SaveChangesAsync();
+            }
+            return View("SignupExpiredMessageView");
+        }
+
+
         public async Task<IActionResult> SignUpForInvite(string e, string? i = null, string? s = null)
         {
             i = i ?? EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
             e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
             //s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+
+            // Check if the link is expired
+            var user = await _userManager.FindByEmailAsync(e);
+            bool IsExpired = _userService.IsSignupLinkExpired(user.Id);
+            if (!IsExpired)
+            {
+                TempData["Message"] = "Your invite link may have expired. In this case, please contact the application owner for a new invite by clicking below:";
+                return View("SignupExpiredView"); 
+            }
+
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
             ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
                                   .ThenBy(item => item.Country).Select(p => new SelectListItem
@@ -378,7 +455,9 @@ namespace EvolvedTax.Controllers
                 }
                 var user = await _userManager.FindByEmailAsync(SUEmailAddress);
                 if (user != null) {
-                    var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p=>p.UserId.ToString() == user.Id && p.EntityId == EntityId);
+                    string userIdString = user.Id.ToString();
+                    var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p => p.UserId == userIdString && p.EntityId == EntityId);
+                    //var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p=>p.UserId.ToString() == user.Id && p.EntityId == EntityId);
                     if (emailExists)
                     {
                         return Json(false);
@@ -411,7 +490,7 @@ namespace EvolvedTax.Controllers
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
             // for local email otp testing
-            user.Email = "niqbal@mailinator.com";
+            //user.Email = "niqbal@mailinator.com";
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
@@ -451,13 +530,7 @@ namespace EvolvedTax.Controllers
                 HttpContext.Session.SetString("EmailId", user.Email);
                 HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
                 HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
-
-                // Retrieve user roles
-                var roles = await _userManager.GetRolesAsync(user);
-                if (roles.Any())
-                {
-                    HttpContext.Session.SetString("UserRole", roles.First()); 
-                }
+                HttpContext.Session.SetString("UserId", user.Id);
                 return RedirectToAction("Index", "Dashboard");
             }
             else if (result.IsLockedOut)
@@ -726,6 +799,33 @@ namespace EvolvedTax.Controllers
             ViewBag.StatusCode = statusCode;
             return View();
         }
+
+
+        #region User Access 
+
+        [Route("Account/ChangeAccess")]
+        public async Task<IActionResult> ChangeAccess(string Id, string role )
+        {
+            var entityUser = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.Id == Convert.ToInt32(Id) );
+
+            if (entityUser != null)
+            {
+                if (role == "Remove")
+                {
+                    _evolvedtaxContext.EntitiesUsers.Remove(entityUser);
+                }
+                else
+                {
+                    entityUser.Role = role;
+                    _evolvedtaxContext.EntitiesUsers.Update(entityUser);
+                }
+
+                await _evolvedtaxContext.SaveChangesAsync();
+            }
+
+            return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessRoleChange });
+        }
+        #endregion
 
 
         [HttpGet]

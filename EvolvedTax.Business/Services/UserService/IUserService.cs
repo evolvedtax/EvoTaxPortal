@@ -22,6 +22,7 @@ namespace EvolvedTax.Business.Services.UserService
         bool ResetPassword(ForgetPasswordRequest request);
         InstituteMaster? GetSecurityQuestionsByInstituteEmail(string emailAddress);
         bool IsEmailExist(string sUEmailAddress);
+        public bool IsSignupLinkExpired(string userid);
         Task<bool> AddRoles();
         Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId);
         Task<IdentityResult> UpdateInvitedUserForShare(UserRequest model);

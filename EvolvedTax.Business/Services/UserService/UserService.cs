@@ -258,9 +258,22 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return true;
         }
+
+        public bool IsSignupLinkExpired(string userid)
+        {
+            var user = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(e => e.UserId == userid.ToString());
+
+            if (user == null || user.ExpirySignupDatetime.HasValue && user.ExpirySignupDatetime.Value < DateTime.Now)
+            {
+                return false;
+            }
+           
+            return true;
+        }
         public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId)
         {
             var result = false;
+            DateTime CurrentDate= DateTime.Now;
             var userModel = new User
             {
                 UserName = email,
@@ -277,7 +290,7 @@ namespace EvolvedTax.Business.Services.UserService
                 result = response.Succeeded;
                 await _userManager.AddToRoleAsync(userModel, role);
             }
-            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role });
+            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role, EntryDatetime = CurrentDate, ExpirySignupDatetime = CurrentDate.AddDays(5)});
             await _evolvedtaxContext.SaveChangesAsync();
             return result;
         }
