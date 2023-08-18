@@ -40,17 +40,18 @@ namespace EvolvedTax.Controllers
 
 
         [HttpPost]
-        public Task<IActionResult> PostAnnouncementAsync(AnnouncementRequest model)
+        public IActionResult PostAnnouncementAsync(SettingRequest model)
         {
-            _announcementService.SaveAnnouncement(model);
-           // await _hubContext.Clients.All.SendAsync("ReceiveAnnouncement", model.Message);
+            _announcementService.SaveAnnouncement(model.AnnouncementRequest);
+            // await _hubContext.Clients.All.SendAsync("ReceiveAnnouncement", model.Message);
 
-            return Task.FromResult<IActionResult>(RedirectToAction("Index"));
+            //return Task.FromResult<IActionResult>(RedirectToAction("Index"));
+            return Json(new { Status = true });
         }
 
         public IActionResult GetAnnouncements()
         {
-         
+
             List<AnnouncementRequest> announcements = _announcementService.GetAnnouncements();
             return PartialView("_Announcements", announcements);
         }

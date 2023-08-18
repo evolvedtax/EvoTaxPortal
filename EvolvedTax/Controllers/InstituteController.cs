@@ -204,6 +204,24 @@ namespace EvolvedTax.Controllers
         {
             return Json(_instituteService.RestoreClients(selectedValues));
         }
+
+        [HttpGet]
+        public IActionResult GetEntityRole(int entityId)
+        {
+            try
+            {
+                string userId = HttpContext.Session.GetString("UserId");
+                string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == userId && p.EntityId == entityId)?.Role.Trim();
+
+                return Json(new { role = userRole });
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+                return StatusCode(500, "An error occurred while fetching entity role.");
+            }
+        }
+
         public IActionResult Client(int EntityId, int? InstituteId)
         {
             var items = _evolvedtaxContext.MstrCountries.ToList();
@@ -219,13 +237,29 @@ namespace EvolvedTax.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
-            ViewBag.Roles = _identityRoles.Roles.Where(p => p.Name != "Admin" && p.Name != "SuperAdmin" && p.Name != "Co-Admin")
+            string UserId = HttpContext.Session.GetString("UserId");
+            string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == UserId && p.EntityId == EntityId)?.Role.Trim();
+            ViewBag.UserRole = userRole;
+
+            // Define a dictionary to represent the role hierarchy
+            var roleHierarchy = new Dictionary<string, List<string>>
+            {
+                { "Viewer", new List<string>() },
+                { "Editor", new List<string> { "Viewer" } },
+                { "Co-Admin", new List<string> { "Viewer", "Editor" } },
+                { "Admin", new List<string> { "Viewer", "Editor", "Co-Admin" } }
+            };
+
+            // Filter and construct SelectListItem based on user's role
+            ViewBag.Roles = _identityRoles.Roles
+                .Where(p => roleHierarchy[userRole].Contains(p.Name))
                 .Select(p => new SelectListItem
                 {
                     Text = "Invite as " + p.Name,
                     Value = p.Name,
                     Selected = p.Name == "Viewer"
                 });
+
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstituteId ?? 0);
             var IntMaster = _instituteService.GetInstituteDataById(InstituteId ?? 0);
@@ -240,18 +274,47 @@ namespace EvolvedTax.Controllers
             ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
             var users = _userManager.Users.ToList();
+            //var usersData = _evolvedtaxContext.EntitiesUsers
+            //            .Where(p => p.EntityId == EntityId)
+            //            .ToList(); 
+
             var usersData = _evolvedtaxContext.EntitiesUsers
-                        .Where(p => p.EntityId == EntityId)
-                        .ToList(); // Fetch data from the database
+                            .Where(p => p.EntityId == EntityId)
+                            .Join(
+                                _evolvedtaxContext.Users.Where(u => u.EmailConfirmed),
+                                entitiesUser => entitiesUser.UserId,
+                                user => user.Id,
+                                (entitiesUser, user) => new
+                                {
+                                    EntitiesUser = entitiesUser,
+                                    User = user
+                                }
+                            )
+                            .ToList();
+
+
+            var availableRoles = roleHierarchy[userRole];
+            ViewBag.availableRoles = availableRoles;
+
+            //var sharedUsersResponse = usersData
+            //    .Select(p => new SharedUsersResponse
+            //    {
+            //        UserName = users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.FirstName + " " + users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.LastName,
+            //        Role = p.Role.Trim(),
+            //        Id = p.Id.ToString(),
+            //    })
+            //    .ToList();
 
             var sharedUsersResponse = usersData
-                .Select(p => new SharedUsersResponse
-                {
-                    UserName = users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.FirstName + " " + users.FirstOrDefault(x => x.Id == p.UserId.ToLower())?.LastName,
-                    Role = p.Role.Trim(),
-                })
-                .ToList();
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId),SharedUsersResponse = sharedUsersResponse.AsQueryable() };
+              .Select(p => new SharedUsersResponse
+              {
+                  UserName = $"{p.User.FirstName} {p.User.LastName}",
+                  Role = p.EntitiesUser.Role.Trim(), // Access the Role property from EntitiesUser
+                  Id = p.EntitiesUser.Id.ToString(),
+              })
+              .ToList();
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
         public async Task<IActionResult> SendEmail(int[] selectedValues)
@@ -395,5 +458,7 @@ namespace EvolvedTax.Controllers
             }
 
         }
+
+
     }
 }

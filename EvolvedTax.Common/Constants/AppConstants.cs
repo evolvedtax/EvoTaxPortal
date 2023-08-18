@@ -280,5 +280,35 @@ Technology Team at Evolved LLC";
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
         public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used in the EvoTax Portal for further process. <br/><br/> {{OTP}} <br/><br/>Please check your email. The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
+
+        public const string EmailForExpireSignUp = @"
+        Dear {{InviteeName}},
+        <br><br>
+        We hope this email finds you well. Below user(s) invite links have expired due to non-acceptance of the invites:
+        <br><br>
+        <table border='1'>
+            <tr>
+                <th>Name of the User/Email</th>
+                <th>Name of the Entity</th>
+                <th>Role</th>
+                <th>Invite Date</th>
+            </tr>
+            {{UserInviteeData}}
+        </table>
+        <br><br>
+        Please send them new invites for accessing the Evo Tax Portal.
+        <br><br>
+        <a href='{{LoginUrl}}' style='padding: 10px 20px; background-color: #1ab394; color: white; text-decoration: none; border-radius: 5px;'>Login to EvoTax Portal</a>
+        <br><br>
+        Should you have any questions or concerns, please do not hesitate to reach out to our support team at technology@evolvedtax.com.
+        <br><br>
+        Regards,
+        <br><br>
+        Technology Team at Evolved LLC
+    ";
+
+
+
+
     }
 }

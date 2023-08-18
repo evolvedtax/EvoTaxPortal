@@ -111,8 +111,8 @@
                     <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
                     </div>*@
                     <div class="row">
-                        <div class="table-container col-md-10">
-                            <div class="table-responsive">
+                      <div class="table-container col-md-10">
+                            <div class="table-responsive" id="maintable">
                                 @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
                                 <label for="pageLengthInput">Show</label>
@@ -243,60 +243,66 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
-                        <div class="table-container col-md-2" style="margin-top:5%">
-                            <div class="pull-right"><button class="btn btn-primary">Share <i class="fa fa-share"></i></button></div>
-                            <h3>Shared with:</h3>
-                            <div class="table-responsive">
-                                <table id="" class="table">
-                                    @*<thead>
+                       </div>
+                        @{
+                            var userRole = ViewBag.UserRole as string;
+                        }
+                        @if (userRole != "Viewer")
+                        {
+                            <div class="table-container col-md-2" style="margin-top:5%">
+                                <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
+                                <h3>Shared with:</h3>
+                                <div class="table-responsive">
+                                    <table id="" class="table" style="border: 3px solid #ccc;margin-top: 6px;">
+                                        
+                                        @*<thead>
                                     <tr>
                                     <th></th>
                                     <th></th>
                                     </tr>
                                     </thead>*@
-                                    <tbody>
-                                        @if (Model.SharedUsersResponse.Any())
-                                        {
-                                            foreach (var item in Model.SharedUsersResponse)
+                                        <tbody>
+                                            @if (Model.SharedUsersResponse.Any())
                                             {
-                                                <tr style="height:70px">
-                                                    <td>@item.UserName</td>
-                                                    <td class="actions">
-                                                        <div class="dropdown">
-                                                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <span class="fa fa-ellipsis-h"></span>
-                                                            </button>
-                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <div class="dropdown-menu-horizontal">
-                                                                    @if (item.Role == "Viewer")
-                                                                    {
-                                                                        <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@><span class="fa fa-check"></span> Viewer</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Viewer</a>
-                                                                    }
-                                                                    @if (item.Role == "Editor")
-                                                                    {
-                                                                        <a class="dropdown-item" href="javascript:void()" @* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@><span class="fa fa-check"></span> Editor</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Editor</a>
-                                                                    }
-                                                                    <a class="dropdown-item" href="javascript:void()"@* onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('', {selectedValues:'@item?.UserId'})"*@>Remove</a>
+                                                foreach (var item in Model.SharedUsersResponse)
+                                                {
+                                                    <tr style="height:70px">
+                                                        <td>@item.UserName <br> @item.Role</td>
+                                                        <td class="actions">
+                                                            <div class="dropdown">
+                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-ellipsis-h"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <div class="dropdown-menu-horizontal">
+                                                                        @foreach (var role in ViewBag.AvailableRoles)
+                                                                        {
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', { Id: '@item?.Id', role: '@role' })">
+                                                                                @if (item.Role == role)
+                                                                                {
+                                                                                    <span class="fa fa-check"></span> @role
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @role
+                                                                                }
+                                                                            </a>
+
+                                                                        }
+                                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', {Id:'@item?.Id', role: 'Remove'})">Remove</a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                    </tr>
+                                                }
                                             }
-                                        }
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
+                        }
+
                     </div>
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
@@ -579,7 +585,7 @@
                     <div class="col-md-12">
                         <div>
                             <label>Invite People</label>
-                            <input class="tagsinput form-control" type="email" />
+                            <input class="tagsinput form-control" type="email" placeholder="Enter email address" />
                         </div>
                         <div class="mt-2">
                             <select asp-items="ViewBag.Roles" name="role" class="selec2" style="width:25%">
@@ -622,8 +628,24 @@
                 $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
+ 
+
 
         $(document).ready(function () {
+
+    
+            var userRole = "@ViewBag.UserRole";
+
+            // Check if the userRole is "Viewer"
+            if (userRole === "Viewer") {
+                // Remove the parent div with id "maintable"
+                $("#maintable").unwrap();
+            }
+
+            $("#openModalButton").click(function () {
+                $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
+                $("#shareModal").modal("show");
+            });
 
             $('.tagsinput').tagsinput({
                 tagClass: 'label label-primary'
@@ -761,38 +783,38 @@
                                     window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
                                 }
                             },
-                            {
-                                text: '<i class="fa fa-envelope"></i> Send Email',
-                                className: 'email-btn',
-                                action: function (e, dt, button, config) {
-                                    var selectedValues = [];
-                                    $('.rowCheckbox:checked').each(function () {
-                                        selectedValues.push($(this).val());
-                                    });
+                            //{
+                            //    text: '<i class="fa fa-envelope"></i> Send Email',
+                            //    className: 'email-btn',
+                            //    action: function (e, dt, button, config) {
+                            //        var selectedValues = [];
+                            //        $('.rowCheckbox:checked').each(function () {
+                            //            selectedValues.push($(this).val());
+                            //        });
 
-                                    if (selectedValues.length === 0) {
-                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                        return;
-                                    }
-                                    swal({
-                                        title: "Sending Email...",
-                                        text: "Email will send to the clients awaited for form submission",
-                                        type: "info",
-                                        showCancelButton: false,
-                                        confirmButtonColor: "#1ab394",
-                                        confirmButtonText: "Ok",
-                                        //cancelButtonText: "Cancel"
-                                    },
-                                        function () {
-                                            let params = { selectedValues: selectedValues }
-                                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                                        });
-                                    //let params = { selectedValues: selectedValues }
-                                    //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
-                                    //$('.loading').show();
+                            //        if (selectedValues.length === 0) {
+                            //            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                            //            return;
+                            //        }
+                            //        swal({
+                            //            title: "Sending Email...",
+                            //            text: "Email will send to the clients awaited for form submission",
+                            //            type: "info",
+                            //            showCancelButton: false,
+                            //            confirmButtonColor: "#1ab394",
+                            //            confirmButtonText: "Ok",
+                            //            //cancelButtonText: "Cancel"
+                            //        },
+                            //            function () {
+                            //                let params = { selectedValues: selectedValues }
+                            //                COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //            });
+                            //        //let params = { selectedValues: selectedValues }
+                            //        //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //        //$('.loading').show();
 
-                                }
-                            },
+                            //    }
+                            //},
                             {
                                 text: '<i class="fa fa-unlock"></i> Unlock All',
                                 className: 'btn-imp-data',
@@ -840,14 +862,14 @@
                             $("#addModal").modal("show");
                         }
                     },
-                    {
-                        text: 'Share <i class="fa fa-share"></i>',
-                        className: 'email-btn',
-                        action: function (e, dt, button, config) {
-                            $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
-                            $("#shareModal").modal("show");
-                        }
-                    },
+                    //{
+                    //    text: 'Share <i class="fa fa-share"></i>',
+                    //    className: 'email-btn',
+                    //    action: function (e, dt, button, config) {
+                    //        $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
+                    //        $("#shareModal").modal("show");
+                    //    }
+                    //},
                 ],
                 //"drawCallback": function () {
                 //    var pageInfo = this.api().page.info();

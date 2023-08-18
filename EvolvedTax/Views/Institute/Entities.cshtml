@@ -4,6 +4,9 @@
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
 <style>
+    .bootstrap-tagsinput {
+        width: 100%;
+    }
     .dropdown-menu-horizontal {
         display: flex;
         flex-direction: row;
@@ -64,90 +67,95 @@
                 </div>
                 <div class="ibox-content">
                     @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
-                    <div class="table-responsive">
-                       @* <div class="form-group" style="margin-bottom:-2rem">
+                 
+                        <div class="table-responsive">
+                            @* <div class="form-group" style="margin-bottom:-2rem">
                             <label for="pageLengthInput">Show</label>
                             <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
                             <label for="pageLengthInput">entries</label>
-                        </div>*@
-                        <table class="table table-striped table-bordered table-hover dataTables-example">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" id="selectAll"></th>
-                                    <th>Entity Name</th>
-                                    <th>EIN</th>
-                                    <th>Entity Registration Date</th>
-                                    <th>Address</th>
-                                    <th hidden></th>
-                                    <th hidden></th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th hidden>Province (If Applicable)</th>
-                                    <th>Zip</th>
-                                    <th>Country of Incorporation</th>
-                                    <th>Last Updated By</th>
-                                    <th>Last Updated On</th>
-                                    <th>Lock/Unlock</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.InstituteEntitiesResponse.Any())
-                                {
-                                    foreach (var item in Model.InstituteEntitiesResponse)
+                            </div>*@
+                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>Entity Name</th>
+                                        <th>EIN</th>
+                                        <th>Entity Registration Date</th>
+                                        <th>Address</th>
+                                        <th hidden></th>
+                                        <th hidden></th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th hidden>Province (If Applicable)</th>
+                                        <th>Zip</th>
+                                        <th>Country of Incorporation</th>
+                                        <th>Last Updated By</th>
+                                        <th>Last Updated On</th>
+                                        <th>Role</th>
+                                        <th>Lock/Unlock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.InstituteEntitiesResponse.Any())
                                     {
-                                        <tr id="@item.EntityId">
-                                            <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
-                                            <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId, InstituteId = item.InstituteId}) </td>
-                                            <td>@item.Ein</td>
-                                            <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
-                                            <td>@string.Concat(item.Address1," ",item.Address2)</td>
-                                            <td hidden>@item.Address1</td>
-                                            <td hidden>@item.Address2</td>
-                                            <td>@item.City</td>
-                                            <td>@item.State</td>
-                                            <td hidden>@item.Province</td>
-                                            <td>@item.Zip</td>
-                                            <td>@item.Country</td>
-                                            <td>@item.LastUpdatedByName</td>
-                                            <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
-                                            <td class="text-center">
-                                                @if (item?.IsLocked ?? false)
-                                                {
-                                                    <span class="fa fa-lock"></span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="fa fa-unlock"></span>
-                                                }
-                                            </td>
-                                            <td class="actions">
-                                                <div class="dropdown">
-                                                    <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <span class="fa fa-bars"></span>
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <div class="dropdown-menu-horizontal">
-                                                            @if (item?.IsLocked ?? false)
-                                                            {
-                                                                @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'false'})">Unlock</a>*@
-                                                            }
-                                                            else
-                                                            {
-                                                                <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
-                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
-                                                                @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'true'})">Lock</a>*@
-                                                            }
+                                        foreach (var item in Model.InstituteEntitiesResponse)
+                                        {
+                                            <tr id="@item.EntityId">
+                                                <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
+                                                <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId, InstituteId = item.InstituteId}) </td>
+                                                <td>@item.Ein</td>
+                                                <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
+                                                <td>@string.Concat(item.Address1," ",item.Address2)</td>
+                                                <td hidden>@item.Address1</td>
+                                                <td hidden>@item.Address2</td>
+                                                <td>@item.City</td>
+                                                <td>@item.State</td>
+                                                <td hidden>@item.Province</td>
+                                                <td>@item.Zip</td>
+                                                <td>@item.Country</td>
+                                                <td>@item.LastUpdatedByName</td>
+                                                <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
+                                            <td>@item.Role</td>
+                                                <td class="text-center">
+                                                    @if (item?.IsLocked ?? false)
+                                                    {
+                                                        <span class="fa fa-lock"></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="fa fa-unlock"></span>
+                                                    }
+                                                </td>
+                                                <td class="actions">
+                                                    <div class="dropdown">
+                                                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fa fa-bars"></span>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <div class="dropdown-menu-horizontal">
+                                                                @if (item?.IsLocked ?? false)
+                                                                {
+                                                                    @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'false'})">Unlock</a>*@
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
+                                                                    @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'true'})">Lock</a>*@
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        }
                                     }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+               
+             
 
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
@@ -283,6 +291,83 @@
         </div>
     </div>
 </div>
+<!-- Share Modal -->
+<div class="modal inmodal" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="shareModelHeader" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="shareForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessShare"
+                      data-ajax-url="@Url.Action("InviteUserForEntities","Account")">
+                
+                    <input id="emailAddresses" name="emailAddresses" hidden />
+                    <input id="entityNamesHidden" name="EntityNamesHidden" type="hidden" />
+                    <div class="col-md-12">
+                    
+                        <div>
+                            <label>Invite People</label>
+                            <input class="tagsinput form-control" type="email" placeholder="Enter email address" />
+                        </div>
+                        <div class="mt-2">
+                            <select  name="role" class="selec2" style="width:25%">
+                                <option value="Viewer">Viewer</option>
+                            </select>
+                        </div>
+                        <div class="mt-4">
+                            <label>Message (optional)</label>
+                            <textarea class="form-control" placeholder="Add a message"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveShareBtn">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareModalLabel">Share Entity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Email Address</th>
+                            <th>Entity Name</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be added dynamically using JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="sendButton">Share</button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
 <!--Edit Modal -->
 <div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -391,6 +476,77 @@
 
     <script type="text/javascript">
 
+
+        function updateModalHeader(selectedRows) {
+            var headerText = "";
+            var entityNames = [];
+            var entityNamesWithId = [];
+
+            var rolePromises = []; // Array to store the promises
+
+            for (var i = 0; i < selectedRows.length; i++) {
+                var entity = selectedRows[i];
+                var entityId = entity[1].match(/EntityId=(\d+)/)[1];
+
+                // Use an IIFE (Immediately Invoked Function Expression) to capture entityName correctly
+                (function (entityId) {
+                    var entityName = $(entity[1]).text();
+
+                    var rolePromise = fetchEntityRole(entityId)
+                        .then(function (role) {
+                            if (role !== "Viewer") {
+                                 var Entitynames=entityName + "$" + entityId;
+                                entityNames.push(entityName);
+                                entityNamesWithId.push(Entitynames);
+                            }
+                        });
+
+                    rolePromises.push(rolePromise); // Store the promise in the array
+                })(entityId);
+            }
+
+            Promise.all(rolePromises)
+                .then(function () {
+                    if (entityNames.length > 0) {
+                        var entityNamesFormatted = entityNames.join(", ");
+                        var headerText = "Share access to <br/>" + entityNamesFormatted;
+                        $("#shareModelHeader").html(headerText);
+                        $("#entityNamesHidden").val(entityNamesWithId.join(","));
+                    }
+                });
+        }
+
+
+
+        function fetchEntityRole(entityId) {
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: '/Institute/GetEntityRole', // Update the URL to your controller action
+                    method: 'GET',
+                    data: { entityId: entityId },
+                    success: function (data) {
+                        resolve(data.role);
+                    },
+                    error: function () {
+                        reject();
+                    }
+                });
+            });
+        }
+
+
+
+
+        function ajaxsuccessShare(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, response.Message);
+                $("#shareModal").modal("hide");
+                //window.location.reload();
+            } else {
+                COMMON.notification(2, response.Message);
+            }
+
+        }
         // Upgrade button class name
         $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
         $(document).ready(function () {
@@ -399,6 +555,43 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+
+              $('#saveShareBtn').click(function () {
+            let form = $('#shareForm');
+            if (form.valid()) {
+          
+                var emails = [];
+                $(".tag.label-primary").each(function () {
+                    emails.push($(this).text());
+                });
+                $('#emailAddresses').val(JSON.stringify(emails));
+                form.submit();
+                $("#shareModal").modal("hide");
+            }
+            return false;
+        });
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+            $('.tagsinput').on('itemAdded', function (event) {
+                var email = event.item.trim();
+                if (!isValidEmail(email)) {
+                    $(this).tagsinput('remove', email);
+                    COMMON.AlertSuccessMessage("Entity already shared", "This entity is already shared with entered user.", "error")
+                }
+            });
+
+            function isValidEmail(email) {
+                var entityId = $('#changeEntity').val();
+                return COMMON.doAjaxGetWithJSONResponse('@Url.Action("ValidateEmailDomainAddressOnInvitation","Account")', { SUEmailAddress: email, EntityId: entityId })
+            }
+
+
+         
+      
+
             //Masking
             $('.ein').attr('placeholder', '00-0000000');
             $('.ein').mask('00-0000000', { reverse: true });
@@ -534,11 +727,35 @@
                         }
                     },
                     {
-                        text: 'share <i class="fa fa-share"></i>',
+                        text: 'Share <i class="fa fa-share"></i>',
                         className: 'email-btn',
-                        //action: function (e, dt, button, config) {
-                        //    $("#addModal").modal("show");
-                        //}
+                        action: function (e, dt, button, config) {
+                     
+                            // Get selected rows
+                            //var selectedRows = dt.rows({ selected: true }).data().toArray();
+                            var selectedRows = [];
+
+                            $('.rowCheckbox:checked').each(function () {
+                                var checkboxValue = $(this).val();
+                                var rowData = dt.row('#' + checkboxValue).data();
+
+                                if (rowData) {
+                                    selectedRows.push(rowData);
+                                }
+                            });
+
+                            if (selectedRows.length === 0) {
+                                COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                return;
+                            }
+                          
+                        
+                                $("#shareModal").modal("show");
+                                updateModalHeader(selectedRows);
+
+           
+                         
+                        }
                     },
                 ],
                 //"drawCallback": function () {

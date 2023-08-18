@@ -23,11 +23,12 @@ namespace EvolvedTax.Business.Services.InstituteService
     {
         readonly private EvolvedtaxContext _evolvedtaxContext;
         readonly private IMapper _mapper;
-
-        public InstituteService(EvolvedtaxContext evolvedtaxContext, IMapper mapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public InstituteService(EvolvedtaxContext evolvedtaxContext, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public IQueryable<InstituteMasterResponse> GetMaster()
@@ -37,8 +38,22 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
         {
+            string userId = "";
+            HttpContext httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null)
+            {
+                userId = httpContext.Session.GetString("UserId");
+
+            }
+      
+
+            var userEntityIds = _evolvedtaxContext.EntitiesUsers
+                                .Where(ue => ue.UserId == userId)
+                                .Select(ue => ue.EntityId)
+                                .ToList();
+
             var query = from p in _evolvedtaxContext.InstituteEntities
-                        where p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
+                        where userEntityIds.Contains(p.EntityId) && p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -59,6 +74,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             IsLocked = p.IsLocked,
                             EmailFrequency = p.EmailFrequency,
                             LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
+                            Role = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.EntityId == p.EntityId && ue.UserId == userId).Role.Trim() ?? string.Empty,
                         };
 
             return query;
@@ -884,7 +900,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                           join ie in _evolvedtaxContext.InstituteEntities on eu.EntityId equals ie.EntityId
                           where eu.UserId == UserId && ie.InstituteId == value
                           select ie);
-            
+
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
         }
     }
