@@ -74,6 +74,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             IsLocked = p.IsLocked,
                             EmailFrequency = p.EmailFrequency,
                             LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
+                            Role = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.EntityId == p.EntityId && ue.UserId == userId).Role.Trim() ?? string.Empty,
                         };
 
             return query;

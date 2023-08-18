@@ -253,7 +253,8 @@
                                 <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
                                 <h3>Shared with:</h3>
                                 <div class="table-responsive">
-                                    <table id="" class="table">
+                                    <table id="" class="table" style="border: 3px solid #ccc;margin-top: 6px;">
+                                        
                                         @*<thead>
                                     <tr>
                                     <th></th>
@@ -266,7 +267,7 @@
                                                 foreach (var item in Model.SharedUsersResponse)
                                                 {
                                                     <tr style="height:70px">
-                                                        <td>@item.UserName</td>
+                                                        <td>@item.UserName <br> @item.Role</td>
                                                         <td class="actions">
                                                             <div class="dropdown">
                                                                 <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -627,33 +628,7 @@
                 $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
-        var roleHierarchy = {
-            "Viewer": [],
-            "Editor": ["Viewer"],
-            "Co-Admin": ["Viewer", "Editor"],
-            "Admin": ["Viewer", "Editor", "Co-Admin"]
-        };
-
-        function DisableUnAvilableRole() {
-            var userRole = "@ViewBag.UserRole";
-
-            var selectElement = $('select[name="role"]');
-            var options = selectElement.find('option');
-
-            options.each(function () {
-                var roleText = $(this).html();
-                roleText = roleText.replace("Invite as ", "").trim();
-
-                if (!roleHierarchy[userRole].includes(roleText)) {
-                    $(this).prop('disabled', true);
-                } else {
-                    $(this).prop('disabled', false);
-                }
-            });
-
-            // Refresh the Select2 UI after modifying the options
-            selectElement.trigger('change');
-        }
+ 
 
 
         $(document).ready(function () {
@@ -669,7 +644,6 @@
 
             $("#openModalButton").click(function () {
                 $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
-                DisableUnAvilableRole();
                 $("#shareModal").modal("show");
             });
 

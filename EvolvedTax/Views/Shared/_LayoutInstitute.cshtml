@@ -394,7 +394,7 @@
                             var alertItem = response[i];
                             var alertId = alertItem.Id;
 
-                            debugger;
+
                             // Calculate the time difference between the current date and alert date
                             var currentDate = new Date();
                             var alertDate = new Date(alertItem.CreatedDate);
@@ -470,7 +470,7 @@
  
             loadAlerts();
             loadAnnouncement();
-            setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
+           // setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
 
             $(document).on('click', function (event) {
                 // Check if the clicked element is outside the alertDropdown
