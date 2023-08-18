@@ -134,6 +134,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public virtual DbSet<W8imyFatca> W8imyFatcas { get; set; }
 
     public virtual DbSet<W8imyfatcade> W8imyfatcades { get; set; }
+    public virtual DbSet<EmailSetting> EmailSetting { get; set; }
 
     public virtual DbSet<W9> W9s { get; set; }
 
