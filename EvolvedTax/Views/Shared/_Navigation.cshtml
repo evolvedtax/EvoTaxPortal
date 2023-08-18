@@ -54,12 +54,12 @@
                 <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span> <span class="fa arrow"></span></a>
             </li>
             <li>
-                <a href="@Url.Action("UpdateProfile", "Account")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
+                <a href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
+               @* <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
                     <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "UserManagement")">User Management</a></li>
                     <li class="@Html.IsSelected(action: "EmailReminder")"><a href="@Url.Action("EmailReminder", "Account")">Set Email Reminder</a></li>
-                </ul>
+                </ul>*@
             </li>
            
          @*   <li class="@Html.IsSelected(controller: "Individual")">
