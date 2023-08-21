@@ -241,14 +241,12 @@ namespace EvolvedTax.Controllers
             string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == UserId && p.EntityId == EntityId)?.Role.Trim();
             ViewBag.UserRole = userRole;
 
-            // Define a dictionary to represent the role hierarchy
-            var roleHierarchy = new Dictionary<string, List<string>>
-            {
-                { "Viewer", new List<string>() },
-                { "Editor", new List<string> { "Viewer" } },
-                { "Co-Admin", new List<string> { "Viewer", "Editor" } },
-                { "Admin", new List<string> { "Viewer", "Editor", "Co-Admin" } }
-            };
+
+            var roleHierarchyData = _evolvedtaxContext.RoleHierarchy.ToList();
+            var roleHierarchy = roleHierarchyData.ToDictionary(
+                role => role.RoleName,
+                role => role.AllowedRoles.Split(',').ToList()
+            );
 
             // Filter and construct SelectListItem based on user's role
             ViewBag.Roles = _identityRoles.Roles

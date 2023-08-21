@@ -139,11 +139,12 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public virtual DbSet<W9> W9s { get; set; }
 
     public virtual DbSet<W91> W91s { get; set; }
+    public DbSet<RoleHierarchy> RoleHierarchy{ get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-     
+        modelBuilder.Entity<RoleHierarchy>().HasNoKey();
         modelBuilder.Entity<Announcement>(entity =>
         {
             entity.Property(e => e.CreatedDate)
