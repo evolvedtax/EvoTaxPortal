@@ -116,12 +116,12 @@ namespace EvolvedTax.Controllers
             int InstituteId = user.InstituteId;
             string userId = user.Id;
 
-           var Institute = _evolvedtaxContext.InstituteMasters.FirstOrDefault(e => e.InstId == InstituteId);
-            string Institutename= Institute.FirstName + " " + Institute.LastName;
+            var Institute = _evolvedtaxContext.InstituteMasters.FirstOrDefault(e => e.InstId == InstituteId);
+            string Institutename = Institute.FirstName + " " + Institute.LastName;
 
             var currentDate = DateTime.Now;
 
-      
+
             var expiredEntityUserData = _evolvedtaxContext.EntitiesUsers
                 .Where(ue => ue.UserId == user.Id && ue.ExpirySignupDatetime.HasValue && ue.ExpirySignupDatetime.Value < currentDate)
                 .ToList();
@@ -178,7 +178,7 @@ namespace EvolvedTax.Controllers
             if (!IsExpired)
             {
                 TempData["Message"] = "Your invite link may have expired. In this case, please contact the application owner for a new invite by clicking below:";
-                return View("SignupExpiredView"); 
+                return View("SignupExpiredView");
             }
 
             var items = await _evolvedtaxContext.MstrCountries.ToListAsync();
@@ -285,7 +285,7 @@ namespace EvolvedTax.Controllers
                     var URL = string.Concat(fullUrl, "Account/", "Login");
                     var user = await _userManager.GetUserAsync(User);
                     var invitee = await _userManager.GetUserAsync(User);
-                    await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName," ",invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
+                    await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role);
                 }
             }
             return Json(new { Status = true, Message = "Invited link has been sent." });
@@ -503,7 +503,8 @@ namespace EvolvedTax.Controllers
                     return Json(false);
                 }
                 var user = await _userManager.FindByEmailAsync(SUEmailAddress);
-                if (user != null) {
+                if (user != null)
+                {
                     string userIdString = user.Id.ToString();
                     var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p => p.UserId == userIdString && p.EntityId == EntityId);
                     //var emailExists = _evolvedtaxContext.EntitiesUsers.Any(p=>p.UserId.ToString() == user.Id && p.EntityId == EntityId);
@@ -639,7 +640,7 @@ namespace EvolvedTax.Controllers
             }
             else
             {
-               
+
                 clientEmail = HttpContext.Session.GetString("OTPClientEmail");
             }
 
@@ -777,36 +778,28 @@ namespace EvolvedTax.Controllers
             return View(_mapper.Map<InstituteMasterRequest>(response));
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(InstituteMasterRequest request)
+        public async Task<IActionResult> UpdateProfile(SettingRequest request)
         {
-            if (request.ProfileImage != null || request.ProfileImage?.Length > 0)
+            if (request.InstituteMasterRequest.ProfileImage != null || request.InstituteMasterRequest.ProfileImage?.Length > 0)
             {
                 // Create a unique filename to avoid overwriting existing files
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.ProfileImage?.FileName);
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.InstituteMasterRequest.ProfileImage?.FileName);
                 var webRootPath = _webHostEnvironment.WebRootPath;
                 // Combine the wwwroot path with the desired file path and filename
                 var filePath = Path.Combine(webRootPath, "ProfileImage", fileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    await request.ProfileImage?.CopyToAsync(fileStream);
+                    await request.InstituteMasterRequest.ProfileImage?.CopyToAsync(fileStream);
                 }
-                request.InstituteLogo = fileName;
+                request.InstituteMasterRequest.InstituteLogo = fileName;
                 HttpContext.Session.SetString("ProfileImage", fileName);
             }
             else
             {
                 HttpContext.Session.SetString("ProfileImage", "");
             }
-            var response = _instituteService.UpdateInstituteMaster(request);
-            if (response)
-            {
-                TempData["Type"] = ResponseMessageConstants.SuccessStatus;
-                TempData["Message"] = "Profile is updated";
-                return RedirectToAction(nameof(UpdateProfile));
-            }
-            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
-            TempData["Message"] = "Something went wrong";
-            return View(request);
+            var response = _instituteService.UpdateInstituteMaster(request.InstituteMasterRequest);
+            return Json(new { Status = response });
         }
         [HttpGet]
         public IActionResult ResetPassword(string token)
@@ -853,9 +846,9 @@ namespace EvolvedTax.Controllers
         #region User Access 
 
         [Route("Account/ChangeAccess")]
-        public async Task<IActionResult> ChangeAccess(string Id, string role )
+        public async Task<IActionResult> ChangeAccess(string Id, string role)
         {
-            var entityUser = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.Id == Convert.ToInt32(Id) );
+            var entityUser = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.Id == Convert.ToInt32(Id));
 
             if (entityUser != null)
             {
@@ -885,12 +878,12 @@ namespace EvolvedTax.Controllers
             return View(_mapper.Map<InstituteMasterRequest>(response));
         }
         [HttpPost]
-        public IActionResult EmailReminder(InstituteMasterRequest request)
+        public IActionResult EmailReminder(SettingRequest request)
         {
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            request.InstId = instId;
-            var response = _instituteService.SetEmailReminder(request);
-            return View();
+            request.InstituteMasterRequest.InstId = instId;
+            var response = _instituteService.SetEmailReminder(request.InstituteMasterRequest);
+            return Json(new { Status = response });
         }
 
         public IActionResult GetAlertsNotification()
