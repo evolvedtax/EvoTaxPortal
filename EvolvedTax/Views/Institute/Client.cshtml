@@ -37,8 +37,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                top: 0;
-                                                                                left: 15%;*/
+                                                                                        top: 0;
+                                                                                        left: 15%;*/
         padding: 0;
         padding-right: 60%
     }
@@ -48,6 +48,7 @@
         display: inline-block;
         width: 150%;
     }
+
     .actions {
         text-align: center;
     }
@@ -92,6 +93,10 @@
                                 </div>
                             </form>
                         </div>
+                        <button class="btn btn-primary navbar-minimalize minimalize-styl-2" id="toggleButton" data-toggle="tooltip" data-placement="top" title="Shared Users">
+                            <i class="fa fa-bars"></i>
+                        </button>
+
                         <div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
                             <div style="display:flex">
                                 <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
@@ -111,7 +116,7 @@
                     <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
                     </div>*@
                     <div class="row">
-                      <div class="table-container col-md-10">
+                        <div class="table-container col-md-10">
                             <div class="table-responsive" id="maintable">
                                 @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
@@ -243,18 +248,23 @@
                                     </tbody>
                                 </table>
                             </div>
-                       </div>
+                        </div>
                         @{
                             var userRole = ViewBag.UserRole as string;
                         }
                         @if (userRole != "Viewer")
                         {
-                            <div class="table-container col-md-2" style="margin-top:5%">
-                                <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
-                                <h3>Shared with:</h3>
+                            
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc;">
+                               
+                                <div style="margin-top: 6px;">
+                                    <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
+                                    <h3>Shared with:</h3>
+                                </div>
+
                                 <div class="table-responsive">
-                                    <table id="" class="table" style="border: 3px solid #ccc;margin-top: 6px;">
-                                        
+                                    <table id="" class="table">
+
                                         @*<thead>
                                     <tr>
                                     <th></th>
@@ -601,7 +611,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveShareBtn">Send</button>
+                <button type="button" class="btn btn-primary" id="saveShareBtn">Share</button>
             </div>
         </div>
     </div>
@@ -628,12 +638,35 @@
                 $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
- 
+
+        function HideAndShowShareOption() {
+            var toggleButton = document.getElementById("toggleButton");
+            var toggleIcon = document.getElementById("toggleIcon");
+            var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+            var maintableWrapper = $("#maintable"); // Add an ID to the wrapper element
+
+            // Add click event listener to the button
+            toggleButton.addEventListener("click", function () {
+                // Toggle the visibility of the container
+                sharedUsersContainer.style.display = (sharedUsersContainer.style.display === "none") ? "block" : "none";
+
+                // Toggle the icon and text
+                if (sharedUsersContainer.style.display === "none") {
+  
+                    toggleButton.textContent = "Show Shared Users";
+                    maintableWrapper.unwrap(); // Unwrap the maintable wrapper
+                } else {
+
+                    toggleButton.textContent = "Hide Shared Users";
+                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>"); // Wrap in the desired container
+                }
+            });
+        }
 
 
         $(document).ready(function () {
 
-    
+
             var userRole = "@ViewBag.UserRole";
 
             // Check if the userRole is "Viewer"
@@ -641,6 +674,9 @@
                 // Remove the parent div with id "maintable"
                 $("#maintable").unwrap();
             }
+
+            HideAndShowShareOption();
+
 
             $("#openModalButton").click(function () {
                 $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
@@ -1312,4 +1348,4 @@
             }
         }
     </script>
-}
+        }
