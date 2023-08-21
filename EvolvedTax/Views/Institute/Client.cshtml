@@ -93,7 +93,10 @@
                                 </div>
                             </form>
                         </div>
-                        <button class="btn btn-primary navbar-minimalize minimalize-styl-2" id="toggleButton" data-toggle="tooltip" data-placement="top" title="Shared Users">
+                      @*  <button class="btn btn-primary pull-right" id="toggleButton">
+                            Hide Shared Users
+                        </button>*@
+                        <button class="pull-right btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top" >
                             <i class="fa fa-bars"></i>
                         </button>
 
@@ -641,24 +644,20 @@
 
         function HideAndShowShareOption() {
             var toggleButton = document.getElementById("toggleButton");
-            var toggleIcon = document.getElementById("toggleIcon");
             var sharedUsersContainer = document.getElementById("sharedUsersContainer");
-            var maintableWrapper = $("#maintable"); // Add an ID to the wrapper element
+            var maintableWrapper = $("#maintable");
 
             // Add click event listener to the button
             toggleButton.addEventListener("click", function () {
                 // Toggle the visibility of the container
-                sharedUsersContainer.style.display = (sharedUsersContainer.style.display === "none") ? "block" : "none";
-
-                // Toggle the icon and text
                 if (sharedUsersContainer.style.display === "none") {
-  
-                    toggleButton.textContent = "Show Shared Users";
-                    maintableWrapper.unwrap(); // Unwrap the maintable wrapper
+                    sharedUsersContainer.style.display = "block"; // Show 
+                    toggleButton.title = "Hide Users";
+                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
                 } else {
-
-                    toggleButton.textContent = "Hide Shared Users";
-                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>"); // Wrap in the desired container
+                    sharedUsersContainer.style.display = "none"; // Hide 
+                    toggleButton.title = "Show Users"; 
+                    maintableWrapper.unwrap(); /
                 }
             });
         }
