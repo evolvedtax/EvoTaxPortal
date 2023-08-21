@@ -43,6 +43,30 @@ namespace EvolvedTax.Controllers
         {
             return View(_instituteService.GetMaster());
         }
+        [HttpPost]
+        public async Task<IActionResult> RequestInstituteName(string NewInstituteName, string Comments)
+        {
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var fullUrl = $"{scheme}://{host}";
+
+            int instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var instituteName = _instituteService.GetInstituteDataById(instituteId).InstitutionName ?? "";
+
+            var acceptLink = string.Concat(fullUrl, "/");
+            var rejectLink = string.Concat(fullUrl, "/");
+
+            var user = await _userManager.GetUserAsync(User);
+            var userFullName = user.FirstName + " " + user.LastName;
+            await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
+            return Json(new { Status = true });
+        }
+        [HttpPost]
+        public IActionResult ChangeInstituteName(string NewInstituteName, string Comments)
+        {
+
+            return Json(new { Status = true });
+        }
         #region Entities
         public IActionResult Entities(int? instituteId)
         {
