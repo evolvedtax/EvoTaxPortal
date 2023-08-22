@@ -770,10 +770,10 @@
                 $('#ClientEmailId').val(rowData.ClientEmailId);
 
                 if (rowData.Status != 'Active') {
-                    $('#ClientEmailId').prop('disabled', true);
+                    $('#ClientEmailId').prop('readonly', true);
                 }
                 else {
-                    $('#ClientEmailId').prop('disabled', false);
+                    $('#ClientEmailId').prop('readonly', false);
                 }
 
             }
