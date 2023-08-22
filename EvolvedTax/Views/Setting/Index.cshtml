@@ -166,7 +166,7 @@
                                                             Institute Name
                                                             @if (SuperAdminOrAdminOrCoAdmin)
                                                             {
-                                                                <a href='javascript: void()' data-toggle='modal' data-target='#instNameChangeModal'>Request for name change</a>
+                                                                <a href='javascript: void()' data-toggle='modal' data-target='#instNameChangeModal'>Request Name Change</a>
                                                             }
                                                         </label>
                                                         <input class="form-control" id="instituteName" asp-for="InstituteMasterRequest.InstitutionName" disabled>
@@ -483,15 +483,15 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Comments<span class="text-danger"> *</span></label>
-                                <textarea class="form-control" name="Comments" placeholder="Add some comments here" required></textarea>
+                                <label>Reason<span class="text-danger"> *</span></label>
+                                <textarea class="form-control" name="Comments" placeholder="Why you want to change the institute name. Give solid reason here." required></textarea>
                             </div>
                         </div>
                     </div>
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveInstNameChangeBtn">Request changes</button>
+                    <button type="button" class="btn btn-primary" id="saveInstNameChangeBtn">Request Name Change</button>
                 </div>
             </div>
         </div>
@@ -715,7 +715,7 @@
         function ajaxsuccessRequestInstituteNameChange(response) {
             if (response.Status == true) {
                 $("#instNameChangeModal").modal("hide");
-                COMMON.AlertSuccessMessage("Your request has been sent to the admin. After reviewing your request, you'll be notified about change request status.", "", "info")
+                COMMON.AlertSuccessMessage("Your request for entity name change has been submitted and is currently under review. Thank You for your cooperation in this matter.", "", "info")
             } else {
                 COMMON.notification(2, "Something went wrong");
             }

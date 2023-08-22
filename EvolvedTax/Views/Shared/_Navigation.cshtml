@@ -37,7 +37,7 @@
                 <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span> <span class="fa arrow"></span></a>
             </li>
             <li>
-                @if (_httpContextAccessor.HttpContext?.Session.GetString("InstituteName") != null)
+                @if (!User.IsInRole("SuperAdmin"))
                 {
                     <a href="@Url.Action("Entities", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
                 }
@@ -45,7 +45,6 @@
                 {
                     <a href="@Url.Action("Master", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
                 }
-              
             </li>
             <li>
                 <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span> <span class="fa arrow"></span></a>

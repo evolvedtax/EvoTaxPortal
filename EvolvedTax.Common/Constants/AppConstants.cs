@@ -284,7 +284,10 @@ Technology Team at Evolved LLC";
                                                         <br /><br />
                                                         We hope this email finds you well. <strong>{{adminUser}}</strong> of <strong>{{institute}}</strong> requested to change the name of the institute from ""{{oldInstituteName}}"" to ""{{newInstituteName}}"".
                                                         <br /><br />
-                                                        Your approval required in this regard.
+                                                        Below is the reason for request name change submitted by the user.
+                                                        ({{reason}})
+                                                        <br /><br />
+                                                        Your approval is required in this regard.
                                                         <br /><br />
                                                         <!--[if mso]>
                                                           <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">

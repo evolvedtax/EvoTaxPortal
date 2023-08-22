@@ -353,6 +353,7 @@ namespace EvolvedTax.Business.MailService
                     .Replace("{{institute}}", oldInstituteName)
                     .Replace("{{oldInstituteName}}", oldInstituteName)
                     .Replace("{{newInstituteName}}", newInstituteName)
+                    .Replace("{{reason}}", Comments)
                     .Replace("{{acceptLink}}", acceptLink)
                     .Replace("{{rejectLink}}", rejectLink);
 
