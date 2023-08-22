@@ -859,6 +859,11 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<EntitiesUsers>(entity =>
+        {
+            entity.ToTable("EntitiesUsers", tb => tb.HasTrigger("trg_EntitiesUsersUpdateHistory"));
+        });
+
         modelBuilder.Entity<MasterEntityType>(entity =>
         {
             entity.HasKey(e => e.EntityId);
