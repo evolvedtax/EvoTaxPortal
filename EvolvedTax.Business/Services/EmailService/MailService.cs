@@ -338,6 +338,47 @@ namespace EvolvedTax.Business.MailService
                 // Handle exception
             }
         }
+        public async Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName,string adminUser, string acceptLink, string rejectLink, string Comments)
+        {
+            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
+            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
+            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
+            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort;;
+
+
+            try
+            {
+                var content = AppConstants.RequestForChangeInstituteName
+                    .Replace("{{adminUser}}", adminUser)
+                    .Replace("{{institute}}", oldInstituteName)
+                    .Replace("{{oldInstituteName}}", oldInstituteName)
+                    .Replace("{{newInstituteName}}", newInstituteName)
+                    .Replace("{{acceptLink}}", acceptLink)
+                    .Replace("{{rejectLink}}", rejectLink);
+
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(FromEmail);
+                message.To.Add(new MailAddress("aghazipura@evolvedtax.com"));
+                //message.To.Add(new MailAddress("niqbal@evolvedtax.com"));
+                message.To.Add(new MailAddress("mjunaid@evolvedtax.com"));
+                message.To.Add(new MailAddress("mmcnally@evolvedtax.com"));
+                message.Subject = "Action required for change of the Institute Name";
+                message.IsBodyHtml = true; //to make message body as html
+                message.Body = content;
+                smtp.Port = Port;
+                smtp.Host = Host;
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                await smtp.SendMailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+            }
+        }
 
     }
 }
