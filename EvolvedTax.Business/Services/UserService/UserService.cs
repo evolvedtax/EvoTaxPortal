@@ -32,18 +32,18 @@ namespace EvolvedTax.Business.Services.UserService
         public async Task<UserRequest> Login(LoginRequest model)
         {
             var request = new UserRequest();
-            var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == model.UserName && p.Password == model.Password);
+            //var response = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.EmailAddress == model.UserName && p.Password == model.Password);
             //var repsonse = await _signInManager.SignInAsync(new User { UserName = model.UserName, Email = model.UserName }, false);
-            if (response != null)
-            {
-                request.UserName = response.FirstName + " " + response.LastName;
-                request.InstId = response.InstId;
-                request.EmailId = response.EmailAddress ?? string.Empty;
-                request.InstituteName = response.InstitutionName ?? string.Empty;
-                request.IsLoggedIn = true;
-                request.IsAdmin = response.IsAdmin;
-                return request;
-            }
+            //if (response != null)
+            //{
+            //    request.UserName = response.FirstName + " " + response.LastName;
+            //    request.InstId = response.InstId;
+            //    request.EmailId = response.EmailAddress ?? string.Empty;
+            //    request.InstituteName = response.InstitutionName ?? string.Empty;
+            //    request.IsLoggedIn = true;
+            //    request.IsAdmin = response.IsAdmin;
+            //    return request;
+            //}
             return request;
         }
         public bool UpdateInstituteMasterOTP(string emailId, string otp, DateTime expiryDate)

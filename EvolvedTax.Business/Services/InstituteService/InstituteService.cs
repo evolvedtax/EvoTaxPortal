@@ -33,7 +33,8 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteMasterResponse> GetMaster()
         {
-            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters.Where(p => !p.IsAdmin)).AsQueryable();
+            var s = _evolvedtaxContext.InstituteMasters.ToList();
+            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters).AsQueryable();
         }
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)

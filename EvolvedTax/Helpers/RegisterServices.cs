@@ -5,6 +5,7 @@ using EvolvedTax.Business.Services.FormReport;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
+using EvolvedTax.Business.Services.SessionProfileUser;
 using EvolvedTax.Business.Services.SignupService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Business.Services.W8BEN_E_FormService;
@@ -16,7 +17,9 @@ using EvolvedTax.Business.Services.W9FormService;
 
 using EvolvedTax.Data.EFRepository;
 using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Web.Middlewares;
 using Microsoft.AspNetCore.Identity;
+using NPOI.SS.Formula.Functions;
 
 namespace EvolvedTax.Helpers
 {
@@ -73,7 +76,8 @@ namespace EvolvedTax.Helpers
             services.AddAutoMapper(typeof(AutoMapperProfileConfig));
 
             #region @@@[------Services]
-          
+            services.AddScoped<UserSessionProfileService>();
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsPrincipalFactory>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGeneralQuestionareService, GeneralQuestionareService>();
             services.AddScoped<IGeneralQuestionareEntityService, GeneralQuestionareEntityService>();

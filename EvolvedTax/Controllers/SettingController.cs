@@ -4,7 +4,9 @@ using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Common.ExtensionMethods;
+using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
@@ -109,6 +111,26 @@ namespace EvolvedTax.Controllers
                 POPPort = p.POPPort,
             }).First();
             model.EmailSettingRequest = emailSettingModel;
+            //----------- REQUEST NAME CHANGE ----------//
+            var requestChangeName = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n.RequestedOn).LastOrDefault(p => p.RequesterUserId == SessionUser.UserId);
+            model.InstituteRequestNameChange.IsApproved = requestChangeName != null ? requestChangeName.IsApproved : RequestChangeNameStatusEnum.Approved;
+            var users = _userManager.Users;
+            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p=>p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
+            {
+                Id = p.Id,
+                InstituteId = p.InstituteId,
+                IsApproved = p.IsApproved,
+                NewName = p.NewName,
+                OldName = p.OldName,
+                ApprovedOn = p.ApprovedOn,
+                RequestedOn = p.RequestedOn,
+                RequesterUserId = p.RequesterUserId,
+                UserName = users.First(x=>x.Id == p.RequesterUserId).UserName ?? ""
+            }).AsQueryable();
+            model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
+            //----------- RENDERING IFRAME -------------//
+            ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["TransactionHistory"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
             return View(model);
         }
         [HttpPost]
