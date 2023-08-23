@@ -270,7 +270,7 @@ namespace EvolvedTax.Business.Services.UserService
            
             return true;
         }
-        public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId)
+        public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId, string AssignedBy)
         {
             var result = false;
             DateTime CurrentDate= DateTime.Now;
@@ -290,7 +290,8 @@ namespace EvolvedTax.Business.Services.UserService
                 result = response.Succeeded;
                 await _userManager.AddToRoleAsync(userModel, role);
             }
-            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role, EntryDatetime = CurrentDate, ExpirySignupDatetime = CurrentDate.AddDays(5)});
+            
+            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role,AssignedBy= AssignedBy, EntryDatetime = CurrentDate, ExpirySignupDatetime = CurrentDate.AddDays(5)});
             await _evolvedtaxContext.SaveChangesAsync();
             return result;
         }

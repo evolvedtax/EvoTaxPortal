@@ -16,7 +16,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
         : base(options)
     {
     }
-
+    public virtual DbSet<AuditLog> AuditLog { get; set; }
     public virtual DbSet<Announcement> Announcements { get; set; }
     public virtual DbSet<Alert> Alert { get; set; }
 

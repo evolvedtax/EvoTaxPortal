@@ -672,7 +672,22 @@
             $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
                 event.preventDefault(); // Prevent the default anchor behavior
                 var buttonText = $(this).find('span').text().trim();
-                console.log(buttonText); // Log the text to the console
+                
+                var searchParams = new URLSearchParams(window.location.search);
+                var entityId = searchParams.get('EntityId');
+                var InstituteId = searchParams.get('InstituteId');
+
+                $.ajax({
+                    url: '/Institute/LogButtonClicked',
+                    type: 'POST',
+                    data: { buttonText: buttonText, entityId: entityId, InstituteId: InstituteId },
+                    success: function () {
+                        console.log('Button text saved to audit log');
+                    },
+                    error: function () {
+                        console.error('Error saving button text to audit log');
+                    }
+                });
             });
          
 

@@ -10,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Converters;
 
@@ -478,6 +479,22 @@ namespace EvolvedTax.Controllers
             {
                 return NotFound();
             }
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> LogButtonClicked(string buttonText,string entityId,string InstituteId)
+        {
+            var CreatedBy= HttpContext.Session.GetString("UserId");
+            var user = await _userManager.GetUserAsync(User);
+            //var InstituteResponse = _instituteService.GetClientByEntityId(Convert.ToInt32(InstituteId), Convert.ToInt32(entityId));
+            var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
+            string userName = string.Concat(user.FirstName, " ", user.LastName);
+            string newButtonText = $"{user.FirstName} {user.LastName} click {buttonText} in ({EntityName})";
+            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText);
+            return Json(response);
+
 
         }
 

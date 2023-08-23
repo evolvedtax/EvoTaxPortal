@@ -16,6 +16,7 @@ using Azure;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
 using NPOI.OpenXmlFormats.Dml;
+using System.Net.Http;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -902,6 +903,21 @@ namespace EvolvedTax.Business.Services.InstituteService
                           select ie);
 
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
+        }
+        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText)
+        {
+            var auditLog = new AuditLog
+            {
+                TableName = "", 
+                Action = buttonText,
+                CreatedAt = DateTime.Now,
+                CreatedBy = CreatedBy,
+            };
+
+            _evolvedtaxContext.AuditLog.Add(auditLog);
+            _evolvedtaxContext.SaveChanges();
+            return new MessageResponseModel { Status = true };
+
         }
     }
 }
