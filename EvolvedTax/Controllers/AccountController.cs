@@ -67,8 +67,14 @@ namespace EvolvedTax.Controllers
         // POST: AccountController/Login
         public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
+            var user = await _userManager.FindByNameAsync(userDTO.UserName);
+            var IsSuperAdmin = true;
+            if (user != null)
+            {
+                IsSuperAdmin = user.IsSuperAdmin;
+            }
             //await _userService.AddRoles();
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !IsSuperAdmin)
             {
                 //var response = await _userService.Login(userDTO);
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);

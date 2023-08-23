@@ -1,3 +1,4 @@
+using EvolvedTax.Common.Utils;
 using EvolvedTax.Helpers;
 using EvolvedTax.Middleware;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -40,10 +41,11 @@ var configuration = builder.Configuration
     .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
     .Build();
 var environment = builder.Environment;
+ServiceActivator._config = new ConfigurationBuilder().SetBasePath(environment.ContentRootPath).AddJsonFile("appSettings.json").Build();
 builder.Services.ConfigureApplicationServices(configuration, environment);
 builder.Services.AddSignalR();
 var app = builder.Build();
-
+ServiceActivator.Configure(app.Services);
 
 
 //Configure the HTTP request pipeline.
