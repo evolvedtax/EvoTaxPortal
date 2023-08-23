@@ -16,7 +16,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
         : base(options)
     {
     }
-
+    public virtual DbSet<AuditLog> AuditLog { get; set; }
     public virtual DbSet<Announcement> Announcements { get; set; }
     public virtual DbSet<Alert> Alert { get; set; }
 
@@ -135,6 +135,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
 
     public virtual DbSet<W8imyfatcade> W8imyfatcades { get; set; }
     public virtual DbSet<EmailSetting> EmailSetting { get; set; }
+    public virtual DbSet<InstituteRequestNameChange> InstituteRequestNameChange { get; set; }
 
     public virtual DbSet<W9> W9s { get; set; }
 
@@ -857,6 +858,11 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.Property(e => e.StatusName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<EntitiesUsers>(entity =>
+        {
+            entity.ToTable("EntitiesUsers", tb => tb.HasTrigger("trg_EntitiesUsersUpdateHistory"));
         });
 
         modelBuilder.Entity<MasterEntityType>(entity =>

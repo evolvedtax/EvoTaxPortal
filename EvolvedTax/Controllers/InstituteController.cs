@@ -10,7 +10,9 @@ using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Converters;
 
 namespace EvolvedTax.Controllers
@@ -53,20 +55,76 @@ namespace EvolvedTax.Controllers
             int instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var instituteName = _instituteService.GetInstituteDataById(instituteId).InstitutionName ?? "";
 
-            var acceptLink = string.Concat(fullUrl, "/");
-            var rejectLink = string.Concat(fullUrl, "/");
+            var requestChangeNameModel = new InstituteRequestNameChange { OldName = instituteName, InstituteId = SessionUser.InstituteId, NewName = NewInstituteName, IsApproved = RequestChangeNameStatusEnum.Pending, RequestedOn = DateTime.Now, RequesterUserId = SessionUser.UserId };
+            await _evolvedtaxContext.InstituteRequestNameChange.AddAsync(requestChangeNameModel);
+            await _evolvedtaxContext.SaveChangesAsync();
 
-            var user = await _userManager.GetUserAsync(User);
-            var userFullName = user.FirstName + " " + user.LastName;
+            //var acceptLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Approved"));
+            //var rejectLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Rejected"));
+            
+            var acceptLink = string.Concat(fullUrl, "/admin");
+            var rejectLink = string.Concat(fullUrl, "/admin");
+
+            var userFullName = SessionUser.FirstName + " " + SessionUser.LastName;
             await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
             return Json(new { Status = true });
         }
-        [HttpPost]
-        public IActionResult ChangeInstituteName(string NewInstituteName, string Comments)
+        //[HttpGet]
+        //public IActionResult ChangeInstituteName(string u, string s)
+        //{
+        //    var status = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+        //    var requestChangeNameResult = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n).LastOrDefault(p => p.RequesterUserId == u);
+        //    if (status == "Approved")
+        //    {
+        //        requestChangeNameResult.IsApproved = RequestChangeNameStatusEnum.Approved;
+        //        var institute = _instituteService.GetInstituteDataById(requestChangeNameResult.InstituteId);
+        //        institute.InstitutionName = requestChangeNameResult.NewName;
+        //        _evolvedtaxContext.InstituteMasters.Update(institute);
+        //    }
+        //    else if (status == "Rejected")
+        //    {
+        //        requestChangeNameResult.IsApproved = RequestChangeNameStatusEnum.Approved;
+        //    }
+        //    requestChangeNameResult.ApprovedOn = DateTime.Now;
+        //    requestChangeNameResult.ApprovedBy = SessionUser.UserId;
+
+        //    _evolvedtaxContext.InstituteRequestNameChange.Update(requestChangeNameResult);
+        //    _evolvedtaxContext.SaveChanges();
+
+        //    return Json(new { Status = true });
+        //}
+        [HttpGet]
+        public IActionResult ChangeInstituteName(int Id, RequestChangeNameStatusEnum requestChange)
         {
+            var requestChangeNameResult = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n).LastOrDefault(p => p.Id == Id);
+            if (requestChange == RequestChangeNameStatusEnum.Approved)
+            {
+                requestChangeNameResult.IsApproved = RequestChangeNameStatusEnum.Approved;
+                // Get the institute entity from the context if it's already being tracked
+                var institute = _evolvedtaxContext.InstituteMasters.Find(requestChangeNameResult.InstituteId);
+
+                if (institute == null)
+                {
+                    // If the institute entity isn't tracked, fetch it and attach it to the context
+                    institute = _instituteService.GetInstituteDataById(requestChangeNameResult.InstituteId);
+                    _evolvedtaxContext.Attach(institute);
+                }
+                // Update the entity properties
+                institute.InstitutionName = requestChangeNameResult.NewName;
+            }
+            else if (requestChange == RequestChangeNameStatusEnum.Rejected)
+            {
+                requestChangeNameResult.IsApproved = RequestChangeNameStatusEnum.Rejected;
+            }
+            requestChangeNameResult.ApprovedOn = DateTime.Now;
+            requestChangeNameResult.ApprovedBy = SessionUser.UserId;
+
+            _evolvedtaxContext.InstituteRequestNameChange.Update(requestChangeNameResult);
+            _evolvedtaxContext.SaveChanges();
 
             return Json(new { Status = true });
         }
+        
         #region Entities
         public IActionResult Entities(int? instituteId)
         {
@@ -478,6 +536,22 @@ namespace EvolvedTax.Controllers
             {
                 return NotFound();
             }
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> LogButtonClicked(string buttonText,string entityId,string InstituteId)
+        {
+            var CreatedBy= HttpContext.Session.GetString("UserId");
+            var user = await _userManager.GetUserAsync(User);
+            //var InstituteResponse = _instituteService.GetClientByEntityId(Convert.ToInt32(InstituteId), Convert.ToInt32(entityId));
+            var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
+            string userName = string.Concat(user.FirstName, " ", user.LastName);
+            string newButtonText = $"{user.FirstName} {user.LastName} click {buttonText} in ({EntityName})";
+            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText);
+            return Json(response);
+
 
         }
 

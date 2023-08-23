@@ -12,7 +12,9 @@ namespace EvolvedTax.Data.Models.Entities
         public int EntityId { get; set; }
         public string? UserId { get; set; }
         public string? Role { get; set; }
+        public string? AssignedBy {  get; set;}
         public DateTime? EntryDatetime { get; set; }
         public DateTime? ExpirySignupDatetime { get; set; }
+
     }
 }

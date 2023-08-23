@@ -20,23 +20,24 @@ namespace EvolvedTax.Controllers
     public class AdminController : BaseController
     {
         #region Fields
-        #endregion
-
-        #region Ctor
         readonly IUserService _userService;
         readonly IGeneralQuestionareService _generalQuestionareService;
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
+        readonly UserManager<User> _userManager;
         readonly SignInManager<User> _signInManager;
         private readonly EvolvedtaxContext _evolvedtaxContext;
+        #endregion
 
-        public AdminController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, SignInManager<User> signInManager)
+        #region Ctor
+        public AdminController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
             _instituteService = instituteService;
             _mailService = mailService;
             _evolvedtaxContext = evolvedtaxContext;
+            _userManager = userManager;
             _signInManager = signInManager;
         }
         #endregion
@@ -52,7 +53,13 @@ namespace EvolvedTax.Controllers
         // POST: AccountController/Login
         public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
-            if (ModelState.IsValid)
+            var user = await _userManager.FindByNameAsync(userDTO.UserName);
+            var IsSuperAdmin = false;
+            if (user != null)
+            {
+                IsSuperAdmin = user.IsSuperAdmin;
+            }
+            if (ModelState.IsValid && IsSuperAdmin)
             {
                 //var response = await _userService.Login(userDTO);
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
@@ -60,10 +67,10 @@ namespace EvolvedTax.Controllers
                 {
                     //return RedirectToLocal(returnUrl);
                 }
-                if (result.RequiresTwoFactor && User.IsInRole("SuperAdmin"))
+                if (result.RequiresTwoFactor)
                 {
                     HttpContext.Session.SetString("EmailId", userDTO.UserName);
-                    return RedirectToAction("Auth","Account", new { returnUrl = returnUrl });
+                    return RedirectToAction("Auth", "Account", new { returnUrl = returnUrl });
                 }
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error

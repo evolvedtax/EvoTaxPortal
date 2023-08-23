@@ -16,6 +16,7 @@ using Azure;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
 using NPOI.OpenXmlFormats.Dml;
+using System.Net.Http;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -33,7 +34,8 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         public IQueryable<InstituteMasterResponse> GetMaster()
         {
-            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters.Where(p => !p.IsAdmin)).AsQueryable();
+            var s = _evolvedtaxContext.InstituteMasters.ToList();
+            return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters).AsQueryable();
         }
 
         public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
@@ -902,6 +904,21 @@ namespace EvolvedTax.Business.Services.InstituteService
                           select ie);
 
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
+        }
+        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText)
+        {
+            var auditLog = new AuditLog
+            {
+                TableName = "", 
+                Action = buttonText,
+                CreatedAt = DateTime.Now,
+                CreatedBy = CreatedBy,
+            };
+
+            _evolvedtaxContext.AuditLog.Add(auditLog);
+            _evolvedtaxContext.SaveChanges();
+            return new MessageResponseModel { Status = true };
+
         }
     }
 }

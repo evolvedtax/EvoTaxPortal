@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EvolvedTax.Data.Models.DTOs.Response;
+using EvolvedTax.Data.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +14,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public UserManagementRequest UserManagementRequest { get; set; } = new UserManagementRequest();
         public EmailSettingRequest EmailSettingRequest { get; set; } = new EmailSettingRequest();
         public AnnouncementRequest AnnouncementRequest { get; set; } = new AnnouncementRequest();
+        public InstituteRequestNameChange InstituteRequestNameChange { get; set; } = new InstituteRequestNameChange();
+        public IQueryable<InstituteRequestNameChangeResponse> InstituteRequestNameChangeResponses { get; set; } = new List<InstituteRequestNameChangeResponse>().AsQueryable();
     }
 }

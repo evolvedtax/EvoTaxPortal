@@ -93,12 +93,16 @@
                                 </div>
                             </form>
                         </div>
-                      @*  <button class="btn btn-primary pull-right" id="toggleButton">
-                            Hide Shared Users
-                        </button>*@
-                        <button class="pull-right btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top" >
-                            <i class="fa fa-bars"></i>
-                        </button>
+             
+                        @{
+                            var userRole = ViewBag.UserRole as string;
+                        }
+                        @if (userRole != "Viewer")
+                        {
+                            <button class="pull-right btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top" >
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        }
 
                         <div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
                             <div style="display:flex">
@@ -252,13 +256,11 @@
                                 </table>
                             </div>
                         </div>
-                        @{
-                            var userRole = ViewBag.UserRole as string;
-                        }
+                     
                         @if (userRole != "Viewer")
                         {
                             
-                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc;">
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc; border-radius:10px;">
                                
                                 <div style="margin-top: 6px;">
                                     <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
@@ -647,6 +649,7 @@
             var sharedUsersContainer = document.getElementById("sharedUsersContainer");
             var maintableWrapper = $("#maintable");
 
+            if (toggleButton !=null){
             // Add click event listener to the button
             toggleButton.addEventListener("click", function () {
                 // Toggle the visibility of the container
@@ -660,11 +663,33 @@
                     maintableWrapper.unwrap(); 
                 }
             });
+            }
         }
 
 
         $(document).ready(function () {
 
+            $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
+                event.preventDefault(); // Prevent the default anchor behavior
+                var buttonText = $(this).find('span').text().trim();
+                
+                var searchParams = new URLSearchParams(window.location.search);
+                var entityId = searchParams.get('EntityId');
+                var InstituteId = searchParams.get('InstituteId');
+
+                $.ajax({
+                    url: '/Institute/LogButtonClicked',
+                    type: 'POST',
+                    data: { buttonText: buttonText, entityId: entityId, InstituteId: InstituteId },
+                    success: function () {
+                        console.log('Button text saved to audit log');
+                    },
+                    error: function () {
+                        console.error('Error saving button text to audit log');
+                    }
+                });
+            });
+         
 
             var userRole = "@ViewBag.UserRole";
 
@@ -710,11 +735,9 @@
                 //allowClear: true
             });
             $('.btn-menu-toggle').click(function () {
-                debugger
                 var obj = $('.dt-button-collection');
             });
             $('.edit-row').click(function () {
-                debugger
                 // Get the row ID from the data attribute
                 var rowId = $(this).data('row-id');
 
@@ -762,10 +785,10 @@
                 $('#ClientEmailId').val(rowData.ClientEmailId);
 
                 if (rowData.Status != 'Active') {
-                    $('#ClientEmailId').prop('disabled', true);
+                    $('#ClientEmailId').prop('readonly', true);
                 }
                 else {
-                    $('#ClientEmailId').prop('disabled', false);
+                    $('#ClientEmailId').prop('readonly', false);
                 }
 
             }

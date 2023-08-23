@@ -360,10 +360,10 @@ namespace EvolvedTax.Business.MailService
                 MailMessage message = new MailMessage();
                 SmtpClient smtp = new SmtpClient();
                 message.From = new MailAddress(FromEmail);
-                message.To.Add(new MailAddress("aghazipura@evolvedtax.com"));
-                //message.To.Add(new MailAddress("niqbal@evolvedtax.com"));
-                message.To.Add(new MailAddress("mjunaid@evolvedtax.com"));
-                message.To.Add(new MailAddress("mmcnally@evolvedtax.com"));
+                message.To.Add(new MailAddress("niqbal@evolvedtax.com"));
+                //message.To.Add(new MailAddress("aghazipura@evolvedtax.com"));
+                //message.To.Add(new MailAddress("mjunaid@evolvedtax.com"));
+                //message.To.Add(new MailAddress("mmcnally@evolvedtax.com"));
                 message.Subject = "Action required for change of the Institute Name";
                 message.IsBodyHtml = true; //to make message body as html
                 message.Body = content;

@@ -67,8 +67,14 @@ namespace EvolvedTax.Controllers
         // POST: AccountController/Login
         public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
         {
+            var user = await _userManager.FindByNameAsync(userDTO.UserName);
+            var IsSuperAdmin = true;
+            if (user != null)
+            {
+                IsSuperAdmin = user.IsSuperAdmin;
+            }
             //await _userService.AddRoles();
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && !IsSuperAdmin)
             {
                 //var response = await _userService.Login(userDTO);
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
@@ -134,12 +140,14 @@ namespace EvolvedTax.Controllers
                     string entityName = entity.EntityName;
                     string entityEmail = user.Email;
                     string Role = entityUserData.Role.Trim();
+                    string AssignedByUserId = entityUserData.AssignedBy.Trim();
+                    var AssignedBy = _evolvedtaxContext.Users.FirstOrDefault(p => p.Id == AssignedByUserId && p.InstituteId == Convert.ToInt32(i));
 
                     var scheme = HttpContext.Request.Scheme; // "http" or "https"
                     var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
 
                     var fullUrl = $"{scheme}://{host}";
-                    await _mailService.SendEmailForExpireSignUp(Institute.EmailAddress, entityEmail, entityName, Role, entityUserData.EntryDatetime, Institutename, fullUrl);
+                    await _mailService.SendEmailForExpireSignUp(AssignedBy.Email, entityEmail, entityName, Role, entityUserData.EntryDatetime, Institutename, fullUrl);
                 }
             }
 
@@ -266,10 +274,12 @@ namespace EvolvedTax.Controllers
         {
             List<string> emails = JsonConvert.DeserializeObject<List<string>>(emailAddresses);
             int InstituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            string AssignedBy = HttpContext.Session.GetString("UserId");
             var instituteName = HttpContext.Session.GetString("InstituteName");
+
             foreach (var email in emails)
             {
-                var responseForm = await _userService.SaveInvitedUserForShare(role, EntityId, email, InstituteId);
+                var responseForm = await _userService.SaveInvitedUserForShare(role, EntityId, email, InstituteId, AssignedBy);
                 if (responseForm)
                 {
                     var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
@@ -310,10 +320,11 @@ namespace EvolvedTax.Controllers
                     {
                         int InstituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
                         var instituteName = HttpContext.Session.GetString("InstituteName");
+                        string AssignedBy = HttpContext.Session.GetString("UserId");
 
                         foreach (var email in emails)
                         {
-                            var responseForm = await _userService.SaveInvitedUserForShare(role, entityId, email, InstituteId);
+                            var responseForm = await _userService.SaveInvitedUserForShare(role, entityId, email, InstituteId, AssignedBy);
                             if (responseForm)
                             {
                                 var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
@@ -540,7 +551,7 @@ namespace EvolvedTax.Controllers
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
             // for local email otp 
-            //user.Email = "niqbal@mailinator.com";
+            user.Email = "niqbal@mailinator.com";
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;

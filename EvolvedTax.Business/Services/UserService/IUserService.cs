@@ -24,7 +24,7 @@ namespace EvolvedTax.Business.Services.UserService
         bool IsEmailExist(string sUEmailAddress);
         public bool IsSignupLinkExpired(string userid);
         Task<bool> AddRoles();
-        Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId);
+        Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId,string AssignedBy);
         Task<IdentityResult> UpdateInvitedUserForShare(UserRequest model);
     }
 }
