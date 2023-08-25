@@ -57,11 +57,14 @@ namespace EvolvedTax.Controllers
 
             var requestChangeNameModel = new InstituteRequestNameChange { OldName = instituteName, InstituteId = SessionUser.InstituteId, NewName = NewInstituteName, IsApproved = RequestChangeNameStatusEnum.Pending, RequestedOn = DateTime.Now, RequesterUserId = SessionUser.UserId };
             await _evolvedtaxContext.InstituteRequestNameChange.AddAsync(requestChangeNameModel);
+
+            var alrtModel = new Alert { AlertText = SessionUser.FirstName + " " + SessionUser.LastName + " has requested for change institute name.", CreatedDate = DateTime.Now, InstituteID = SessionUser.InstituteId, Title = "Request Change Name", IsRead = false };
+            await _evolvedtaxContext.Alert.AddAsync(alrtModel);
             await _evolvedtaxContext.SaveChangesAsync();
 
             //var acceptLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Approved"));
             //var rejectLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Rejected"));
-            
+
             var acceptLink = string.Concat(fullUrl, "/admin");
             var rejectLink = string.Concat(fullUrl, "/admin");
 
@@ -124,7 +127,7 @@ namespace EvolvedTax.Controllers
 
             return Json(new { Status = true });
         }
-        
+
         #region Entities
         public IActionResult Entities(int? instituteId)
         {
@@ -397,14 +400,21 @@ namespace EvolvedTax.Controllers
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
-        public async Task<IActionResult> SendEmail(int[] selectedValues)
+        public async Task<IActionResult> SendEmail(int[] selectedValues,int EntityId)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
 
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
-            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
+
+            var user = await _userManager.GetUserAsync(User);
+            
+            string userName = string.Concat(user.FirstName, " ", user.LastName);
+            string ActionText = $"An email has been sent to {{Email}} for the client associated with the {{EntityName}}, sent by {user.FirstName} {user.LastName}";
+
+
+            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL, ActionText, userName);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
         [Route("institute/uploadClients")]
@@ -541,15 +551,15 @@ namespace EvolvedTax.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> LogButtonClicked(string buttonText,string entityId,string InstituteId)
+        public async Task<IActionResult> LogButtonClicked(string buttonText, string entityId, string InstituteId)
         {
-            var CreatedBy= HttpContext.Session.GetString("UserId");
+            var CreatedBy = HttpContext.Session.GetString("UserId");
             var user = await _userManager.GetUserAsync(User);
             //var InstituteResponse = _instituteService.GetClientByEntityId(Convert.ToInt32(InstituteId), Convert.ToInt32(entityId));
             var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
             string userName = string.Concat(user.FirstName, " ", user.LastName);
             string newButtonText = $"{user.FirstName} {user.LastName} click {buttonText} in ({EntityName})";
-            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText);
+            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText, Convert.ToInt32(entityId));
             return Json(response);
 
 

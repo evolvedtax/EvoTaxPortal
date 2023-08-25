@@ -821,10 +821,29 @@ namespace EvolvedTax.Business.Services.InstituteService
             return true;
         }
 
-        public List<AlertRequest> GetAlertsNotification(int instituteId)
+        public List<AlertRequest> GetAlertsNotification(int instituteId, bool IsuperAdmin)
         {
+            List<AlertRequest> alerts = new List<AlertRequest>();
 
-            var alerts = _evolvedtaxContext.Alert
+            if (IsuperAdmin)
+            {
+                 alerts = _evolvedtaxContext.Alert
+               .Where(a =>  a.IsRead == false)
+                  .OrderByDescending(a => a.Id)
+                    .Take(20)
+               .Select(a => new AlertRequest
+               {
+                   Id = a.Id,
+                   Title = a.Title,
+                   AlertText = a.AlertText,
+                   CreatedDate = (DateTime)a.CreatedDate
+               })
+               .ToList();
+            }
+            else
+            {
+
+                 alerts = _evolvedtaxContext.Alert
                 .Where(a => a.InstituteID == instituteId && a.IsRead == false)
                    .OrderByDescending(a => a.Id)
                      .Take(20)
@@ -836,6 +855,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                     CreatedDate = (DateTime)a.CreatedDate
                 })
                 .ToList();
+            }
+        
 
             return alerts;
         }
@@ -905,7 +926,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
         }
-        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText)
+        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText, int EntityId)
         {
             var auditLog = new AuditLog
             {
@@ -913,6 +934,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 Action = buttonText,
                 CreatedAt = DateTime.Now,
                 CreatedBy = CreatedBy,
+                EntityId = EntityId
             };
 
             _evolvedtaxContext.AuditLog.Add(auditLog);

@@ -897,10 +897,13 @@ namespace EvolvedTax.Controllers
             return Json(new { Status = response });
         }
 
-        public IActionResult GetAlertsNotification()
+        public async Task<IActionResult> GetAlertsNotification()
         {
+            //var user = await _userManager.GetUserAsync(User);
+            bool IsuperAdmin= User.IsInRole("SuperAdmin");
+            
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId);
+            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId, IsuperAdmin);
             return Json(alerts);
         }
 

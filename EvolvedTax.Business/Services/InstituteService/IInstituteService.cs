@@ -50,14 +50,14 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         bool SetEmailReminder(InstituteMasterRequest request);
 
-        public List<AlertRequest> GetAlertsNotification(int instituteId);
+        public List<AlertRequest> GetAlertsNotification(int instituteId,bool IsuperAdmin);
         bool MarkAlertAsRead(int id);
         public bool MarkAllAlertsAsRead(int instituteId);
 
         public List<AnnouncementRequest> GetAnnouncements();
         IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, string UserId);
 
-        Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy,string buttonText);
+        Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy,string buttonText, int EntityId);
 
     }
 }

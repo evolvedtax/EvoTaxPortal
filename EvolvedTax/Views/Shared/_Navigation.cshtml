@@ -33,27 +33,27 @@
                     <img src="~/images/evolved_tax_mark_logo.png" width="50px" />
                 </div>
             </li>
-            <li>
-                <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span> <span class="fa arrow"></span></a>
+            <li class="@Html.IsSelected(controller: "Dashboard")">
+                <a class="left-nav-links" href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span></a>
             </li>
-            <li>
+            <li class="@Html.IsSelected(controller: "Institute")">
                 @if (!User.IsInRole("SuperAdmin"))
                 {
-                    <a href="@Url.Action("Entities", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
+                    <a class="left-nav-links" href="@Url.Action("Entities", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span></a>
                 }
                 else
                 {
-                    <a href="@Url.Action("Master", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span> <span class="fa arrow"></span></a>
+                    <a class="left-nav-links" href="@Url.Action("Master", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span></a>
                 }
             </li>
             <li>
-                <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span> <span class="fa arrow"></span></a>
+                <a class ="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span></a>
             </li>
             <li>
-                <a><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span> <span class="fa arrow"></span></a>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
             </li>
-            <li>
-                <a href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
+            <li class="@Html.IsSelected(controller: "Setting")">
+                <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
                @* <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
                     <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "UserManagement")">User Management</a></li>
