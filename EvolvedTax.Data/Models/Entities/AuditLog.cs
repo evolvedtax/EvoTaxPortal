@@ -25,5 +25,6 @@ namespace EvolvedTax.Data.Models.Entities
         public DateTime? CreatedAt { get; set; }
 
         public string Action { get; set; }
+        public int EntityId { get; set; }
     }
 }

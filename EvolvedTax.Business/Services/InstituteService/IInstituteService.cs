@@ -57,7 +57,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         public List<AnnouncementRequest> GetAnnouncements();
         IQueryable<InstituteEntitiesResponse> GetEntitiesByInstIdRole(int value, string UserId);
 
-        Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy,string buttonText);
+        Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy,string buttonText, int EntityId);
 
     }
 }

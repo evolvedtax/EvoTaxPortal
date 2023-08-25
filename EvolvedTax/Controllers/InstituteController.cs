@@ -549,7 +549,7 @@ namespace EvolvedTax.Controllers
             var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
             string userName = string.Concat(user.FirstName, " ", user.LastName);
             string newButtonText = $"{user.FirstName} {user.LastName} click {buttonText} in ({EntityName})";
-            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText);
+            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText, Convert.ToInt32(entityId));
             return Json(response);
 
 
