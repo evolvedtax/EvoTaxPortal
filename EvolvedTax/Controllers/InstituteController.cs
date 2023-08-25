@@ -397,14 +397,21 @@ namespace EvolvedTax.Controllers
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
-        public async Task<IActionResult> SendEmail(int[] selectedValues)
+        public async Task<IActionResult> SendEmail(int[] selectedValues,int EntityId)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
             var fullUrl = $"{scheme}://{host}";
 
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
-            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL);
+
+            var user = await _userManager.GetUserAsync(User);
+            
+            string userName = string.Concat(user.FirstName, " ", user.LastName);
+            string ActionText = $"An email has been sent to {{Email}} for the client associated with the {{EntityName}}, sent by {user.FirstName} {user.LastName}";
+
+
+            await _emailService.SendEmailAsync(_instituteService.GetClientInfoByClientId(selectedValues).Where(p => p.ClientStatus != AppConstants.ClientStatusFormSubmitted).ToList(), "Action Required: Verify Your Registration with EvoTax Portal", "", URL, ActionText, userName);
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }
         [Route("institute/uploadClients")]

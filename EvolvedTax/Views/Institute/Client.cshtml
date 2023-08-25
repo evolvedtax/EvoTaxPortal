@@ -1035,6 +1035,7 @@
                                         //cancelButtonText: "Cancel"
                                     },
                                         function () {
+                                            let urlParams = new URLSearchParams(window.location.search);
                                             let params = { selectedValues: selectedValues }
                                             COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
                                         });
