@@ -54,6 +54,7 @@
         background: white;
         z-index: 1;
     }
+
 </style>
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -80,7 +81,7 @@
                                 <li><a class="nav-link" data-toggle="tab" href="#tab-6">Email Setting</a></li>
                                 <li><a class="nav-link" data-toggle="tab" href="#tab-7">Bounced Emails</a></li>
                                 <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-9">Request Name Change Approval</a></li>
+                                <li><a class="nav-link" data-toggle="tab" href="#tab-9">Pending Approvals @if (Model.InstituteRequestNameChangeResponses.Any()) { <span style="color:red"> (@Model.InstituteRequestNameChangeResponses.Count())</span> }</a></li>
                             }
                         </ul>
                         <div class="tab-content">
@@ -176,11 +177,11 @@
                                                             }
                                                             else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Pending)
                                                             {
-                                                                <span style="color:orange">Your request for change name is pending.</span>
+                                                                <span style="color:orange">Your request for name change is pending approval.</span>
                                                             }
                                                             else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Rejected)
                                                             {
-                                                                <span style="color:red">Your request for change name is Rejected.</span>
+                                                                <span style="color:red">Your request for name change is Rejected.</span>
                                                             }
                                                         </label>
                                                         <input class="form-control" id="instituteName" asp-for="InstituteMasterRequest.InstitutionName" disabled>
@@ -360,7 +361,6 @@
                             </div>
                             <div id="tab-5" class="tab-pane">
                                 <div class="panel-body">
-
                                     @Html.Raw(ViewData["UserManagement"])
                                 </div>
                             </div>
@@ -765,7 +765,7 @@
             if (response.Status == true) {
                 $("#instNameChangeModal").modal("hide");
                 COMMON.AlertSuccessMessage("Your request for entity name change has been submitted and is currently under review. Thank You for your cooperation in this matter.", "", "info")
-                $('#requestNameChangeLabel').text('Institute Name ').append('<span style="color:orange">Your request for change name is pending.</span>')
+                $('#requestNameChangeLabel').text('Institute Name ').append('<span style="color:orange">Your request for name change is pending approval.</span>')
             } else {
                 COMMON.notification(2, "Something went wrong");
             }
