@@ -551,7 +551,7 @@ namespace EvolvedTax.Controllers
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
             // for local email otp 
-            //user.Email = "niqbal@mailinator.com";
+            user.Email = "niqbal@mailinator.com";
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
@@ -897,10 +897,13 @@ namespace EvolvedTax.Controllers
             return Json(new { Status = response });
         }
 
-        public IActionResult GetAlertsNotification()
+        public async Task<IActionResult> GetAlertsNotification()
         {
+            //var user = await _userManager.GetUserAsync(User);
+            bool IsuperAdmin= User.IsInRole("SuperAdmin");
+            
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId);
+            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId, IsuperAdmin);
             return Json(alerts);
         }
 

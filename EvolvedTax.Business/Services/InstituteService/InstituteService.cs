@@ -821,10 +821,29 @@ namespace EvolvedTax.Business.Services.InstituteService
             return true;
         }
 
-        public List<AlertRequest> GetAlertsNotification(int instituteId)
+        public List<AlertRequest> GetAlertsNotification(int instituteId, bool IsuperAdmin)
         {
+            List<AlertRequest> alerts = new List<AlertRequest>();
 
-            var alerts = _evolvedtaxContext.Alert
+            if (IsuperAdmin)
+            {
+                 alerts = _evolvedtaxContext.Alert
+               .Where(a =>  a.IsRead == false)
+                  .OrderByDescending(a => a.Id)
+                    .Take(20)
+               .Select(a => new AlertRequest
+               {
+                   Id = a.Id,
+                   Title = a.Title,
+                   AlertText = a.AlertText,
+                   CreatedDate = (DateTime)a.CreatedDate
+               })
+               .ToList();
+            }
+            else
+            {
+
+                 alerts = _evolvedtaxContext.Alert
                 .Where(a => a.InstituteID == instituteId && a.IsRead == false)
                    .OrderByDescending(a => a.Id)
                      .Take(20)
@@ -836,6 +855,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                     CreatedDate = (DateTime)a.CreatedDate
                 })
                 .ToList();
+            }
+        
 
             return alerts;
         }
