@@ -57,11 +57,14 @@ namespace EvolvedTax.Controllers
 
             var requestChangeNameModel = new InstituteRequestNameChange { OldName = instituteName, InstituteId = SessionUser.InstituteId, NewName = NewInstituteName, IsApproved = RequestChangeNameStatusEnum.Pending, RequestedOn = DateTime.Now, RequesterUserId = SessionUser.UserId };
             await _evolvedtaxContext.InstituteRequestNameChange.AddAsync(requestChangeNameModel);
+
+            var alrtModel = new Alert { AlertText = SessionUser.FirstName + " " + SessionUser.LastName + " has requested for change institute name.", CreatedDate = DateTime.Now, InstituteID = SessionUser.InstituteId, Title = "Request Change Name", IsRead = false };
+            await _evolvedtaxContext.Alert.AddAsync(alrtModel);
             await _evolvedtaxContext.SaveChangesAsync();
 
             //var acceptLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Approved"));
             //var rejectLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Rejected"));
-            
+
             var acceptLink = string.Concat(fullUrl, "/admin");
             var rejectLink = string.Concat(fullUrl, "/admin");
 
@@ -124,7 +127,7 @@ namespace EvolvedTax.Controllers
 
             return Json(new { Status = true });
         }
-        
+
         #region Entities
         public IActionResult Entities(int? instituteId)
         {
@@ -541,9 +544,9 @@ namespace EvolvedTax.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> LogButtonClicked(string buttonText,string entityId,string InstituteId)
+        public async Task<IActionResult> LogButtonClicked(string buttonText, string entityId, string InstituteId)
         {
-            var CreatedBy= HttpContext.Session.GetString("UserId");
+            var CreatedBy = HttpContext.Session.GetString("UserId");
             var user = await _userManager.GetUserAsync(User);
             //var InstituteResponse = _instituteService.GetClientByEntityId(Convert.ToInt32(InstituteId), Convert.ToInt32(entityId));
             var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
