@@ -554,12 +554,17 @@ namespace EvolvedTax.Controllers
         public async Task<IActionResult> LogButtonClicked(string buttonText, string entityId, string InstituteId)
         {
             var CreatedBy = HttpContext.Session.GetString("UserId");
+            string Category = "";
             var user = await _userManager.GetUserAsync(User);
             //var InstituteResponse = _instituteService.GetClientByEntityId(Convert.ToInt32(InstituteId), Convert.ToInt32(entityId));
             var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(entityId))?.EntityName.Trim();
             string userName = string.Concat(user.FirstName, " ", user.LastName);
             string newButtonText = $"{user.FirstName} {user.LastName} click {buttonText} in ({EntityName})";
-            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText, Convert.ToInt32(entityId));
+            if (buttonText.Contains("Import"))
+            {
+                Category = "Upload";
+            }
+            var response = await _instituteService.LogClientButtonClicked(userName, newButtonText, Convert.ToInt32(entityId), Category);
             return Json(response);
 
 

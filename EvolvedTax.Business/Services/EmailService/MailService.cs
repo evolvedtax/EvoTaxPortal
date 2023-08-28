@@ -56,7 +56,7 @@ namespace EvolvedTax.Business.MailService
                     var EntityName = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == Convert.ToInt32(email.EntityId))?.EntityName.Trim();
                     string Message = ActionText.Replace("{Email}", email.ClientEmailId).Replace("{EntityName}", EntityName);
                     //Message+= ActionText.Replace("{EntityName}", EntityName);
-                    await _instituteService.LogClientButtonClicked(userName, Message, email.EntityId);
+                    await _instituteService.LogClientButtonClicked(userName, Message, email.EntityId,"Email Send");
                 }
                 catch (Exception ex)
                 {
