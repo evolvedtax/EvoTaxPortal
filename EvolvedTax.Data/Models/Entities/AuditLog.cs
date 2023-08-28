@@ -18,6 +18,7 @@ namespace EvolvedTax.Data.Models.Entities
         public string OldValue { get; set; }
 
         public string NewValue { get; set; }
+        public string Category { get; set; }
 
         [StringLength(255)]
         public string CreatedBy { get; set; }

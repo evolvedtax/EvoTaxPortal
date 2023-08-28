@@ -926,7 +926,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
         }
-        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText, int EntityId)
+        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText, int EntityId,string Category)
         {
             var auditLog = new AuditLog
             {
@@ -934,7 +934,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                 Action = buttonText,
                 CreatedAt = DateTime.Now,
                 CreatedBy = CreatedBy,
-                EntityId = EntityId
+                EntityId = EntityId,
+                Category= Category  
             };
 
             _evolvedtaxContext.AuditLog.Add(auditLog);

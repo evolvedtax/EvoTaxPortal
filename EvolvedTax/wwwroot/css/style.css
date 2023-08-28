@@ -4571,6 +4571,7 @@ video {
 }
 .inmodal .modal-body {
   background: #f8fafb;
+  border-radius:1rem;
 }
 .inmodal .modal-header {
   padding: 30px 15px;
@@ -4753,6 +4754,7 @@ body.body-small .footer.fixed {
 .table > thead:first-child > tr:first-child > td,
 .table > thead:first-child > tr:first-child > th {
   border-top: 0;
+  border-color:black;
 }
 .table-bordered {
   border: 1px solid #EBEBEB;
@@ -4784,6 +4786,7 @@ body.body-small .footer.fixed {
   line-height: 1.42857;
   padding: 8px;
   vertical-align: top;
+  border-color:black
 }
 /* PANELS */
 .panel.blank-panel {
@@ -5646,6 +5649,7 @@ _:future,
 body.modal-open .animated {
   animation-fill-mode: initial;
   z-index: inherit;
+  border-radius:1rem;
 }
 /* Show profile dropdown on fixed sidebar */
 body.mini-navbar.fixed-sidebar .profile-element,
