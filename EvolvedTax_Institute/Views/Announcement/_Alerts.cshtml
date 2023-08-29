@@ -1,0 +1,55 @@
+﻿@model List<AlertRequest>
+
+<div class="feed-activity-list">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var alert in Model)
+        {
+            string shortMessage = alert.AlertText.Length > 100 ? alert.AlertText.Substring(0, 100) + "..." : alert.AlertText;
+
+            var currentDate = DateTime.Now;
+            var alertDate = alert.CreatedDate;
+
+            // Calculate the absolute time difference in minutes
+            var timeDifference = (int)Math.Abs((currentDate - alertDate).TotalMinutes);
+            
+
+            string timestamp;
+
+            if (timeDifference < 60)
+            {
+                // Less than an hour ago
+                timestamp = $"{timeDifference}m ago";
+            }
+            else if (timeDifference < 1440)
+            {
+                // Less than a day ago
+                timestamp = $"{(int)(timeDifference / 60)}h ago";
+            }
+            else
+            {
+                // Older than a day, display the full date and time
+                timestamp = alert.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy");
+            }
+
+            <div class="feed-element">
+                <div>
+                    <small class="float-right text-navy">@timestamp</small>
+                    <strong>@alert.Title</strong>
+                    <div>@shortMessage</div>
+                    <small class="text-muted">
+                        @alert.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy") -
+                        
+                    </small>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No alerts found.</p>
+    }
+</div>
+
+
+

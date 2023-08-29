@@ -1,0 +1,249 @@
+﻿@model FormRequest
+@{
+    var fgh = 45;
+    var sd = Model;
+}
+<div class="tab" data-tab-index="0" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "0") ? "style='display: block;'" : "style='display: none;'")>
+    <div class="text-center"><span><p>Identification of Beneficial Owner</p></span></div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Name of individual or organization that is the beneficial owner<span class="text-danger">*</span></label>
+                    <input asp-for="GQOrgName" type="text" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Type of Entity<span class="text-danger">*</span></label>
+                    <select asp-for="TypeOfEntityForW8ECI" asp-items="ViewBag.TypeOfEntityW8ECI" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country of incorporation or organization<span class="text-danger">*</span></label>
+                    <select asp-for="CountryOfIncorporation" asp-items="ViewBag.CountriesListW8" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lbl_TypeofTaxNumber">
+                        <div class="form-check abc-radio abc-radio-info form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineRadio5" value="S" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber">
+                            <label class="form-check-label" for="inlineRadio5">SSN or ITIN </label>
+                        </div>
+                        <div class="form-check abc-radio form-check-inline" style="margin-right: 0px;">
+                            <input class="form-check-input" type="radio" id="inlineRadio7" value="E" onclick="ChangeMaskingW8ECI(this)" asp-for="TypeofTaxNumber" checked>
+                            <label class="form-check-label" for="inlineRadio7">EIN</label>
+                        </div>
+                    </label>
+                    <input id="SsnitneinDQW8ECI" asp-for="Ssnitnein" type="text" class="form-control">
+                    <span asp-validation-for="Ssnitnein" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="DEW8ECI1" value="true" checked="@(Model.DEW8ECI ? "checked" : null)"
+                               asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                        <label class="form-check-label" for="DEW8ECI1"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="DEW8ECI2" value="false" checked="@(Model.DEW8ECI ? null : "checked")"
+                               asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                        <label class="form-check-label" for="DEW8ECI2"> No </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
+                    <label>Name of disregarded entity receiving the payments (if applicable)</label>
+                    <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab" data-tab-index="1" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "1") ? "style='display: block;'" : "style='display: none;'")>
+    <div class="text-center">
+        <span><p>Permanent residence address</p></span><br />
+    </div>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="country" asp-for="MCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span> ( <strong>Do not use a P.O. box or in-care-of address</strong>)</label>
+                    <input id="adreess1" asp-for="MAddress1" type="text" class="form-control" required>
+                    <span asp-validation-for="MAddress1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2" asp-for="MAddress2" type="text" class="form-control">
+                    <span asp-validation-for="MAddress2" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="city" asp-for="MCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="stateDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="state" asp-items="ViewBag.StatesList" asp-for="MState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provinceDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="province" asp-for="MProvince" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCode">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCode" asp-for="MZipCode" type="text" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="businessCheckboxDiv" class="mt-3 mb-3 ml-4">
+        <input id="SamePermAddress" type="checkbox" checked onChange="HideAddress(this)" name="SamePermAddress" class=""> Business address is the same as the permanent residence address
+    </div>
+    <div id="businessAddressHeading" class="ml-4" hidden>
+        <text>Business address in the United States</text>
+    </div>
+    <div id="SamePermAddressDiv" class="form-box" hidden>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Country <span class="text-danger">*</span></label>
+                    <select id="countryPerm" asp-for="PCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvincePerm(this)" class="select2" required>
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 1 <span class="text-danger">*</span> ( <strong>Do not use a P.O. box or in-care-of address</strong>)</label>
+                    <input id="adreess1Perm" asp-for="PAddress1" type="text" class="form-control" required>
+                    <span asp-validation-for="PAddress1" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Address Line 2</label>
+                    <input id="adreess2Perm" asp-for="PAddress2" type="text" class="form-control">
+                    <span asp-validation-for="PAddress2" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>City <span class="text-danger">*</span></label>
+                    <input id="cityPerm" asp-for="PCity" type="text" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="statePermDiv" class="form-group" hidden>
+                    <label>State </label>
+                    <select id="statePerm" asp-items="ViewBag.StatesList" asp-for="PState" class="select2">
+                        <option></option>
+                    </select>
+                </div>
+                <div id="provincePermDiv" class="form-group">
+                    <label>Province</label>
+                    <input id="provincePerm" name="provincePerm" type="text" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label id="lblZipCodePerm">Zip/Postal Code <span class="text-danger"> *</span></label>
+                    <input id="zipCodePerm" asp-for="PZipCode" type="text" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="tab">
+    <div class="text-center"><span><p>Additional Information</p></span></div>
+    <div class="form-box">
+        <div class="col-md-6">
+            <label>Are you a disregarded entity (DE) receiving the payments (if applicable)?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI1" value="true"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)">
+                    <label class="form-check-label" for="DEW8ECI1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="DEW8ECI2" value="false"
+                           asp-for="DEW8ECI" onchange="SelectDEW8ECIEntity(this)" checked>
+                    <label class="form-check-label" for="DEW8ECI2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group" id="DeW8ECIEntityOwnerNameDiv" hidden>
+                <label>Name of disregarded entity receiving the payments (if applicable)</label>
+                <input id="DEOwnerNameW8ECI" asp-for="DEOwnerNameW8ECI" type="text" class="form-control">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label>Is a foreign Tax Identification Number (FTIN) legally required for you?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="LegallyReq1" value="true" onclick="ShowHideFTIN(this)"
+                           asp-for="LegallyRequired" />
+                    <label class="form-check-label" for="LegallyReq1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="LegallyReq2" value="false" onclick="ShowHideFTIN(this)"
+                           asp-for="LegallyRequired" />
+                    <label class="form-check-label" for="LegallyReq2"> No </label>
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.LegallyRequired, new { id = "LegallyRequired" })
+        </div>
+        <div class="col-md-6">
+            <div id="FTINDiv" class="form-group" hidden>
+                <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                <input id="FTIN" type="text" asp-for=ForeignTaxIdentifyingNumber class="form-control">
+            </div>
+        </div>
+    </div>
+    <div id="AuthSignatoryNameDiv" class="col-md-6" hidden>
+        <div class="form-group">
+            <label>Please enter the name of the authorized signatory<span class="text-danger"> *</span></label>
+            <input asp-for="AuthSignatoryName" class="form-control" required />
+        </div>
+    </div>
+</div>
+*@

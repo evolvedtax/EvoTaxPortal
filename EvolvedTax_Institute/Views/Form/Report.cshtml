@@ -1,0 +1,170 @@
+﻿@inject IHttpContextAccessor _httpContextAccessor
+@model IQueryable<InstituteClientResponse>
+@{
+    ViewData["Title"] = "W8(s)/W9(s)";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+    var formTypes = ViewBag.FormTypes as List<string>;
+}
+<style>
+    .center-dropdown {
+        left: -313% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: none;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+    </style>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <form id="myForm" method="post" action="/Form/Report" class="form-inline">
+                        <div class="form-group">
+                            <label for="formType" class="mr-2">Select Form Name:</label>
+                            <select id="formType" name="formType" class="form-control">
+                                <option value="">Please Select</option>
+                                @foreach (var formType in formTypes)
+                                {
+                                    <option value="@formType">@formType</option>
+                                }
+                            </select>
+
+                            <!-- Add some space using a class or inline style -->
+                            <label for="Entities" class="mr-2 ml-2">Select Entities:</label>
+                            <select id="Entities" name="Entities" asp-items="ViewBag.EntitiesList">
+                                <option value="">Please Select</option>
+                            </select>
+
+                            <!-- Add some space using inline style -->
+                            <label for="Status" class="mr-2" style="margin-left: 10px;">Select Completion Status:</label>
+                            <select id="Status" name="Status">
+                                <option value="">Please Select</option>
+                                <option value="1">Non-Filled</option>
+                                <option value="3">Filled</option>
+                            </select>
+
+                            <input type="submit" class="btn btn-primary ml-2" value="Search" />
+                            <button type="button" class="btn btn-secondary ml-2" id="resetButton">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+                <div class="ibox-content">
+
+                    <table class="table table-striped table-bordered table-hover dataTables-example">
+                        <thead>
+                            <tr>
+                                <th>Entity Name</th>
+                                <th>Partner Name</th>
+                                <th>Official Email</th>
+                                <th>Contact Number</th>
+                                <th>Form Completed</th>
+                                <th>Form Completion Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.EntityName</td>
+
+                                        <td>@string.Concat(item.PartnerName1," ",item.PartnerName2)</td>
+                                        <td>@item.ClientEmailId</td>
+                                        <td>@item.PhoneNumber</td>
+                                        <td><a href="~/@item.FileName">@item.FileName</a></td>
+                                        <td>@item.ClientStatusDate?.ToString("MM-dd-yyyy")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+
+        // Upgrade button class name
+        $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
+        $(document).ready(function () {
+
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Please Select",
+                //allowClear: true
+            });
+
+            var lastSelectedFormType = '@(TempData["LastSelectedFormType"] as string)';
+            var instituteName = '@(_httpContextAccessor.HttpContext?.Session.GetString("InstituteName"))';
+
+            if (lastSelectedFormType !== '') {
+                $("#formType").val(lastSelectedFormType).change();
+            }
+
+            var LastSelectedEntities = '@(TempData["LastSelectedEntities"] as string)';
+            if (LastSelectedEntities !== '') {
+                $("#Entities").val(LastSelectedEntities).change();
+            }
+
+            var LastSelectedStatus = '@(TempData["LastSelectedStatus"] as string)';
+            if (LastSelectedStatus !== '') {
+                $("#Status").val(LastSelectedStatus).change();
+            }
+
+            $("#resetButton").on("click", function () {
+                window.location.href = window.location.href;
+            });
+         
+            $('.dataTables-example').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: '<i class="fa fa-ellipsis-h"></i>',
+                        className: 'btn-menu-toggle',
+                        buttons: [
+                            {
+                                extend: 'excel',
+                                title: lastSelectedFormType !== '' ? instituteName + '_' + lastSelectedFormType + ' Record' : (instituteName !== '' ? instituteName + ' Partners Data' : 'Default Record'),
+                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                className: 'btn-excel'
+                            }
+                        ],
+                    },
+                ],
+                initComplete: function () {
+                    $('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+
+
+                        dropdown.addClass('center-dropdown');
+                    });
+                }
+
+            });
+        });
+    </script>
+}

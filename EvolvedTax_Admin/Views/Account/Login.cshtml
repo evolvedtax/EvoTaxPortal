@@ -1,0 +1,103 @@
+﻿@model EvolvedTax.Data.Models.DTOs.Request.LoginRequest
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/evolved_tax_mark_logo.ico">
+    <title>@ViewData["Title"] - Login to EvoTax Portal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+    </environment>
+        
+
+</head>
+<body class="white-bg">
+
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div>
+                <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
+                <h3>Welcome to EvoTax Portal</h3>
+            </div>
+            <p class="text-danger">@TempData["Message"]</p>
+            <p>Login in. To see it in action.</p>
+            <form class="m-t" role="form" method="post" asp-action="Login" asp-controller="Account">
+                <div class="form-group">
+                    <input class="form-control" name="UserName" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="Password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                <button type="button" id="createAccountBtn" class="btn btn-primary block full-width m-b">Create Account</button>
+
+                <a href="~/Account/ForgetPassword"><small>Forgot password?</small></a>
+                @*<p class="text-muted text-center"><small>Do not have an account?</small></p>*@
+            </form>
+            <p class="m-t"> <small><strong>Copyright</strong> &copy; EvoTax Portal @DateTime.UtcNow.Year</small> </p>
+        </div>
+    </div>
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+    </environment>
+    <script>
+        COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
+
+        // Handle the click event of the Create Account button
+        document.getElementById("createAccountBtn").addEventListener("click", function () {
+            // Get the current host name
+            var currentHost = window.location.host;
+            // Construct the URL using the current host name
+            var redirectUrl = "https://" + currentHost + "/Account/Signup";
+
+            //window.open(redirectUrl, "_blank");
+            window.location.href = redirectUrl;
+        });
+
+        // Upgrade button class name
+        //$.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
+    </script>
+</body>
+</html>

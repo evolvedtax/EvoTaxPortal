@@ -134,6 +134,8 @@ namespace EvolvedTax.Business.Services.UserService
                 State = request.SUMState,
                 Zip = request.SUMZip,
                 Province = request.SUMProvince,
+                EmailConfirmed = true,
+                TwoFactorEnabled = true,
             };
 
             await _evolvedtaxContext.InstituteMasters.AddAsync(model);
