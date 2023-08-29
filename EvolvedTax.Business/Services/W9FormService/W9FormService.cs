@@ -59,6 +59,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            request.Id = model.Id;
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -94,6 +95,8 @@ namespace EvolvedTax.Business.Services.W9FormService
             }
             _evolvedtaxContext.TblW9forms.Add(model);
             _evolvedtaxContext.SaveChanges();
+
+            request.Id = model.Id;
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -106,11 +109,11 @@ namespace EvolvedTax.Business.Services.W9FormService
             string newFile1 = string.Empty;
             if (request.IndividualOrEntityStatus == AppConstants.IndividualStatus)
             {
-                newFile1 = string.Concat(string.Concat(request.GQFirstName, " ", request.GQLastName).Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", Guid.NewGuid(), "_temp.pdf");
+                newFile1 = string.Concat(string.Concat(request.GQFirstName, " ", request.GQLastName).Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", request.Id, "_temp.pdf");
             }
             else
             {
-                newFile1 = string.Concat(request.GQOrgName.Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", Guid.NewGuid(), "_temp.pdf");
+                newFile1 = string.Concat(request.GQOrgName.Replace(" ", "_"), "_", "Form_", AppConstants.W9Form, "_", request.Id, "_temp.pdf");
             }
             string newFile = Path.Combine(request.BasePath, newFile1);
 
@@ -370,6 +373,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             var response = _evolvedtaxContext.TblW9forms.FirstOrDefault(p => p.W9emailAddress == request.EmailId);
             if (response != null)
             {
+                request.Id = response.Id;
                 response.Name = string.Concat(request.GQFirstName, " ", request.GQLastName);
                 response.BusinessEntity = "";
                 response.FederalTaxClassification = "";
@@ -399,6 +403,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             var response = _evolvedtaxContext.TblW9forms.FirstOrDefault(p => p.W9emailAddress == request.EmailId);
             if (response != null)
             {
+                request.Id = response.Id;
                 response.Name = "";
                 response.BusinessEntity = request.GQOrgName;
                 response.FederalTaxClassification = "";

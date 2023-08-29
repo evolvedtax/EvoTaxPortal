@@ -485,9 +485,12 @@
         });
         function ajaxsuccess(response) {
             if (response.status == false) {
+                debugger;
                 COMMON.notification(2, "There's some technical issue");
                 return;
             }
+            debugger;
+            console.log(response.fileName);
             //$('.ibox').prop('hidden', true);
             $('.prevBtn').prop('hidden', true);
             $('#certifyDiv').empty();
@@ -511,7 +514,8 @@
 
             var disclaimerText = $("<span>")
                 .text("If you need to make any changes or have any inquiries regarding your submitted form, please reach out to N Tech dedicated support team at ")
-
+            
+                debugger;
 
             var emailLink = $("<a>")
                 .attr("href", "mailto:" + instituteEmail)
@@ -523,6 +527,7 @@
             // Re-render the PDF without annotations
             var pdfObject = '<object data="/' + response.fileName + '" type="application/pdf" width="100%" height="800px"></object>';
             $('#contentContainer').html(pdfObject);
+            console.log(response.fileName);
         }
 
         function openFile(fileName) {
