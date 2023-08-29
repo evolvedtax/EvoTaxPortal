@@ -29,6 +29,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
         {
             var model = new TblW8benform
             {
+
                 NameOfIndividual = request.NameOfIndividual,
                 City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode),
                 ArticleAndParagraph = request.ArticleAndParagraph,
@@ -64,10 +65,13 @@ namespace EvolvedTax.Business.Services.W8BenFormService
             }
             if (_evolvedtaxContext.TblW8benforms.Any(p => p.W8benemailAddress == request.EmailId))
             {
+                var data = _evolvedtaxContext.TblW8benforms.FirstOrDefault(p => p.W8benemailAddress == request.EmailId);
+                request.Id = data.Id;
                 return Update(request);
             }
             _evolvedtaxContext.TblW8benforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            request.Id = model.Id;
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -77,7 +81,7 @@ namespace EvolvedTax.Business.Services.W8BenFormService
         protected static string W8BenCreation(FormRequest request)
         {
             string templatefile = request.TemplateFilePath;
-            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_", AppConstants.W8BENForm, "_", Guid.NewGuid(), "_temp.pdf");
+            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_", AppConstants.W8BENForm, "_", request.Id, "_temp.pdf");
             string newFile = Path.Combine(request.BasePath, fileName);
             PdfReader pdfReader = new PdfReader(templatefile);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));

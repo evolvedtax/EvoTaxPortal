@@ -58,6 +58,8 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             }
             _evolvedtaxContext.TblW8ebeneforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            request.Id = model.Id;
+
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -67,7 +69,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
         protected static string W8BENECreationForEntity(W8BENERequest request)
         {
             string templatefile = request.TemplateFilePath;
-            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_", AppConstants.W8BENEForm, "_", Guid.NewGuid(), "_temp.pdf");
+            string fileName = string.Concat(request.NameOfIndividual?.Replace(" ", "_"), "_", "Form_", AppConstants.W8BENEForm, "_", request.Id, "_temp.pdf");
             string newFile = Path.Combine(request.BasePath, fileName);
             PdfReader pdfReader = new PdfReader(templatefile);
             int numberOfPages = pdfReader.NumberOfPages;
@@ -2273,6 +2275,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             var response = _evolvedtaxContext.TblW8ebeneforms.FirstOrDefault(p => p.W8beneemailAddress == request.EmailId);
             if (response != null)
             {
+                request.Id = response.Id;
                 response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
                 response.MailingAddress = string.Concat(request.MAddress1, " ", request.MAddress2);
                 response.MCity = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);

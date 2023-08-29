@@ -1,0 +1,46 @@
+﻿@model AnnouncementRequest
+
+@{
+    ViewData["Title"] = "Announcement";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<div class="ibox-content">
+
+    <form asp-action="PostAnnouncement" asp-controller="Announcement" method="post">
+ 
+        <div>
+  
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input class="form-control" asp-for="Title" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Announcement End Date</label>
+                        <input id="SURegistrationDate" type="date" asp-for="EndDate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea class="form-control" asp-for="Message" rows="4" required></textarea>
+
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+
+
+
+
