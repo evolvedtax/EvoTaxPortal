@@ -421,7 +421,6 @@ namespace EvolvedTax.Controllers
         // GET: AccountController/Login
         public async Task<ActionResult> Verify(string s, string e)
         {
-           
             var user = await _userManager.FindByEmailAsync(e);
             if (user == null)
                 return View("Error");
