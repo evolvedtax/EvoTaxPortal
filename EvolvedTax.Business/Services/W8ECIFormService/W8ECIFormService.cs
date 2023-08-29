@@ -130,6 +130,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             };
             if (_evolvedtaxContext.TblW8eciforms.Any(p => p.W8eciemailAddress == request.EmailId))
             {
+                var data = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == request.EmailId);
+                request.Id = data.Id;
                 return UpdateForIndividual(request);
             }
             _evolvedtaxContext.TblW8eciforms.Add(model);
