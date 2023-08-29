@@ -130,10 +130,13 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             };
             if (_evolvedtaxContext.TblW8eciforms.Any(p => p.W8eciemailAddress == request.EmailId))
             {
+                var data = _evolvedtaxContext.TblW8eciforms.FirstOrDefault(p => p.W8eciemailAddress == request.EmailId);
+                request.Id = data.Id;
                 return UpdateForIndividual(request);
             }
             _evolvedtaxContext.TblW8eciforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            request.Id = model.Id;
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -248,6 +251,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             }
             _evolvedtaxContext.TblW8eciforms.Add(model);
             _evolvedtaxContext.SaveChanges();
+            request.Id = model.Id;
             if (request.IsPartialSave)
             {
                 return AppConstants.FormPartiallySave;
@@ -258,7 +262,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         {
             request.TypeOfEntity = "8";
             string templatefile = request.TemplateFilePath;
-            string fileName = string.Concat(request.NameOfIndividualW8ECI?.Replace(" ", "_"), "_", "Form_", AppConstants.W8ECIForm, "_", Guid.NewGuid(), "_temp.pdf");
+            string fileName = string.Concat(request.NameOfIndividualW8ECI?.Replace(" ", "_"), "_", "Form_", AppConstants.W8ECIForm, "_", request.Id, "_temp.pdf");
             string newFile = Path.Combine(request.BasePath, fileName);
             PdfReader pdfReader = new PdfReader(templatefile);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
@@ -607,7 +611,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
         protected static string W8ECICreationForEntity(FormRequest request, string Items1stLine, string Items2ndLine, string Items3rdLine)
         {
             string templatefile = request.TemplateFilePath;
-            string fileName = string.Concat(request.GQOrgName?.Replace(" ", "_"), "_", "Form_", AppConstants.W8ECIForm, "_", Guid.NewGuid(), "_temp.pdf");
+            string fileName = string.Concat(request.GQOrgName?.Replace(" ", "_"), "_", "Form_", AppConstants.W8ECIForm, "_", request.Id, "_temp.pdf");
             string newFile = Path.Combine(request.BasePath, fileName);
             PdfReader pdfReader = new PdfReader(templatefile);
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFile, FileMode.Create));
@@ -1084,7 +1088,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                     } while (startindex < Endline3);
                     Items3rdLine = items.Substring(line1 + line2, line3) ?? string.Empty;
                 }
-
+                request.Id = response.Id;
                 response.NameOfIndividual = request.NameOfIndividualW8ECI;
                 response.CountryOfIncorporation = "";
                 response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);
@@ -1196,7 +1200,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                     } while (startindex < Endline3);
                     Items3rdLine = items.Substring(line1 + line2, line3) ?? string.Empty;
                 }
-
+                request.Id = response.Id;
                 response.NameOfIndividual = request.GQOrgName;
                 response.CountryOfIncorporation = request.CountryOfIncorporation;
                 response.City = string.Concat(request.PCity, ", ", request.PState ?? request.PProvince, ", ", request.PZipCode);

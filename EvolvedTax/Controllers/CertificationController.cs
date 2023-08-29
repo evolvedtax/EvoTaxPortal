@@ -190,6 +190,9 @@ namespace EvolvedTax.Controllers
             return View(buttonRequest);
         }
 
+
+
+
         public async Task<IActionResult> Certify(PdfFormDetailsRequest request)
         {
             var oldFile = request.FileName;
@@ -201,6 +204,67 @@ namespace EvolvedTax.Controllers
             {
                 return Json(new { staus = false });
             }
+          
+
+            request.FileName = _commonService.RemoveAnnotations(request.FileName);
+
+            var OldFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName);
+            var newFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName.Replace("_new", ""));
+            request.FileName = request.FileName.Replace("_new", "");
+            // Remove "_new" from the file name
+
+            //request.FileName = "output.pdf";
+            var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
+            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).SupportEmail ?? string.Empty;
+            HttpContext.Session.SetString("FormName", string.Empty);
+            var AuthSigName = HttpContext.Session.GetString("ClientNameSig");
+            if (!string.IsNullOrEmpty(AuthSigName))
+            {
+                request.PrintName = AuthSigName;
+            }
+
+            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, oldFile)))
+            {
+                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
+            }
+
+            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, copyFile)))
+            {
+                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, copyFile));
+            }
+
+
+            string folderName = request.FormName.ToString();
+            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, folderName);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string destinationFilePath = "";
+
+            // Rename the file in the folder
+            if (System.IO.File.Exists(OldFileName))
+            {
+                System.IO.File.Move(OldFileName, newFileName);
+
+                // Construct the subfolder path and file name
+                string subfolderPath = folderName;
+                string fileName = Path.GetFileName(newFileName);
+
+                destinationFilePath = Path.Combine(subfolderPath, fileName);
+
+                // Move the renamed file to the form folder
+                System.IO.File.Move(newFileName, Path.Combine(_webHostEnvironment.WebRootPath, destinationFilePath));
+            }
+
+            // Save the subfolder path and file name in the database
+            // Save 'destinationFilePath' in your database
+
+            // Update the request.FileName to just the filename
+            request.FileName = destinationFilePath;
+
             if (request.FormName == AppConstants.W9Form)
             {
                 await _w9FormService.UpdateByClientEmailId(clientEmail, request);
@@ -236,38 +300,7 @@ namespace EvolvedTax.Controllers
                 return Json(new { staus = false });
             }
 
-            request.FileName = _commonService.RemoveAnnotations(request.FileName);
 
-            var OldFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName);
-            var newFileName = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName.Replace("_new", ""));
-            request.FileName = request.FileName.Replace("_new", "");
-            // Remove "_new" from the file name
-
-            //request.FileName = "output.pdf";
-            var EntityName = _instituteService.GetEntityDataByClientEmailId(clientEmail).EntityName;
-            var InstituteEmail = _instituteService.GetInstituteDataByClientEmailId(clientEmail).SupportEmail ?? string.Empty;
-            HttpContext.Session.SetString("FormName", string.Empty);
-            var AuthSigName = HttpContext.Session.GetString("ClientNameSig");
-            if (!string.IsNullOrEmpty(AuthSigName))
-            {
-                request.PrintName = AuthSigName;
-            }
-
-            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, oldFile)))
-            {
-                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, oldFile));
-            }
-
-            if (System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, copyFile)))
-            {
-                System.IO.File.Delete(Path.Combine(_webHostEnvironment.WebRootPath, copyFile));
-            }
-           
-            // Rename the file in the folder
-            if (System.IO.File.Exists(OldFileName))
-            {
-                System.IO.File.Move(OldFileName, newFileName);
-            }
             return Json(new { fileName = request.FileName, staus = true, entityName = EntityName, printName = request.PrintName, formName = request.FormName, InstituteEmail = InstituteEmail }); ;
         }
         public IActionResult DownloadForm(string clientEmail)
