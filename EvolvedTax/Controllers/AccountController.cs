@@ -421,7 +421,7 @@ namespace EvolvedTax.Controllers
         // GET: AccountController/Login
         public async Task<ActionResult> Verify(string s, string e)
         {
-            s = s.Replace("+", "");
+           
             var user = await _userManager.FindByEmailAsync(e);
             if (user == null)
                 return View("Error");
@@ -552,7 +552,7 @@ namespace EvolvedTax.Controllers
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
             // for local email otp 
-            user.Email = "niqbal@mailinator.com";
+            //user.Email = "niqbal@mailinator.com";
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
