@@ -4754,7 +4754,7 @@ body.body-small .footer.fixed {
 .table > thead:first-child > tr:first-child > td,
 .table > thead:first-child > tr:first-child > th {
   border-top: 0;
-  border-color:black;
+  border-color:#1ab394;
 }
 .table-bordered {
   border: 1px solid #EBEBEB;
@@ -4786,7 +4786,7 @@ body.body-small .footer.fixed {
   line-height: 1.42857;
   padding: 8px;
   vertical-align: top;
-  border-color:black
+  border-color:#1ab394
 }
 /* PANELS */
 .panel.blank-panel {

@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         .AddCookie(options =>
         {
             options.AccessDeniedPath = "/Account/AccessDenied?statusCode={0}";
-            options.LoginPath = "/Account/Login/"; // auth redirect
+            options.LoginPath = "/Admin/Login/"; // auth redirect
             options.ExpireTimeSpan = new TimeSpan(1, 0, 0, 0);
         });
 builder.Services.AddSession();
@@ -77,8 +77,8 @@ app.UseSession();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-       name: "Account",
-       pattern: "{controller=Account}/{action=Login}");
+       name: "Admin",
+       pattern: "{controller=Admin}/{action=Login}");
     endpoints.MapRazorPages();
 });
 #pragma warning restore ASP0014 // Suggest using top level route registrations

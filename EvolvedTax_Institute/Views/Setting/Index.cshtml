@@ -76,13 +76,7 @@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-3">Email Reminder</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
-                            @if (User.IsInRole("SuperAdmin"))
-                            {
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-6">Email Setting</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-7">Bounced Emails</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-9">Pending Approvals @if (Model.InstituteRequestNameChangeResponses.Any()) { <span style="color:red"> (@Model.InstituteRequestNameChangeResponses.Count())</span> }</a></li>
-                            }
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
                         </ul>
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
@@ -364,133 +358,11 @@
                                     @Html.Raw(ViewData["UserManagement"])
                                 </div>
                             </div>
-                            @if (User.IsInRole("SuperAdmin"))
-                            {
-                                <div id="tab-6" class="tab-pane">
-                                    <div class="panel-body">
-                                        <form id="formEmailSetting" style="width:100%"
-                                              method="post"
-                                              data-ajax="true"
-                                              data-ajax-method="post"
-                                              data-ajax-mode="replace"
-                                              data-ajax-failure="COMMON.ajaxfailure"
-                                              data-ajax-loading="#ajax-loader"
-                                              data-ajax-success="ajaxsuccessEmailSetting"
-                                              data-ajax-url="@Url.Action("EmailSetting","Setting")">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Domain Email Address</label>
-                                                        <input class="form-control" asp-for="EmailSettingRequest.EmailDoamin" required>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Password</label>
-                                                        <input class="form-control" type="password" asp-for="EmailSettingRequest.Password" required>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <section class="wrapper-sec">
-                                                <header class="float">
-                                                    <h4>Outgoing Server</h4>
-                                                </header>
-                                                <div class="row" style="margin:20px">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>SMTP Server</label>
-                                                            <input class="form-control" asp-for="EmailSettingRequest.SMTPServer" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Port Number</label>
-                                                            <input class="form-control" asp-for="EmailSettingRequest.SMTPPort" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
-
-                                            <section class="wrapper-sec mt-4">
-                                                <header class="float">
-                                                    <h4>Incoming Server</h4>
-                                                </header>
-                                                <div class="row" style="margin:20px">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>POP Server</label>
-                                                            <input class="form-control" asp-for="EmailSettingRequest.POPServer">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Port Number</label>
-                                                            <input class="form-control" asp-for="EmailSettingRequest.POPPort">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </section>
-                                            <div class="pull-right mt-2">
-                                                <button type="button" id="submitEmailSetting" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                            <div id="tab-8" class="tab-pane">
+                                <div class="panel-body">
+                                    @Html.Raw(ViewData["TransactionHistory"])
                                 </div>
-                                <div id="tab-7" class="tab-pane">
-                                    <div class="panel-body">
-                                    </div>
-                                </div>
-                                <div id="tab-8" class="tab-pane">
-                                    <div class="panel-body">
-                                        @Html.Raw(ViewData["TransactionHistory"])
-                                    </div>
-                                </div>
-                                <div id="tab-9" class="tab-pane">
-                                    <div class="panel-body">
-                                        <div class="table-responsive">
-                                            <table id="requestNameChangetable" class="table table-striped table-bordered table-hover dataTables-example">
-                                                <thead>
-                                                    <tr>
-                                                        <th>User Admin</th>
-                                                        <th>Old Name</th>
-                                                        <th>New Name</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (Model.InstituteRequestNameChangeResponses.Any())
-                                                    {
-                                                        foreach (var item in Model.InstituteRequestNameChangeResponses)
-                                                        {
-                                                            <tr>
-                                                                <td>@item.UserName</td>
-                                                                <td>@item.OldName</td>
-                                                                <td>@item.NewName</td>
-                                                                <td>@item.IsApproved.ToString()</td>
-                                                                <td class="actions">
-                                                                    <div class="dropdown">
-                                                                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                            <span class="fa fa-bars"></span>
-                                                                        </button>
-                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                            <div class="dropdown-menu-horizontal">
-                                                                                <a class="dropdown-item" href="javascript:void()" onclick="confirmAlertActive(@item?.Id,'@RequestChangeNameStatusEnum.Approved')">Approved</a>
-                                                                                <a class="dropdown-item" href="javascript:void()" onclick="confirmAlertActive(@item?.Id,'@RequestChangeNameStatusEnum.Rejected')">Reject</a>
-                                                                                @*<a class="dropdown-item" href="javascript:void()" data-row-id="@item?.Id">History</a>*@
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        }
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>

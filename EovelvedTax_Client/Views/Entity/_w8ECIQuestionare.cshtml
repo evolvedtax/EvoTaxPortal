@@ -1,0 +1,73 @@
+﻿@model FormRequest
+
+<div id="W8ECIQuestionareDiv" class="tab" data-tab-index="2" @(Model != null && (string.IsNullOrEmpty(Model.activeTabIndex) || Model.activeTabIndex == "2") ? "style='display: block;'" : "style='display: none;'")>
+    <h4>W-8ECI (Certificate of Foreign Person's Claim That Income Is Effectively Connected with the Conduct of a Trade or Business in the United States)</h4>
+    <div class="form-box">
+        <div class="row">
+            <div class="col-md-6">
+                <label>Is a foreign Tax Identification Number(FTIN) legally required for you?</label>
+                <div class="form-group">
+                    <div class="form-check abc-radio abc-radio-info form-check-inline">
+                        <input class="form-check-input" type="radio" id="inlineRadio6" value="true" onclick="ShowHideFTINW8ECI(this)" asp-for="CheckIfFtinNotLegallyRequiredYNW8ECI" checked="@(Model.CheckIfFtinNotLegallyRequiredYNW8ECI ? "checked" : null)">
+                        <label class="form-check-label" for="inlineRadio6"> Yes </label>
+                    </div>
+                    <div class="form-check abc-radio form-check-inline">
+                        <input class="form-check-input" type="radio" id="inlineRadio5" value="false" onclick="ShowHideFTINW8ECI(this)" asp-for="CheckIfFtinNotLegallyRequiredYNW8ECI" checked="@(Model.CheckIfFtinNotLegallyRequiredYNW8ECI ? null : "checked")">
+                        <label class="form-check-label" for="inlineRadio5"> No </label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="FTINW8ECIDiv" class="form-group" hidden>
+                    <label>Please enter your Foreign Tax Identification Number (FTIN)</label>
+                    <input id="ForeignTaxIdentifyingNumberW8ECI" type="text" asp-for=ForeignTaxIdentifyingNumberW8ECI class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Reference number(s)</label>
+                    <input type="text" asp-for=ReferenceNumberSW8ECI title="Reference number refers to the name and account number of the disregarded entity to which a payment is made or credited. However, if the account receiving payment is not under the name of the disregarded entity this question is not applicable." class="form-control">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Specify each item of income that is, or is expected to be, received from the payer that is effectively connected with the conduct of a trade or business in the United States.</label>
+                    <textarea id="Items" asp-for=Items class="form-control" maxlength="342" required></textarea>
+                    <span id="textCounter" style="color:crimson"></span>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-check inline">
+                        <input class="form-check-input" asp-for=DealerCertification type="checkbox">
+                        <label class="form-check-label">
+                            Check here to certify that: you are a dealer in securities (as defined in section 475(c)(1)); you are a transferor of an interest in a publicly traded partnership (PTP) claiming an exception from withholding under Regulations section 1.1446(f)-4(b)(6); and any gain from the transfer of the PTP interest associated
+                            with this form is effectively connected with the conduct of a trade or business within the United States without regard to section 864(c)(8)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-box">
+        <div class="col-md-12">
+            <label>Are you signing this form on behalf of another person? If so, are you certified to do so?</label>
+            <div class="form-group">
+                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName1" value="true" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required >
+                    <label class="form-check-label" for="W8ECIOnBehalfName1"> Yes </label>
+                </div>
+                <div class="form-check abc-radio form-check-inline">
+                    <input class="form-check-input" type="radio" id="W8ECIOnBehalfName2" value="false" onclick="W8ECIOnBehalfNameFunc(this)" asp-for="W8ECIOnBehalfName" required >
+                    <label class="form-check-label" for="W8ECIOnBehalfName2"> No </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="W8ECIOnBehalfNameDiv" class="form-group" hidden>
+                <label id="lbl_authSignatory">Please enter the name of the beneficial owner <span class="text-danger">*</span></label>
+                <input asp-for="PrintNameOfSignerW8ECI" class="form-control" required />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<partial name="@Model.ViewName" model="@Model.Model" />
+
+@if (Model.success)
+{
+    <script>
+        $(function () {
+            var modal = $("#generic_modal");
+            if (modal && modal.length > 0) {
+                modal.modal('hide');
+            }            
+            ERP_BASE.dataTableInitialization();
+            toastr.success('@Model.Message');
+        });
+    </script>
+}
+else
+{
+    <script>
+        $(function () {
+            ERP_BASE.dataTableInitialization();
+            toastr.error('@Model.Message');
+         });
+    </script>
+}

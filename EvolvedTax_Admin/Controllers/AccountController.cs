@@ -58,10 +58,10 @@ namespace EvolvedTax_Admin.Controllers
 
         [HttpGet]
         // GET: AccountController/Login
-        public ActionResult Login()
-        {
-            return View();
-        }
+        //public ActionResult Login()
+        //{
+        //    return View();
+        //}
         [HttpPost]
         // POST: AccountController/Login
         public async Task<ActionResult> Login(LoginRequest userDTO, string? returnUrl = null)
@@ -75,7 +75,6 @@ namespace EvolvedTax_Admin.Controllers
             //await _userService.AddRoles();
             if (ModelState.IsValid && !IsSuperAdmin)
             {
-                //var response = await _userService.Login(userDTO);
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
                 if (result.Succeeded)
                 {
@@ -86,18 +85,6 @@ namespace EvolvedTax_Admin.Controllers
                     HttpContext.Session.SetString("EmailId", userDTO.UserName);
                     return RedirectToAction(nameof(Auth), new { returnUrl = returnUrl });
                 }
-                //if (result.Succeeded)
-                //{
-                //    HttpContext.Session.SetString("EmailId", response.EmailId);
-                //    var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
-                //    var totp = new Totp(bytes);
-                //    var otp = totp.ComputeTotp();
-
-                //    await _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoTax Portal", response.UserName, "");
-                //    _userService.UpdateInstituteMasterOTP(response.EmailId, otp, DateTime.Now.AddMinutes(60));
-
-                //    return RedirectToAction(nameof(Auth));
-                //}
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error
             TempData["Message"] = "Username or password is incorrect!";
