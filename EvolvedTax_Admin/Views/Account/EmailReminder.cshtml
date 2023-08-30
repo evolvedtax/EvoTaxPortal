@@ -1,0 +1,100 @@
+﻿@model InstituteMasterRequest
+@{
+    ViewData["Title"] = "Email Reminder";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+
+    .hide-counter::-webkit-inner-spin-button {
+        display: none;
+    }
+</style>
+<div class="ibox-content">
+    <!-- User Guidance -->
+    <p>
+        This feature is a powerful tool designed to streamline the process of collecting tax-related information from investors. This feature aims to alleviate the administrative burden and ensure compliance by automatically sending reminder emails to investors who haven't yet completed or submitted the requested tax forms.
+    </p>
+    <p>
+        If you wish to customize the frequency of reminder emails for each entity, please follow these steps:
+    </p>
+    <ol>
+        <li>Uncheck the box here to disable the automatic reminder emails for all entities.</li>
+        <li>Go inside each entity individually and set the frequency of reminder emails.</li>
+    </ol>
+    <p>
+        This allows you to customize the reminder schedule for each entity according to your preferences and ensure a personalized approach to your communication.
+    </p>
+
+    <br />
+    <br />
+    <!-- Email Reminder Settings Form -->
+    <form asp-action="EmailReminder" asp-controller="Account" method="post" enctype="multipart/form-data">
+
+        <!-- Email Reminder Settings -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @*<label>Set email reminder for all entity</label>*@
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" asp-for="IsEmailFrequency" />
+                            Set Email Reminders For All Entities
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Frequency Setting -->
+        <div class="row" id="emailFrequencyDiv">
+            <div class="col-md-6 d-flex align-items-center">
+                <label class="ml-2 mr-2">Send Email Reminder After Every</label>
+                <input class="form-control hide-counter" min="0" type="number" asp-for="EmailFrequency" style="width:15%; text-align:right">
+                <span class="ml-2 mr-2">days</span>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <!-- Hidden file input control -->
+
+    <script>
+        $(document).ready(function () {
+            // Function to toggle EmailFrequency textbox and its parent div based on checkbox status
+            function toggleEmailFrequencyTextbox() {
+                var checkbox = $("#IsEmailFrequency");
+                var emailFrequencyTextbox = $("#EmailFrequency");
+                var emailFrequencyDiv = $("#emailFrequencyDiv"); // Add the ID of the parent div here
+
+                if (checkbox.is(":checked")) {
+                    emailFrequencyTextbox.prop("disabled", false);
+                    emailFrequencyDiv.show();
+                } else {
+                    emailFrequencyTextbox.prop("disabled", true);
+                    emailFrequencyDiv.hide();
+                }
+            }
+
+            // Call the toggle function on page load
+            toggleEmailFrequencyTextbox();
+
+            // Bind the function to the checkbox change event
+            $("#IsEmailFrequency").on("change", function () {
+                toggleEmailFrequencyTextbox();
+            });
+        });
+    </script>
+
+
+}

@@ -1,0 +1,687 @@
+﻿@using EvolvedTax.Data.Enums;
+@model SettingRequest
+@{
+    ViewData["Title"] = "UserManagement";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+    bool SuperAdminOrAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
+    bool SuperAdminOrAdminOrCoAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Co-Admin");
+}
+<style>
+    .center-dropdown {
+        left: -312% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .hide-counter::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: none;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+
+    .table-container {
+        position: relative;
+    }
+
+    .dataTables_filter {
+        /*position: absolute;
+                                                                                                                                                                top: 0;
+                                                                                                                                                                left: 15%;*/
+        padding: 0;
+        padding-right: 70%
+    }
+
+    .wrapper-sec {
+        position: relative;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 1ex;
+    }
+
+    .float {
+        position: absolute;
+        top: -1.8ex;
+        left: 10px;
+        padding: 0 10px;
+        background: white;
+        z-index: 1;
+    }
+
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                Settings
+            </div>
+            <div class="ibox-content">
+                <div class="col-lg-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            @if (SuperAdminOrAdmin)
+                            {
+                                <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
+                            }
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Update Profile</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Email Reminder</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            @if (SuperAdminOrAdmin)
+                            {
+                                <div id="tab-1" class="tab-pane active">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <form id="formInviteEmail" style="width:100%"
+                                                  method="post"
+                                                  data-ajax="true"
+                                                  data-ajax-method="post"
+                                                  data-ajax-mode="replace"
+                                                  data-ajax-failure="COMMON.ajaxfailure"
+                                                  data-ajax-loading="#ajax-loader"
+                                                  data-ajax-success="ajaxsuccessInviteEmail"
+                                                  data-ajax-url="@Url.Action("SendInvitaionLink","UserManagement")">
+                                                <div class="col-md-6">
+                                                    <label>Invite co-admins for the account</label>
+                                                    <table id="email" style="width:100%">
+                                                        <partial name="_invitaionEmail" model="new InvitationEmailDetalsRequest()"></partial>
+                                                    </table>
+                                                    <div class="mt-2">
+                                                        <button type="button" id="submitEmInvite" class="btn btn-primary">Invite</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div id="tab-2" class="tab-pane">
+                                <div class="panel-body">
+                                    <form id="formUpdateProfile" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessUpdateProfile"
+                                          data-ajax-url="@Url.Action("UpdateProfile","Account")">
+                                        <input asp-for="InstituteMasterRequest.InstId" hidden />
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Profile Image</label>
+                                                    <div style="display:flex">
+                                                        <div class="form-group mr-4">
+                                                            @if (!string.IsNullOrEmpty(Model.InstituteMasterRequest.InstituteLogo))
+                                                            {
+                                                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/ProfileImage/@Model.InstituteMasterRequest.InstituteLogo" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/images/evolved_tax_mark_logo.png" />
+                                                            }
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <button type="button" class="btn btn-primary" id="changeBtn">Change</button>
+                                                            <button type="button" class="btn btn-dark" id="removeBtn">Remove</button>
+                                                            <div><span>Uploads must be in either jpg or png formats and less than 1 MB.</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>First Name</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.FirstName">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Last Name</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.LastName">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Position</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Position">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label id="requestNameChangeLabel">
+                                                            Institute Name
+                                                            @if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Approved)
+                                                            {
+                                                                <a href='javascript: void()' data-toggle='modal' data-target='#instNameChangeModal'>Request Name Change</a>
+                                                            }
+                                                            else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Pending)
+                                                            {
+                                                                <span style="color:orange">Your request for name change is pending approval.</span>
+                                                            }
+                                                            else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Rejected)
+                                                            {
+                                                                <span style="color:red">Your request for name change is Rejected.</span>
+                                                            }
+                                                        </label>
+                                                        <input class="form-control" id="instituteName" asp-for="InstituteMasterRequest.InstitutionName" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Phone Number</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Phone">
+                                                        <span asp-validation-for="InstituteMasterRequest.Phone"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Country</label>
+                                                        <select asp-for="InstituteMasterRequest.Mcountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Address Line 1</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Madd1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Address Line 2</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Madd2">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>City</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mcity">
+                                                    </div>
+                                                </div>
+                                                <div id="stateDiv" class="col-md-6" hidden>
+                                                    <div class="form-group">
+                                                        <label>State</label>
+                                                        <select asp-items="ViewBag.StatesList" asp-for="InstituteMasterRequest.Mstate" class="select2">
+                                                            <option></option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div id="provinceDiv" class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Province</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mprovince">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label id="lblZipCode">Zip</label>
+                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mzip">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Date Format</label>
+                                                    <select asp-items="ViewBag.DateFormats" asp-for="InstituteMasterRequest.DateFormat" class="select2" required>
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Time zone</label>
+                                                    <select asp-items="ViewBag.TimezonList" asp-for="InstituteMasterRequest.Timezone" class="select2">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="pull-right mt-2">
+                                                <button type="button" id="submitUpdateProfile" class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="profileUpload" asp-for="InstituteMasterRequest.ProfileImage" accept=".jpg, .png" style="display:none">
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane">
+                                <div class="panel-body">
+                                    <!-- User Guidance -->
+                                    <p>
+                                        This feature is a powerful tool designed to streamline the process of collecting tax-related information from investors. This feature aims to alleviate the administrative burden and ensure compliance by automatically sending reminder emails to investors who haven't yet completed or submitted the requested tax forms.
+                                    </p>
+                                    <p>
+                                        If you wish to customize the frequency of reminder emails for each entity, please follow these steps:
+                                    </p>
+                                    <ol>
+                                        <li>Uncheck the box here to disable the automatic reminder emails for all entities.</li>
+                                        <li>Go inside each entity individually and set the frequency of reminder emails.</li>
+                                    </ol>
+                                    <p>
+                                        This allows you to customize the reminder schedule for each entity according to your preferences and ensure a personalized approach to your communication.
+                                    </p>
+
+                                    <br />
+                                    <br />
+                                    <form id="formEmailReminder" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessEmailReminder"
+                                          data-ajax-url="@Url.Action("EmailReminder","Account")">
+
+                                        <!-- Email Reminder Settings Form -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    @*<label>Set email reminder for all entity</label>*@
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="IsEmailFrequency" asp-for="InstituteMasterRequest.IsEmailFrequency" />
+                                                            Set Email Reminders For All Entities
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Email Frequency Setting -->
+                                        <div class="row" id="emailFrequencyDiv">
+                                            <div class="col-md-6 d-flex align-items-center">
+                                                <label class="ml-2 mr-2">Send Email Reminder After Every</label>
+                                                <input class="form-control hide-counter" min="0" id="EmailFrequency" type="number" asp-for="InstituteMasterRequest.EmailFrequency" style="width:15%; text-align:right">
+                                                <span class="ml-2 mr-2">days</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div class="pull-right mt-2">
+                                            <button type="button" id="submitEmailReminder" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane">
+                                <div class="panel-body">
+                                    <form id="formPostAnnouncement" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessPostAnnouncement"
+                                          data-ajax-url="@Url.Action("PostAnnouncement","Announcement")">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Title</label>
+                                                    <input class="form-control" asp-for="AnnouncementRequest.Title" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Announcement End Date</label>
+                                                    <input id="SURegistrationDate" type="date" asp-for="AnnouncementRequest.EndDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Message</label>
+                                                    <textarea class="form-control" asp-for="AnnouncementRequest.Message" rows="4" required></textarea>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="pull-right mt-2">
+                                            <button type="button" id="submitPostAnnouncement" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab-5" class="tab-pane">
+                                <div class="panel-body">
+                                    @Html.Raw(ViewData["UserManagement"])
+                                </div>
+                            </div>
+                            <div id="tab-8" class="tab-pane">
+                                <div class="panel-body">
+                                    @Html.Raw(ViewData["TransactionHistory"])
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Institute Name change Modal -->
+<div class="modal inmodal" id="instNameChangeModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Change Institute Name</h4>
+            </div>
+            <div class="modal-body">
+                <form id="instNameChangeForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessRequestInstituteNameChange"
+                      data-ajax-url="@Url.Action("RequestInstituteName","Institute")">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="partnerName1">Old Institute Name</label>
+                                <input type="text" class="form-control" id="oldInstituteName" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="partnerName1">New Institute Name<span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" name="NewInstituteName" placeholder="Enter new institute name" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Reason<span class="text-danger"> *</span></label>
+                                <textarea class="form-control" name="Comments" placeholder="Why you want to change the institute name. Please give the solid reason." required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveInstNameChangeBtn">Request changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        // Upgrade button class name
+        $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
+        $(document).ready(function () {
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
+            $('#oldInstituteName').val($('#instituteName').val());
+            $('.select2-container').css('width', '100%');
+
+            $('#requestNameChangetable').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+
+                ],
+                initComplete: function () {
+
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+                        dropdown.addClass('center-dropdown');
+                    });
+                }
+            });
+
+            
+            // Function to toggle EmailFrequency textbox and its parent div based on checkbox status
+            function toggleEmailFrequencyTextbox() {
+                var checkbox = $("#IsEmailFrequency");
+                var emailFrequencyTextbox = $("#EmailFrequency");
+                var emailFrequencyDiv = $("#emailFrequencyDiv"); // Add the ID of the parent div here
+
+                if (checkbox.is(":checked")) {
+                    emailFrequencyTextbox.prop("disabled", false);
+                    emailFrequencyDiv.show();
+                } else {
+                    emailFrequencyTextbox.prop("disabled", true);
+                    emailFrequencyDiv.hide();
+                }
+            }
+
+            // Call the toggle function on page load
+            toggleEmailFrequencyTextbox();
+
+            // Bind the function to the checkbox change event
+            $("#IsEmailFrequency").on("change", function () {
+                toggleEmailFrequencyTextbox();
+            });
+
+        });
+        $(window).on('load', function () {
+            $('select').change();
+        });
+        //-------------- START USER MANAGEMENT ---------------------------//
+        function addNewEmail() {
+            var htmlResponse = COMMON.doAjaxPostHTMLResponse('@Url.Action("AddEmail", "UserManagement")', null);
+            if (htmlResponse !== null && htmlResponse !== undefined && COMMON.is.html(htmlResponse)) {
+                $('#email').append(htmlResponse);
+            }
+        }
+        $(document).on('click', '.removeItem', function () {
+            $(this).closest(".add-remove-item").remove();
+        });
+        $('#submitEmInvite').click(function () {
+            let form = $('#formInviteEmail');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessInviteEmail(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Invitation has been sent.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        //-------------- END USER MANAGEMENT ---------------------------//
+
+        //-------------- START UPDATE PROFILE ---------------------------//
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const profileImage = document.getElementById('profileImage');
+            const changeBtn = document.getElementById('changeBtn');
+            const removeBtn = document.getElementById('removeBtn');
+            const profileUpload = document.getElementById('profileUpload');
+
+            // Trigger file input dialog when "Change" button is clicked
+            changeBtn.addEventListener('click', function () {
+                profileUpload.click();
+            });
+
+            // Handle image selection
+            profileUpload.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function () {
+                    profileImage.src = reader.result;
+                };
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle image removal
+            removeBtn.addEventListener('click', function () {
+                profileImage.removeAttribute('src');
+                profileUpload.value = ''; // Clear the file input value
+            });
+        });
+
+        function ShowHideProvince(obj) {
+
+            if (obj.value !== null && obj.value.trim() !== '') {
+                $('#AddressFields').prop('hidden', false);
+            }
+            else {
+                $('#AddressFields').prop('hidden', true);
+            }
+            if (obj.value == 'United States') {
+                $('#provinceDiv').prop('hidden', true);
+                $('#province').val('');
+                $('#stateDiv').prop('hidden', false);
+                $('#lblZipCode').text('Zip Code');//.append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provinceDiv').prop('hidden', false);
+                $('#stateDiv').prop('hidden', true);
+                $('#state').val(1);
+                $('#lblZipCode').text('Zip/Postal Code');//.append(`<span class="text-danger"> *</span>`);
+            }
+        }
+        $('#submitUpdateProfile').click(function () {
+            let form = $('#formUpdateProfile');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessUpdateProfile(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Profile is updated");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        //-------------- END UPDATE PROFILE ---------------------------//
+
+        //-------------- START EMAIL REMINDER ---------------------------//
+
+        $('#submitEmailReminder').click(function () {
+            let form = $('#formEmailReminder');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessEmailReminder(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Email reminder is updated.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        //-------------- END EMAIL REMINDER ---------------------------//
+        //-------------- START EMAIL SETTING ---------------------------//
+
+        $('#submitEmailSetting').click(function () {
+            let form = $('#formEmailSetting');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessEmailSetting(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Email setting is updated.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        //-------------- END EMAIL SETTING ---------------------------//
+        //-------------- START EMAIL SETTING ---------------------------//
+
+        $('#submitPostAnnouncement').click(function () {
+            let form = $('#formPostAnnouncement');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessPostAnnouncement(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Announcement posted.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        //-------------- END EMAIL SETTING ---------------------------//
+        //-------------- START INSTITUTE NAME CHANGE ---------------------------//
+
+        $('#saveInstNameChangeBtn').click(function () {
+            let form = $('#instNameChangeForm');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessRequestInstituteNameChange(response) {
+            if (response.Status == true) {
+                $("#instNameChangeModal").modal("hide");
+                COMMON.AlertSuccessMessage("Your request for entity name change has been submitted and is currently under review. Thank You for your cooperation in this matter.", "", "info")
+                $('#requestNameChangeLabel').text('Institute Name ').append('<span style="color:orange">Your request for name change is pending approval.</span>')
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+
+        function confirmAlertActive(id, requestStatus) {
+            swal({
+                title: "Are you sure you want to aprove this record?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1ab394",
+                confirmButtonText: "Approve",
+                cancelButtonText: "Cancel"
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $('.loading').show();
+                        // Define your parameters as an object
+                        var postData = {
+                            Id: id,
+                            requestChange: requestStatus
+                        };
+
+                        // Make the AJAX POST call
+                        $.ajax({
+                            url: '@Url.Action("ChangeInstituteName","Institute")', // Replace with your actual endpoint URL
+                            type: 'GET',
+                            data: postData,
+                            success: function (response) {
+                                $('.loading').hide();
+                                COMMON.notification(1, "Institute name has been changed.")
+                            },
+                            error: function (error) {
+                                COMMON.notification(3, "Something went wrong");
+                            }
+                        });
+                        confirmed = true;
+                    } else {
+                        swal("Cancelled", "You have cancelled delete operation!", "error");
+                        return false;
+                    }
+                });
+        }
+                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+    </script>
+}

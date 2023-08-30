@@ -111,7 +111,8 @@ namespace EvolvedTax.Business.Services.UserService
                 StatusDate = DateTime.Now,
                 Phone = request.Phone
             };
-
+            await _evolvedtaxContext.InstituteMasters.AddAsync(model);
+            await _evolvedtaxContext.SaveChangesAsync();
             var userModel = new User
             {
                 FirstName = request.SUFirstName,
@@ -134,10 +135,11 @@ namespace EvolvedTax.Business.Services.UserService
                 State = request.SUMState,
                 Zip = request.SUMZip,
                 Province = request.SUMProvince,
+                EmailConfirmed = true,
+                TwoFactorEnabled = true,
             };
 
-            await _evolvedtaxContext.InstituteMasters.AddAsync(model);
-            await _evolvedtaxContext.SaveChangesAsync();
+            
             var user = await _userManager.FindByEmailAsync(userModel.Email);
             var response = new IdentityResult();
             if (user == null)

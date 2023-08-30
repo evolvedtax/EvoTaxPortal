@@ -1,0 +1,24 @@
+﻿@model Announcement
+
+@{
+    ViewData["Title"] = "Announcement";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+    .blog-content {
+        line-height: 1.6;
+        text-align: justify;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h1>@Model.Title</h1>
+        </div>
+        <div class="card-body">
+            <p class="blog-content">@Model.Message</p>
+        </div>
+      
+    </div>
+</div>

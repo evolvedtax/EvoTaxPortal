@@ -19,6 +19,7 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+		<PackageReference Include="DevExpress.DotNet.Web.ProjectTemplates" Version="23.1.4" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
 			<PrivateAssets>all</PrivateAssets>
@@ -34,6 +35,13 @@
 		<ProjectReference Include="..\EvolvedTax.Business\EvolvedTax.Business.csproj" />
 		<ProjectReference Include="..\EvolvedTax.Common\EvolvedTax.Common.csproj" />
 		<ProjectReference Include="..\EvolvedTax.Data\EvolvedTax.Data.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="wwwroot\css\style.css">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

@@ -1,0 +1,88 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvolvedTax | @ViewBag.StatusCode Error</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/css/animate.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+    @if ((short)ViewBag.StatusCode == 404)
+    {
+        <div class="middle-box text-center animated fadeInDown">
+            <h1>@ViewBag.StatusCode</h1>
+            <h3 class="font-bold">Page Not Found</h3>
+
+            <div class="error-desc">
+                Sorry, but the page you are looking for has not been found. Try checking the URL for error, then hit the refresh button on your browser or try found something else in our app.
+            </div>
+        </div>
+    }
+    else if ((short)ViewBag.StatusCode == 403 || (short)ViewBag.StatusCode == 0)
+    {
+        <div class="middle-box text-center animated fadeInDown">
+            <h1>403</h1>
+            <h3 class="font-bold">Forbidden</h3>
+
+            <div class="error-desc">
+                Sorry, you are not authorized to access this page.
+            </div>
+        </div>
+
+    }
+    else if ((short)ViewBag.StatusCode == 500)
+    {
+        <div class="middle-box text-center animated fadeInDown">
+            <h1>@ViewBag.StatusCode</h1>
+            <h3 class="font-bold">Internal Error</h3>
+
+            <div class="error-desc">
+                Sorry, the server encountered an error and could not complete your request.
+            </div>
+        </div>
+    }
+    else if ((short)ViewBag.StatusCode == 401 || (short)ViewBag.StatusCode == 0)
+    {
+        <div class="middle-box text-center animated fadeInDown">
+            <h1>401</h1>
+            <h3 class="font-bold">Unauthorized</h3>
+
+            <div class="error-desc">
+                Sorry, you are not authorized.
+            </div>
+        </div>
+    }
+    else if ((short)ViewBag.StatusCode == 400 || (short)ViewBag.StatusCode == 0)
+    {
+        <div class="text-center animated fadeInDown" style="text-align: center;margin-top:5%;">
+            <h1 class="font-bold" style="margin-bottom:40px">
+                We apologize for the inconvenience, but it appears that the link you clicked on is not functioning
+            </h1>
+            <text style="font-size:initial">
+                If the problem persists or if
+                you have any further questions, please don&#39;t hesitate to contact <strong>@TempData["EntityName"]</strong> support team at <a href="mailto:'@TempData["InstituteEmail"]'">@TempData["InstituteEmail"]</a>. 
+            </text>
+            <br/>
+            <text style="font-size:initial">
+                We apologize for any inconvenience caused and appreciate your understanding.
+            </text>
+        </div>
+    }
+    <!-- Mainly scripts -->
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+
+</body>
+
+</html>

@@ -13,9 +13,9 @@ public partial class InstituteMaster
 
     public string? InstitutionName { get; set; }
 
-    public string EmailAddress { get; set; } = null!;
+    public string? EmailAddress { get; set; } = null!;
 
-    public string Password { get; set; } = null!;
+    public string? Password { get; set; } = null!;
 
     public string? InstituteLogo { get; set; }
 
@@ -99,7 +99,7 @@ public partial class InstituteMaster
 
     public string? Phone { get; set; }
 
-    public bool IsAdmin { get; set; }
+    public bool? IsAdmin { get; set; }
 
     public string? DateFormat { get; set; }
 

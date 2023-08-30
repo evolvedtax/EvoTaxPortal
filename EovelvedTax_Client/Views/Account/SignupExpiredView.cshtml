@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Expired</title>
+</head>
+<body>
+    <div>
+        <h1>Signup Expired</h1>
+        <p>@TempData["Message"]</p>
+        <a href="@Url.Action("SendEmailToInstitueMaster", "Account")?e=@Context.Request.Query["e"]&i=@Context.Request.Query["i"]" class="btn btn-primary">Request New Link</a>
+
+    </div>
+</body>
+</html>

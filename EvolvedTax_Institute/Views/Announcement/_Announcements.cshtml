@@ -1,0 +1,54 @@
+﻿@model List<AnnouncementRequest>
+
+<div class="feed-activity-list">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var announcement in Model)
+        {
+            string shortMessage = announcement.Message.Length > 100 ? announcement.Message.Substring(0, 100) + "..." : announcement.Message;
+
+            var currentDate = DateTime.Now;
+            var announcementDate = announcement.CreatedDate;
+
+            // Calculate the absolute time difference in minutes
+            var timeDifference = (int)Math.Abs((currentDate - announcementDate).TotalMinutes);
+
+            string timestamp;
+
+            if (timeDifference < 60)
+            {
+                // Less than an hour ago
+                timestamp = $"{timeDifference}m ago";
+            }
+            else if (timeDifference < 1440)
+            {
+                // Less than a day ago
+                timestamp = $"{(int)(timeDifference / 60)}h ago";
+            }
+            else
+            {
+                // Older than a day, display the full date and time
+                timestamp = announcement.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy");
+            }
+
+            <div class="feed-element">
+                <div>
+                    <small class="float-right text-navy">@timestamp</small>
+                    <strong>@announcement.Title</strong>
+                    <div>@shortMessage</div>
+                    <small class="text-muted">
+                        @announcement.CreatedDate.ToString("hh:mm tt - dd.MM.yyyy") -
+                        <a href="@Url.Action("ViewAnnouncement", "Announcement", new { id = announcement.Id })">Read more</a>
+                    </small>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No announcements found.</p>
+    }
+</div>
+
+
+

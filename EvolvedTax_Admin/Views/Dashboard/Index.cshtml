@@ -1,0 +1,253 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+    .ibox-title {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        border-top-left-radius:1rem;
+        border-top-right-radius:1rem;
+    }
+
+    .ibox-content {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+</style>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Forms Status</h5>
+                </div>
+                <div class="ibox-content">
+                    <div>
+                        <canvas id="barChart" height="70"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Announcements</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                @*   <div class="ibox-content ibox-heading">
+                <h3><i class="fa fa-envelope-o"></i> New messages</h3>
+                <small><i class="fa fa-tim"></i> You have 22 new messages and 16 waiting in draft folder.</small>
+                </div>*@
+                <div class="ibox-content">
+                    <div id="announcementsContainer">
+                        <!-- The partial view content will be inserted here using AJAX -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <h5>Alerts</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                @*    <div class="ibox-content ibox-heading">
+                <h3><i class="fa fa-envelope-o"></i> New messages</h3>
+                <small><i class="fa fa-tim"></i> You have 22 new messages and 16 waiting in draft folder.</small>
+                </div>*@
+                <div class="ibox-content">
+                    <div id="alertsContainer">
+                        <!-- The partial view content will be inserted here using AJAX -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>To-do</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="input-group">
+                        <input type="text" placeholder="Add new task. " class="input form-control-sm form-control">
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-sm btn-white"> <i class="fa fa-plus"></i> Add task</button>
+                        </span>
+                    </div>
+
+                    <ul class="sortable-list connectList agile-list" id="todo">
+                        <li class="warning-element" id="task1">
+                            Simply dummy text of the printing and typesetting industry.
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Tag</a>
+                                <i class="fa fa-clock-o"></i> 12.10.2015
+                            </div>
+                        </li>
+                        <li class="success-element" id="task2">
+                            Many desktop publishing packages and web page editors now use Lorem Ipsum as their default.
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Mark</a>
+                                <i class="fa fa-clock-o"></i> 05.04.2015
+                            </div>
+                        </li>
+                        <li class="info-element" id="task3">
+                            Sometimes by accident, sometimes on purpose (injected humour and the like).
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Mark</a>
+                                <i class="fa fa-clock-o"></i> 16.11.2015
+                            </div>
+                        </li>
+                        <li class="danger-element" id="task4">
+                            All the Lorem Ipsum generators
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-primary">Done</a>
+                                <i class="fa fa-clock-o"></i> 06.10.2015
+                            </div>
+                        </li>
+                        <li class="warning-element" id="task5">
+                            Which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Tag</a>
+                                <i class="fa fa-clock-o"></i> 09.12.2015
+                            </div>
+                        </li>
+                        <li class="warning-element" id="task6">
+                            Packages and web page editors now use Lorem Ipsum as
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-primary">Done</a>
+                                <i class="fa fa-clock-o"></i> 08.04.2015
+                            </div>
+                        </li>
+                        <li class="success-element" id="task7">
+                            Many desktop publishing packages and web page editors now use Lorem Ipsum as their default.
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Mark</a>
+                                <i class="fa fa-clock-o"></i> 05.04.2015
+                            </div>
+                        </li>
+                        <li class="info-element" id="task8">
+                            Sometimes by accident, sometimes on purpose (injected humour and the like).
+                            <div class="agile-detail">
+                                <a href="#" class="float-right btn btn-xs btn-white">Mark</a>
+                                <i class="fa fa-clock-o"></i> 16.11.2015
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/chartJs/Chart.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $.ajax({
+                url: '@Url.Action("GetAnnouncements", "Dashboard")',
+                type: 'GET',
+                success: function (data) {
+                    $('#announcementsContainer').html(data);
+                },
+                error: function (error) {
+                    console.error('Error fetching announcements:', error);
+                }
+            });
+            $.ajax({
+                url: '@Url.Action("GetAlerts", "Dashboard")',
+                type: 'GET',
+                success: function (data) {
+                    $('#alertsContainer').html(data);
+                },
+                error: function (error) {
+                    console.error('Error fetching alerts:', error);
+                }
+            });
+            var barData = {
+                labels: ["Email Sent", "Pending", "Submitted"],
+                datasets: [
+                    {
+                        label: "W9",
+                        backgroundColor: '#115f9a',
+                        borderColor: '#115f9a',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(251, 170, 140, 1)',
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                    {
+                        label: "W8-EXP",
+                        backgroundColor: '#1984c5',
+                        borderColor: '#1984c5',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(177, 224, 185, 1)',
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    },
+                    {
+                        label: "W8-ECI",
+                        backgroundColor: '#22a7f0',
+                        borderColor: '#22a7f0',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(165, 206, 255, 1)',
+                        data: [35, 28, 49, 78, 29, 54, 61]
+                    },
+                    {
+                        label: "W8-BEN",
+                        backgroundColor: '#48b5c4',
+                        borderColor: '#48b5c4',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(239, 179, 221, 1)',
+                        data: [40, 12, 75, 30, 62, 42, 28]
+                    },
+                    {
+                        label: "W8-BEN-E",
+                        backgroundColor: '#76c68f',
+                        borderColor: '#76c68f',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(253, 225, 123, 1)',
+                        data: [80, 35, 62, 45, 91, 74, 23]
+                    },
+                    {
+                        label: "W8-IMY",
+                        backgroundColor: '"#a6d75b',
+                        borderColor: '"#a6d75b',
+                        pointBackgroundColor: "#fff",
+                        pointBorderColor: 'rgba(220, 220, 220, 1)',
+                        data: [57, 19, 34, 68, 12, 83, 46]
+                    }
+                ]
+            };
+
+            var barOptions = {
+                responsive: true
+            };
+
+            var ctx2 = document.getElementById("barChart").getContext("2d");
+            new Chart(ctx2, { type: 'bar', data: barData, options: barOptions });
+        });
+    </script>
+}
