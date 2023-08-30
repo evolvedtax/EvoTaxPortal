@@ -24,6 +24,8 @@
 /.vs/EvolvedTax/v17/fileList.bin
 /.vs/EvolvedTax/v17/.futdcache.v2
 /.vs/EvolvedTax/DesignTimeBuild/.dtbcache.v2
+/EvolvedTax_Admin
+/EovelvedTax_Client
 /EvolvedTax_Admin/bin/Debug/net7.0
 /EvolvedTax_Admin/obj
 /EovelvedTax_Client/bin/Debug/net7.0
