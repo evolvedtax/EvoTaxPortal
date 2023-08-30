@@ -33,8 +33,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                top: 0;
-                                                                                                                                                                left: 15%;*/
+                                                                                                                                                                        top: 0;
+                                                                                                                                                                        left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -68,21 +68,20 @@
                 <div class="col-lg-12">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            @if (SuperAdminOrAdmin)
-                            {
-                                <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
-                            }
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Update Profile</a></li>
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-3">Email Reminder</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
-                            @if (User.IsInRole("SuperAdmin"))
-                            {
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-6">Email Setting</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-7">Bounced Emails</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
-                                <li><a class="nav-link" data-toggle="tab" href="#tab-9">Pending Approvals @if (Model.InstituteRequestNameChangeResponses.Any()) { <span style="color:red"> (@Model.InstituteRequestNameChangeResponses.Count())</span> }</a></li>
-                            }
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-6">Email Setting</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-7">Bounced Emails</a></li>
+                            <li>
+                                <a class="nav-link" data-toggle="tab" href="#tab-9">
+                                    Pending Approvals @if (Model.InstituteRequestNameChangeResponses.Any())
+                                    {
+                                        <span style="color:red"> (@Model.InstituteRequestNameChangeResponses.Count())</span>
+                                    }
+                                </a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
@@ -113,154 +112,6 @@
                                     </div>
                                 </div>
                             }
-                            <div id="tab-2" class="tab-pane">
-                                <div class="panel-body">
-                                    <form id="formUpdateProfile" style="width:100%"
-                                          method="post"
-                                          data-ajax="true"
-                                          data-ajax-method="post"
-                                          data-ajax-mode="replace"
-                                          data-ajax-failure="COMMON.ajaxfailure"
-                                          data-ajax-loading="#ajax-loader"
-                                          data-ajax-success="ajaxsuccessUpdateProfile"
-                                          data-ajax-url="@Url.Action("UpdateProfile","Account")">
-                                        <input asp-for="InstituteMasterRequest.InstId" hidden />
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <label>Profile Image</label>
-                                                    <div style="display:flex">
-                                                        <div class="form-group mr-4">
-                                                            @if (!string.IsNullOrEmpty(Model.InstituteMasterRequest.InstituteLogo))
-                                                            {
-                                                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/ProfileImage/@Model.InstituteMasterRequest.InstituteLogo" />
-                                                            }
-                                                            else
-                                                            {
-                                                                <img alt="" height="50" width="50" class="rounded-circle text-center" id="profileImage" src="~/images/evolved_tax_mark_logo.png" />
-                                                            }
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <button type="button" class="btn btn-primary" id="changeBtn">Change</button>
-                                                            <button type="button" class="btn btn-dark" id="removeBtn">Remove</button>
-                                                            <div><span>Uploads must be in either jpg or png formats and less than 1 MB.</span></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>First Name</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.FirstName">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Last Name</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.LastName">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Position</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Position">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label id="requestNameChangeLabel">
-                                                            Institute Name
-                                                            @if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Approved)
-                                                            {
-                                                                <a href='javascript: void()' data-toggle='modal' data-target='#instNameChangeModal'>Request Name Change</a>
-                                                            }
-                                                            else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Pending)
-                                                            {
-                                                                <span style="color:orange">Your request for name change is pending approval.</span>
-                                                            }
-                                                            else if (User.IsInRole("Admin") && Model.InstituteRequestNameChange.IsApproved == RequestChangeNameStatusEnum.Rejected)
-                                                            {
-                                                                <span style="color:red">Your request for name change is Rejected.</span>
-                                                            }
-                                                        </label>
-                                                        <input class="form-control" id="instituteName" asp-for="InstituteMasterRequest.InstitutionName" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Phone Number</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Phone">
-                                                        <span asp-validation-for="InstituteMasterRequest.Phone"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Country</label>
-                                                        <select asp-for="InstituteMasterRequest.Mcountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2" required>
-                                                            <option></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Address Line 1</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Madd1">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Address Line 2</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Madd2">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>City</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mcity">
-                                                    </div>
-                                                </div>
-                                                <div id="stateDiv" class="col-md-6" hidden>
-                                                    <div class="form-group">
-                                                        <label>State</label>
-                                                        <select asp-items="ViewBag.StatesList" asp-for="InstituteMasterRequest.Mstate" class="select2">
-                                                            <option></option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div id="provinceDiv" class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label>Province</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mprovince">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label id="lblZipCode">Zip</label>
-                                                        <input class="form-control" asp-for="InstituteMasterRequest.Mzip">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label>Date Format</label>
-                                                    <select asp-items="ViewBag.DateFormats" asp-for="InstituteMasterRequest.DateFormat" class="select2" required>
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label>Time zone</label>
-                                                    <select asp-items="ViewBag.TimezonList" asp-for="InstituteMasterRequest.Timezone" class="select2">
-                                                        <option></option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right mt-2">
-                                                <button type="button" id="submitUpdateProfile" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </div>
-                                        <input type="file" id="profileUpload" asp-for="InstituteMasterRequest.ProfileImage" accept=".jpg, .png" style="display:none">
-                                    </form>
-                                </div>
-                            </div>
                             <div id="tab-3" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- User Guidance -->
@@ -440,11 +291,6 @@
                                     <div class="panel-body">
                                     </div>
                                 </div>
-                                <div id="tab-8" class="tab-pane">
-                                    <div class="panel-body">
-                                        @Html.Raw(ViewData["TransactionHistory"])
-                                    </div>
-                                </div>
                                 <div id="tab-9" class="tab-pane">
                                     <div class="panel-body">
                                         <div class="table-responsive">
@@ -577,7 +423,7 @@
                 }
             });
 
-            
+
             // Function to toggle EmailFrequency textbox and its parent div based on checkbox status
             function toggleEmailFrequencyTextbox() {
                 var checkbox = $("#IsEmailFrequency");
@@ -810,6 +656,6 @@
                     }
                 });
         }
-                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
     </script>
 }

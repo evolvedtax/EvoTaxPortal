@@ -1,0 +1,1242 @@
+﻿@model FormRequest
+@{
+    ViewData["Title"] = "General Questions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+
+    /* Mark input boxes that gets an error on validation: */
+    input.invalid {
+        background-color: #ffdddd;
+    }
+
+    /* Hide all steps by default: */
+    .tab {
+        display: none;
+    }
+
+    /* Make circles that indicate the steps of the form: */
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+        /* Mark the active step: */
+        .step.active {
+            opacity: 1;
+        }
+
+        /* Mark the steps that are finished and valid: */
+        .step.finish {
+            background-color: #04AA6D;
+        }
+
+    p {
+        font-size: large;
+        color: white;
+    }
+
+    .text-center {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .text-center span {
+            display: inline-block;
+            border-radius: 5px;
+            background-color: #1AB394;
+            /*width: 20%;*/
+        }
+
+            .text-center span p {
+                text-align: center;
+                margin: 10px;
+            }
+
+    .form-box {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 4px;
+        margin: 20px;
+    }
+</style>
+
+
+
+<div class="ibox" style="margin-bottom:15%">
+    <div class="ibox-content" style="border: none;">
+        <div id="contentContainer"></div>
+        <form id="regForm"
+              method="post"
+              data-ajax="true"
+              data-ajax-method="post"
+              data-ajax-mode="replace"
+              data-ajax-failure="COMMON.ajaxfailure"
+              data-ajax-loading="#ajax-loader"
+              data-ajax-success="ajaxsuccess"
+              data-ajax-url="@Url.Action("GQEntity","Entity")">
+
+            <!-- One "tab" for each step in the form: -->
+            <div>
+
+                <!--General Questionare View-->
+                <partial name="_generalQuestionare" model="Model" />
+
+                <!--W8 BEN Questionare View-->
+                <partial name="_w8BenQuestionare" model="Model" />
+
+                <!--W8 ECI Questionare View-->
+                @*<partial name="_w8ECIQuestionare" model="Model" />*@
+            </div>
+            <!-- Hidden field for isPartialSave -->
+
+            <input type="hidden" name="IsPartialSave" id="isPartialSave" value="true">
+
+
+            <!-- Circles which indicates the steps of the form: -->
+            <div id="stepsDiv" style="text-align:center;margin-top:40px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="footer fixed" style="height:25%">
+    <div style="overflow:auto;">
+        <div style="float:right;">
+            <button type="button" onclick="location.href='@Url.Action("GQEntity","Entity")'" id="editBtn" class="btn btn-md btn-dark" hidden> << Edit</button>
+            <button type="button" id="SaveExitBtn" class="btn btn-md btn-primary">Save Progress</button>
+            <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
+            <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+            <input type="hidden" id="hdn_FormType" />
+            <input type="hidden" id="hdn_PreviousFormType" />
+            <input type="hidden" id="hdn_MainSelectionRadioBtn" />
+            <input type="hidden" id="hdn_W8SelectionRadioBtn" />
+        </div>
+    </div>
+</div>
+<div id="modal-form" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:fit-content">
+            <div class="modal-body">
+                <div id="pdf_containers">
+                    <canvas id="canvas2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+    <script type="text/javascript">
+
+        var isFirstChange = true; // Flag to track the first change
+
+        $("#SaveExitBtn").click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                $('#isPartialSave').val('true');
+                form.submit();
+            }
+
+        });
+        function BindEntityForW8EXPForm() {
+            $.ajax({
+                url: '@Url.Action("BindEntityForW8EXPForm", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityTypeW8').empty();
+
+                        // Add "Please Select" option as the first option
+                        var pleaseSelectOption = $('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        });
+                        $('#EntityTypeW8').append(pleaseSelectOption);
+
+                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
+
+
+                        $.each(result.entitiesListW8, function (index, entity) {
+                            var option = $('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (!selectedValue || entity.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+                            $('#EntityTypeW8').append(option);
+                        });
+
+                        // Trigger the change event if selectedValue is empty
+                        if (!selectedValue) {
+                            $('#EntityTypeW8').val('').trigger('change');
+                        } else {
+                            // Trigger the change event after a small delay
+                            setTimeout(function () {
+                                $('#EntityTypeW8').trigger('change');
+                            }, 10);
+                        }
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+        function BindEntityForW8ECIGQForm() {
+            $.ajax({
+                url: '@Url.Action("BindEntityForW8ECIGQForm", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityTypeW8ECIGQ').empty();
+
+                        // Add "Please Select" option as the first option
+                        var pleaseSelectOption = $('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        });
+                        $('#EntityTypeW8ECIGQ').append(pleaseSelectOption);
+
+                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
+
+
+                        $.each(result.entitiesList, function (index, entity) {
+                            var option = $('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (!selectedValue || entity.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+                            $('#EntityTypeW8ECIGQ').append(option);
+                        });
+
+                        // Trigger the change event if selectedValue is empty
+                        if (!selectedValue) {
+                            $('#EntityTypeW8ECIGQ').val('').trigger('change');
+                        } else {
+                            // Trigger the change event after a small delay
+                            setTimeout(function () {
+                                $('#EntityTypeW8ECIGQ').trigger('change');
+                            }, 10);
+                        }
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+        function BindEntityForW8ECIForm() {
+            $.ajax({
+                url: '@Url.Action("BindEntityForW8ECIForm", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#EntityTypeW8ECI').empty();
+
+                        // Add "Please Select" option as the first option
+                        var pleaseSelectOption = $('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        });
+                        $('#EntityTypeW8ECI').append(pleaseSelectOption);
+
+                        var selectedValue = $('#TypeOfEntity').val(); // Assuming a hidden field with ID "TypeOfEntity" is present
+
+
+                        $.each(result.entitiesList, function (index, entity) {
+                            var option = $('<option>', {
+                                value: entity.Value,
+                                text: entity.Text
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (!selectedValue || entity.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+                            $('#EntityTypeW8ECI').append(option);
+                        });
+
+                        // Trigger the change event if selectedValue is empty
+                        if (!selectedValue) {
+                            $('#EntityTypeW8ECI').val('').trigger('change');
+                        } else {
+                            // Trigger the change event after a small delay
+                            setTimeout(function () {
+                                $('#EntityTypeW8ECI').trigger('change');
+                            }, 10);
+                        }
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+
+
+
+        function BindEW8EXPFATCA() {
+            $.ajax({
+                url: '@Url.Action("BindEW8EXPFATCA", "Entity")',
+                type: 'POST',
+                success: function (result) {
+                    // Check if the action was successful
+                    if (result.success) {
+                        // Clear existing options from the dropdown
+                        $('#FatcaW8').empty();
+
+                        // Add "Please Select" option as the first option
+                        $('#FatcaW8').prepend($('<option>', {
+                            value: '',
+                            text: 'Please Select'
+                        }));
+
+                        // Retrieve the value from the hidden field
+                        var selectedValue = $('#W8EXPFatca').val();
+
+                        // Iterate over the updated entities and add new options to the dropdown
+                        $.each(result.W8EXPFATCAList, function (index, FATCA) {
+                            var option = $('<option>', {
+                                value: FATCA.Value,
+                                text: FATCA.Text
+                            });
+
+                            // Check if the current option value matches the selected value
+                            if (FATCA.Value === selectedValue) {
+                                option.prop('selected', true); // Set the selected attribute
+                            }
+
+                            $('#FatcaW8').append(option);
+                        });
+
+                        // Check if selectedValue is not set
+                        if (!selectedValue) {
+                            $('#FatcaW8').val(''); // Clear the selected value
+                        }
+
+                        // Trigger the change event after a small delay
+                        setTimeout(function () {
+                            $('#FatcaW8').trigger('change');
+                        }, 10);
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred.');
+                }
+            });
+        }
+
+        function BindEntityForW9Form() {
+
+            //$.ajax({
+            //    url: '@Url.Action("BindEntityForW9Form", "Entity")',
+            //    type: 'POST',
+            //    success: function (result) {
+            //        // Check if the action was successful
+            //        if (result.success) {
+            //            // Clear existing options from the dropdown
+            //            $('#EntityTypeW9').empty();
+            //            debugger;
+
+            //            // Iterate over the updated entities and add new options to the dropdown
+            //            $.each(result.entitiesList, function (index, entity) {
+            //                debugger;
+            //                $('#EntityTypeW9').append($('<option>', {
+            //                    value: entity.Value,
+            //                    text: entity.Text
+            //                }));
+            //            });
+
+            //        }
+            //    },
+            //    error: function (jqXHR, textStatus, errorThrown) {
+            //        alert('Error: ' + textStatus);
+            //        console.log('AJAX Error:', errorThrown);
+            //    }
+            //});
+        }
+        function ChekboxValidationForDropdowns() {
+            // Handle checkbox change event
+            $('.chkbox-toggle').change(function () {
+                var checkbox = $(this);
+                var control = checkbox.closest('.form-check').find('.required-control-valid');
+                var targetDropdown = checkbox.closest('.row').find('.country-dropdown');
+
+                if (checkbox.is(':checked')) {
+                    control.prop('required', true); // Add "required" attribute
+                    targetDropdown.prop('required', true); // Add "required" attribute
+                } else {
+                    control.prop('required', false); // Remove "required" attribute
+                    targetDropdown.prop('required', false); // Remove "required" attribute
+                }
+
+            });
+        }
+        function HideDivOnDDLEntitySelection() {
+            //$('#Q1Div').prop('hidden', true);
+            $('#IntOrgDiv').prop('hidden', true);
+            $('#FrgnBankDiv').prop('hidden', true);
+            $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', true);
+            $('#GovUSPossDiv').prop('hidden', true);
+        }
+        function HideDivOnDDLStatusFATCASelection() {
+            $('#NonreportingDiv').prop('hidden', true);
+            $('#FincalInsDiv').prop('hidden', true);
+            $('#FrgnGovUSDiv').prop('hidden', true);
+            $('#RetPlanSDiv').prop('hidden', true);
+            $('#501OrgUSDiv').prop('hidden', true);
+            $('#PassNFEDiv').prop('hidden', true);
+            $('#SponEntity_RirRepNFFEDiv').prop('hidden', true);
+
+        }
+        function ChangeMaskingW8ECI(obj) {
+
+            if (obj.value == 'S') {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
+                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
+            } else if (obj.value == 'E') {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
+                $('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
+            } else {
+                $('#SsnitneinDQW8ECI').attr('placeholder', '000-00-0000');
+                $('#SsnitneinDQW8ECI').mask('000-00-0000', { reverse: true });
+            }
+        }
+        function ChangeMasking(obj) {
+
+            if (obj.value == 'S') {
+                $('#IdNumber').attr('placeholder', '000-00-0000');
+                $('#IdNumber').mask('000-00-0000', { reverse: true });
+            } else if (obj.value == 'E') {
+                $('#IdNumber').attr('placeholder', '00-0000000');
+                $('#IdNumber').mask('00-0000000', { reverse: true });
+            } else {
+                $('#IdNumber').attr('placeholder', '000-00-0000');
+                $('#IdNumber').mask('000-00-0000', { reverse: true });
+            }
+        }
+        function ShowHideFTIN(obj) {
+
+            if (obj.value === 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#FTINDiv').prop('hidden', false);
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#FTINDiv').prop('hidden', false);
+            }
+            else if (obj.value === undefined) {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            }
+        }
+
+        function CheckExistingRecord(lastSelectedRadioId = null) {
+            $('#ajax-loader').show();
+
+            $.ajax({
+                type: 'POST',
+                url: '/Entity/CheckAndDelete',
+                success: function (result) {
+                    if (result.exists) {
+
+                        var tableName = '';
+                        if (result.recordExistsInW8EBENEForm) {
+                            tableName = 'W-8BEN-E';
+                        } else if (result.recordExistsInW8IMYForm) {
+                            tableName = 'W-8IMY';
+                        } else if (result.recordExistsInW8EXPForm) {
+                            tableName = 'W-8EXP';
+                        } else if (result.recordExistsInW8ECIForm) {
+                            tableName = 'W-8ECI';
+                        } else if (result.recordExistsInW9Form) {
+                            tableName = 'W9';
+                        }
+
+                        // Show the confirmation dialog using SweetAlert
+                        Swal.fire({
+                            title: 'Your last saved form was ' + tableName + '.',
+                            text: 'Do you want to delete and start the new application?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#1ab394',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                            confirmButtonColor: '#d33', // "Yes" button color to red
+                            cancelButtonColor: '#1ab394', // "No" button color to green
+                            didOpen: () => {
+                                $('.swal2-title').css('font-size', '22px');
+                            },
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Make another AJAX call to delete the record
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/Entity/DeleteRecord',
+                                    success: function () {
+                                        // Show success notification using SweetAlert
+                                        Swal.fire('Record deleted successfully!', '', 'success');
+                                    },
+                                    error: function () {
+                                        // Show error notification using SweetAlert
+                                        Swal.fire('Failed to delete the record.', '', 'error');
+                                    },
+                                    complete: function () {
+                                        $('#ajax-loader').hide();
+                                    }
+                                });
+                            } else {
+                               
+                                // Re-select the last selected radio button using its ID
+                                var MainSelectionRadioBtn= $('#hdn_MainSelectionRadioBtn').val()
+                                var W8SelectionRadioBtn = $('#hdn_W8SelectionRadioBtn').val();
+                                $('#hdn_FormType').val($('#hdn_PreviousFormType').val());
+
+                                if (MainSelectionRadioBtn !== '') {
+                                    $(`#${MainSelectionRadioBtn}`).prop('checked', true);
+                                    var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
+                                    checkedRadioButton.trigger("click");
+                                }
+                                if (W8SelectionRadioBtn !== '') {
+                                    $(`#${W8SelectionRadioBtn}`).prop('checked', true);
+                                }
+                                $('#ajax-loader').hide();
+                            }
+                        });
+                    } else {
+
+                        $('#ajax-loader').hide();
+                    }
+                },
+                error: function () {
+                    // Show error notification using SweetAlert
+                    Swal.fire('Error checking record existence.', '', 'error');
+                    $('#ajax-loader').hide();
+                }
+            });
+
+        }
+        $(document).ready(function () {
+            $('#SaveExitBtn').prop('hidden', true);
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
+
+
+
+
+            //Mailing  Address Validation
+            var addressInput = $('#adreess1');
+            var MvalidationMessage = $('#MvalidationMessageAddress');
+
+            addressInput.on('focusout', function () {
+                var address = addressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            MvalidationMessage.text('');
+                        } else {
+                            MvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            //Permeant Address Validation
+            var PaddressInput = $('#adreess1Perm');
+            var PvalidationMessage = $('#PvalidationMessageAddress');
+
+            PaddressInput.on('focusout', function () {
+                var address = PaddressInput.val();
+                $.ajax({
+                    url: '/Entity/ValidateAddress',
+                    type: 'POST',
+                    data: { address: address },
+                    success: function (result) {
+                        if (result) {
+                            PvalidationMessage.text('');
+                        } else {
+                            PvalidationMessage.text('Do not use a P.O. box or in-care-of address.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            $('#Ssnitnein').attr('placeholder', '00-0000000');
+            $('#Ssnitnein').mask('00-0000000', { reverse: true });
+
+            ChekboxValidationForDropdowns();
+            if ($('#IdNumber').val() == '') {
+                var ssnitneinValue = $('#Ssnitnein').val();
+                if (ssnitneinValue !== '') {
+                    $('#inlineRadio7').prop('checked', true);
+                    $('#IdNumber').val(ssnitneinValue);
+                }
+            }
+
+
+            $('#Ssnitnein').on('input', function () {
+                var inputValue = $(this).val();
+                if (inputValue !== '') {
+                    if ($('#IdNumber').val() == '' || $('#IdNumber').val() != inputValue) {
+                        $('#inlineRadio7').prop('checked', true);
+                        $('#IdNumber').val(inputValue);
+                    }
+                }
+            });
+
+
+            $('input[name="FormType"]').change(function () {
+
+                 $('#hdn_FormType').val('');
+                CheckExistingRecord();
+              
+
+            });
+
+            $('input[name="W8FormType"]').change(function () {
+                //re-fill the entity dropdown if the user select the W8EXPEntity radio button
+                $('#hdn_FormType').val('');
+
+                if (isFirstChange) {
+                    $('#hdn_PreviousFormType').val($(this).val());
+                    var $this = $(this);
+                    var prevValue = $this.data('prev-value');
+                    var curValue = $this.val();
+                    // Check if the change event is due to user interaction
+                    if (prevValue !== curValue) {
+                        $this.data('prev-value', curValue); // Update the data attribute with the new value
+                        CheckExistingRecord();
+                    }
+                    isFirstChange = false;
+
+                }
+                else {
+                    CheckExistingRecord();
+                }
+
+                if ($(this).val() === '@AppConstants.W8EXPForm' && $(this).is(':checked')) {
+                    $('#hdn_FormType').val($(this).val());
+
+                    $('#hdn_FormType').val($(this).val());
+                    $('#W8EXPFatcaDiv').prop('hidden', false);
+                    $('#W8Entity').prop('hidden', false);
+                    $('#W8Country').prop('hidden', false);
+                    $('#AuthSignatoryNameDiv').prop('hidden', false);
+                    $('#SSNDiv').prop('hidden', false);
+                    $('#QFormDiv').prop('hidden', false);
+
+                    $('#W9Entity').prop('hidden', true);
+                    $('#W9Country').prop('hidden', true);
+                    $('#W8ECIQuestionareDiv').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', true);
+                    $('#SSNDivW8ECI').prop('hidden', true);
+                    $('#DEW8ECIDiv').prop('hidden', true);
+
+                    BindEntityForW8EXPForm();
+                    BindEW8EXPFATCA();
+
+
+                } else if ($(this).val() === '@AppConstants.W8ECIForm' && $(this).is(':checked')) {
+
+                    //$('#W8ECIEntityDiv').prop('hidden', false);
+                    //$('#W8Country').prop('hidden', false);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', false);
+                    //$('#W8ECIQuestionareDiv').prop('hidden', false);
+                    //$('#SSNDivW8ECI').prop('hidden', false);
+                    //$('#DEW8ECIDiv').prop('hidden', false);
+                    //$('#AuthSignatoryNameDiv').prop('hidden', false);
+
+                    //$('#W8Entity').prop('hidden', true);
+                    //$('#W9Entity').prop('hidden', true);
+                    //$('#W9Country').prop('hidden', true);
+                    //$('#BackupWithHoldingMainDiv').prop('hidden', true);
+                    //$('.w8EXPDDLSelectedDivs').prop('hidden', true);
+                    //$('.SSNDiv').prop('hidden', true);
+                    //$('#QFormDiv').prop('hidden', true);
+
+                    //$('#SsnitneinDQW8ECI').attr('placeholder', '00-0000000');
+                    //$('#SsnitneinDQW8ECI').mask('00-0000000', { reverse: true });
+
+                    //BindEntityForW8ECIGQForm();
+                    //BindEntityForW8ECIForm();
+                    //window.location.href = '@Url.Action("W8ECI", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
+                }
+                else if ($(this).val() === '@AppConstants.W8IMYForm' && $(this).is(':checked')) {
+                    //window.location.href = '@Url.Action("W8IMY", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
+
+                }
+                else if ($(this).val() === '@AppConstants.W8BENEForm' && $(this).is(':checked')) {
+                    //window.location.href = '@Url.Action("W8BENE", "Entity")';
+                    $('#hdn_FormType').val($(this).val());
+                }
+                else {
+                    // alert('here in w8 different');
+                    $('#W8EXPFatcaDiv').prop('hidden', true);
+                    $('#W9Entity').prop('hidden', false);
+                    $('#W9Country').prop('hidden', false);
+                    $('#AuthSignatoryNameDiv').prop('hidden', false);
+                    $('#SSNDiv').prop('hidden', false);
+
+                    $('#W8Country').prop('hidden', true);
+                    $('#W8ECIQuestionareDiv').prop('hidden', true);
+                    $('#W8ECIEntityDiv').prop('hidden', true);
+                    $('#SSNDivW8ECI').prop('hidden', true);
+                    $('#DEW8ECIDiv').prop('hidden', true);
+
+                    BindEntityForW9Form();
+                    HideDivOnDDLEntitySelection();
+                    HideDivOnDDLStatusFATCASelection();
+
+                }
+            });
+
+            $('#EntityTypeW8').on('change', function () {
+                var selectedValue = $(this).val();
+
+                //Foreign government
+                if (selectedValue == 1) {
+                    HideDivOnDDLEntitySelection();
+                    $('#FrgnGovDiv').prop('hidden', false);
+                }
+                //Internal organization
+                if (selectedValue == 2) {
+                    HideDivOnDDLEntitySelection();
+                    $('#FrgnGovDiv').prop('hidden', true);
+                    $('#IntOrgDiv').prop('hidden', false);
+                }
+                //Foreign central bank of issue (not wholly owned by the foreign sovereign)
+                if (selectedValue == 3) {
+                    HideDivOnDDLEntitySelection();
+                    $('#FrgnBankDiv').prop('hidden', false);
+                }
+                //Foreign tax-exempt organization
+                //Foreign private foundation
+                if (selectedValue == 4 || selectedValue == 5) {
+                    HideDivOnDDLEntitySelection();
+                    $('#TaxExempt_FrgnPvtFndDiv').prop('hidden', false);
+                }
+                if (selectedValue == 6) {
+                    HideDivOnDDLEntitySelection();
+                    $('#GovUSPossDiv').prop('hidden', false);
+                }
+
+
+            });
+
+            $('#FatcaW8').on('change', function () {
+                var selectedValue = $(this).val();
+
+                //Nonreporting IGA FFI
+                if (selectedValue == 5) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#NonreportingDiv').prop('hidden', false);
+                }
+                //Territory financial institution. Complete Part III.
+                if (selectedValue == 6) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#FincalInsDiv').prop('hidden', false);
+                }
+                //Foreign government (including a political subdivision), government of a U.S. possession,
+                if (selectedValue == 8) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#FrgnGovUSDiv').prop('hidden', false);
+                }
+                //Exempt retirement plan of foreign government. Complete Part III.
+                if (selectedValue == 9) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#RetPlanSDiv').prop('hidden', false);
+                }
+                //501(c) organization. Complete Part XXI.
+                if (selectedValue == 10) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#501OrgUSDiv').prop('hidden', false);
+                }
+                //Passive NFFE. Complete Part XXVI.
+                if (selectedValue == 11) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#PassNFEDiv').prop('hidden', false);
+                }
+
+
+
+                //Direct reporting NFFE.
+                //Sponsored direct reporting NFFE. Complete Part III.
+                if (selectedValue == 12 || selectedValue == 13) {
+                    HideDivOnDDLStatusFATCASelection();
+                    $('#SponEntity_RirRepNFFEDiv').prop('hidden', false);
+                }
+
+
+            });
+
+
+            // Get the current date
+            var currentDate = new Date().toISOString().split('T')[0];
+            // Set the max attribute of the date input
+            $('#dateOfBirthW8Ben').attr('max', currentDate);
+            $('#dateOfBirthW8ECI').attr('max', currentDate);
+
+            //-------------------//
+            $('select').change();
+            var checkedRadioButton = $("input[type='radio'][name='BackupWithHolding']:checked");
+            if (checkedRadioButton.length > 0) {
+                checkedRadioButton.trigger("click");
+            }
+            var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
+            if (checkedRadioButton.length > 0) {
+                checkedRadioButton.trigger("click");
+            }
+            var checkedRadioButtonW8From = $("input[type='radio'][name='W8FormType']:checked");
+            if (checkedRadioButtonW8From.length > 0) {
+                checkedRadioButtonW8From.trigger("click");
+            }
+        });
+        $(window).on('load', function () {
+            $('select').change();
+            var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
+            if (checkedRadioButton.length > 0) {
+                // var selectedValuecheckedRadioButton = $("input[type='radio'][name='FormType']:checked").val();
+                //checkedRadioButton.data('prev-value', checkedRadioButton.val());
+                const selectedId = checkedRadioButton.attr('id');
+                $('#hdn_MainSelectionRadioBtn').val(selectedId);
+                checkedRadioButton.trigger("click");
+            }
+
+
+            var W8FormTypecheckedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
+            if (W8FormTypecheckedRadioButton.length > 0) {
+                const selectedId = W8FormTypecheckedRadioButton.attr('id');
+                $('#hdn_W8SelectionRadioBtn').val(selectedId);
+                var selectedValueW8FormType = $("input[type='radio'][name='W8FormType']:checked").val();
+                W8FormTypecheckedRadioButton.data('prev-value', W8FormTypecheckedRadioButton.val());
+                W8FormTypecheckedRadioButton.trigger("change");
+            }
+            ChekboxValidationForDropdowns();
+
+            //  code for w8-EXP of Are you a disregarded entity (DE) for U.S. tax purposes?
+            var obj = $('#DEValue').val();
+            if (obj) {
+                SelectDEEntity(obj);
+            }
+            //end
+
+            //  code for w8-EXP of Is a foreign Tax Identification Number (FTIN) legally required for you?
+            var objLegallyRequired = $('#LegallyRequired').val();
+            if (objLegallyRequired) {
+                ShowHideFTIN(objLegallyRequired);
+            }
+            //end
+
+
+        });
+        function ajaxsuccess(response) {
+            if (response.message != '@AppConstants.FormPartiallySave') {
+
+                //Full form logic
+                document.getElementById("stepsDiv").style.display = "none";
+                let pdfUrl = window.location.origin + '//' + response;
+                // Create the object element
+                var $pdfObject = $('<object>').attr({
+                    data: pdfUrl,
+                    type: 'application/pdf',
+                    width: '100%',
+                    height: '800px'
+                });
+                $('#contentContainer').empty();
+                // Append the object element to the container
+                $('#contentContainer').append($pdfObject);
+                $('#editBtn').prop('hidden', false);
+                $('#prevBtn').prop('hidden', true);
+                $('#nextBtn').prop('hidden', true);
+                $('#SaveExitBtn').prop('hidden', true);
+            }
+            else if (response.message == '@AppConstants.FormPartiallySave') {
+                COMMON.notification(1, "Saving ...");
+            }
+
+
+
+        }
+        function SelectDEEntity(obj) {
+            //    console.log(typeof obj, obj);
+            //    console.log(typeof obj.value, obj.value);
+            if (obj.value === 'false' || obj.value === 'False') {
+                // HideDivs();
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                // HideDivs();
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                // ShowHideDivs();
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#DeEntityOwnerNameDiv').prop('hidden', false);
+                // ShowHideDivs();
+            }
+            else if (obj.value === undefined) {
+                $('#DeEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerName').val('');
+                // HideDivs();
+            }
+        }
+        function ShowHideProvince(obj) {
+            if (obj.value == 'United States') {
+                $('#provinceDiv').prop('hidden', true);
+                $('#province').val('');
+                $('#stateDiv').prop('hidden', false);
+                $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                console.log('w8expppppp');
+                console.log(obj.value);
+                $('#provinceDiv').prop('hidden', false);
+                $('#stateDiv').prop('hidden', true);
+                $('#state').val(1);
+                $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
+        function ShowHideProvincePerm(obj) {
+            if (obj.value == 'United States') {
+                $('#provincePermDiv').prop('hidden', true);
+                $('#provincePerm').val('');
+                $('#statePermDiv').prop('hidden', false);
+                $('#lblZipCodePerm').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provincePermDiv').prop('hidden', false);
+                $('#statePermDiv').prop('hidden', true);
+                $('#statePerm').val(1);
+                $('#lblZipCodePerm').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
+
+        function HideAddress(obj) {
+            if (obj.checked) {
+                $('#SamePermAddressDiv').prop('hidden', true);
+            } else {
+                $('#SamePermAddressDiv').prop('hidden', false);
+            }
+        }
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
+
+        function SelectDEW8ECIEntity(obj) {
+            //console.log(typeof obj, obj);
+            //console.log(typeof obj.value, obj.value);
+            if (obj.value === 'false' || obj.value === 'False') {
+                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerNameW8ECI').val('');
+            } else if (obj == 'false' || obj.value === 'False') {
+                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerNameW8ECI').val('');
+            } else if (obj.value === 'true' || obj.value === 'True') {
+                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
+            }
+            else if (obj == 'true' || obj == 'True') {
+                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', false);
+            }
+            else if (obj.value === undefined) {
+                $('#DeW8ECIEntityOwnerNameDiv').prop('hidden', true);
+                $('#DEOwnerNameW8ECI').val('');
+            }
+        }
+
+        function SelectForm(obj) {
+            $('#SaveExitBtn').prop('hidden', false);
+            if (obj.value == '@AppConstants.W8FormTypes') {
+                $('#WFormDiv').prop('hidden', false);
+                $('#QFormDiv').prop('hidden', false);
+                $('#BackupWithHoldingMainDiv').prop('hidden', true);
+                $('#BackupWithHoldingDiv').prop('hidden', true);
+
+                $('#W8Entity').prop('hidden', false);
+                $('#W9Entity').prop('hidden', true);
+
+                $('#W9Country').prop('hidden', true);
+                $('#W8Country').prop('hidden', false);
+            }
+            else if (obj.value == '@AppConstants.W9Form') {
+                $('#WFormDiv').prop('hidden', true);
+                $('#QFormDiv').prop('hidden', true);
+                $('#AuthSignatoryNameDiv').prop('hidden', false);
+
+                $('#W8EXPFatcaDiv').prop('hidden', true);
+                $('#W8Entity').prop('hidden', true);
+                $('#W9Entity').prop('hidden', false);
+
+                $('#W8Country').prop('hidden', true);
+                $('#W9Country').prop('hidden', false);
+                $('#BackupWithHoldingMainDiv').prop('hidden', false);
+                //Masking
+                $('#Ssnitnein').attr('placeholder', '00-0000000');
+                $('#Ssnitnein').mask('00-0000000', { reverse: true });
+                // re-fill the enity dropdown if the user by mistake select NO
+                BindEntityForW9Form();
+                HideDivOnDDLEntitySelection();
+                HideDivOnDDLStatusFATCASelection();
+            }
+            showTab(currentTab);
+        }
+        function ShowHideFTINW8ECI(obj) {
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#FTINW8ECIDiv').prop('hidden', false);
+            } else {
+                $('#FTINW8ECIDiv').prop('hidden', true);
+                $('#ForeignTaxIdentifyingNumberW8ECI').val('');
+            }
+        }
+        function W8ECIOnBehalfNameFunc(obj) {
+            if (String(obj.value).toLowerCase() == 'true') {
+                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', false);
+            } else {
+                $('#W8ECIOnBehalfNameQuesDiv').prop('hidden', true);
+                $('#PrintNameOfSignerW8ECI').val('');
+            }
+        }
+        function BackupWithHoldingFunc(obj) {
+            if (obj.value == 'false') {
+                $('#BackupWithHoldingDiv').prop('hidden', true);
+                //#('#Payeecode').val('').change();
+                // #('#Fatca').val('').change();
+            } else {
+                $('#BackupWithHoldingDiv').prop('hidden', false);
+            }
+        }
+        function showTab(n) {
+            // This function will display the specified tab of the form ...
+            var x = document.querySelectorAll('.tab:not([hidden])');
+
+            x[n].style.display = "block";
+            // ... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+
+                $('#SaveExitBtn').prop('hidden', true);
+
+            }
+            else {
+                document.getElementById("prevBtn").style.display = "inline";
+                $('#SaveExitBtn').prop('hidden', false);
+            }
+            if (n == (x.length - 1)) {
+
+                if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8Form') {
+                    var checkedRadioButton = $("input[type='radio'][name='W8FormType']:checked");
+                    if (checkedRadioButton.val() == '@AppConstants.W8BENForm') {
+                        $('#firstNameW8Ben').val($('#firstName').val());
+                        $('#lastNameW8Ben').val($('#lastName').val());
+                        $('#CitizenshipW8Ben').val($('#Citizenship').val());
+                        $('#socialSecurityNumberW8Ben').val($('#socialSecurityNumber').val());
+                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8BEN >>";
+                    } else {
+                        $('#firstNameW8ECI').val($('#firstName').val());
+                        $('#lastNameW8ECI').val($('#lastName').val());
+                        $('#CitizenshipW8ECI').val($('#Citizenship').val()).change();
+                        $('#socialSecurityNumberW8ECI').val($('#socialSecurityNumber').val());
+                        document.getElementById("nextBtn").innerHTML = "View and Edit Form W-8ECI >>";
+                    }
+                }
+                else if ($("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W9Form') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8BENEForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8BEN-E >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8ECIForm') {
+                    $('#nameOfOrganizationW8ECI').val($('#GQOrgName').val());
+                    $('#CountryW8ECI').val($('#CountryW8').val()).change();
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8ECI  >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8IMYForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8IMY  >>";
+                }
+                else if ($("input[type='radio'][name='W8FormType']:checked").val() == '@AppConstants.W8EXPForm') {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-8EXP  >>";
+                }
+                else {
+                    document.getElementById("nextBtn").innerHTML = "Preview and Sign Form W-9 >>";
+                }
+            } else {
+                document.getElementById("nextBtn").innerHTML = "Next Page >>";
+            }
+            // ... and run a function that displays the correct step indicator:
+            fixStepIndicator(n)
+        }
+
+        function nextPrev(n) {
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8EXPForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8EXP", "Entity")';
+            }
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8IMYForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8IMY", "Entity")';
+            }
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8BENEForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8BENE", "Entity")';
+            }
+
+            if ($('#hdn_FormType').val() == '@AppConstants.W8ECIForm' && $("input[type='radio'][name='FormType']:checked").val() == '@AppConstants.W8FormTypes') {
+                window.location.href = '@Url.Action("W8ECI", "Entity")';
+            }
+
+            // This function will figure out which tab to display
+            // var x = document.getElementsByClassName("tab");
+            var x = document.querySelectorAll('.tab:not([hidden])');
+
+            if ($('#SamePermAddress').is(':checked')) {
+                //--------------------//
+                $('#countryPerm').val($('#country').val()).change();
+                $('#adreess1Perm').val($('#adreess1').val());
+                $('#adreess2Perm').val($('#adreess2').val());
+                $('#cityPerm').val($('#city').val());
+                $('#provincePerm').val($('#province').val());
+                $('#zipCodePerm').val($('#zipCode').val());
+                $('#statePerm').val($('#state').val());
+                //--------------------//
+            }
+            $('#contentContainer').empty();
+            // Exit the function if any field in the current tab is invalid:
+            //if (n == 1 && !validateForm()) return false;
+            if (n == 1 && !$('#regForm').valid()) return false;
+            if (currentTab < x.length) {
+
+                // Hide the current tab:
+                x[currentTab].style.display = "none";
+                // Increase or decrease the current tab by 1:
+            }
+            currentTab = currentTab + n;
+            // if you have reached the end of the form... :
+            if (currentTab >= x.length) {
+                //...the form gets submitted:
+                // document.getElementById("regForm").submit();
+                let form = $('#regForm');
+                if (form.valid()) {
+                    $('#isPartialSave').val('false');
+                    form.submit();
+                }
+                return false;
+            }
+
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+        }
+
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            //x = document.getElementsByClassName("tab");
+            var x = document.querySelectorAll('.tab:not([hidden])');
+            sp = x[currentTab].getElementsByTagName("span");
+            y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByTagName("select");
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].hasAttribute("required") && y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+                if (y[i].id == "socialSecurityNumber" && y[i].value.length < 11) {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < z.length; i++) {
+                // If a field is empty...
+                if (z[i].hasAttribute("required") && z[i].value == "") {
+                    // add an "invalid" class to the field:
+                    sp[7].style.backgroundColor = "#ffdddd"
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < y.length; i++) {
+                    // If a field is empty...
+                    if (y[i].hasAttribute("required") && y[i].value != "") {
+                        // add an "invalid" class to the field:
+                        y[i].classList.remove("invalid")
+                        // and set the current valid status to false:
+                    }
+                }
+
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < z.length; i++) {
+                    // If a field is empty...
+                    if (z[i].hasAttribute("required") && z[i].value != "") {
+                        // add an "invalid" class to the field:
+                        sp[7].style.backgroundColor = "";
+                        // and set the current valid status to false:
+                    }
+                }
+                document.getElementsByClassName("step")[currentTab].className += " finish";
+            }
+            return valid; // return the valid status
+        }
+
+        function fixStepIndicator(n) {
+            // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("step");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" active", "");
+            }
+            //... and adds the "active" class to the current step:
+            x[n].className += " active";
+        }
+    </script>
+}

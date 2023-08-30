@@ -5,27 +5,12 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element text-center">
-                    @if (!string.IsNullOrEmpty(_httpContextAccessor.HttpContext?.Session.GetString("ProfileImage")))
-                    {
-                        <img alt="" height="50" width="50" class="rounded-circle text-center" src="~/ProfileImage/@_httpContextAccessor.HttpContext?.Session.GetString("ProfileImage")" />
-                    }
-                    else
-                    {
-                        <img alt="" height="50" width="50" class="rounded-circle text-center" src="~/images/evolved_tax_mark_logo.png" />
-                    }
+                    <img alt="" height="50" width="50" class="rounded-circle text-center" src="~/images/evolved_tax_mark_logo.png" />
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        @if (_httpContextAccessor.HttpContext?.Session.GetString("InstituteName") != null)
-                        {
-                            <span class="block m-t-xs font-bold">@_httpContextAccessor.HttpContext?.Session.GetString("InstituteName")</span>
-                        }
-                        else
-                        {
-                            <span class="block m-t-xs font-bold">Admin</span>
-                        }
+                        <span class="block m-t-xs font-bold">Admin</span>
                         @*<span class="text-muted text-xs block">Art Director <b class="caret"></b></span>*@
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs" style="position: absolute; top: 91px; left: 0px; will-change: top, left;">
-                        <li><a class="dropdown-item" href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
                         <li><a class="dropdown-item" href="@Url.Action("Login", "Account")">Logout</a></li>
                     </ul>
                 </div>
@@ -37,54 +22,47 @@
                 <a class="left-nav-links" href="@Url.Action("Index", "Dashboard")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Dashboard</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Institute")">
-                @if (!User.IsInRole("SuperAdmin"))
-                {
-                    <a class="left-nav-links" href="@Url.Action("Entities", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span></a>
-                }
-                else
-                {
-                    <a class="left-nav-links" href="@Url.Action("Master", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span></a>
-                }
-              
+                <a class="left-nav-links" href="@Url.Action("Master", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s) </span></a>
+
             </li>
             <li>
-                <a class ="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span></a>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span></a>
             </li>
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Setting")">
                 <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
-               @* <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
-                    <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "UserManagement")">User Management</a></li>
-                    <li class="@Html.IsSelected(action: "EmailReminder")"><a href="@Url.Action("EmailReminder", "Account")">Set Email Reminder</a></li>
+                @* <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
+                <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
+                <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "UserManagement")">User Management</a></li>
+                <li class="@Html.IsSelected(action: "EmailReminder")"><a href="@Url.Action("EmailReminder", "Account")">Set Email Reminder</a></li>
                 </ul>*@
             </li>
-           
-         @*   <li class="@Html.IsSelected(controller: "Individual")">
 
-                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Individual")">GQ Individual</a></li>
-                    <li class="@Html.IsSelected(action: "TaxPayerDetails")"><a href="@Url.Action("TaxPayerDetails", "Home")">TaxPayerDetails</a></li>
-                    <li class="@Html.IsSelected(action: "OpenForm83")"><a href="@Url.Action("OpenForm83", "Home")">Form 83(b)</a></li>
-                    <li class="@Html.IsSelected(action: "EmailFrequency")"><a href="@Url.Action("EmailFrequency", "Home")">Email Frequency</a></li>
-                </ul>
+            @*   <li class="@Html.IsSelected(controller: "Individual")">
+
+            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
+            <li class="@Html.IsSelected(action: "GQIndividual")"><a href="@Url.Action("GQIndividual", "Individual")">GQ Individual</a></li>
+            <li class="@Html.IsSelected(action: "TaxPayerDetails")"><a href="@Url.Action("TaxPayerDetails", "Home")">TaxPayerDetails</a></li>
+            <li class="@Html.IsSelected(action: "OpenForm83")"><a href="@Url.Action("OpenForm83", "Home")">Form 83(b)</a></li>
+            <li class="@Html.IsSelected(action: "EmailFrequency")"><a href="@Url.Action("EmailFrequency", "Home")">Email Frequency</a></li>
+            </ul>
             </li>*@
 
-      @*      <li class="@Html.IsSelected(controller: "Institute")">
-                <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
-                    @if (_httpContextAccessor.HttpContext?.Session.GetString("IsAdmin") == true.ToString())
-                    {
-                        <li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>
-                    }
-                    else
-                    {
-                        <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
-                    }
-                  
-                </ul>
+            @*      <li class="@Html.IsSelected(controller: "Institute")">
+            <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
+            @if (_httpContextAccessor.HttpContext?.Session.GetString("IsAdmin") == true.ToString())
+            {
+            <li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>
+            }
+            else
+            {
+            <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
+            }
+
+            </ul>
             </li>*@
 
         </ul>

@@ -1,0 +1,112 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/evolved_tax_mark_logo.ico">
+    <title>@ViewData["Title"] - Login to EvoTax Portal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+    </environment>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            background: rgb(28, 134, 255)
+        }
+
+        .container {
+            width: 28em;
+            background-color: #ffffff;
+            padding: 4em 2em;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 0.8em;
+            box-shadow: 0 45px 60px rgba(30, 22, 1, 0.3);
+        }
+
+        .info-icon {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+    </style>
+
+</head>
+<body class="gray-bg">
+    <div class="container text-center">
+        <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
+        <h3>Welcome to EvoTax Portal</h3>
+        <p>Please select your status</p>
+        <div class="row">
+            <div class="col">
+                <a href="~/Individual/GQIndividual" class="btn btn-dark mx-auto d-block" style="width: 100%;">Individual</a>
+            </div>
+            <div class="col">
+                <a href="~/Entity/GQEntity" class="btn btn-primary mx-auto d-block" style="width: 100%;">
+                    Entity
+                    <span class="fa fa-info-circle info-icon" title="An entity is a corporation, S-corporation, partnership, limited liability company, limited liability partnership, or a sole proprietorship."></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+    </environment>
+    <script>
+        COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
+                        // Upgrade button class name
+                        //$.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
+    </script>
+</body>
+</html>
