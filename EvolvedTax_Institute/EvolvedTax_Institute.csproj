@@ -15,25 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="C:\Users\NaeemIqbal\.nuget\packages\select.pdf.netcore\22.2.0\contentFiles\any\any\Select.Html.dep" TargetPath="Select.Html.dep" Link="Select.Html.dep">
-      <Private>True</Private>
-      <NuGetPackageVersion>22.2.0</NuGetPackageVersion>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>Select.Pdf.NetCore</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-    <Content Include="C:\Users\NaeemIqbal\.nuget\packages\select.pdf.netcore\22.2.0\contentFiles\any\any\Select.Tools.dep" TargetPath="Select.Tools.dep" Link="Select.Tools.dep">
-      <Private>True</Private>
-      <NuGetPackageVersion>22.2.0</NuGetPackageVersion>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <NuGetItemType>Content</NuGetItemType>
-      <NuGetPackageId>Select.Pdf.NetCore</NuGetPackageId>
-      <Pack>false</Pack>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
   </ItemGroup>
 
