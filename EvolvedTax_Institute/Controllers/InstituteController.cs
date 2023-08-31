@@ -49,7 +49,15 @@ namespace EvolvedTax_Institute.Controllers
         public async Task<IActionResult> RequestInstituteName(string NewInstituteName, string Comments)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
-            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var host = string.Empty;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                host = HttpContext.Request.Host.Value;
+            }
+            else
+            {
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
+            }
             var fullUrl = $"{scheme}://{host}";
 
             int instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -403,7 +411,15 @@ namespace EvolvedTax_Institute.Controllers
         public async Task<IActionResult> SendEmail(int[] selectedValues,int EntityId)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
-            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var host = string.Empty;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                host = HttpContext.Request.Host.Value;
+            }
+            else
+            {
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
+            }
             var fullUrl = $"{scheme}://{host}";
 
             string URL = string.Concat(fullUrl, "/Account", "/OTP");

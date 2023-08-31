@@ -13,6 +13,7 @@ using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 
 namespace EvolvedTax_Admin.Controllers
@@ -49,7 +50,15 @@ namespace EvolvedTax_Admin.Controllers
         public async Task<IActionResult> RequestInstituteName(string NewInstituteName, string Comments)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
-            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var host = string.Empty;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                host = HttpContext.Request.Host.Value;
+            }
+            else
+            {
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
+            }
             var fullUrl = $"{scheme}://{host}";
 
             int instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
@@ -65,8 +74,8 @@ namespace EvolvedTax_Admin.Controllers
             //var acceptLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Approved"));
             //var rejectLink = string.Concat(fullUrl, "/Institute/", "ChangeInstituteName?u=" + SessionUser.UserId, "&s=" + EncryptionHelper.Encrypt("Rejected"));
 
-            var acceptLink = string.Concat(fullUrl, "/admin");
-            var rejectLink = string.Concat(fullUrl, "/admin");
+            var acceptLink = fullUrl;
+            var rejectLink = fullUrl;
 
             var userFullName = SessionUser.FirstName + " " + SessionUser.LastName;
             await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
@@ -400,16 +409,24 @@ namespace EvolvedTax_Admin.Controllers
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
-        public async Task<IActionResult> SendEmail(int[] selectedValues,int EntityId)
+        public async Task<IActionResult> SendEmail(int[] selectedValues, int EntityId)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
-            var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+            var host = string.Empty;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                host = HttpContext.Request.Host.Value;
+            }
+            else
+            {
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
+            }
             var fullUrl = $"{scheme}://{host}";
 
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
 
             var user = await _userManager.GetUserAsync(User);
-            
+
             string userName = string.Concat(user.FirstName, " ", user.LastName);
             string ActionText = $"An email has been sent to {{Email}} for the client associated with the {{EntityName}}, sent by {user.FirstName} {user.LastName}";
 
