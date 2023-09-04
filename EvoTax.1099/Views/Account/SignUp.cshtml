@@ -1,0 +1,520 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/evolved_tax_mark_logo.ico">
+    <title>@ViewData["Title"] - SignUp to EvoTax Portal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </environment>
+
+
+</head>
+
+<style>
+
+    .password-container {
+        position: relative;
+    }
+
+    .password-input {
+        position: relative;
+    }
+
+        .password-input input {
+            padding-right: 35px; /* Adjust the padding to accommodate the eye icon */
+        }
+
+        .password-input::after {
+            content: "\f06e"; /* Unicode for the eye icon (Font Awesome) */
+            font-family: "Font Awesome 6 Free"; /* Use the appropriate font-family for the eye icon */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            pointer-events: auto; /* Make sure the icon is clickable */
+        }
+
+        .password-input.show-password::after {
+            content: "\f070"; /* Unicode for the eye-slash icon (Font Awesome) */
+        }
+
+    .password-container {
+        position: relative;
+    }
+
+    .confirm-input {
+        position: relative;
+    }
+
+        .confirm-input input {
+            padding-right: 35px; /* Adjust the padding to accommodate the eye icon */
+        }
+
+        .confirm-input::after {
+            content: "\f06e"; /* Unicode for the eye icon (Font Awesome) */
+            font-family: "Font Awesome 6 Free"; /* Use the appropriate font-family for the eye icon */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            pointer-events: auto; /* Make sure the icon is clickable */
+        }
+
+        .confirm-input.show-password::after {
+            content: "\f070"; /* Unicode for the eye-slash icon (Font Awesome) */
+        }
+
+
+
+    /* Hide all steps by default: */
+    .tab {
+        display: none;
+    }
+
+    .bordertext {
+        border-radius: 5px;
+    
+    }
+
+    .textQuest {
+        border-radius: 5px;
+         width: 327.833px;
+    }
+
+    /* Make circles that indicate the steps of the form: */
+    .step {
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+        /* Mark the active step: */
+        .step.active {
+            opacity: 1;
+        }
+
+    /* Mark the steps that are finished and valid: */
+    /*    .step.finish {
+                                    background-color: #04AA6D;
+                                }*/
+
+    p {
+        font-size: large;
+        color: white;
+    }
+
+    .form-box {
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 4px;
+        margin: 20px;
+    }
+
+</style>
+
+<body class="gray-bg">
+    <partial name="_busyIndicator" />
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div id="contentContainer"></div>
+            <form id="regForm"
+                  method="post"
+                  data-ajax="true"
+                  data-ajax-method="post"
+                  data-ajax-mode="replace"
+                  data-ajax-failure="COMMON.ajaxfailure"
+                  data-ajax-loading="#ajax-loader"
+                  data-ajax-success="ajaxsuccess"
+                  data-ajax-url="@Url.Action("SignUp","Account")">
+
+                <!-- One "tab" for each step in the form: -->
+                <div>
+
+                    <!--General Questionare View-->
+                    <partial name="_signUpQuestionare" model="Model" />
+                </div>
+
+
+               
+                <!-- Circles which indicates the steps of the form: -->
+                <div id="stepsDiv" style="text-align:center;margin-top:40px;">
+                    <span class="step"></span>
+                    <span class="step"></span>
+                    <span class="step"></span>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="responseDiv" class="mt-5 ml-5" hidden>
+        <h3>Thank you for registering for the EvoTax Platform. Please check your e-mail for further process.</h3>
+    </div>
+    <div style="margin-top:2%; left: 0; right: 0; bottom: 10px; text-align: center;">
+        <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>
+        <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+    </div>
+
+    <environment names="Development">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+        <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
+
+
+    </environment>
+    <environment names="Staging,Production">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <!-- Only for demo purpose -->
+        <script src="~/js/common.js"></script>
+        <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
+    </environment>
+    <script type="text/javascript">
+
+        document.querySelector('.password-input').addEventListener('click', function () {
+            var passwordInput = document.getElementById('Password');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('show-password');
+        });
+
+        document.querySelector('.confirm-input').addEventListener('click', function () {
+            var passwordInput = document.getElementById('ConfirmPassword');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            this.classList.toggle('show-password');
+        });
+
+
+        $(document).ready(function () {
+
+            $('input[type="text"], input[type="email"], input[type="password"]').each(function () {
+                var placeholderText = $(this).attr('placeholder');
+                $(this).hover(function () {
+                    $(this).attr('title', placeholderText);
+                }, function () {
+                    $(this).removeAttr('title');
+                });
+            });
+
+
+            $('.ddl').css('width', '299.167px');
+            $('.ddlQues').css('width', '327.833px');
+            $('.select2-container').css('width', '100%');
+
+            $("select").select2({
+                theme: 'bootstrap4',
+                // placeholder: "Select One",
+                //allowClear: true
+            });
+
+
+            // Get the current date
+            //var currentDate = new Date().toISOString().split('T')[0];
+            // Set the max attribute of the date input
+            //$('#dateOfBirthW8Ben').attr('max', currentDate);
+            //$('#dateOfBirthW8ECI').attr('max', currentDate);
+        });
+
+
+        $('#SecuredQ1').change(function () {
+            var selectedValue = $(this).val(); // Get the selected value
+            $('#SecuredQ2').find('option[value="' + selectedValue + '"]').remove();
+            $('#SecuredQ3').find('option[value="' + selectedValue + '"]').remove();
+        });
+        $('#SecuredQ2').change(function () {
+            var selectedValue = $(this).val(); // Get the selected value
+            $('#SecuredQ3').find('option[value="' + selectedValue + '"]').remove();
+        });
+
+        $(window).on('load', function () {
+            $('select').change();
+            var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
+            if (checkedRadioButton.length > 0) {
+                checkedRadioButton.trigger("click");
+            }
+            var checkedRadioButtonW8From = $("input[type='radio'][name='W8FormType']:checked");
+            if (checkedRadioButtonW8From.length > 0) {
+                checkedRadioButtonW8From.trigger("click");
+            }
+        });
+        function ajaxsuccess(response) {
+            COMMON.notification(1, "Account created successfully");
+            document.getElementById("stepsDiv").style.display = "none";
+            document.getElementById("nextBtn").style.display = "none";
+            document.getElementById("prevBtn").style.display = "none";
+            $('#responseDiv').prop('hidden', false);
+            window.open('https://outlook.office365.com/', '_blank');
+
+        }
+        function ShowHideProvince(obj) {
+
+            if (obj.value !== null && obj.value.trim() !== '') {
+                $('#AddressFields').prop('hidden', false);
+            }
+            else {
+                $('#AddressFields').prop('hidden', true);
+            }
+            if (obj.value == 'United States') {
+                $('#provinceDiv').prop('hidden', true);
+                $('#province').val('');
+                $('#stateDiv').prop('hidden', false);
+                $('#lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provinceDiv').prop('hidden', false);
+                $('#stateDiv').prop('hidden', true);
+                $('#state').val(1);
+                $('#lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
+        function ShowHideFTIN(obj) {
+            if (obj.value == 'true') {
+                $('#FTINDiv').prop('hidden', false);
+            } else {
+                $('#FTINDiv').prop('hidden', true);
+                $('#FTIN').val('');
+            }
+        }
+        function ShowHideFTINW8ECI(obj) {
+            if (obj.value == 'true') {
+                $('#FTINW8ECIDiv').prop('hidden', false);
+            } else {
+                $('#FTINW8ECIDiv').prop('hidden', true);
+                $('#FTINW8ECI').val('');
+            }
+        }
+        function ShowHideProvincePerm(obj) {
+            if (obj.value == 'United States') {
+                $('#provincePermDiv').prop('hidden', true);
+                $('#provincePerm').val('');
+                $('#statePermDiv').prop('hidden', false);
+                $('#lblZipCodePerm').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('#provincePermDiv').prop('hidden', false);
+                $('#statePermDiv').prop('hidden', true);
+                $('#statePerm').val(1);
+                $('#lblZipCodePerm').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
+
+        function HideAddress(obj) {
+            if (obj.checked) {
+                $('#SamePermAddressDiv').prop('hidden', true);
+            } else {
+                $('#SamePermAddressDiv').prop('hidden', false);
+            }
+        }
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
+
+
+        function ChangeMasking(obj) {
+            if (obj.value == 'S') {
+                $('#SUIDNumber').attr('placeholder', '000-00-0000');
+                $('#SUIDNumber').mask('000-00-0000', { reverse: true });
+            } else if (obj.value == 'E') {
+                $('#SUIDNumber').attr('placeholder', '00-0000000');
+                $('#SUIDNumber').mask('00-0000000', { reverse: true });
+            } else {
+                $('#SUIDNumber').attr('placeholder', '000-00-0000');
+                $('#SUIDNumber').mask('000-00-0000', { reverse: true });
+            }
+        }
+
+
+        function showTab(n) {
+
+            // This function will display the specified tab of the form ...
+            var x = document.querySelectorAll('.tab:not([hidden])');
+
+            x[n].style.display = "block";
+            // ... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Create Account";
+
+            } else {
+                document.getElementById("nextBtn").innerHTML = "Next Page >>";
+            }
+            // ... and run a function that displays the correct step indicator:
+            fixStepIndicator(n)
+        }
+
+        function nextPrev(n) {
+
+            // This function will figure out which tab to display
+            // var x = document.getElementsByClassName("tab");
+            var x = document.querySelectorAll('.tab:not([hidden])');
+
+            //if ($('#SamePermAddress').is(':checked')) {
+            //    //--------------------//
+            //    $('#countryPerm').val($('#country').val()).change();
+            //    $('#adreess1Perm').val($('#adreess1').val());
+            //    $('#adreess2Perm').val($('#adreess2').val());
+            //    $('#cityPerm').val($('#city').val());
+
+            //    $('#zipCodePerm').val($('#zipCode').val());
+            //    $('#statePerm').val($('#state').val());
+            //    $('#provincePerm').val($('#province').val());
+            //    //--------------------//
+            //}
+            $('#contentContainer').empty();
+            // Exit the function if any field in the current tab is invalid:
+            //if (n == 1 && !validateForm()) return false;
+            if (n == 1 && !$('#regForm').valid()) return false;
+            if (currentTab < x.length) {
+                // Hide the current tab:
+                x[currentTab].style.display = "none";
+                // Increase or decrease the current tab by 1:
+            }
+            currentTab = currentTab + n;
+
+
+
+            // if you have reached the end of the form... :
+            if (currentTab >= x.length) {
+
+                //...the form gets submitted:
+                // document.getElementById("regForm").submit();
+                let form = $('#regForm');
+                if (form.valid()) {
+                    $("#Citizenship").prop('disabled', false);
+                    form.submit();
+                }
+                return false;
+            }
+
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+        }
+
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            //x = document.getElementsByClassName("tab");
+            var x = document.querySelectorAll('.tab:not([hidden])');
+            sp = x[currentTab].getElementsByTagName("span");
+            y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByTagName("select");
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].hasAttribute("required") && y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+                if (y[i].id == "socialSecurityNumber" && y[i].value.length < 11) {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < z.length; i++) {
+                // If a field is empty...
+                if (z[i].hasAttribute("required") && z[i].value == "") {
+                    // add an "invalid" class to the field:
+                    sp[7].style.backgroundColor = "#ffdddd"
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < y.length; i++) {
+                    // If a field is empty...
+                    if (y[i].hasAttribute("required") && y[i].value != "") {
+                        // add an "invalid" class to the field:
+                        y[i].classList.remove("invalid")
+                        // and set the current valid status to false:
+                    }
+                }
+
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < z.length; i++) {
+                    // If a field is empty...
+                    if (z[i].hasAttribute("required") && z[i].value != "") {
+                        // add an "invalid" class to the field:
+                        sp[7].style.backgroundColor = "";
+                        // and set the current valid status to false:
+                    }
+                }
+                document.getElementsByClassName("step")[currentTab].className += " finish";
+            }
+            return valid; // return the valid status
+        }
+
+        function fixStepIndicator(n) {
+            // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("step");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" active", "");
+            }
+            //... and adds the "active" class to the current step:
+            x[n].className += " active";
+        }
+    </script>
+</body>
+</html>
