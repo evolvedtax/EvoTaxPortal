@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EvolvedTax.Data.Models.Entities._1099
 {
 
     public partial class Tbl1099_LTC
     {
+        [Key]
         public string Rcp_TIN { get; set; }
 
         public string? Last_Name_Company { get; set; }
