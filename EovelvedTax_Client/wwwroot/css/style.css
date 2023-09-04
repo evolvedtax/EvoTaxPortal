@@ -1515,7 +1515,7 @@ button:focus {
   outline: 0 !important;
 }
 .btn {
-  border-radius: 1rem;
+  border-radius: 0.6rem;
   font-size: inherit;
 }
 .btn:focus {
@@ -2806,7 +2806,7 @@ select.form-control:not([size]):not([multiple]) {
     background-color: #FFFFFF;
     background-image: none;
     border: 2px solid #929292;
-    border-radius: 1rem;
+    border-radius: 0.6rem;
     color: inherit;
     display: block;
     padding: 6px 12px;
@@ -4753,8 +4753,8 @@ body.body-small .footer.fixed {
 .table > colgroup + thead > tr:first-child > th,
 .table > thead:first-child > tr:first-child > td,
 .table > thead:first-child > tr:first-child > th {
-  border-top: 0;
-  border-color:#1ab394;
+    border: 1px solid #e7eaec;
+    border-color: #1ab394;
 }
 .table-bordered {
   border: 1px solid #EBEBEB;
@@ -4786,7 +4786,7 @@ body.body-small .footer.fixed {
   line-height: 1.42857;
   padding: 8px;
   vertical-align: top;
-  border-color:#1ab394
+  /*border-color:#1ab394*/
 }
 /* PANELS */
 .panel.blank-panel {
