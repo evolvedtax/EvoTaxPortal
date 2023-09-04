@@ -32,5 +32,7 @@
 /EovelvedTax_Client/obj
 /EvoTax.1099/bin/Debug/net7.0
 /EvoTax.1099/obj
-*.cache
-/EvolvedTax_Institute/obj/Debug/net7.0
+/EvolvedTax_Institute/obj/project.nuget.cache
+/EvolvedTax_Institute/obj/project.assets.json
+/EvolvedTax_Institute/obj/EvolvedTax_Institute.csproj.nuget.g.props
+/EvolvedTax_Institute/obj/EvolvedTax_Institute.csproj.nuget.dgspec.json

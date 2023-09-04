@@ -1,0 +1,110 @@
+﻿@model UserRequest
+
+
+<div class="tab">
+    <div style="margin-bottom:5%">
+        <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
+        @*<h3>Welcome to EvoTax Portal</h3>*@
+    </div>
+    <div class="form-group">
+        @*  <label><span class="text-danger">*</span></label>*@
+        <input id="firstName" asp-for="SUFirstName" type="text" class="form-control bordertext" required placeholder="First Name">
+    </div>
+
+
+    <div class="form-group">
+
+        <input id="lastName" asp-for="SULastName" type="text" class="form-control bordertext" required placeholder="Last Name" />
+    </div>
+
+
+    <div class="form-group">
+
+        <input id="Position" asp-for="SUPosition" type="text" class="form-control bordertext" required placeholder="Position">
+    </div>
+    
+    <div class="form-group">
+
+        <input id="InstitutionName" asp-for="SUInstitutionName" type="text" class="form-control bordertext" required placeholder="Institution Name/Business Name">
+    </div>
+
+
+    <div class="form-group">
+        <input id="EmailAddress" asp-for="SUEmailAddress" type="email" class="form-control bordertext" required placeholder="Official E-mail">
+        <span asp-validation-for="SUEmailAddress"></span>
+    </div>
+
+
+    <div class="form-group">
+        <div class="password-input">
+            <input id="Password" asp-for="SUPassword" type="password" class="form-control bordertext" required placeholder="Password">
+        </div>
+        <span asp-validation-for="SUPassword" class="text-danger"></span>
+    </div>
+    
+
+
+
+    <div class="form-group">
+        <div class="confirm-input">
+        <input id="ConfirmPassword" asp-for="SUConfirmPassword" type="password" class="form-control bordertext" required placeholder="Confirm Password">
+        <span asp-validation-for="SUConfirmPassword" class="text-danger"></span>
+    </div>
+
+
+</div>
+
+</div>
+
+<div class="tab">
+
+    <div style="margin-bottom:5%">
+        <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
+        <h3>Password Recovery Questions</h3>
+    </div>
+
+    <div class="form-group">
+        <select id="SecuredQ1" asp-for="SUPasswordSecuredQ1" asp-items="ViewBag.SecuredQ1" class="select2 ddlQues" required>
+            <option value="" disabled selected>Select Security Question 1</option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA1" asp-for="SUPasswordSecuredA1" type="text" class="form-control textQuest" required placeholder="Answer">
+    </div>
+
+
+    <div class="form-group">
+        <select id="SecuredQ2" asp-for="SUPasswordSecuredQ2" asp-items="ViewBag.SecuredQ2" class="select2 ddlQues" required>
+            <option value="" disabled selected>Select Security Question 2</option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA2" asp-for="SUPasswordSecuredA2" type="text" class="form-control textQuest" required placeholder="Answer">
+    </div>
+
+
+    <div class="form-group">
+        <select id="SecuredQ3" asp-for="SUPasswordSecuredQ3" asp-items="ViewBag.SecuredQ3" class="select2 ddlQues" required>
+            <option value="" disabled selected>Select Security Question 3</option>
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <input id="PasswordSecuredA3" asp-for="SUPasswordSecuredA3" type="text" class="form-control textQuest" required placeholder="Answer">
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
