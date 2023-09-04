@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="DbContexts\" />
-    <Folder Include="Models\Entities\1099\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {}
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {}
   },
   "projects": {
-    "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
         "projectName": "EvolvedTax.Business",
-        "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
         "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\obj\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -28,11 +28,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
-                "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
               },
-              "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
-                "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
               }
             }
           }
@@ -96,14 +96,14 @@
         }
       }
     },
-    "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
         "projectName": "EvolvedTax.Common",
-        "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
         "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\obj\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -161,14 +161,14 @@
         }
       }
     },
-    "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
         "projectName": "EvolvedTax.Data",
-        "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
         "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\obj\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -240,14 +240,14 @@
         }
       }
     },
-    "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
         "projectName": "EvolvedTax_Institute",
-        "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
         "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
-        "outputPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax_Institute\\obj\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -265,14 +265,14 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
-                "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Business\\EvolvedTax.Business.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj"
               },
-              "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
-                "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
               },
-              "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
-                "projectPath": "C:\\Code\\Code Repos\\EvolvedTax\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
               }
             }
           }

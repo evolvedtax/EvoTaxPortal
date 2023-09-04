@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvolvedTax.Data.Models.Entities._1099;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -141,6 +142,8 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
 
     public virtual DbSet<W91> W91s { get; set; }
     public DbSet<RoleHierarchy> RoleHierarchy{ get; set; }
+    public DbSet<Tbl1099_MISC> Tbl1099_MISC { get; set; }
+    public DbSet<Tbl1099_NEC> Tbl1099_NEC { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -864,6 +867,17 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
         {
             entity.ToTable("EntitiesUsers", tb => tb.HasTrigger("trg_EntitiesUsersUpdateHistory"));
         });
+
+        modelBuilder.Entity<Tbl1099_MISC>(entity =>
+        {
+            entity.ToTable("Tbl1099_MISC", tb => tb.HasTrigger("trg_tbl1099_MISC_UpdateHistory"));
+        });
+
+        modelBuilder.Entity<Tbl1099_NEC>(entity =>
+        {
+            entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
+        });
+
 
         modelBuilder.Entity<MasterEntityType>(entity =>
         {
