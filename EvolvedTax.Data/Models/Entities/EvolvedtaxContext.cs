@@ -144,10 +144,38 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public DbSet<RoleHierarchy> RoleHierarchy{ get; set; }
     public DbSet<Tbl1099_MISC> Tbl1099_MISC { get; set; }
     public DbSet<Tbl1099_NEC> Tbl1099_NEC { get; set; }
+    public DbSet<Tbl1099_A> Tbl1099_A { get; set; }
+    public DbSet<Tbl1099_B> Tbl1099_B { get; set; }
+    public DbSet<Tbl1099_C> Tbl1099_C { get; set; }
+    public DbSet<Tbl1099_CAP> Tbl1099_CAP { get; set; }
+    public DbSet<Tbl1099_DIV> Tbl1099_DIV { get; set; }
+    public DbSet<Tbl1099_G> Tbl1099_G { get; set; }
+    public DbSet<Tbl1099_INT> Tbl1099_INT { get; set; }
+    public DbSet<Tbl1099_K> Tbl1099_K { get; set; }
+    public DbSet<Tbl1099_LS> Tbl1099_LS { get; set; }
+    public DbSet<Tbl1099_LTC> Tbl1099_LTC { get; set; }
+    public DbSet<Tbl1099_OID> Tbl1099_OID { get; set; }
+    public DbSet<Tbl1099_PATR> Tbl1099_PATR { get; set; }
+    public DbSet<Tbl1099_Q> Tbl1099_Q { get; set; }
+    public DbSet<Tbl1099_R> Tbl1099_R { get; set; }
+    public DbSet<Tbl1099_S> Tbl1099_S { get; set; }
+    public DbSet<Tbl1099_SA> Tbl1099_SA { get; set; }
+    public DbSet<Tbl1099_SB> Tbl1099_SB { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Tbl1099_MISC>(entity =>
+        {
+            entity.ToTable("Tbl1099_MISC", tb => tb.HasTrigger("trg_tbl1099_MISC_UpdateHistory"));
+        });
+
+        modelBuilder.Entity<Tbl1099_NEC>(entity =>
+        {
+            entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
+        });
+
+
         modelBuilder.Entity<RoleHierarchy>().HasNoKey();
         modelBuilder.Entity<Announcement>(entity =>
         {
@@ -868,15 +896,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.ToTable("EntitiesUsers", tb => tb.HasTrigger("trg_EntitiesUsersUpdateHistory"));
         });
 
-        modelBuilder.Entity<Tbl1099_MISC>(entity =>
-        {
-            entity.ToTable("Tbl1099_MISC", tb => tb.HasTrigger("trg_tbl1099_MISC_UpdateHistory"));
-        });
-
-        modelBuilder.Entity<Tbl1099_NEC>(entity =>
-        {
-            entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
-        });
+   
 
 
         modelBuilder.Entity<MasterEntityType>(entity =>
