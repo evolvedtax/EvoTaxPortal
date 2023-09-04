@@ -1,7 +1,5 @@
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.Development.json
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.json
-D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\Select.Html.dep
-D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\Select.Tools.dep
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.staticwebassets.runtime.json
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.exe
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.deps.json

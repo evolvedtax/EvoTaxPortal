@@ -614,7 +614,7 @@ namespace EvolvedTax_Institute.Controllers
             //    return RedirectToAction("Index", "Dashboard");
             //}
             TempData["Type"] = ResponseMessageConstants.ErrorStatus;
-            TempData["Message"] = "Please enter correct OTP";
+            TempData["Message"] = "Invalid OTP entered. Please try again.";
             return View(nameof(Auth));
         }
         public async Task<IActionResult> OTP(string? s = "", string e = "")

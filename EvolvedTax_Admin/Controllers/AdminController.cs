@@ -76,9 +76,10 @@ namespace EvolvedTax_Admin.Controllers
             TempData["Message"] = "Username or password is incorrect!";
             return RedirectToAction(nameof(Login));
         }
-        public ActionResult Logout()
+        public async Task<ActionResult> Logout()
         {
             HttpContext.Session.Clear();
+            await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(Login));
         }
         public ActionResult AccessDenied(short statusCode)

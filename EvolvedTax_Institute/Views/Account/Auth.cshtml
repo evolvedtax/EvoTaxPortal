@@ -60,7 +60,7 @@
         .input {
             height: 3em;
             width: 2.8em;
-            border: 1px solid #dad9df;
+            border: 2px solid #dad9df;
             outline: none;
             text-align: center;
             font-size: 1.3em;
@@ -102,7 +102,7 @@
         }
 
         .input:focus {
-            border: 1px solid #1ab394;
+            border: 2px solid #1ab394;
         }
 
     </style>
@@ -114,7 +114,7 @@
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
         <h3>Welcome to EvoTax Portal</h3>
         <p class="text-danger">@TempData["Message"]</p>
-        <p>To verify your identity, please enter the OTP (One-Time Password) that was sent to your email inbox. Once you've entered the OTP, click 'Proceed' to continue.</p>
+        <p>To verify your identity, please enter the OTP (One-Time Password) that was sent to your e-mail.</p>
         <form id="form" class="m-t" role="form" method="post" asp-action="Auth" asp-controller="Account" asp-route-returnUrl="@ViewData["ReturnUrl"]">
             <div class="inputfield">
                 <input type="number" name="Otp1" maxlength="1" class="input" disabled />

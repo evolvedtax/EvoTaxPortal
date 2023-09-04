@@ -84,10 +84,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxfc2lnblVwUXVlc3Rpb25hcmUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Admin/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTG9naW4uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Announcement/Announcements.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5ub3VuY2VtZW50XEFubm91bmNlbWVudHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -108,64 +104,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5ub3VuY2VtZW50XF9Bbm5vdW5jZW1lbnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Certification/DownloadForm.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2VydGlmaWNhdGlvblxEb3dubG9hZEZvcm0uY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Certification/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2VydGlmaWNhdGlvblxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/GQEntity.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XEdRRW50aXR5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/W8BENE.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XFc4QkVORS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/W8ECI.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XFc4RUNJLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/W8EXP.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XFc4RVhQLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/W8IMY.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XFc4SU1ZLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_generalQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF9nZW5lcmFsUXVlc3Rpb25hcmUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_generalQuestionareW8BENE.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF9nZW5lcmFsUXVlc3Rpb25hcmVXOEJFTkUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_generalQuestionareW8ECI.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF9nZW5lcmFsUXVlc3Rpb25hcmVXOEVDSS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_generalQuestionareW8EXP.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF9nZW5lcmFsUXVlc3Rpb25hcmVXOEVYUC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_generalQuestionareW8IMY.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF9nZW5lcmFsUXVlc3Rpb25hcmVXOElNWS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_w8BenQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF93OEJlblF1ZXN0aW9uYXJlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Entity/_w8ECIQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW50aXR5XF93OEVDSVF1ZXN0aW9uYXJlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Form/Report.cshtml]
@@ -182,22 +122,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Home/TaxPayerDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxUYXhQYXllckRldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Individual/GQIndividual.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kaXZpZHVhbFxHUUluZGl2aWR1YWwuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Individual/_generalQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kaXZpZHVhbFxfZ2VuZXJhbFF1ZXN0aW9uYXJlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Individual/_w8BenQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kaXZpZHVhbFxfdzhCZW5RdWVzdGlvbmFyZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Individual/_w8ECIQuestionare.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kaXZpZHVhbFxfdzhFQ0lRdWVzdGlvbmFyZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Repositories/EvoTaxPortal/EvolvedTax_Institute/Views/Institute/Client.cshtml]

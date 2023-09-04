@@ -34,7 +34,12 @@
         border-bottom: 0;
         border-left: 0.3em solid transparent;
     }
-
+    /* CSS */
+    .show-container {
+        transition: opacity 0.5s, max-height 0.5s;
+        opacity: 1;
+        max-height: 200px; /* You can adjust the max height as needed */
+    }
     .dataTables_filter {
         /*position: absolute;
                                                                                         top: 0;
@@ -55,6 +60,8 @@
 
     .bootstrap-tagsinput {
         width: 100%;
+        border-radius: 0.6rem;
+        border: 2px solid #929292;
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -81,11 +88,11 @@
                                   data-ajax-success="ajaxsuccessUpdateEmailFrequency"
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
                                 <div style="display:flex">
-                                    <label class="ml-2 mr-2" style="margin:auto">Send Email Reminder After Every</label>
+                                    <label class="ml-2 mr-2" style="margin:auto">Send E-mail Reminder After Every</label>
                                     <input id="EntityIdFreq" name="EntityIdFreq" hidden />
                                     <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
 
-                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set email reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set e-mail reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top">Save</button>
                                     @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
@@ -124,7 +131,7 @@
                     </div>*@
                     <div class="row">
                         <div class="table-container col-md-10">
-                            <div class="table-responsive" id="maintable">
+                            <div class="table-responsive show-container" id="maintable">
                                 @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
                                 <label for="pageLengthInput">Show</label>
@@ -147,7 +154,7 @@
                                             <th>Zip/Postal Code</th>
                                             <th>Country</th>
                                             <th>Phone Number</th>
-                                            <th>Email Address</th>
+                                            <th>E-mail Address</th>
                                             <th>Status</th>
                                             <th>Form Completion Date</th>
                                             <th>Form Name</th>
@@ -242,7 +249,7 @@
                                                                         }
                                                                         @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
                                                                         {
-                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send Email</a>
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send E-mail</a>
                                                                         }
                                                                     </div>
                                                                 </div>
@@ -335,7 +342,7 @@
                                     <th>Zip/Postal Code</th>
                                     <th>Country</th>
                                     <th>Phone Number</th>
-                                    <th>Email Address</th>
+                                    <th>E-mail Address</th>
                                     <th>Status</th>
                                     <th>Form Completion Date</th>
                                     <th>Form Name</th>
@@ -373,7 +380,7 @@
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Add New Client</h4>
+                <h4 class="modal-title">Add New Investor</h4>
             </div>
             <div class="modal-body">
                 <form id="addForm"
@@ -403,7 +410,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="partnerName1">Email Address<span class="text-danger">*</span></label>
+                                <label for="partnerName1">E-mail Address<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" asp-for="InstituteClientsRequest.ClientEmailId" required>
                                 <span asp-validation-for="InstituteClientsRequest.ClientEmailId"></span>
                             </div>
@@ -477,7 +484,7 @@
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Edit Client</h4>
+                <h4 class="modal-title">Edit Investor</h4>
             </div>
             <div class="modal-body">
                 <!-- Form for editing row data -->
@@ -508,7 +515,7 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="ClientEmailId">Email Address<span class="text-danger">*</span></label>
+                                <label for="ClientEmailId">E-mail Address<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="ClientEmailId" asp-for="InstituteClientsRequest.ClientEmailId" required>
 
                             </div>
@@ -600,7 +607,7 @@
                     <div class="col-md-12">
                         <div>
                             <label>Invite People</label>
-                            <input class="tagsinput form-control" type="email" placeholder="Enter email address" />
+                            <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
                         </div>
                         <div class="mt-2">
                             <select asp-items="ViewBag.Roles" name="role" class="selec2" style="width:25%">
@@ -649,23 +656,24 @@
             var sharedUsersContainer = document.getElementById("sharedUsersContainer");
             var maintableWrapper = $("#maintable");
 
-            if (toggleButton !=null){
-            // Add click event listener to the button
-            toggleButton.addEventListener("click", function () {
-                // Toggle the visibility of the container
-                if (sharedUsersContainer.style.display === "none") {
-                    sharedUsersContainer.style.display = "block"; // Show 
-                    toggleButton.title = "Hide Users";
-                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
-                } else {
-                    sharedUsersContainer.style.display = "none"; // Hide 
-                    toggleButton.title = "Show Users"; 
-                    maintableWrapper.unwrap(); 
-                }
-            });
+            if (toggleButton != null) {
+                // Add click event listener to the button
+                toggleButton.addEventListener("click", function () {
+                    // Toggle the visibility of the container with animation
+                    if (sharedUsersContainer.style.display === "none") {
+                        sharedUsersContainer.style.display = "block";
+                        toggleButton.title = "Hide Users";
+                        maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+                        sharedUsersContainer.classList.add("show-container");
+                    } else {
+                        sharedUsersContainer.style.display = "none";
+                        toggleButton.title = "Show Users";
+                        maintableWrapper.unwrap();
+                        sharedUsersContainer.classList.remove("show-container");
+                    }
+                });
             }
         }
-
 
         $(document).ready(function () {
 
@@ -1026,8 +1034,8 @@
                                         return;
                                     }
                                     swal({
-                                        title: "Sending Email...",
-                                        text: "Email will send to the clients awaited for form submission",
+                                        title: "Sending E-mail...",
+                                        text: "E-mail will send to the clients awaited for form submission",
                                         type: "info",
                                         showCancelButton: false,
                                         confirmButtonColor: "#1ab394",
@@ -1170,13 +1178,13 @@
             // Select All checkbox
             $('#selectAll').change(function () {
                 $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
-                $('.email-btn').text('Send Email to All');
+                $('.email-btn').text('Send E-mail to All');
                 var selectedValues = [];
                 $('.rowCheckbox:checked').each(function () {
                     selectedValues.push($(this).val());
                 });
                 if (selectedValues.length === 0) {
-                    $('.email-btn').text('Send Email');
+                    $('.email-btn').text('Send E-mail');
                 }
             });
 
@@ -1184,16 +1192,16 @@
             $('.rowCheckbox').change(function () {
                 if ($('.rowCheckbox:checked').length == $('.rowCheckbox').length) {
                     $('#selectAll').prop('checked', true);
-                    $('.email-btn').text('Send Email to All');
+                    $('.email-btn').text('Send E-mail to All');
                 } else {
                     $('#selectAll').prop('checked', false);
-                    $('.email-btn').text('Send Email to Selected');
+                    $('.email-btn').text('Send E-mail to Selected');
                     var selectedValues = [];
                     $('.rowCheckbox:checked').each(function () {
                         selectedValues.push($(this).val());
                     });
                     if (selectedValues.length === 0) {
-                        $('.email-btn').text('Send Email');
+                        $('.email-btn').text('Send E-mail');
                     }
                 }
             });
@@ -1256,7 +1264,7 @@
                                                 $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteClient\',\'id=' + item?.ClientId + '\',\'\')">').text('Delete')),
                                         (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') ?
                                             '' :
-                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId + '\'})">').text('Send Email')
+                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId + '\'})">').text('Send E-mail')
                                     )
                                 )
                             )

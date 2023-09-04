@@ -56,13 +56,13 @@
         <link rel="stylesheet" href="~/lib/bootstrap-tagsinput/bootstrap-tagsinput.css" />
     </environment>
     <style>
-    
+
 
         #alertDropdown li {
             padding: 10px;
             border-bottom: 1px solid #e9e9e9;
         }
-    /* Hover effect */
+            /* Hover effect */
             #alertDropdown li:hover {
                 background-color: #f2f2f2; /* Change to any color you prefer for the hover effect */
                 cursor: pointer; /* Change cursor to a pointer when hovering over the alert item */
@@ -90,7 +90,7 @@
             color: white;
         }
 
-        .btn-template{
+        .btn-template {
             background-color: #384a50;
             border-color: white;
             color: white;
@@ -102,18 +102,19 @@
             color: white;
         }
 
-        .email-btn{
+        .email-btn {
             background-color: #1ab394;
             border-color: #1ab394;
             color: white;
         }
 
-        .btn-recycle-bin{
+        .btn-recycle-bin {
             background-color: #384a50;
             border-color: white;
             color: white;
         }
-        .btn-empty-recycle-bin{
+
+        .btn-empty-recycle-bin {
             background-color: #384a50;
             border-color: white;
             color: white;
@@ -136,18 +137,18 @@
             font-weight: 600;
             padding: 10px 20px 10px 25px;
         }
-        .left-nav-links{
+
+        .left-nav-links {
             border-radius: 1rem;
             width: 96%;
         }
 
-            .table td {
-                border-radius: 1rem;
-                border-color:black
+        .table td {
+            border-radius: 0.60rem;
         }
+
         table thead th {
-            border-radius: 1rem;
-            border-color: black
+            border-radius: 0.60rem;
         }
 
         .ibox-title {
@@ -162,7 +163,7 @@
             border-bottom-right-radius: 1rem;
         }
 
-        .minimalize-styl-2{
+        .minimalize-styl-2 {
             border-radius: 0.75rem;
         }
 
@@ -184,8 +185,8 @@
 
             <!-- Top Navbar -->
             <partial name="_TopNavbarInstitiute" />
-        @*    <partial name="_Testing" />
-*@
+            @*    <partial name="_Testing" />
+            *@
             <!-- Main view  -->
             @RenderBody()
 
@@ -274,18 +275,18 @@
             displayBusyIndicator();
         });
 
-        
+
         function updateNewAlertCount(count) {
-         $('#newAlertCount').text(count);
+            $('#newAlertCount').text(count);
         }
 
         function updateNewAnnouncementCount(count) {
             $('#newAnnouncementCount').text(count);
         }
-        
+
 
         function markFirstTwoAlertsAsRead() {
-            // Select the first two alert items 
+            // Select the first two alert items
             var $alertsToMarkAsRead = $('#alertDropdown li:lt(2)');
             $alertsToMarkAsRead.each(function () {
                 var alertId = $(this).data('alertid');
@@ -506,12 +507,12 @@
         }
 
         $(document).ready(function () {
-        
 
- 
+
+
             loadAlerts();
             loadAnnouncement();
-           // setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
+            // setInterval(loadAlerts, 30000); // 30000 milliseconds = 30 seconds
 
             $(document).on('click', function (event) {
                 // Check if the clicked element is outside the alertDropdown
@@ -523,12 +524,12 @@
 
 
         });
-    
+
 
         // Function to mark all alerts as read
         function markAllAlertsAsReadAndRedirect() {
             $.ajax({
-                url: '/Account/MarkAllAlertsAsRead', 
+                url: '/Account/MarkAllAlertsAsRead',
                 method: 'POST',
                 dataType: 'json',
                 success: function (response) {
@@ -542,49 +543,49 @@
                 }
             });
         }
-    
+
 
     </script>
-  
-@*    <script>
-        Object.defineProperty(WebSocket, 'OPEN', { value: 1 });
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/announcementHub")
-            .build();
 
-        // List to store announcements received through SignalR
-        const signalRAnnouncements = [];
+    @*    <script>
+    Object.defineProperty(WebSocket, 'OPEN', { value: 1 });
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/announcementHub")
+    .build();
+
+    // List to store announcements received through SignalR
+    const signalRAnnouncements = [];
 
 
-        connection.on("ReceiveAnnouncement", function (message) {
-            console.log("Received announcement:", message);
-            // Add the received announcement to the SignalR list
-            signalRAnnouncements.push(message);
-            displaySignalRAnnouncements();
-        });
+    connection.on("ReceiveAnnouncement", function (message) {
+    console.log("Received announcement:", message);
+    // Add the received announcement to the SignalR list
+    signalRAnnouncements.push(message);
+    displaySignalRAnnouncements();
+    });
 
-        connection.start()
-            .catch(err => console.error(err));
+    connection.start()
+    .catch(err => console.error(err));
 
-        // Function to display SignalR announcements as alerts using SweetAlert
-        function displaySignalRAnnouncements() {
-            if (signalRAnnouncements.length > 0) {
-                const message = signalRAnnouncements.shift();
-                // Show announcement using SweetAlert
-                Swal.fire({
-                    title: "New Announcement",
-                    text: message,
-                    icon: "info",
-                    timer: 60000, // Auto close after 1 minute 
-                    timerProgressBar: true,
-                    showConfirmButton: true// Show close button to allow manual close
-          
-                }).then(() => {
-                    // Schedule the next notification after a delay (e.g., 1 minute)
-                    setTimeout(displaySignalRAnnouncements, 60000);
-                });
-            }
-        }
+    // Function to display SignalR announcements as alerts using SweetAlert
+    function displaySignalRAnnouncements() {
+    if (signalRAnnouncements.length > 0) {
+    const message = signalRAnnouncements.shift();
+    // Show announcement using SweetAlert
+    Swal.fire({
+    title: "New Announcement",
+    text: message,
+    icon: "info",
+    timer: 60000, // Auto close after 1 minute
+    timerProgressBar: true,
+    showConfirmButton: true// Show close button to allow manual close
+
+    }).then(() => {
+    // Schedule the next notification after a delay (e.g., 1 minute)
+    setTimeout(displaySignalRAnnouncements, 60000);
+    });
+    }
+    }
     </script>*@
     @RenderSection("Scripts", required: false)
 </body>
