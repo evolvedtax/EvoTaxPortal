@@ -30,3 +30,7 @@
 /EvolvedTax_Admin/obj
 /EovelvedTax_Client/bin/Debug/net7.0
 /EovelvedTax_Client/obj
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.assets.cache
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.AssemblyReference.cache
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.GeneratedMSBuildEditorConfig.editorconfig
+/.gitignore
