@@ -32,3 +32,5 @@
 /EovelvedTax_Client/obj
 /EvoTax.1099/bin/Debug/net7.0
 /EvoTax.1099/obj
+*.cache
+/EvolvedTax_Institute/obj/Debug/net7.0

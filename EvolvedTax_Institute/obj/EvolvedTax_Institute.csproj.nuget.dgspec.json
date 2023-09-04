@@ -1,26 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Repositories\\EvoTaxPortal\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {}
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {}
   },
   "projects": {
-    "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
         "projectName": "EvolvedTax.Business",
-        "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
-        "packagesPath": "C:\\Users\\NaeemIqbal\\.nuget\\packages\\",
-        "outputPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\obj\\",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj",
+        "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\NaeemIqbal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,18 +22,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
-                "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
               },
-              "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
-                "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
               }
             }
           }
@@ -99,27 +92,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
         "projectName": "EvolvedTax.Common",
-        "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
-        "packagesPath": "C:\\Users\\NaeemIqbal\\.nuget\\packages\\",
-        "outputPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\obj\\",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj",
+        "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\NaeemIqbal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -127,7 +114,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -171,27 +157,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
         "projectName": "EvolvedTax.Data",
-        "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
-        "packagesPath": "C:\\Users\\NaeemIqbal\\.nuget\\packages\\",
-        "outputPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\obj\\",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj",
+        "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\NaeemIqbal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -199,7 +179,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -257,27 +236,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\Repositories\\EvoTaxPortal\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {
+    "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
+        "projectUniqueName": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
         "projectName": "EvolvedTax_Institute",
-        "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
-        "packagesPath": "C:\\Users\\NaeemIqbal\\.nuget\\packages\\",
-        "outputPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax_Institute\\obj\\",
+        "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\EvolvedTax_Institute.csproj",
+        "packagesPath": "C:\\Users\\OwaisBaig\\.nuget\\packages\\",
+        "outputPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\NaeemIqbal\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.2.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\OwaisBaig\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -285,21 +258,21 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\Components\\System\\Components\\Packages": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
-                "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Business\\EvolvedTax.Business.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Business\\EvolvedTax.Business.csproj"
               },
-              "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
-                "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Common\\EvolvedTax.Common.csproj"
               },
-              "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
-                "projectPath": "D:\\Repositories\\EvoTaxPortal\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
+              "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj": {
+                "projectPath": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax.Data\\EvolvedTax.Data.csproj"
               }
             }
           }
@@ -356,7 +329,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
