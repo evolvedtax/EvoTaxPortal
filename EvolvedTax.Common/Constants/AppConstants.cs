@@ -17,7 +17,6 @@ namespace EvolvedTax.Common.Constants
         public const string NEC1099Form = @"1099_NEC";
         public const string FormPartiallySave = @"Form partially saved";
 
-        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
 
         public const string Entity = "Entity";
         public const string Client = "Client";
@@ -39,6 +38,14 @@ namespace EvolvedTax.Common.Constants
         public const string NEC_1099_TemplateFileName = @"Form_1099_NEC.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
+
+        //----------1099 TEMPLATES----------//
+        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
+
+        public const string Form1099MISCTemplate = "Form1099MISCTemplate.xlsx";
+
+        public const string Form1099MISC = @"Form1099MISC";
+
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
         //public const string F_Family_VladimirScript = "Vladimir Script";
