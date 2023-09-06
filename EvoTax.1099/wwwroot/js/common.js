@@ -231,6 +231,7 @@ var COMMON = (function () {
         return jsonResponse;
     };
     COMMON.doAjaxGetWithJSONResponse = function (url, params) {
+        $('.loading').show();
         var response = null;
         $.ajax({
             type: "GET",
@@ -238,9 +239,11 @@ var COMMON = (function () {
             data: params,
             async: false,
             success: function (data) {
+                $('.loading').hide();
                 response = data;
             },
             error: function (xhr, status, error) {
+                $('.loading').hide();
                 COMMON.displayError(xhr.responseText, xhr.status);
                 response = null;
             }

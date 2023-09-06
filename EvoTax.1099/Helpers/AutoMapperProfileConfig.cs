@@ -2,7 +2,9 @@
 using Azure;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
+using EvolvedTax.Data.Models.DTOs.Response.Form1099;
 using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Data.Models.Entities._1099;
 using System.Reflection;
 
 namespace EvolvedTax.Helpers
@@ -24,6 +26,10 @@ namespace EvolvedTax.Helpers
             //        CreateMap(dbEntity, response).ReverseMap();
             //    }
             //}
+            // 1099 Forms Config
+            CreateMap(typeof(Form1099MISCResponse),typeof(Tbl1099_MISC)).ReverseMap();
+
+            //W8/W9 Forms Confing
             CreateMap(typeof(InstituteMasterResponse),typeof(InstituteMaster)).ReverseMap();
             CreateMap(typeof(InstituteMasterRequest),typeof(InstituteMaster)).ReverseMap();
             CreateMap(typeof(InstituteEntitiesResponse),typeof(InstituteEntity)).ReverseMap();
