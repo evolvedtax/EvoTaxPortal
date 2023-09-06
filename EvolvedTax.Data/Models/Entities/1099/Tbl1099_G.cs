@@ -8,6 +8,8 @@ namespace EvolvedTax.Data.Models.Entities._1099
     public class Tbl1099_G
     {
         [Key]
+        public int Id { get; set; }
+        public string? Corrected { get; set; }
         public string Rcp_TIN { get; set; }
 
         public string? Last_Name_Company { get; set; }

@@ -49,10 +49,20 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
-                UserId = Guid.NewGuid().ToString();
+           
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
+
+                    string cell_value_13 = excelRow.GetCell(13)?.ToString();
+                    string Second_TIN_Notice = string.IsNullOrEmpty(cell_value_13) ? "0" : (cell_value_13.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
+
+                    string cell_value_15 = excelRow.GetCell(15)?.ToString();
+                    string Box_2_Checkbox = string.IsNullOrEmpty(cell_value_15) ? "0" : (cell_value_15.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
+
+
+                    string cell_value_27 = excelRow.GetCell(27)?.ToString();
+                    string Corrected = string.IsNullOrEmpty(cell_value_27) ? "0" : (cell_value_27.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
                     var entity = new Tbl1099_NEC
                     {
@@ -69,9 +79,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         Country = excelRow.GetCell(10)?.ToString(),
                         Rcp_Account = excelRow.GetCell(11)?.ToString(),
                         Rcp_Email = excelRow.GetCell(12)?.ToString(),
-                        Second_TIN_Notice = excelRow.GetCell(13)?.ToString(),
+                        Second_TIN_Notice = Second_TIN_Notice,
                         Box_1_Amount = excelRow.GetCell(14) != null ? Convert.ToDecimal(excelRow.GetCell(14).ToString()) : (decimal?)null,
-                        Box_2_Checkbox = excelRow.GetCell(15)?.ToString(),
+                        Box_2_Checkbox = Box_2_Checkbox,
                         Box_4_Amount = excelRow.GetCell(16) != null ? Convert.ToDecimal(excelRow.GetCell(16).ToString()) : (decimal?)null,
                         Box_5_Amount = excelRow.GetCell(17) != null ? Convert.ToDecimal(excelRow.GetCell(17).ToString()) : (decimal?)null,
                         Box_6_IDNumber = excelRow.GetCell(18)?.ToString(),
@@ -84,9 +94,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         BatchID = excelRow.GetCell(25)?.ToString(),
                         Tax_State = excelRow.GetCell(26)?.ToString(),
                         InstID = InstId,
-                        UserId = UserId,
+                        //UserId = UserId,
                         Created_Date = DateTime.Now.Date,
-                        Created_By = InstId.ToString()
+                        Created_By = UserId,
+                        Corrected= Corrected
 
                     };
 
@@ -165,114 +176,120 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
 
-            string PayData= string.Concat(requestInstitue.FirstName,",", requestInstitue.Madd1,",", requestInstitue.Mcity, ",",requestInstitue.Mcountry,",",requestInstitue.Phone);
-            string RecipentCIty=string.Concat(request.City,",",request.State,",",request.Zip,",",request.Country);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].CalendarYear[0].f1_1[0]", "23");   //CalYear
+            string PayData= string.Concat(requestInstitue.InstitutionName, ", ", requestInstitue.Madd1, ", ", requestInstitue.Madd2, ", ", requestInstitue.Mcity, ", ", requestInstitue.Mstate, requestInstitue.Mprovince, ", ", requestInstitue.Mcountry, ", ", requestInstitue.Mzip, ", ", requestInstitue.Phone);
+            string RecipentCity=string.Concat(request.City,",",request.State,",",request.Zip,",",request.Country);
+            String RecipentAddress = string.Concat(request.Address_Deliv_Street, ",",request.Address_Apt_Suite);
+            int currenDate = DateTime.Now.Year;
+            string currentYear = Convert.ToString(currenDate % 100);
+
+
+
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].CalendarYear[0].f1_1[0]", currentYear);   //CalYear
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].c1_1[0]", "VOID");   //VOID
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].c1_1[1]", "CORRECTED");   //CORRECTED
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].c1_1[1]", request.Corrected.ToString());   //CORRECTED
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_2[0]", PayData);   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_3[0]", requestInstitue.Idnumber);   //Payer TIN (IDNYMber
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_4[0]", request.Rcp_TIN);   //Recepients TIN
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_5[0]", request.First_Name);   //RECIPIENT’S name
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_6[0]", request.Address_Apt_Suite);   //Street address (including apt. no.)
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_7[0]", RecipentCIty);   //City or town, state or province, country, and ZIP or foreign postal code
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_5[0]", request.First_Name + " " + request.Name_Line2);   //RECIPIENT’S name
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_6[0]", RecipentAddress);   //Street address (including apt. no.)
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_7[0]", RecipentCity);   //City or town, state or province, country, and ZIP or foreign postal code
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_8[0]",  request.Rcp_Account);   //Account number (see instructions)
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].c1_2[0]", request.Second_TIN_Notice);   //2nd TIN not.
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_9[0]", request.Box_1_Amount.ToString());   //1 Nonemployee compensation
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_9[0]", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //1 Nonemployee compensation
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].c1_3[0]", request.Box_2_Checkbox.ToString());   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_10[0]", request.Box_4_Amount.ToString());   //4 Federal income tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_11[0]", request.Box_5_Amount.ToString());   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_12[0]", request.Box_5_Amount.ToString());   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_13[0]", request.Box_6_State.ToString());   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_14[0]", request.Box_6_State.ToString());   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_15[0]", request.Box_7_Amount.ToString());   //7 State income
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_16[0]", request.Box_7_Amount.ToString());   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_10[0]", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //4 Federal income tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_11[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_12[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_13[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_14[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_15[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_16[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
 
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].CalendarYear[0].f2_1[0]", "CalYear");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[0]", "VOID");   //VOID
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[1]", "CORRECTED");   //CORRECTED
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[1]", request.Corrected.ToString());   //CORRECTED
             pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_2[0]", PayData);   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_3[0]", "PAYTIN");   //Payer TIN
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_4[0]", "RCPTIN");   //Recepients TIN
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_5[0]", "RCPName");   //RECIPIENT’S name
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_6[0]", "RCPAdd");   //Street address (including apt. no.)
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_7[0]", "RCPCityStateCountryZIPPC");   //City or town, state or province, country, and ZIP or foreign postal code
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_8[0]", "RCTAccountNo");   //Account number (see instructions)
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_9[0]", "NonEmployeeComp");   //1 Nonemployee compensation
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].c2_3[0]", "Payer5k");   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_10[0]", "FedITWithHeld");   //4 Federal income tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_11[0]", "StatTax1");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_12[0]", "StatTax2");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_13[0]", "StateNo1");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_14[0]", "StateNo2");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_15[0]", "StateIncome1");   //7 State income
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_16[0]", "StateIncome2");   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_3[0]", requestInstitue.Idnumber);   //Payer TIN
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_4[0]", request.Rcp_TIN);   //Recepients TIN
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_5[0]", request.First_Name + " " + request.Name_Line2);   //RECIPIENT’S name
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_6[0]", RecipentAddress);   //Street address (including apt. no.)
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_7[0]", RecipentCity);   //City or town, state or province, country, and ZIP or foreign postal code
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_8[0]", request.Rcp_Account);   //Account number (see instructions)
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_9[0]", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //1 Nonemployee compensation
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].c2_3[0]", request.Box_2_Checkbox.ToString());   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_10[0]", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //4 Federal income tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_11[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_12[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_13[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_14[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_15[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_16[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
 
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].CalendarYear[0].f2_1[0]", "CalYear");   //CalYear
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].c2_1[0]", "CORRECTED");   //CORRECTED
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_2[0]", "PayData");   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_3[0]", "PAYTIN");   //Payer TIN
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_4[0]", "RCPTIN");   //Recepients TIN
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_5[0]", "RCPName");   //RECIPIENT’S name
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_6[0]", "RCPAdd");   //Street address (including apt. no.)
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_7[0]", "RCPCityStateCountryZIPPC");   //City or town, state or province, country, and ZIP or foreign postal code
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_8[0]", "RCTAccountNo");   //Account number (see instructions)
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_9[0]", "NonEmployeeComp");   //1 Nonemployee compensation
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].c2_3[0]", "Payer5k");   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_10[0]", "FedITWithHeld");   //4 Federal income tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_11[0]", "StatTax1");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_12[0]", "StatTax2");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_13[0]", "StateNo1");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_14[0]", "StateNo2");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_15[0]", "StateIncome1");   //7 State income
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_16[0]", "StateIncome2");   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].c2_1[0]", request.Corrected.ToString());   //CORRECTED
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_2[0]", PayData);   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_3[0]", requestInstitue.Idnumber);   //Payer TIN
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_4[0]", request.Rcp_TIN);   //Recepients TIN
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_5[0]", request.First_Name + " " + request.Name_Line2);   //RECIPIENT’S name
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_6[0]", RecipentAddress);   //Street address (including apt. no.)
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_7[0]", RecipentCity);   //City or town, state or province, country, and ZIP or foreign postal code
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_8[0]", request.Rcp_Account);   //Account number (see instructions)
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_9[0]", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //1 Nonemployee compensation
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].c2_3[0]", request.Box_2_Checkbox.ToString());   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_10[0]", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //4 Federal income tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_11[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_12[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_13[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_14[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_15[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_16[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
 
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", "CalYear");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             pdfFormFields.SetField("topmostSubform[0].Copy2[0].CopyCHeader[0].c2_1[0]", "VOID");   //VOID
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].CopyCHeader[0].c2_1[1]", "CORRECTED");   //CORRECTED
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_2[0]", "PayData");   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_3[0]", "PAYTIN");   //Payer TIN
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_4[0]", "RCPTIN");   //Recepients TIN
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_5[0]", "RCPName");   //RECIPIENT’S name
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_6[0]", "RCPAdd");   //Street address (including apt. no.)
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_7[0]", "RCPCityStateCountryZIPPC");   //City or town, state or province, country, and ZIP or foreign postal code
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_8[0]", "RCTAccountNo");   //Account number (see instructions)
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_9[0]", "NonEmployeeComp");   //1 Nonemployee compensation
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].c2_3[0]", "Payer5k");   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_10[0]", "FedITWithHeld");   //4 Federal income tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_11[0]", "StatTax1");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_12[0]", "StatTax2");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_13[0]", "StateNo1");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_14[0]", "StateNo2");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_15[0]", "StateIncome1");   //7 State income
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_16[0]", "StateIncome2");   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].CopyCHeader[0].c2_1[1]", request.Corrected.ToString());   //CORRECTED
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_2[0]", PayData);   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_3[0]", requestInstitue.Idnumber);   //Payer TIN
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_4[0]", request.Rcp_TIN);   //Recepients TIN
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_5[0]", request.First_Name + " " + request.Name_Line2);   //RECIPIENT’S name
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_6[0]", RecipentAddress);   //Street address (including apt. no.)
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_7[0]", RecipentCity);   //City or town, state or province, country, and ZIP or foreign postal code
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_8[0]", request.Rcp_Account);   //Account number (see instructions)
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_9[0]", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //1 Nonemployee compensation
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].c2_3[0]", request.Box_2_Checkbox.ToString());   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_10[0]", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //4 Federal income tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_11[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_12[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_13[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_14[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_15[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_16[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
 
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", "CalYear");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[0]", "VOID");   //VOID
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[1]", "CORRECTED");   //CORRECTED
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_2[0]", "PayData");   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_3[0]", "PAYTIN");   //Payer TIN
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_4[0]", "RCPTIN");   //Recepients TIN
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_5[0]", "RCPName");   //RECIPIENT’S name
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_6[0]", "RCPAdd");   //Street address (including apt. no.)
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_7[0]", "RCPCityStateCountryZIPPC");   //City or town, state or province, country, and ZIP or foreign postal code
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_8[0]", "RCTAccountNo");   //Account number (see instructions)
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].c2_2[0]", "2ndTin");   //2nd TIN not.
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_9[0]", "NonEmployeeComp");   //1 Nonemployee compensation
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].c2_3[0]", "Payer5k");   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_10[0]", "FedITWithHeld");   //4 Federal income tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_11[0]", "StatTax1");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_12[0]", "StatTax2");   //5 State tax withheld
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_13[0]", "StateNo1");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_14[0]", "StateNo2");   //6 State/Payer’s state no.
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_15[0]", "StateIncome1");   //7 State income
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_16[0]", "StateIncome2");   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[1]", request.Corrected.ToString());   //CORRECTED
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_2[0]", PayData);   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_3[0]", requestInstitue.Idnumber);   //Payer TIN
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_4[0]", request.Rcp_TIN);   //Recepients TIN
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_5[0]", request.First_Name + " " + request.Name_Line2);   //RECIPIENT’S name
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_6[0]", RecipentAddress);   //Street address (including apt. no.)
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_7[0]", RecipentCity);   //City or town, state or province, country, and ZIP or foreign postal code
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_8[0]", request.Rcp_Account);   //Account number (see instructions)
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].c2_2[0]", request.Second_TIN_Notice);   //2nd TIN not.
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_9[0]", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //1 Nonemployee compensation
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].c2_3[0]", request.Box_2_Checkbox.ToString());   //2 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_10[0]", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //4 Federal income tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_11[0]", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_12[0]",  request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //5 State tax withheld
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_13[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_14[0]", request.Box_6_State ?? string.Empty);   //6 State/Payer’s state no.
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_15[0]", request.Box_7_Amount.HasValue ? request.Box_7_Amount.Value.ToString() : string.Empty);   //7 State income
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_16[0]", request.Box_7_Amount.ToString());   //7 State income
 
             pdfStamper.FormFlattening = true;
             pdfStamper.Close();
             pdfReader.Close();
             return FilenameNew;
-            //return Path.Combine("1099NEC", newFileName); // Return the relative path to the generated PDF
+
         }
 
     }
