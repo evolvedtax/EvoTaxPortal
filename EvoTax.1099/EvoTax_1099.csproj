@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\Form1099MISC\" />
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
   </ItemGroup>
 

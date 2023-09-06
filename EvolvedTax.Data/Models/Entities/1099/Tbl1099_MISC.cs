@@ -6,9 +6,9 @@ namespace EvolvedTax.Data.Models.Entities._1099
 {
     public partial class Tbl1099_MISC
     {
-        [Key]
         public string Rcp_TIN { get; set; }
-
+        [Key]
+        public int Id { get; set; }
         public string? Last_Name_Company { get; set; }
 
         public string? First_Name { get; set; }
@@ -33,7 +33,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public string? Rcp_Email { get; set; }
 
-        public string? Secondnd_TIN_Notice { get; set; }
+        public string? Second_TIN_Notice { get; set; }
 
         public string? FATCA_Checkbox { get; set; }
 

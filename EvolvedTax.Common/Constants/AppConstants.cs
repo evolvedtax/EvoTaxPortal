@@ -16,6 +16,8 @@ namespace EvolvedTax.Common.Constants
         public const string W8FormTypes = @"W8FormType";
         public const string FormPartiallySave = @"Form partially saved";
 
+        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
+
         public const string Entity = "Entity";
         public const string Client = "Client";
 

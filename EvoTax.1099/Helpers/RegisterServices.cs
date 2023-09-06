@@ -96,6 +96,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IW8BEN_E_FormService, W8BEN_E_FormService>();
             services.AddScoped<IFormReportService, FormReportService>();
             services.AddScoped<IAnnouncementService, AnnouncementService>();
+            services.AddScoped<IForm1099_MISC_Service, Form1099_MISC_Service>();
             #endregion
 
             #region @@@[------Repository]
