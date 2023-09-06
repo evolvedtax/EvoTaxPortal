@@ -81,11 +81,11 @@
                                   data-ajax-success="ajaxsuccessUpdateEmailFrequency"
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
                                 <div style="display:flex">
-                                    <label class="ml-2 mr-2" style="margin:auto">Send Email Reminder After Every</label>
+                                    <label class="ml-2 mr-2" style="margin:auto">Send E-mail Reminder After Every</label>
                                     <input id="EntityIdFreq" name="EntityIdFreq" hidden />
                                     <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
 
-                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set email reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set e-mail reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
                                     <span class="ml-2 mr-2" style="margin:auto">Days</span>
                                     <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top">Save</button>
                                     @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
@@ -600,7 +600,7 @@
                     <div class="col-md-12">
                         <div>
                             <label>Invite People</label>
-                            <input class="tagsinput form-control" type="email" placeholder="Enter email address" />
+                            <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
                         </div>
                         <div class="mt-2">
                             <select asp-items="ViewBag.Roles" name="role" class="selec2" style="width:25%">
@@ -1013,7 +1013,7 @@
                                 }
                             },
                             {
-                                text: '<i class="fa fa-envelope"></i> Send Email',
+                                text: '<i class="fa fa-envelope"></i> Send E-mail',
                                 className: 'email-btn',
                                 action: function (e, dt, button, config) {
                                     var selectedValues = [];
@@ -1026,8 +1026,8 @@
                                         return;
                                     }
                                     swal({
-                                        title: "Sending Email...",
-                                        text: "Email will send to the clients awaited for form submission",
+                                        title: "Sending E-mail...",
+                                        text: "E-mail will send to the clients awaited for form submission",
                                         type: "info",
                                         showCancelButton: false,
                                         confirmButtonColor: "#1ab394",
@@ -1170,13 +1170,13 @@
             // Select All checkbox
             $('#selectAll').change(function () {
                 $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
-                $('.email-btn').text('Send Email to All');
+                $('.email-btn').text('Send E-mail to All');
                 var selectedValues = [];
                 $('.rowCheckbox:checked').each(function () {
                     selectedValues.push($(this).val());
                 });
                 if (selectedValues.length === 0) {
-                    $('.email-btn').text('Send Email');
+                    $('.email-btn').text('Send E-mail');
                 }
             });
 
@@ -1184,16 +1184,16 @@
             $('.rowCheckbox').change(function () {
                 if ($('.rowCheckbox:checked').length == $('.rowCheckbox').length) {
                     $('#selectAll').prop('checked', true);
-                    $('.email-btn').text('Send Email to All');
+                    $('.email-btn').text('Send E-mail to All');
                 } else {
                     $('#selectAll').prop('checked', false);
-                    $('.email-btn').text('Send Email to Selected');
+                    $('.email-btn').text('Send E-mail to Selected');
                     var selectedValues = [];
                     $('.rowCheckbox:checked').each(function () {
                         selectedValues.push($(this).val());
                     });
                     if (selectedValues.length === 0) {
-                        $('.email-btn').text('Send Email');
+                        $('.email-btn').text('Send E-mail');
                     }
                 }
             });

@@ -73,8 +73,8 @@
                                 <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
                             }
                             <li><a class="nav-link" data-toggle="tab" href="#tab-2">Update Profile</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">Email Reminder</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
                         </ul>
@@ -259,14 +259,14 @@
                                 <div class="panel-body">
                                     <!-- User Guidance -->
                                     <p>
-                                        This feature is a powerful tool designed to streamline the process of collecting tax-related information from investors. This feature aims to alleviate the administrative burden and ensure compliance by automatically sending reminder emails to investors who haven't yet completed or submitted the requested tax forms.
+                                        This feature is a powerful tool designed to streamline the process of collecting tax-related information from investors. This feature aims to alleviate the administrative burden and ensure compliance by automatically sending reminder e-mails to investors who haven't yet completed or submitted the requested tax forms.
                                     </p>
                                     <p>
-                                        If you wish to customize the frequency of reminder emails for each entity, please follow these steps:
+                                        If you wish to customize the frequency of reminder e-mails for each entity, please follow these steps:
                                     </p>
                                     <ol>
-                                        <li>Uncheck the box here to disable the automatic reminder emails for all entities.</li>
-                                        <li>Go inside each entity individually and set the frequency of reminder emails.</li>
+                                        <li>Uncheck the box here to disable the automatic reminder e-mails for all entities.</li>
+                                        <li>Go inside each entity individually and set the frequency of reminder e-mails.</li>
                                     </ol>
                                     <p>
                                         This allows you to customize the reminder schedule for each entity according to your preferences and ensure a personalized approach to your communication.
@@ -292,7 +292,7 @@
                                                     <div class="checkbox">
                                                         <label>
                                                             <input type="checkbox" id="IsEmailFrequency" asp-for="InstituteMasterRequest.IsEmailFrequency" />
-                                                            Set Email Reminders For All Entities
+                                                            Set E-mail Reminders For All Entities
                                                         </label>
                                                     </div>
                                                 </div>
@@ -302,7 +302,7 @@
                                         <!-- Email Frequency Setting -->
                                         <div class="row" id="emailFrequencyDiv">
                                             <div class="col-md-6 d-flex align-items-center">
-                                                <label class="ml-2 mr-2">Send Email Reminder After Every</label>
+                                                <label class="ml-2 mr-2">Send E-mail Reminder After Every</label>
                                                 <input class="form-control hide-counter" min="0" id="EmailFrequency" type="number" asp-for="InstituteMasterRequest.EmailFrequency" style="width:15%; text-align:right">
                                                 <span class="ml-2 mr-2">days</span>
                                             </div>

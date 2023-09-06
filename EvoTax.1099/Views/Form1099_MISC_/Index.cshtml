@@ -1,0 +1,179 @@
+﻿@model IQueryable<Form1099MISCResponse>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+    .dropdown-menu-horizontal {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+        .dropdown-menu-horizontal .dropdown-item {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+    .center-dropdown {
+        left: -650% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: none;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+                    <div class="row">
+                        <div id="uploadDataDiv" class="col-md-3 pull-right">
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
+                                        <label class="custom-file-label" for="uploadClients">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>Rcp TIN</th>
+                                        <th>Last Name/Company</th>
+                                        <th>First Name</th>
+                                        <th>Name Line 2</th>
+                                        <th>Address Type</th>
+                                        <th>Address Deliv/Street</th>
+                                        <th>Address Apt/Suite</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Zip</th>
+                                        <th>Country</th>
+                                        <th>Rcp Account</th>
+                                        <th>Rcp Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.Any())
+                                    {
+                                        foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@item.Rcp_TIN</td>
+                                                <td>@item.Last_Name_Company</td>
+                                                <td>@item.First_Name</td>
+                                                <td>@item.Name_Line_2</td>
+                                                <td>@item.Address_Type</td>
+                                                <td>@item.Address_Deliv_Street</td>
+                                                <td>@item.Address_Apt_Suite</td>
+                                                <td>@item.City</td>
+                                                <td>@item.State</td>
+                                                <td>@item.Zip</td>
+                                                <td>@item.Country</td>
+                                                <td>@item.Rcp_Account</td>
+                                                <td>@item.Rcp_Email</td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <span class="fa fa-bars"></span>
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <div class="dropdown-menu-horizontal">
+                                                                <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Rcp_TIN')">Download Form</a>
+                                                                <a class="dropdown-item" href="javascript:void()">Mail to the recipient and send to IRS</a>
+                                                                <a class="dropdown-item" href="javascript:void()">Professional Review</a>
+                                                                <a class="dropdown-item" href="javascript:void()">File with IRS</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('.dataTables-example').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    //{
+                    //    extend: 'collection',
+                    //    text: '<i class="fa fa-ellipsis-h"></i>',
+                    //    className: 'btn-menu-toggle',
+                    //    buttons: [
+                    //        {
+                    //            extend: 'excel',
+                    //            title: 'EvolvedTax',
+                    //            text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                    //            className: 'btn-excel'
+                    //        },
+                    //        {
+                    //            text: '<i class="fa fa-exclamation-circle"></i> Status Change',
+                    //            className: 'btn-recycle-bin',
+                    //            //action: function (e, dt, button, config) {
+                    //            //    window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                    //            //}
+                    //        },
+                    //    ],
+                    //}
+                ],
+                initComplete: function () {
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+                        dropdown.addClass('center-dropdown');
+                    });
+                },
+            });
+
+            // Get the file input element
+            var fileInput = document.getElementById('uploadClients');
+            // Add an event listener to the file input
+            fileInput.addEventListener('change', uploadData);
+            function uploadData(event) {
+                debugger;
+                let entityId = 0;
+                let entityName = '';
+                COMMON.uploadFile(event, '/Form1099_MISC_/uploadClients', { entityId, entityName });
+            }
+            bsCustomFileInput.init();
+        })
+        function DownloadFile(id) {
+            var response = COMMON.doAjaxGetWithJSONResponse("downlodPdf",{Id:id})
+            window.open(response);
+        }
+    </script>
+}

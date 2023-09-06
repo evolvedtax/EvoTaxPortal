@@ -30,8 +30,12 @@
 /EvolvedTax_Admin/obj
 /EovelvedTax_Client/bin/Debug/net7.0
 /EovelvedTax_Client/obj
-/EvolvedTax.Business/Properties
-/EvolvedTax.Common/Properties
-/EvolvedTax.Data/Properties
-/EovelvedTax_Client
-/EvoTax.1099
+/EvoTax.1099/bin/Debug/net7.0
+/EvoTax.1099/obj
+/EvolvedTax_Institute/obj/project.nuget.cache
+/EvolvedTax_Institute/obj/project.assets.json
+/EvolvedTax_Institute/obj/EvolvedTax_Institute.csproj.nuget.g.props
+/EvolvedTax_Institute/obj/EvolvedTax_Institute.csproj.nuget.dgspec.json
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.assets.cache
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.GeneratedMSBuildEditorConfig.editorconfig
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.AssemblyReference.cache

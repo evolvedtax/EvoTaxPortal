@@ -1,7 +1,5 @@
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.Development.json
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.json
-D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\Select.Html.dep
-D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\Select.Tools.dep
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.staticwebassets.runtime.json
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.exe
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.deps.json
@@ -112,3 +110,115 @@ D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\obj\Debug\net7.0\refint\Evolve
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.pdb
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.genruntimeconfig.cache
 D:\Repositories\EvoTaxPortal\EvolvedTax_Institute\obj\Debug\net7.0\ref\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.csproj.AssemblyReference.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.GeneratedMSBuildEditorConfig.editorconfig
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.AssemblyInfoInputs.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.AssemblyInfo.cs
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.csproj.CoreCompileInputs.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.MvcApplicationPartsAssemblyInfo.cs
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.MvcApplicationPartsAssemblyInfo.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.RazorAssemblyInfo.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.RazorAssemblyInfo.cs
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\refint\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.pdb
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.Development.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\appsettings.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.staticwebassets.runtime.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.exe
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.deps.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.runtimeconfig.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax_Institute.pdb
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\AutoMapper.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Azure.Core.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Azure.Identity.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Enums.NET.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Humanizer.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\itextsharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\MathNet.Numerics.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Identity.Client.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Identity.Client.Extensions.Msal.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.SqlServer.Server.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Mono.TextTemplating.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OOXML.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OpenXml4Net.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OpenXmlFormats.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\BouncyCastle.Crypto.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\ICSharpCode.SharpZipLib.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\SixLabors.Fonts.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\SixLabors.ImageSharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\SkiaSharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.CodeDom.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Drawing.Common.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Memory.Data.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Runtime.Caching.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Security.Cryptography.ProtectedData.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Security.Permissions.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Windows.Extensions.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\osx\native\libSkiaSharp.dylib
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Business.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Common.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Data.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Business.pdb
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Common.pdb
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EvolvedTax.Data.pdb
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets\msbuild.EvolvedTax_Institute.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets\msbuild.build.EvolvedTax_Institute.props
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.EvolvedTax_Institute.props
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.EvolvedTax_Institute.props
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets.build.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets.development.json
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\bundle\EvolvedTax_Institute.styles.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\projectbundle\EvolvedTax_Institute.bundle.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.csproj.CopyComplete
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.genruntimeconfig.cache
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\ref\EvolvedTax_Institute.dll

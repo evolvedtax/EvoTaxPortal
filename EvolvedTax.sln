@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvolvedTax_Institute", "Evo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvolvedTax_Admin", "EvolvedTax_Admin\EvolvedTax_Admin.csproj", "{CD737A46-2CC8-4BC8-AEAB-12315D5D84B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EovelvedTax_Client", "EovelvedTax_Client\EovelvedTax_Client.csproj", "{D1282BBB-CE65-4282-BCC7-FFE392156FC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EovelvedTax_Client", "EovelvedTax_Client\EovelvedTax_Client.csproj", "{D1282BBB-CE65-4282-BCC7-FFE392156FC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoTax_1099", "EvoTax.1099\EvoTax_1099.csproj", "{235027A6-1512-41AC-AFB1-645CE2D3548D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D1282BBB-CE65-4282-BCC7-FFE392156FC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1282BBB-CE65-4282-BCC7-FFE392156FC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1282BBB-CE65-4282-BCC7-FFE392156FC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235027A6-1512-41AC-AFB1-645CE2D3548D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235027A6-1512-41AC-AFB1-645CE2D3548D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235027A6-1512-41AC-AFB1-645CE2D3548D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235027A6-1512-41AC-AFB1-645CE2D3548D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
