@@ -44,20 +44,9 @@ namespace EvolvedTax_1099.Controllers
         {
             string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.NEC_1099_TemplateFileName);
             string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099NEC");
-
-
             string pdfUrl = _form1099_NEC_Service.GeneratePdf(id, TemplatePathFile, SavePathFolder);
             return Json(pdfUrl);
-            //if (pdfUrl != null)
-            //{
-            //    return File(pdfUrl, "application/pdf", "YourFileName.pdf");
-            //}
-            //else
-            //{
-            //    // Handle the case where PDF generation failed or the file doesn't exist
-            //    // You can return an error view or handle it based on your requirements.
-            //    return NotFound(); // For example, returning a 404 Not Found status.
-            //}
+
         }
 
 

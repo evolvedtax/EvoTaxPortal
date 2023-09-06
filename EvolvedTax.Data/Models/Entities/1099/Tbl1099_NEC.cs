@@ -10,6 +10,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
         [Key]
         public int Id { get; set; }
         public string Rcp_TIN { get; set; }
+           public int? EntityId { get; set; }
 
         public string? Last_Name_Company { get; set; }
 
@@ -74,6 +75,8 @@ namespace EvolvedTax.Data.Models.Entities._1099
         public string? UserId { get; set; }
 
         public int? InstID { get; set; }
+
+        public string? Corrected { get; set; }
 
     }
 

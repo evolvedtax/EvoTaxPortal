@@ -8,6 +8,9 @@ namespace EvolvedTax.Data.Models.Entities._1099
     public partial class Tbl1099_LTC
     {
         [Key]
+        public int Id { get; set; }
+        public string? Corrected { get; set; }
+        public int? EntityId { get; set; }
         public string Rcp_TIN { get; set; }
 
         public string? Last_Name_Company { get; set; }
@@ -76,7 +79,6 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public DateTime? Created_Date { get; set; }
 
-        public int Id { get; set; }
 
         public string? UserId { get; set; }
 
