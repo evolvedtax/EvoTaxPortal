@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EvolvedTax.Business.Services.W9FormService
+namespace EvolvedTax.Business.Services.Form1099Services
 {
     public interface IForm1099_MISC_Service
     {

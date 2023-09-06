@@ -170,10 +170,10 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.ToTable("Tbl1099_MISC", tb => tb.HasTrigger("trg_tbl1099_MISC_UpdateHistory"));
         });
 
-        modelBuilder.Entity<Tbl1099_NEC>(entity =>
-        {
-            entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
-        });
+        //modelBuilder.Entity<Tbl1099_NEC>(entity =>
+        //{
+        //    entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
+        //});
 
 
         modelBuilder.Entity<RoleHierarchy>().HasNoKey();

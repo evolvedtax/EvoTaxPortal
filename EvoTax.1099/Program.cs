@@ -81,6 +81,8 @@ app.UseEndpoints(endpoints =>
        pattern: "{controller=Account}/{action=Login}");
     endpoints.MapRazorPages();
 });
+
+
 #pragma warning restore ASP0014 // Suggest using top level route registrations
 
 app.Run();

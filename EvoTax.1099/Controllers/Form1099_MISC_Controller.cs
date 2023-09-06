@@ -1,4 +1,5 @@
 ﻿using EvolvedTax.Business.Services.AnnouncementService;
+using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;

@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
+    <Folder Include="wwwroot\Forms\" />
+    <Folder Include="wwwroot\1099NEC\" />
   </ItemGroup>
 
   <ItemGroup>

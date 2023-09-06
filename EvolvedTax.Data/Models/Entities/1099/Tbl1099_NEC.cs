@@ -8,6 +8,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
     public partial class Tbl1099_NEC
     {
         [Key]
+        public int Id { get; set; }
         public string Rcp_TIN { get; set; }
 
         public string? Last_Name_Company { get; set; }
@@ -34,37 +35,31 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public string? Rcp_Email { get; set; }
 
+        public string? Second_TIN_Notice { get; set; }
+
         public decimal? Box_1_Amount { get; set; }
 
-        public decimal? Box_2_Amount { get; set; }
+        public string? Box_2_Checkbox { get; set; }
 
-        public string? Box_3_Checkbox1 { get; set; }
+        public decimal? Box_4_Amount { get; set; }
 
-        public string? Box_3_Checkbox2 { get; set; }
+        public decimal? Box_5_Amount { get; set; }
 
-        public string? Box_INS_SSN { get; set; }
+        public string? Box_6_IDNumber { get; set; }
 
-        public string? Box_INS_Name { get; set; }
+        public string? Box_6_State { get; set; }
 
-        public string? Box_INS_Address { get; set; }
+        public decimal? Box_7_Amount { get; set; }
 
-        public string? Box_INS_City { get; set; }
+        public string? OptRcpTextLine1 { get; set; }
 
-        public string? Box_INS_State { get; set; }
-
-        public string? Box_INS_Zip { get; set; }
-
-        public string? Box_4_Checkbox { get; set; }
-
-        public string? Box_5_Checkbox1 { get; set; }
-
-        public string? Box_5_Checkbox2 { get; set; }
-
-        public DateTime? Box_5_Date { get; set; }
+        public string? OptRcpTextLine2 { get; set; }
 
         public string? Form_Category { get; set; }
 
         public string? Form_Source { get; set; }
+
+        public string? BatchID { get; set; }
 
         public string? Tax_State { get; set; }
 
@@ -81,5 +76,8 @@ namespace EvolvedTax.Data.Models.Entities._1099
         public int? InstID { get; set; }
 
     }
+
+
+
 
 }

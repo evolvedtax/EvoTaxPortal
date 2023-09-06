@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.CommonService;
+using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Business.Services.FormReport;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
@@ -96,6 +97,8 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IW8BEN_E_FormService, W8BEN_E_FormService>();
             services.AddScoped<IFormReportService, FormReportService>();
             services.AddScoped<IAnnouncementService, AnnouncementService>();
+            services.AddScoped<IForm1099_MISC_Service, Form1099_MISC_Service>();
+            services.AddScoped<IForm1099_NEC_Service, Form1099_NEC_Service>();
             #endregion
 
             #region @@@[------Repository]

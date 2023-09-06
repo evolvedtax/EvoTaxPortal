@@ -25,7 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 
-namespace EvolvedTax.Business.Services.W9FormService
+namespace EvolvedTax.Business.Services.Form1099Services
 {
     public class Form1099_MISC_Service : IForm1099_MISC_Service
     {
