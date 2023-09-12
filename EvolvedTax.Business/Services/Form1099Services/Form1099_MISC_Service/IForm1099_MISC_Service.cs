@@ -15,7 +15,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
     public interface IForm1099_MISC_Service
     {
         IQueryable<Form1099MISCResponse> GetForm1099MISCList();
-        Task<MessageResponseModel> Upload1099_MISC_Data(IFormFile file, int InstId, string UserId);
-        string GeneratePdf(string id, string BasePath);
+        Task<MessageResponseModel> Upload1099_MISC_Data(IFormFile file, int InstId,int entityId, string UserId);
+        IQueryable<Tbl1099_MISC> GetRecipientEmailsByIds(int[] selectValues);
+        string GeneratePdf(int id, string BasePath);
     }
 }

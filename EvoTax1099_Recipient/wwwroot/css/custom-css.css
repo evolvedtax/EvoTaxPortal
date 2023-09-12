@@ -1,0 +1,36 @@
+﻿/* Custom for EMOJIs*/
+.container-emoji {
+    width: 100%;
+    max-width: 250px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 1px #777;
+}
+
+.emoji {
+    font-size: 120px;
+    margin: 0px;
+    text-align: center;
+    text-shadow: 0px 0px 4px #555;
+}
+
+.mood {
+    text-align: center;
+    margin: 0px 0px 20px 0px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.emoji-slider {
+    -webkit-appearance: auto;
+    appearance: auto;
+    width: 100%;
+    height: 10px;
+    max-width: 400px;
+    background-color: #ccc;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+}

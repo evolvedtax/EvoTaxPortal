@@ -1,0 +1,163 @@
+﻿using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.Form1099Services;
+using EvolvedTax.Common.Constants;
+using EvolvedTax.Common.ExtensionMethods;
+using EvolvedTax.Data.Models.DTOs;
+using EvolvedTax.Data.Models.Entities._1099;
+using EvolvedTax.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net;
+
+namespace EvolvedTax1099_Recipient.Controllers
+{
+    public class AccountController : Controller
+    {
+        #region Fields
+        readonly ITrailAudit1099Service _trailAudit1099Service;
+        readonly IMailService _mailService;
+        #endregion
+
+        #region Ctor
+        public AccountController(ITrailAudit1099Service trailAudit1099Service, IMailService mailService)
+        {
+            _trailAudit1099Service = trailAudit1099Service;
+            _mailService = mailService;
+        }
+        #endregion
+
+        #region Methods
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> OTP(string? s = "", string e = "")
+        {
+            if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
+            {
+                s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                if (await _trailAudit1099Service.CheckIfRecipientRecordExist(s, e))
+                {
+                    return RedirectToAction("AccessDenied", new { statusCode = 400 });
+                }
+                HttpContext.Session.SetString("RecipientEmail", s);
+                var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+                var totp = new Totp(bytes);
+                var otp = totp.ComputeTotp();
+                var res = GetClientIP();
+                var request = new AuditTrail1099
+                {
+                    OTP = otp,
+                    RecipientEmail = s,
+                    Timestamp = DateTime.Now,
+                    Description = res,
+                    OTPExpiryTime = DateTime.Now.AddMinutes(60),
+                    Token = e
+                };
+                await _trailAudit1099Service.AddUpdateRecipientAuditDetails(request);
+                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User");
+                ViewBag.RecipientEmail = s;
+                HttpContext.Session.SetString("OTPRecipientEmail", s);
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> OTP(IFormCollection formVals)
+        {
+            string RecipientEmail;
+            if (!string.IsNullOrEmpty(formVals["RecipientEmail"]))
+            {
+                RecipientEmail = formVals["RecipientEmail"];
+            }
+            else
+            {
+
+                RecipientEmail = HttpContext.Session.GetString("OTPRecipientEmail");
+            }
+
+            var response = _trailAudit1099Service.GetRecipientDataByEmailId(RecipientEmail);
+            string Otp = string.Concat(
+                formVals["Otp1"].ToString(),
+                formVals["Otp2"].ToString(),
+                formVals["Otp3"].ToString(),
+                formVals["Otp4"].ToString(),
+                formVals["Otp5"].ToString(),
+                formVals["Otp6"].ToString());
+            if (response.OTP.Trim() == string.Empty || response.OTPExpiryTime < DateTime.Now)
+            {
+                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                TempData["Message"] = "OTP has expired";
+                return View(nameof(OTP));
+            }
+            if (Otp.Trim() == response?.OTP.Trim())
+            {
+                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"], OTPExpiryTime = DateTime.Now, OTP = string.Empty };
+                await _trailAudit1099Service.UpdateOTPStatus(request);
+                HttpContext.Session.SetString("RecipientEmail", formVals["RecipientEmail"]);
+                return RedirectToAction("Verify", "Account");
+                //return RedirectToAction("Entities", "Institute");
+            }
+            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            TempData["Message"] = "Please enter correct OTP";
+            return View(nameof(OTP));
+        }
+        [UserSession]
+        [HttpGet]
+        public IActionResult Verify()
+        {
+            return View();
+        }
+
+        [UserSession]
+        public async Task<IActionResult> Verify(int status)
+        {
+            var request = new AuditTrail1099
+            {
+                RecipientEmail = HttpContext.Session.GetString("RecipientEmail"),
+                Status = status
+            };
+            var response = await _trailAudit1099Service.UpdateRecipientStatus(request);
+            string jsonString = response.Description;
+            IpInfo? ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonString);
+            await _mailService.SendConfirmationEmailToRecipient(ipInfo,response.RecipientEmail,"Confirmation");
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(ResponseMessage));
+        }
+        
+        public IActionResult ResponseMessage()
+        {
+            return View();
+        }
+
+        #endregion
+
+        #region Utilities
+        public static string GetClientIP()
+        {
+            string result = "";
+
+            // Create the URI for the IP lookup service
+            Uri uri_val = new Uri("http://ip-api.com/json/?fields=61439");
+
+            // Create a web request
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri_val);
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0";
+            request.Method = WebRequestMethods.Http.Get;
+
+            // Get the response from the server
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            {
+                // Read the response data
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    result = reader.ReadToEnd();
+                }
+            }
+
+            return result;
+        }
+        #endregion
+    }
+}

@@ -592,6 +592,7 @@ namespace EvolvedTax_1099.Controllers
                 HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
                 HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
                 HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetInt32("EntityId", 0);
                 return RedirectToAction("Index", "Dashboard");
             }
             else if (result.IsLockedOut)
