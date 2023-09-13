@@ -103,7 +103,7 @@ namespace EvolvedTax_1099.Controllers
         #endregion
 
 
-        [Route("orm1099_NEC_/KeepRecord")]
+        [Route("Form1099_NEC_/KeepRecord")]
         [HttpPost]
         public async Task<IActionResult> KeepRecord(int id)
         {
@@ -115,7 +115,7 @@ namespace EvolvedTax_1099.Controllers
             return Json(response);
         }
 
-        [Route("Form1099_NEC/DeleteRecord")]
+        [Route("Form1099_NEC_/DeleteRecord")]
         [HttpPost]
         public async Task<IActionResult> DeleteRecord(int id)
         {
