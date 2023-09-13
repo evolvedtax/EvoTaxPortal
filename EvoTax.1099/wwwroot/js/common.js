@@ -535,14 +535,14 @@ var COMMON = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
-                    if (jsonResponse.Deleted === true) {
-                        $.notify('Deleted successful', { globalPosition: 'top center', className: 'success' });
-                    }
+                    //var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
+                    //if (jsonResponse.Deleted === true) {
+                    //    $.notify('Deleted successful', { globalPosition: 'top center', className: 'success' });
+                    //}
                     confirmed = true;
                 } else {
                     swal("Cancelled", "You have cancelled delete operation!", "error");
-                    return false;
+                    //return false;
                 }
             });
         return confirmed;

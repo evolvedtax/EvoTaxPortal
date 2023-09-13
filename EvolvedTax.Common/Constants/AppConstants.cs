@@ -17,7 +17,6 @@ namespace EvolvedTax.Common.Constants
         public const string NEC1099Form = @"1099_NEC";
         public const string FormPartiallySave = @"Form partially saved";
 
-        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
 
         public const string Entity = "Entity";
         public const string Client = "Client";
@@ -40,6 +39,14 @@ namespace EvolvedTax.Common.Constants
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
+
+        //----------1099 TEMPLATES----------//
+        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
+
+        public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
+
+        public const string Form1099MISC = @"Form1099MISC";
+
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
         //public const string F_Family_VladimirScript = "Vladimir Script";
@@ -285,6 +292,7 @@ Technology Team at Evolved LLC";
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
         public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used in the EvoTax Portal for further process. <br/><br/> {{OTP}} <br/><br/>Please check your email. The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
+        public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your email. Please find below the link to accept or reject. <br/><br/> {{link}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string RequestForChangeInstituteName = @"Dear Administrator(s), 
                                                         <br /><br />
                                                         We hope this email finds you well. <strong>{{adminUser}}</strong> of <strong>{{institute}}</strong> requested to change the name of the institute from ""{{oldInstituteName}}"" to ""{{newInstituteName}}"".
@@ -371,8 +379,32 @@ Technology Team at Evolved LLC";
         Technology Team at Evolved LLC
     ";
 
-
-
+        public static string ConfirmationEmailToRecipient = @"Dear User,<br/><br/>
+                                You responded to the email for accepting or rejecting the receipt of the electronic copy of the 1099 form. If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:<br/><br/>
+                                
+                                <table border='1'>
+                                    <tr>
+                                        <th>Country</th>
+                                        <th>City</th>
+                                        <th>RegionName</th>
+                                        <th>Timezone</th>
+                                        <th>IP</th>
+                                        <th>Isp</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{Country}}</td>
+                                        <td>{{City}}</td>
+                                        <td>{{RegionName}}</td>
+                                        <td>{{Timezone}}</td>
+                                        <td>{{IP}}</td>
+                                        <td>{{Isp}}</td>
+                                    </tr>
+                                </table>
+                                
+                                <br/><br/>
+                                Thank you for your cooperation in this matter.<br/><br/>
+                                Regards,<br/>
+                                Technology Team at Evolved LLC";
 
     }
 }

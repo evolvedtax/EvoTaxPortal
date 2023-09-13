@@ -1,0 +1,209 @@
+﻿@using EvolvedTax;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/evolved_tax_mark_logo.ico">
+    <title>@ViewData["Title"] - EvoTax Portal</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <META HTTP-EQUIV=”refresh” CONTENT=”.0; URL=nobackpage.html”>
+    <!-- Add local styles, mostly for plugins css file -->
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection("Styles", required: false)
+    }
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/dataTables/datatables.min.css" rel="stylesheet">
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link href="~/lib/bootstrap-datepicker/datepicker3.css" rel="stylesheet">
+        <link href="~/lib/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/iCheck/custom.css" />
+        <link rel="stylesheet" href="~/lib/steps/jquery.steps.css" />
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.3/dist/sweetalert2.min.css" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/css/animate.css" />
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/dataTables/datatables.min.css" rel="stylesheet">
+        <link href="~/lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2.min.css" rel="stylesheet">
+        <link href="~/lib/select2/dist/css/select2-bootstrap4.min.css" rel="stylesheet">
+        <link href="~/lib/bootstrap-datepicker/datepicker3.css" rel="stylesheet">
+        <link href="~/lib/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/lib/iCheck/custom.css" />
+        <link rel="stylesheet" href="~/lib/steps/jquery.steps.css" />
+        <link rel="stylesheet" href="~/css/loader.css" />
+        <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.3/dist/sweetalert2.min.css" />
+    </environment>
+    <style>
+        .btn-excel {
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+
+        .btn-template{
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+
+        .btn-imp-data {
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+
+        .email-btn{
+            background-color: #1ab394;
+            border-color: #1ab394;
+            color: white;
+        }
+
+        .btn-recycle-bin{
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+        .btn-empty-recycle-bin{
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+
+        .btn-menu-toggle {
+            background-color: #384a50;
+            border-color: white;
+            color: white;
+        }
+
+        .footer.fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 10px 20px;
+            background: white;
+            border-top: 1px solid #e7eaec;
+            /*margin-left: 220px;*/
+            margin-left: 0;
+        }
+    </style>
+
+</head>
+<body class="gray-bg">
+    <partial name="_busyIndicator" />
+    <!-- Skin configuration box -->
+    <!-- <partial name="_SkinConfig" /> -->
+    <!-- Wrapper-->
+    <div id="" class="@Html.PageClass()">
+
+        <!-- Navigation -->
+        @*<partial name="_Navigation" />*@
+
+        <!-- Page wraper -->
+        <div id="" class="gray-bg @ViewBag.SpecialClass" style="display:grid">
+
+            <!-- Top Navbar -->
+            <partial name="_TopNavbar" />
+
+            <!-- Main view  -->
+            @RenderBody()
+
+            <!-- Footer -->
+            @*<partial name="_Footer" />*@
+
+        </div>
+        <!-- End page wrapper-->
+        <!-- Right Sidebar -->
+        @*<partial name="_RightSidebar" />*@
+
+    </div>
+    <!-- End wrapper-->
+    @RenderSection("toast", required: false)
+
+    <environment names="Development">
+        @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="~/lib/Popper/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/metisMenu/dist/jquery.metisMenu.js"></script>
+        <script src="~/lib/pace/pace.min.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.min.js"></script>
+        <script src="~/js/script.js" asp-append-version="true"></script>
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="~/lib/ionRangeSlider/ion.rangeSlider.min.js"></script>
+        <script src="~/lib/clockpicker/clockpicker.js"></script>
+        <!-- Select2 -->
+        <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+        <script src="~/js/common.js"></script>
+        <script src="~/lib/iCheck/icheck.min.js"></script>
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
+        <script src="~/lib/bs-custom-file/bs-custom-file-input.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.3/dist/sweetalert2.min.js"></script>
+
+    </environment>
+    <environment names="Staging,Production">
+        @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="~/lib/Popper/popper.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/metisMenu/dist/jquery.metisMenu.js"></script>
+        <script src="~/lib/pace/pace.min.js"></script>
+        <script src="~/lib/slimScroll/jquery.slimscroll.min.js"></script>
+        <script src="~/js/script.js" asp-append-version="true"></script>
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
+        <script src="~/lib/validate/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+        <script src="~/lib/ionRangeSlider/ion.rangeSlider.min.js"></script>
+        <script src="~/lib/clockpicker/clockpicker.js"></script>
+        <!-- Select2 -->
+        <script src="~/lib/select2/dist/js/select2.full.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+        <script src="~/js/common.js"></script>
+        <script src="~/lib/iCheck/icheck.min.js"></script>
+        <script src="~/lib/dataTables/datatables.min.js"></script>
+        <script src="~/lib/jqueryMask/jquery.mask.min.js"></script>
+        <script src="~/lib/bs-custom-file/bs-custom-file-input.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.3/dist/sweetalert2.min.js"></script>
+
+    </environment>
+    <script>
+        function displayBusyIndicator() {
+            $('.loading').show();
+        }
+        $(window).on('beforeunload', function () {
+            displayBusyIndicator();
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
