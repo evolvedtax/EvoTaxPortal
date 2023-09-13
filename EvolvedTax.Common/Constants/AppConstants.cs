@@ -41,7 +41,8 @@ namespace EvolvedTax.Common.Constants
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
 
         //----------1099 TEMPLATES----------//
-        public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
+        //public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
+        public const string Form1099MISCTemplateFileName = @"f1099msc.pdf";
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
 

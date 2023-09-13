@@ -55,7 +55,7 @@ namespace EvolvedTax_1099.Controllers
 
         [HttpPost]
         [Route("DownloadAll")]
-        public IActionResult DownloadAll([FromBody] DownloadAllRequestModel model)
+        public IActionResult DownloadAll([FromBody] DownloadRequestModel model)
         {
 
             List<int> ids = model.ids;
@@ -74,7 +74,7 @@ namespace EvolvedTax_1099.Controllers
 
         [HttpPost]
         [Route("DownloadOneFile")]
-        public IActionResult DownloadOneFile([FromBody] DownloadAllRequestModel model)
+        public IActionResult DownloadOneFile([FromBody] DownloadRequestModel model)
         {
 
             List<int> ids = model.ids;
@@ -131,9 +131,9 @@ namespace EvolvedTax_1099.Controllers
 
 
     }
-    public class DownloadAllRequestModel
-    {
-        public List<int> ids { get; set; }
-        public List<string> selectedPage { get; set; }
-    }
+    //public class DownloadAllRequestModel
+    //{
+    //    public List<int> ids { get; set; }
+    //    public List<string> selectedPage { get; set; }
+    //}
 }

@@ -17,6 +17,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
         IQueryable<Form1099MISCResponse> GetForm1099MISCList();
         Task<MessageResponseModel> Upload1099_MISC_Data(IFormFile file, int InstId,int entityId, string UserId);
         IQueryable<Tbl1099_MISC> GetRecipientEmailsByIds(int[] selectValues);
-        string GeneratePdf(int id, string BasePath);
+       // string GeneratePdf(int id, string BasePath);
+        public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath);
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
+        Task<MessageResponseModel> KeepRecord(int id);
+        Task<MessageResponseModel> DeletePermeant(int id);
     }
 }
