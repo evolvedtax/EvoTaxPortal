@@ -218,7 +218,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            String ClientName = mISCresponse.First_Name + " " + mISCresponse.Name_Line_2.Replace(": ", ""); 
+            String ClientName = mISCresponse.First_Name + " " + mISCresponse.Name_Line_2?.Replace(": ", ""); 
 
             if (!String.IsNullOrEmpty(Page))
             {
@@ -477,7 +477,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_MISC.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line_2.Replace(": ", "");
+            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");   
             newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099MISC, "_", Id);
             string FilenameNew = "/Form1099MISC/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
@@ -542,7 +542,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_MISC.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line_2.Replace(": ", "");
+            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
 
             newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099MISC, "_", request.Id, "_Page_", selectedPage);
             string FilenameNew = "/Form1099MISC/" + newFile1 + ".pdf";
@@ -771,239 +771,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             return zipFilePath; // Return the ZIP file path.
         }
-        //public string GeneratePdf(int Id, string BasePath)
-        //{
-        //    var mISCresponse = _evolvedtaxContext.Tbl1099_MISC.FirstOrDefault(p => p.Id == Id);
-        //    var instResponse = _instituteService.GetInstituteDataById((int)mISCresponse.InstID);
-        //    string templatefile = BasePath + "/" + AppConstants.Form1099MISCTemplateFileName;
-        //    string newFile = "/Form1099MISC/" + mISCresponse.First_Name + "_" + mISCresponse.Name_Line_2 + "_F1099MISC.pdf";
-        //    PdfReader pdfReader = new PdfReader(templatefile);
-        //    PdfReader.unethicalreading = true;
-        //    PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(BasePath + newFile, FileMode.Create));
-        //    AcroFields pdfFormFields = pdfStamper.AcroFields;
-
-
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].CalendarYear[0].f1_1[0]", "23");   //CalYear
-        //    if (mISCresponse.Corrected == "1")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].c1_1[0]", "0");   //VOID
-        //    }
-        //    else
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].c1_1[1]", "0");   //CORRECTED
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_2[0]", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_3[0]", instResponse.Ftin);   //Payer TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_4[0]", mISCresponse.Rcp_TIN);   //Recepients TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_5[0]", mISCresponse.First_Name + " " + mISCresponse.Name_Line_2);   //RECIPIENT’S name
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_6[0]", mISCresponse.Address_Deliv_Street + " " + mISCresponse.Address_Apt_Suite);   //Street address (including apt. no.)
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_7[0]", mISCresponse.City + " " + mISCresponse.State + " " + mISCresponse.Country + " " + mISCresponse.Zip);   //City or town, state or province, country, and ZIP or foreign postal code
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].f1_8[0]", mISCresponse.Rcp_Account);   //Account number (see instructions)
-        //    if (mISCresponse.Second_TIN_Notice == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftColumn[0].c1_2[0]", "0");   //2nd TIN not.
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_9[0]", mISCresponse.Box_1_Amount.ToString());   //1 Rents
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_10[0]", mISCresponse.Box_2_Amount.ToString());   //2 Royalties
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_11[0]", mISCresponse.Box_3_Amount.ToString());   //3 Other income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_12[0]", mISCresponse.Box_4_Amount.ToString());   //4 Federal income tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_13[0]", mISCresponse.Box_5_Amount.ToString());   //5 Fishing boat proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_14[0]", mISCresponse.Box_6_Amount.ToString());   //6 Medical and health care payments
-        //    if (mISCresponse.Box_7_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].c1_4[0]", "0");   //7 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_15[0]", mISCresponse.Box_8_Amount.ToString());   //8 Substitute payments in lieu of dividends or interest
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_16[0]", mISCresponse.Box_9_Amount.ToString());   //9 Crop insurance proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_17[0]", mISCresponse.Box_10_Amount.ToString());   //10 Gross proceeds paid to an attorney
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_18[0]", mISCresponse.Box_11_Amount.ToString());   //11 Fish purchased for resale
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_19[0]", mISCresponse.Box_12_Amount.ToString());   //12 Section 409A deferrals
-        //    if (mISCresponse.FATCA_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].TagCorrectingSubform[0].c1_3[0]", "0");   //13 FATCA filing requirement
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].Box14_ReadOrder[0].f1_20[0]", mISCresponse.Box_14_Amount.ToString()); //14 Excess golden parachute payments
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightColumn[0].f1_21[0]", mISCresponse.Box_15_Amount.ToString());   //15 Nonqualified deferred compensation
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].Box16_ReadOrder[0].f1_22[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].Box16_ReadOrder[0].f1_23[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].Box17_ReadOrder[0].f1_24[0]", mISCresponse.Box_17_ID_Number);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].Box17_ReadOrder[0].f1_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].f1_26[0]", mISCresponse.Box_18_Amount.ToString());   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyA[0].f1_27[0]", mISCresponse.Box_18_Amount.ToString());   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
-        //    if (mISCresponse.Corrected == "1")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[0]", "0");   //VOID
-        //    }
-        //    else
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[1]", "0");   //CORRECTED
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_2[0]", string.Concat(instResponse.InstitutionName, ", ", instResponse.Madd1, ", ", instResponse.Madd2, ", ", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, ", ", instResponse.Phone));   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_3[0]", instResponse.Ftin);   //Payer TIN
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_4[0]", mISCresponse.Rcp_TIN);   //Recepients TIN
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_5[0]", mISCresponse.First_Name + " " + mISCresponse.Name_Line_2);   //RECIPIENT’S name
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_6[0]", mISCresponse.Address_Deliv_Street + " " + mISCresponse.Address_Apt_Suite);   //Street address (including apt. no.)
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_7[0]", mISCresponse.City + " " + mISCresponse.State + " " + mISCresponse.Country + " " + mISCresponse.Zip);   //City or town, state or province, country, and ZIP or foreign postal code
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].LeftColumn[0].f2_8[0]", mISCresponse.Rcp_Account);   //Account number (see instructions)
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_9[0]", mISCresponse.Box_1_Amount.ToString());   //1 Rents
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_10[0]", mISCresponse.Box_2_Amount.ToString());   //2 Royalties
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_11[0]", mISCresponse.Box_3_Amount.ToString());   //3 Other income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_12[0]", mISCresponse.Box_4_Amount.ToString());   //4 Federal income tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_13[0]", mISCresponse.Box_5_Amount.ToString());   //5 Fishing boat proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_14[0]", mISCresponse.Box_6_Amount.ToString());   //6 Medical and health care payments
-        //    if (mISCresponse.Box_7_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].c2_4[0]", mISCresponse.Box_7_Checkbox);   //7 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_15[0]", mISCresponse.Box_8_Amount.ToString());   //8 Substitute payments in lieu of dividends or interest
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_16[0]", mISCresponse.Box_9_Amount.ToString());   //9 Crop insurance proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_17[0]", mISCresponse.Box_10_Amount.ToString());   //10 Gross proceeds paid to an attorney
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_18[0]", mISCresponse.Box_11_Amount.ToString());   //11 Fish purchased for resale
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_19[0]", mISCresponse.Box_12_Amount.ToString());   //12 Section 409A deferrals
-        //    if (mISCresponse.FATCA_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].TagCorrectingSubform[0].c2_3[0]", "0");   //13 FATCA filing requirement
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].Box14_ReadOrder[0].f2_20[0]", mISCresponse.Box_14_Amount.ToString());   //12 Section 409A deferrals);   //14 Excess golden parachute payments
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].RightColumn[0].f2_21[0]", mISCresponse.Box_15_Amount.ToString());   //15 Nonqualified deferred compensation
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].Box16_ReadOrder[0].f2_22[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].Box16_ReadOrder[0].f2_23[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].Box17_ReadOrder[0].f2_24[0]", mISCresponse.Box_17_ID_Number);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].f2_26[0]", "StateIncome1");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy1[0].f2_27[0]", "StateIncome2");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
-        //    if (mISCresponse.Corrected == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].c2_1[0]", "0");   //CORRECTED
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_2[0]", string.Concat(instResponse.InstitutionName, ", ", instResponse.Madd1, ", ", instResponse.Madd2, ", ", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, ", ", instResponse.Phone));   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_3[0]", instResponse.Ftin);   //Payer TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_4[0]", mISCresponse.Rcp_TIN);   //Recepients TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_5[0]", mISCresponse.First_Name + " " + mISCresponse.Name_Line_2);   //RECIPIENT’S name
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_6[0]", mISCresponse.Address_Deliv_Street + " " + mISCresponse.Address_Apt_Suite);   //Street address (including apt. no.)
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_7[0]", mISCresponse.City + " " + mISCresponse.State + " " + mISCresponse.Country + " " + mISCresponse.Zip);   //City or town, state or province, country, and ZIP or foreign postal code
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftColumn[0].f2_8[0]", mISCresponse.Rcp_Account);   //Account number (see instructions)
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_9[0]", mISCresponse.Box_1_Amount.ToString());   //1 Rents
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_10[0]", mISCresponse.Box_2_Amount.ToString());   //2 Royalties
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_11[0]", mISCresponse.Box_3_Amount.ToString());   //3 Other income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_12[0]", mISCresponse.Box_4_Amount.ToString());   //4 Federal income tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_13[0]", mISCresponse.Box_5_Amount.ToString());   //5 Fishing boat proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_14[0]", mISCresponse.Box_6_Amount.ToString());   //6 Medical and health care payments
-        //    if (mISCresponse.Box_7_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].c2_4[0]", mISCresponse.Box_7_Checkbox);   //7 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_15[0]", mISCresponse.Box_8_Amount.ToString());   //8 Substitute payments in lieu of dividends or interest
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_16[0]", mISCresponse.Box_9_Amount.ToString());   //9 Crop insurance proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_17[0]", mISCresponse.Box_10_Amount.ToString());   //10 Gross proceeds paid to an attorney
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_18[0]", mISCresponse.Box_11_Amount.ToString());   //11 Fish purchased for resale
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_19[0]", mISCresponse.Box_12_Amount.ToString());   //12 Section 409A deferrals
-        //    if (mISCresponse.FATCA_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].TagCorrectingSubform[0].c2_3[0]", "0");   //13 FATCA filing requirement
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].Box14_ReadOrder[0].f2_20[0]", mISCresponse.Box_14_Amount.ToString());   //12 Section 409A deferrals);   //14 Excess golden parachute payments
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightColumn[0].f2_21[0]", mISCresponse.Box_15_Amount.ToString());   //15 Nonqualified deferred compensation
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].Box16_ReadOrder[0].f2_22[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].Box16_ReadOrder[0].f2_23[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].Box17_ReadOrder[0].f2_24[0]", mISCresponse.Box_17_ID_Number);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].f2_26[0]", "StateIncome1");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyB[0].f2_27[0]", "StateIncome2");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].Copy2Header[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
-        //    if (mISCresponse.Corrected == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy2[0].Copy2Header[0].c2_1[0]", "0");   //CORRECTED
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_2[0]", string.Concat(instResponse.InstitutionName, ", ", instResponse.Madd1, ", ", instResponse.Madd2, ", ", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, ", ", instResponse.Phone));   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_3[0]", instResponse.Ftin);   //Payer TIN
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_4[0]", mISCresponse.Rcp_TIN);   //Recepients TIN
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_5[0]", mISCresponse.First_Name + " " + mISCresponse.Name_Line_2);   //RECIPIENT’S name
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_6[0]", mISCresponse.Address_Deliv_Street + " " + mISCresponse.Address_Apt_Suite);   //Street address (including apt. no.)
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_7[0]", mISCresponse.City + " " + mISCresponse.State + " " + mISCresponse.Country + " " + mISCresponse.Zip);   //City or town, state or province, country, and ZIP or foreign postal code
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].LeftColumn[0].f2_8[0]", mISCresponse.Rcp_Account);   //Account number (see instructions)
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_9[0]", mISCresponse.Box_1_Amount.ToString());   //1 Rents
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_10[0]", mISCresponse.Box_2_Amount.ToString());   //2 Royalties
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_11[0]", mISCresponse.Box_3_Amount.ToString());   //3 Other income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_12[0]", mISCresponse.Box_4_Amount.ToString());   //4 Federal income tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_13[0]", mISCresponse.Box_5_Amount.ToString());   //5 Fishing boat proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_14[0]", mISCresponse.Box_6_Amount.ToString());   //6 Medical and health care payments
-        //    if (mISCresponse.Box_7_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].c2_4[0]", mISCresponse.Box_7_Checkbox);   //7 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_15[0]", mISCresponse.Box_8_Amount.ToString());   //8 Substitute payments in lieu of dividends or interest
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_16[0]", mISCresponse.Box_9_Amount.ToString());   //9 Crop insurance proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_17[0]", mISCresponse.Box_10_Amount.ToString());   //10 Gross proceeds paid to an attorney
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_18[0]", mISCresponse.Box_11_Amount.ToString());   //11 Fish purchased for resale
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_19[0]", mISCresponse.Box_12_Amount.ToString());   //12 Section 409A deferrals
-        //    if (mISCresponse.FATCA_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].TagCorrectingSubform[0].c2_3[0]", "0");   //13 FATCA filing requirement
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].Box14_ReadOrder[0].f2_20[0]", mISCresponse.Box_14_Amount.ToString());   //12 Section 409A deferrals);   //14 Excess golden parachute payments
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].RightColumn[0].f2_21[0]", mISCresponse.Box_15_Amount.ToString());   //15 Nonqualified deferred compensation
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].Box16_ReadOrder[0].f2_22[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].Box16_ReadOrder[0].f2_23[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].Box17_ReadOrder[0].f2_24[0]", mISCresponse.Box_17_ID_Number);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].f2_26[0]", "StateIncome1");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].Copy2[0].f2_27[0]", "StateIncome2");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
-        //    if (mISCresponse.Corrected == "1")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[0]", "0");   //VOID
-        //    }
-        //    else
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[1]", "0");   //CORRECTED
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_2[0]", string.Concat(instResponse.InstitutionName, ", ", instResponse.Madd1, ", ", instResponse.Madd2, ", ", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, ", ", instResponse.Phone));   //PAYER’S name, street address, city or town, state or province, country, ZIP or foreign postal code, and telephone no
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_3[0]", instResponse.Ftin);   //Payer TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_4[0]", mISCresponse.Rcp_TIN);   //Recepients TIN
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_5[0]", mISCresponse.First_Name + " " + mISCresponse.Name_Line_2);   //RECIPIENT’S name
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_6[0]", mISCresponse.Address_Deliv_Street + " " + mISCresponse.Address_Apt_Suite);   //Street address (including apt. no.)
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_7[0]", mISCresponse.City + " " + mISCresponse.State + " " + mISCresponse.Country + " " + mISCresponse.Zip);   //City or town, state or province, country, and ZIP or foreign postal code
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftColumn[0].f2_8[0]", mISCresponse.Rcp_Account);   //Account number (see instructions)
-        //    if (mISCresponse.Second_TIN_Notice == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyC[0].c2_2[0]", mISCresponse.Second_TIN_Notice);   //2nd TIN not.
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_9[0]", mISCresponse.Box_1_Amount.ToString());   //1 Rents
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_10[0]", mISCresponse.Box_2_Amount.ToString());   //2 Royalties
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_11[0]", mISCresponse.Box_3_Amount.ToString());   //3 Other income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_12[0]", mISCresponse.Box_4_Amount.ToString());   //4 Federal income tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_13[0]", mISCresponse.Box_5_Amount.ToString());   //5 Fishing boat proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_14[0]", mISCresponse.Box_6_Amount.ToString());   //6 Medical and health care payments
-        //    if (mISCresponse.Box_7_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].c2_4[0]", mISCresponse.Box_7_Checkbox);   //7 CheckBox Payer made direct sales totaling $5,000 or more of consumer products to recipient for resale
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_15[0]", mISCresponse.Box_8_Amount.ToString());   //8 Substitute payments in lieu of dividends or interest
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_16[0]", mISCresponse.Box_9_Amount.ToString());   //9 Crop insurance proceeds
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_17[0]", mISCresponse.Box_10_Amount.ToString());   //10 Gross proceeds paid to an attorney
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_18[0]", mISCresponse.Box_11_Amount.ToString());   //11 Fish purchased for resale
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_19[0]", mISCresponse.Box_12_Amount.ToString());   //12 Section 409A deferrals
-        //    if (mISCresponse.FATCA_Checkbox == "0")
-        //    {
-        //        pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].TagCorrectingSubform[0].c2_3[0]", "0");   //13 FATCA filing requirement
-        //    }
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].Box14_ReadOrder[0].f2_20[0]", mISCresponse.Box_14_Amount.ToString());   //12 Section 409A deferrals);   //14 Excess golden parachute payments
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightColumn[0].f2_21[0]", mISCresponse.Box_15_Amount.ToString());   //15 Nonqualified deferred compensation
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].Box16_ReadOrder[0].f2_22[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].Box16_ReadOrder[0].f2_23[0]", mISCresponse.Box_16_Amount.ToString());   //16 State tax withheld
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].Box17_ReadOrder[0].f2_24[0]", mISCresponse.Box_17_ID_Number);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].f2_26[0]", "StateIncome1");   //18 State income
-        //    pdfFormFields.SetField("topmostSubform[0].CopyC[0].f2_27[0]", "StateIncome2");   //18 State income
-
-        //    pdfStamper.FormFlattening = true;
-        //    pdfStamper.Close();
-        //    return newFile;
-        //}
-
+ 
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {
 

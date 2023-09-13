@@ -161,7 +161,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            String ClientName = request.First_Name + " " + request.Name_Line2.Replace(": ", "");
+            String ClientName = request.First_Name + " " + request.Name_Line2?.Replace(": ", "");
 
             if (!String.IsNullOrEmpty(Page))
             {
@@ -417,7 +417,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_NEC.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line2.Replace(": ", "");
+            String ClientName = request.First_Name + " " + request.Name_Line2?.Replace(": ", "");
             newFile1 = string.Concat(ClientName, "_", "Form_", AppConstants.NEC1099Form, "_", Id);
             string FilenameNew = "/1099NEC/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
@@ -476,7 +476,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_NEC.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line2.Replace(": ", "");
+            String ClientName = request.First_Name + " " + request.Name_Line2?.Replace(": ", "");    
 
             newFile1 = string.Concat(ClientName, "_", "Form_", AppConstants.NEC1099Form, "_", request.Id, "_Page_", selectedPage);
             string FilenameNew = "/1099NEC/" + newFile1 + ".pdf";
