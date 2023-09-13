@@ -77,6 +77,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
         public int? InstID { get; set; }
 
         public string? Corrected { get; set; }
+        public bool IsDuplicated { get; set; }
 
     }
 

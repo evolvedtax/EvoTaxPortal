@@ -17,5 +17,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
         Task<MessageResponseModel> Upload1099_NEC_Data(IFormFile file, int InstId, string UserId);
         IQueryable<Tbl1099_NEC> GetRecodByInstId(int InstId);
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath);
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
+        Task<MessageResponseModel> KeepRecord(int id);
+        Task<MessageResponseModel> DeletePermeant(int id);
     }
 }
