@@ -161,6 +161,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public DbSet<Tbl1099_S> Tbl1099_S { get; set; }
     public DbSet<Tbl1099_SA> Tbl1099_SA { get; set; }
     public DbSet<Tbl1099_SB> Tbl1099_SB { get; set; }
+    public DbSet<AuditTrail1099> AuditTrail1099 { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

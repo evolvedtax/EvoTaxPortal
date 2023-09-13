@@ -180,11 +180,13 @@ var COMMON = (function () {
         return false;
     };
     COMMON.doAjaxPostWithJSONResponse = function (url, params) {
+        debugger;
+
         var data = params;
-        var data = {
-            entityId: params.entityId,
-            isLocked: params.isLocked
-        };
+        //var data = {
+        //    entityId: params.entityId,
+        //    isLocked: params.isLocked
+        //};
         var jsonResponse = null;
         $.ajax({
             type: "POST",
@@ -194,10 +196,11 @@ var COMMON = (function () {
             success: function (response) {
                 $('.loading').hide();
                 COMMON.notification(response.type, response.message);
-                $('#changeEntity').change();
+                //$('#changeEntity').change();
                 jsonResponse = response;
             },
             error: function (xhr, status, error) {
+                debugger;
                 COMMON.displayError(xhr.responseText, xhr.status);
                 $('.loading').hide();
 
@@ -254,6 +257,8 @@ var COMMON = (function () {
         debugger
         COMMON.notification(2, 'Unable to process your request.');
     };
+
+
 
     COMMON.uploadFile = function (event, url, obj) {
         var file = event.target.files[0]; // Get the selected file
@@ -530,14 +535,14 @@ var COMMON = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
-                    if (jsonResponse.Deleted === true) {
-                        $.notify('Deleted successful', { globalPosition: 'top center', className: 'success' });
-                    }
+                    //var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
+                    //if (jsonResponse.Deleted === true) {
+                    //    $.notify('Deleted successful', { globalPosition: 'top center', className: 'success' });
+                    //}
                     confirmed = true;
                 } else {
                     swal("Cancelled", "You have cancelled delete operation!", "error");
-                    return false;
+                    //return false;
                 }
             });
         return confirmed;
@@ -593,7 +598,7 @@ var COMMON = (function () {
         },
             function (isConfirm) {
                 if (isConfirm) {
-                    debugger
+
                     var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
                     if (jsonResponse.Status === true) {
                         COMMON.notification(1, jsonResponse.Message)
@@ -602,6 +607,7 @@ var COMMON = (function () {
                             window.location.reload();
                         }, 3000);
                     } else if (jsonResponse.Status !== null) {
+                        debugger
                         COMMON.notification(jsonResponse.deleteResponse.NotifyType, jsonResponse.deleteResponse.Response)
                     }
                     confirmed = true;
