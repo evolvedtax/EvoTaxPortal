@@ -37,6 +37,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8IMYTemplateFileName = @"Form_W8IMY.pdf";
         public const string W8EXPTemplateFileName = @"Form_W-8EXP.pdf";
         public const string NEC_1099_TemplateFileName = @"Form_1099_NEC.pdf";
+        public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
         //-----------BUTTON CONSTANTS--------------------//
