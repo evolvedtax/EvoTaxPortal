@@ -1,6 +1,7 @@
 ﻿using Azure;
 using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.Form1099Services;
+using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.ViewModels;
@@ -17,17 +18,24 @@ namespace EvolvedTax_1099.Controllers
     public class Form1099_NEC_Controller : BaseController
     {
         private readonly IForm1099_NEC_Service _form1099_NEC_Service;
+        private readonly IInstituteService _instituteService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public Form1099_NEC_Controller(IForm1099_NEC_Service form1099_NEC_Service, IWebHostEnvironment webHostEnvironment)
+        public Form1099_NEC_Controller(IForm1099_NEC_Service form1099_NEC_Service, IWebHostEnvironment webHostEnvironment, IInstituteService instituteService)
         {
             _form1099_NEC_Service = form1099_NEC_Service;
             _webHostEnvironment = webHostEnvironment;
+            _instituteService = instituteService;
         }
         public IActionResult Index()
         {
-            var instId = SessionUser.InstituteId; // Get the InstituteId from your session
-            var data = _form1099_NEC_Service.GetRecodByInstId(instId).ToList();
-            return View(data);
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
+            return View(_form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == EntityId));
         }
         [Route("Form1099_NEC_/uploadClients")]
         [HttpPost]
@@ -37,10 +45,15 @@ namespace EvolvedTax_1099.Controllers
             {
                 return Json(false);
             }
-            var response = await _form1099_NEC_Service.Upload1099_NEC_Data(file, SessionUser.InstituteId, SessionUser.UserId);
+            var response = await _form1099_NEC_Service.Upload1099_NEC_Data(file, EntityId, SessionUser.InstituteId, SessionUser.UserId);
             return Json(response);
         }
-
+        public IActionResult ChangeEntity(int entityId)
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = _form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == entityId);
+            return Json(new { Data = response });
+        }
 
         #region PDF Creation Methods
         public IActionResult downlodPdf(int id)

@@ -18,7 +18,7 @@ namespace EvolvedTax.Business.MailService
         Task SendEmailForExpireSignUp(string email, string entityEmail, string Entity, string Role, DateTime? InviteDate, string InviteeName, string LoginUrl);
         Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName, string adminUser, string acceptLink, string rejectLink, string Comments);
         Task SendOTPToRecipientAsync(string otp, string Email, string Subject, string URL);
-        Task SendElectronicAcceptanceEmail(IQueryable<Tbl1099_MISC> tbl1099_MISCs,string body, string subject, string url);
-        Task SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject);
+        Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form);
+        Task SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject, string acceptingStatus);
     }
 }

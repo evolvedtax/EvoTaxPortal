@@ -45,8 +45,10 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099MISCTemplateFileName = @"f1099msc.pdf";
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
+        public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
 
         public const string Form1099MISC = @"Form1099MISC";
+        public const string Form1099NEC = @"Form1099NEC";
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
@@ -381,7 +383,7 @@ Technology Team at Evolved LLC";
     ";
 
         public static string ConfirmationEmailToRecipient = @"Dear User,<br/><br/>
-                                You responded to the email for accepting or rejecting the receipt of the electronic copy of the 1099 form. If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:<br/><br/>
+                                You {{acceptingStatus}} to receive electronic copy of 1099 forms via e-mail. If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:<br/><br/>
                                 
                                 <table border='1'>
                                     <tr>

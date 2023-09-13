@@ -1,5 +1,6 @@
-﻿@{
-    @model List<EvolvedTax.Data.Models.Entities._1099.Tbl1099_NEC>
+﻿@using EvolvedTax.Data.Models.Entities._1099;
+@{
+    @model IEnumerable<Tbl1099_NEC>
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
@@ -46,8 +47,15 @@
         <div class="col-lg-12">
             <div class="ibox ">
                 <div class="ibox-title">
-                
+
                     <div class="row">
+                        <div class="col-md-5">
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto">Select Entity for Further Details</label>
+                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:fit-content">
+                                </select>
+                            </div>
+                        </div>
                         <div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
                             <div style="display:flex">
                                 <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
@@ -99,8 +107,8 @@
                                         <th>Status</th>
                                         <th>Created By</th>
                                         <th>Created Date</th>
-                                 
-                                       
+
+
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -114,7 +122,7 @@
                                             <tr @IsDuplicatedStyle>
                                                 @*       <td><input type="checkbox" class="rowCheckbox" value="@item.Id"></td>*@
                                                 <td @IsDuplicatedStyle>
-                                                    <input type="checkbox" class="rowCheckbox" value="@item.Id" >
+                                                    <input type="checkbox" class="rowCheckbox" value="@item.Id">
                                                     @if (item.IsDuplicated)
                                                     {
                                                         <span class="fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="Duplicate Record"></span>
@@ -177,13 +185,15 @@
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <div class="dropdown-menu-horizontal">
                                                                     <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
+                                                                    <a class="dropdown-item" href="javascript:void()">Mail to the recipient and send to IRS</a>
+                                                                    <a class="dropdown-item" href="javascript:void()">File with IRS</a>
                                                                     <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     }
                                                 </td>
-                                                
+
                                             </tr>
                                         }
                                     }
@@ -204,7 +214,7 @@
                                     <th>First Name</th>
                                     <th>Name Line 2</th>
                                     <th>Action</th>
-                                   @* <th>Address Type</th>
+                                    @* <th>Address Type</th>
                                     <th>Address Deliv/Street</th>
                                     <th>Address Apt/Suite</th>
                                     <th>City</th>
@@ -284,45 +294,46 @@
 
                                 <input id="hdnSelectedId" name="hdnSelectedId" type="hidden" />
                                 <input id="hdnSelectedPages" name="hdnSelectedPages" type="hidden" />
-                           
-                       
-                            <div class="col-md-12">
-                                @*<div class="mt-2">*@
+
+
+                                <div class="col-md-12">
+                                    @*<div class="mt-2">*@
                                     <label>Download Page(s)</label>
                                     <div>
                                         <input type="checkbox" id="All" class="download-checkbox" name="All" value="All">
                                         <label for="All">All Pages</label>
                                     </div>
-                               
+
                                     <div>
                                         <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="2">
-                                            <label for="page2">For Internal Revenue Service Center</label>
+                                        <label for="page2">For Internal Revenue Service Center</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="3">
-                                            <label for="page3">For State Tax Department</label>
+                                        <label for="page3">For State Tax Department</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page4" class="download-checkbox" name="page4" value="4">
-                                            <label for="page4">For Recipient</label>
+                                        <label for="page4">For Recipient</label>
                                     </div>
-                                 
+
                                     <div>
                                         <input type="checkbox" id="page6" class="download-checkbox" name="page6" value="6">
-                                            <label for="page6">To be filed with recipient’s state income tax return</label>
+                                        <label for="page6">To be filed with recipient’s state income tax return</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page7" class="download-checkbox" name="page7" value="7">
-                                            <label for="page7">For Payer</label>
+                                        <label for="page7">For Payer</label>
                                     </div>
-                                  
-                               @* </div>*@
-                            </div>
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                    @* </div>*@
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary" id="downloadBtn">Download All In Separate File</button>
                                     <button type="button" class="btn btn-primary" id="downloadBtnOne">Download All In One File</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -330,73 +341,72 @@
             </div>
         </div>
     </div>
-</div>
 
 
-@section Scripts {
-    <script type="text/javascript">
+    @section Scripts {
+        <script type="text/javascript">
 
-        function DownloadFile(id) {
-            var response = COMMON.doAjaxGetWithJSONResponse("downlodPdf", { Id: id })
-            window.open(response);
+            function DownloadFile(id) {
+                var response = COMMON.doAjaxGetWithJSONResponse("downlodPdf", { Id: id })
+                window.open(response);
 
-        }
-        $(document).ready(function () {
-            var table = $('.dataTables-example').DataTable({
+            }
+            $(document).ready(function () {
+                var table = $('.dataTables-example').DataTable({
                     "order": [[0, "desc"]],
-                pageLength: 25,
+                    pageLength: 25,
                     fixedColumns: {
                         left: 2,
                         right: 1
                     },
                     fixedHeader: true,
                     scrollX: true,
-                dom: '<"html5buttons"B>lTfgitp',
-                buttons: [
-                    {
-                        extend: 'collection',
-                        text: '<i class="fa fa-ellipsis-h"></i>',
-                        className: 'btn-menu-toggle',
-                        buttons: [
-                            {
-                                text: '<i class="fa fa-download"></i> Download New Entity Template',
-                                className: 'btn-template',
-                                action: function (e, dt, button, config) {
-                                    let url = 'DownloadExcel';
-                                    let params = { fileType: '@AppConstants.Entity' }
-                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
-                                }
-                            },
-                            {
-                                text: '<i class= "fa fa-download" ></i> Download In PDF',
-                                className: 'btn-template',
-                                action: function (e, dt, button, config) {
-                                    // Get selected rows
-                                    var selectedRows = [];
-                                    $('.rowCheckbox:checked').each(function () {
-                                        var checkboxValue = $(this).val();
-                                        //var rowData = dt.row('#' + checkboxValue).data();
-
-                                        if (checkboxValue) {
-                                            selectedRows.push(checkboxValue);
-                                        }
-                                    });
-                                    if (selectedRows.length === 0) {
-                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                        return;
+                    dom: '<"html5buttons"B>lTfgitp',
+                    buttons: [
+                        {
+                            extend: 'collection',
+                            text: '<i class="fa fa-ellipsis-h"></i>',
+                            className: 'btn-menu-toggle',
+                            buttons: [
+                                {
+                                    text: '<i class="fa fa-download"></i> Download New Template',
+                                    className: 'btn-template',
+                                    action: function (e, dt, button, config) {
+                                        let url = '@Url.Action("DownloadExcel","Common")';
+                                        let params = { fileType: '@AppConstants.Form1099NEC' }
+                                        COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099NECExcelTemplate');
                                     }
-                         
-                                    //DownloadAll(selectedRows);
-                                    showModalForDownload(selectedRows);
+                                },
+                                {
+                                    text: '<i class= "fa fa-download" ></i> Download In PDF',
+                                    className: 'btn-template',
+                                    action: function (e, dt, button, config) {
+                                        // Get selected rows
+                                        var selectedRows = [];
+                                        $('.rowCheckbox:checked').each(function () {
+                                            var checkboxValue = $(this).val();
+                                            //var rowData = dt.row('#' + checkboxValue).data();
 
-                                }
-                            },
-                            {
-                                extend: 'excel',
-                                title: 'EvolvedTax',
-                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
-                                className: 'btn-excel'
-                            },
+                                            if (checkboxValue) {
+                                                selectedRows.push(checkboxValue);
+                                            }
+                                        });
+                                        if (selectedRows.length === 0) {
+                                            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                            return;
+                                        }
+
+                                        //DownloadAll(selectedRows);
+                                        showModalForDownload(selectedRows);
+
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    title: 'EvolvedTax',
+                                    text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                    className: 'btn-excel'
+                                },
 
                                 {
                                     text: '<i class="fa fa-upload"></i> Import Data',
@@ -405,75 +415,117 @@
                                         $('#uploadDataDiv').prop('hidden', false);
                                     }
                                 },
-                        ],
-                    }
-                ],
-                initComplete: function () {
-                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
-                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
-                    // Add custom CSS class to the dropdown list container
-                    $('.btn-menu-toggle').on('click', function () {
-                        var dropdown = $(this).siblings('.dt-button-collection');
-                        dropdown.addClass('center-dropdown');
-                    });
-                },
-            });
+                                {
+                                    text: '<i class="fa fa-send"></i> Mail to the recipient and send to IRS',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+                                        COMMON.confirmAlertWitMessages("Professional Review Confirmation", "Kindly note that this service is chargable. If you agree please click on confirm for further process.", "info", "Confirm", "", "", "");
+                                    }
+                                },
+                                {
+                                    text: '<i class="fa fa-send"></i> File with IRS',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
 
-            // Get the file input element
-            var fileInput = document.getElementById('uploadClients');
-            // Add an event listener to the file input
-            fileInput.addEventListener('change', uploadData);
-            function uploadData(event) {
-                let entityId = 0;
-                let entityName = '';
+                                    }
+                                },
+                                {
+                                    text: '<i class="fa fa-send"></i> Electronic Acceptance Email',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+                                        var selectedValues = [];
+                                        $('.rowCheckbox:checked').each(function () {
+                                            selectedValues.push($(this).val());
+                                        });
+
+                                        if (selectedValues.length === 0) {
+                                            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                            return;
+                                        }
+
+                                        $('.loading').show();
+                                        // Send the selectedValues to the controller using AJAX or a form submission
+                                        let url = '@Url.Action("SendLinkToRecipients","Common")';
+                                        let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099NEC' }
+                                        COMMON.doAjaxPostWithJSONResponse(url, params);
+                                    }
+                                },
+                            ],
+                        },
+                        {
+                            text: 'Share <i class="fa fa-share"></i>',
+                            className: 'email-btn',
+                            action: function (e, dt, button, config) {
+                                $("#shareModal").modal("show");
+                            }
+                        },
+                    ],
+                    initComplete: function () {
+                        //$('.dataTables_length').hide(); // Hide the original page length dropdown
+                        $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                        // Add custom CSS class to the dropdown list container
+                        $('.btn-menu-toggle').on('click', function () {
+                            var dropdown = $(this).siblings('.dt-button-collection');
+                            dropdown.addClass('center-dropdown');
+                        });
+                    },
+                });
+
+                // Get the file input element
+                var fileInput = document.getElementById('uploadClients');
+                // Add an event listener to the file input
+                fileInput.addEventListener('change', uploadData);
+                function uploadData(event) {
+                    let entityId = 0;
+                    let entityName = '';
 
                     uploadFile_NEC(event, '/Form1099_NEC_/uploadClients', { entityId, entityName });
-            }
-            bsCustomFileInput.init();
-        })
+                }
+                bsCustomFileInput.init();
+            })
 
 
-        // Select All checkbox
-        $('#selectAll').change(function () {
-            $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
-            //$('.email-btn').text('Send Email to All');
-            var selectedValues = [];
-            $('.rowCheckbox:checked').each(function () {
-                selectedValues.push($(this).val());
+            // Select All checkbox
+            $('#selectAll').change(function () {
+                $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
+                //$('.email-btn').text('Send Email to All');
+                var selectedValues = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+                if (selectedValues.length === 0) {
+                    //$('.email-btn').text('Send Email');
+                }
             });
-            if (selectedValues.length === 0) {
-                //$('.email-btn').text('Send Email');
-            }
-        });
 
             $('#importData').click(function () {
                 $('#uploadDataDiv').prop('hidden', false);
             });
 
 
-        function showModalForDownload(ids) {
-           // $("#hdnSelectedId").val(ids.join(","));
-            $("#hdnSelectedId").val(ids);
-            $("#shareModal").modal("show");
-        }
+            function showModalForDownload(ids) {
+                // $("#hdnSelectedId").val(ids.join(","));
+                $("#hdnSelectedId").val(ids);
+                $("#shareModal").modal("show");
+            }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            // Attach a click event listener to the "Download" button
-            const downloadButton = document.getElementById("downloadBtn");
-            downloadButton.addEventListener("click", function () {
-                const selectedCheckboxes = $(".download-checkbox:checked");
-                const selectedPages = selectedCheckboxes.map(function () {
-                    return $(this).val();
-                }).get();
+            document.addEventListener("DOMContentLoaded", function () {
+                // Attach a click event listener to the "Download" button
+                const downloadButton = document.getElementById("downloadBtn");
+                downloadButton.addEventListener("click", function () {
+                    const selectedCheckboxes = $(".download-checkbox:checked");
+                    const selectedPages = selectedCheckboxes.map(function () {
+                        return $(this).val();
+                    }).get();
 
-                // Set the value of the hidden field to the selected pages
-                $("#hdnSelectedPages").val(selectedPages.join(','));
+                    // Set the value of the hidden field to the selected pages
+                    $("#hdnSelectedPages").val(selectedPages.join(','));
 
-                DownloadAll($("#hdnSelectedId").val(), $("#hdnSelectedPages").val());
+                    DownloadAll($("#hdnSelectedId").val(), $("#hdnSelectedPages").val());
+                });
             });
-        });
 
-        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("DOMContentLoaded", function () {
                 // Attach a click event listener to the "Download" button
                 const downloadButton = document.getElementById("downloadBtnOne");
                 downloadButton.addEventListener("click", function () {
@@ -489,10 +541,10 @@
                 });
             });
 
-       function DownloadOneAll(id, selectedPages) {
+            function DownloadOneAll(id, selectedPages) {
                 const ids = id.split(',');
                 const selectedPage = selectedPages.split(',');
-                const timestamp = new Date().getTime(); 
+                const timestamp = new Date().getTime();
                 const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
                 const zipFolderName = `F1099NEC_${formattedDate}.zip`;
                 $('#ajax-loader').show();
@@ -523,43 +575,110 @@
             }
 
 
-       function DownloadAll(id, selectedPages) {
-            const ids = id.split(',');
-            const selectedPage = selectedPages.split(',');
+            function DownloadAll(id, selectedPages) {
+                const ids = id.split(',');
+                const selectedPage = selectedPages.split(',');
                 const timestamp = new Date().getTime();
                 const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
                 const zipFolderName = `F1099NEC_${formattedDate}.zip`;
 
-            $('#ajax-loader').show();
+                $('#ajax-loader').show();
                 $("#shareModal").modal("hide");
-            fetch("@Url.Action("DownloadAll")", {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({ ids, selectedPage }) 
-            })
-                .then((response) => {
-                    response.blob().then((blob) => {
-                        const downloadUrl = window.URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.setAttribute('href', downloadUrl);
+                fetch("@Url.Action("DownloadAll")", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({ ids, selectedPage })
+                })
+                    .then((response) => {
+                        response.blob().then((blob) => {
+                            const downloadUrl = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.setAttribute('href', downloadUrl);
                             link.setAttribute('download', zipFolderName);
-                        link.style.display = 'none';
-                        document.body.appendChild(link);
-                        link.click();
-                        window.URL.revokeObjectURL(link.href);
-                        document.body.removeChild(link);
-                           
-                        $('#ajax-loader').hide();
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            window.URL.revokeObjectURL(link.href);
+                            document.body.removeChild(link);
 
-                    })
+                            $('#ajax-loader').hide();
+
+                        })
+                    });
+            }
+
+            // On change the entity
+            $('#changeEntity').change(function () {
+                let entityId = $('#changeEntity').val();
+                let params = { entityId: entityId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_MISC_/ChangeEntity', params);
+                // Clear the existing table rows
+                let dataTable = $('.dataTables-example').DataTable();
+                dataTable.clear().draw();
+
+                // Iterate over the response data and populate the table
+                $.each(response.Data, function (index, item) {
+                    let newRow = $('<tr id="' + item.Id + '">').append(
+                        $('<td>').html('<input type="checkbox" class="rowCheckbox" value="' + item.Id + '">'),
+                        $('<td>').text(item.Rcp_TIN),
+                        $('<td>').text(item.Last_Name_Company),
+                        $('<td>').text(item.First_Name),
+                        $('<td>').text(item.Name_Line2),
+                        $('<td>').text(item.Address_Type),
+                        $('<td>').text(item.Address_Deliv_Street),
+                        $('<td>').text(item.Address_Apt_Suite),
+                        $('<td>').text(item.City),
+                        $('<td>').text(item.State),
+                        $('<td>').text(item.Zip),
+                        $('<td>').text(item.Country),
+                        $('<td>').text(item.Rcp_Account),
+                        $('<td>').text(item.Rcp_Email),
+                        $('<td>').text(item.Second_TIN_Notice),
+                        $('<td>').text(item.Box_1_Amount),
+                        $('<td>').text(item.Box_2_Checkbox),
+                        $('<td>').text(item.Box_4_Amount),
+                        $('<td>').text(item.Box_5_Amount),
+                        $('<td>').text(item.Box_6_IDNumber),
+                        $('<td>').text(item.Box_6_State),
+                        $('<td>').text(item.Box_7_Amount),
+                        $('<td>').text(item.OptRcpTextLine1),
+                        $('<td>').text(item.OptRcpTextLine2),
+                        $('<td>').text(item.Form_Category),
+                        $('<td>').text(item.Form_Source),
+                        $('<td>').text(item.BatchID),
+                        $('<td>').text(item.Tax_State),
+                        $('<td>').text(item.Uploaded_File),
+                        $('<td>').text(item.Status),
+                        $('<td>').text(item.Created_By),
+                        $('<td>').text(item.Created_Date),
+
+                        $('<td class="actions">').append(
+                            $('<div class="dropdown">').append(
+                                $('<button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">').html('<span class="fa fa-bars"></span>'),
+                                $('<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">').append(
+                                    item.IsDuplicated ?
+                                        $('<a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive(\'keep\',\'KeepRecord\',\'id= ' + item.Id + '\',\'\')">').text('Keep')
+                                        :
+                                        $('<a class="dropdown-item" href="javascript:void()" onclick="DownloadFile(\'' + item.Id + '\')">').text('Download Form'),
+
+                                    $('<a class="dropdown-item" href="javascript:void()">').text('Mail to the recipient and send to IRS'),
+                                    $('<a class="dropdown-item" href="javascript:void()">').text('File with IRS'),
+
+                                    $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteRecord\',\'id=' + item.Id + '\',\'\')">').text('Delete')
+                                )
+                            )
+                        )
+                    );
+                    dataTable.row.add(newRow);
                 });
-        }
 
+                // Draw the updated DataTable
+                dataTable.draw();
+            });
 
-      
-       function uploadFile_NEC  (event, url, obj) {
+            function uploadFile_NEC(event, url, obj) {
                 var file = event.target.files[0]; // Get the selected file
                 if (file == undefined) {
                     return;
@@ -572,9 +691,9 @@
                 // Create a FormData object and append the file to it
                 var formData = new FormData();
                 formData.append('file', file);
-                formData.append('EntityId', obj.entityId); // Here obj is Entity Id
-                formData.append('entityName', obj.entityName); // Here obj is Entity Id
-    
+                formData.append('EntityId', $('#changeEntity').val()); // Here obj is Entity Id
+                formData.append('entityName', $('#changeEntity option:selected').text().trim()); // Here obj is Entity Id
+
 
                 $('#ajax-loader').show();
                 xhr.onload = function () {
@@ -587,7 +706,7 @@
                         var response = JSON.parse(xhr.responseText);
                         if (response.Status) {
                             if (response.Param == "Entity" && response.Message.length > 0) {
-   
+
                             }
                             console.log('Upload completed successfully');
                         } else {
@@ -602,17 +721,6 @@
 
                 // Send the AJAX request
                 xhr.send(formData);
-
-
             }
-    
-     
-
-
-
-
-
-
-
-    </script>
-}
+        </script>
+    }

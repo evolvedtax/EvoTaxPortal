@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Converters;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace EvolvedTax_Institute.Controllers
 {
@@ -582,10 +583,6 @@ namespace EvolvedTax_Institute.Controllers
             }
             var response = await _instituteService.LogClientButtonClicked(userName, newButtonText, Convert.ToInt32(entityId), Category);
             return Json(response);
-
-
         }
-
-
     }
 }

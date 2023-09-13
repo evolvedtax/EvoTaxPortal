@@ -373,10 +373,10 @@
                                         return;
                                     }
 
-                                    //$('.loading').show();
+                                    $('.loading').show();
                                     // Send the selectedValues to the controller using AJAX or a form submission
                                     let url = '@Url.Action("SendLinkToRecipients","Common")';
-                                    let params = { selectedValues: selectedValues }
+                                    let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099MISC' }
                                     COMMON.doAjaxPostWithJSONResponse(url, params);
                                 }
                             },
