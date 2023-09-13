@@ -12,6 +12,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
         [Key]
         public int Id { get; set; }
         public string Description { get; set; } = string.Empty;
+        public string FormName { get; set; } = string.Empty;
         public string OTP { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
         public DateTime OTPExpiryTime { get; set; } = DateTime.Now;

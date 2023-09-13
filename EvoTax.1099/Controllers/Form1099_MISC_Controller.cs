@@ -59,36 +59,5 @@ namespace EvolvedTax_1099.Controllers
             var response = _form1099_MISC_Service.GeneratePdf(Id, _webHostEnvironment.WebRootPath);
             return Json(response);
         }
-        [HttpGet]
-        public IActionResult DownloadExcel(string fileType)
-        {
-            string fileName;
-            string filePath;
-
-            switch (fileType)
-            {
-                case AppConstants.Entity:
-                    fileName = AppConstants.InstituteEntityTemplate;
-                    break;
-                case AppConstants.Client:
-                    fileName = AppConstants.InstituteClientTemplate;
-                    break;
-                default:
-                    return NotFound();
-            }
-
-            filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Templates", fileName);
-
-            if (System.IO.File.Exists(filePath))
-            {
-                var memoryStream = _commonService.DownloadFile(filePath);
-                return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
-            }
-            else
-            {
-                return NotFound();
-            }
-
-        }
     }
 }

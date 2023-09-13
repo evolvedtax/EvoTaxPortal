@@ -16,17 +16,15 @@ namespace EvolvedTax_1099.Controllers
     public class CommonController : BaseController
     {
         private readonly ICommonService _commonService;
-        private readonly IMailService _mailService;
-        private readonly ITrailAudit1099Service _trailAudit1099Service;
         private readonly IForm1099_MISC_Service _form1099_MISC_Service;
+        private readonly IForm1099_NEC_Service _form1099_NEC_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService, IMailService mailService, ITrailAudit1099Service trailAudit1099Service, IForm1099_MISC_Service form1099_MISC_Service)
+        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService, IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
-            _mailService = mailService;
-            _trailAudit1099Service = trailAudit1099Service;
             _form1099_MISC_Service = form1099_MISC_Service;
+            _form1099_NEC_Service = form1099_NEC_Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -39,8 +37,8 @@ namespace EvolvedTax_1099.Controllers
                 case AppConstants.Form1099MISC:
                     fileName = AppConstants.Form1099MISCExcelTemplate;
                     break;
-                case AppConstants.Client:
-                    fileName = AppConstants.InstituteClientTemplate;
+                case AppConstants.Form1099NEC:
+                    fileName = AppConstants.Form1099NECExcelTemplate;
                     break;
                 default:
                     return NotFound();
@@ -61,7 +59,7 @@ namespace EvolvedTax_1099.Controllers
         }
         [Route("common/SendEmailstoRecipients")]
         [HttpPost]
-        public async Task<IActionResult> SendLinkToRecipients(int[] selectedValues)
+        public async Task<IActionResult> SendLinkToRecipients(int[] selectedValues, string form)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = string.Empty;
@@ -76,7 +74,15 @@ namespace EvolvedTax_1099.Controllers
             }
             var fullUrl = $"{scheme}://{host}";
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
-            await _mailService.SendElectronicAcceptanceEmail(_form1099_MISC_Service.GetRecipientEmailsByIds(selectedValues), "","Action Required",URL);
+            switch (form)
+            {
+                case AppConstants.Form1099MISC:
+                    await _form1099_MISC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099MISC);
+                    break;
+                case AppConstants.Form1099NEC:
+                    await _form1099_NEC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099NEC);
+                    break;
+            }
 
             return Json(new { type = ResponseMessageConstants.SuccessStatus, message = ResponseMessageConstants.SuccessEmailSend });
         }

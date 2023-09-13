@@ -1,33 +1,16 @@
-﻿using Azure.Core;
-using Azure;
-using EvolvedTax.Data.Models.Entities;
-using iTextSharp.text.pdf;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using iTextSharp.text;
-using Microsoft.AspNetCore.Http;
-using iTextSharp.text.html.simpleparser;
-using EvolvedTax.Data.Models.DTOs.Request;
-using Microsoft.AspNetCore.Hosting.Server;
-using System.Drawing;
-using System.Xml.Linq;
-using SkiaSharp;
-using static iTextSharp.text.Font;
+﻿using AutoMapper;
+using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
-using EvolvedTax.Business.Services.GeneralQuestionareService;
-using NPOI.SS.Formula.Functions;
-using Org.BouncyCastle.Asn1.Ocsp;
-using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
-using System.Linq.Expressions;
-using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs;
+using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using EvolvedTax.Data.Models.Entities;
+using EvolvedTax.Data.Models.Entities._1099;
+using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using EvolvedTax.Data.Models.Entities._1099;
-using EvolvedTax.Data.Models.DTOs.Response.Form1099;
-using AutoMapper;
-using EvolvedTax.Business.Services.InstituteService;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -35,12 +18,15 @@ namespace EvolvedTax.Business.Services.Form1099Services
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IInstituteService _instituteService;
+        readonly IMailService _mailService;
+        readonly ITrailAudit1099Service _trailAudit1099Service;
         readonly IMapper _mapper;
-        public Form1099_MISC_Service(EvolvedtaxContext evolvedtaxContext, IMapper mapper, IInstituteService instituteService)
+        public Form1099_MISC_Service(EvolvedtaxContext evolvedtaxContext, IMapper mapper, IInstituteService instituteService, IMailService mailService = null)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mapper = mapper;
             _instituteService = instituteService;
+            _mailService = mailService;
         }
 
         public IQueryable<Form1099MISCResponse> GetForm1099MISCList()
@@ -98,7 +84,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             });
             return response;
         }
-        public IQueryable<Tbl1099_MISC> GetRecipientEmailsByIds(int[] selectValues)
+        public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form)
         {
             var result = from ic in _evolvedtaxContext.Tbl1099_MISC
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
@@ -107,8 +93,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
                          };
+            foreach (var item in result)
+            {
+                await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, string.Empty, "Action Required", URL, form);
 
-            return result;
+                await _trailAudit1099Service.AddUpdateRecipientAuditDetails(new AuditTrail1099 { RecipientEmail = item.Rcp_Email, FormName = form, Token = item.EntityId.ToString() ?? string.Empty });
+            }
+            return true;
         }
         public async Task<MessageResponseModel> Upload1099_MISC_Data(IFormFile file, int InstId, int entityId, string UserId)
         {

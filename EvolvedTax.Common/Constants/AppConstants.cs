@@ -44,8 +44,10 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
+        public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
 
         public const string Form1099MISC = @"Form1099MISC";
+        public const string Form1099NEC = @"Form1099NEC";
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";

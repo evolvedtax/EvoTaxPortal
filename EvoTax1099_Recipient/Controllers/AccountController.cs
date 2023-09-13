@@ -32,12 +32,13 @@ namespace EvolvedTax1099_Recipient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> OTP(string? s = "", string e = "")
+        public async Task<IActionResult> OTP(string? s = "", string e = "", string f="")
         {
             if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
                 s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                f = EncryptionHelper.Decrypt(f.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 if (await _trailAudit1099Service.CheckIfRecipientRecordExist(s, e))
                 {
                     return RedirectToAction("AccessDenied", new { statusCode = 400 });
@@ -54,12 +55,15 @@ namespace EvolvedTax1099_Recipient.Controllers
                     Timestamp = DateTime.Now,
                     Description = res,
                     OTPExpiryTime = DateTime.Now.AddMinutes(60),
-                    Token = e
+                    Token = e,
+                    FormName = f
                 };
                 await _trailAudit1099Service.AddUpdateRecipientAuditDetails(request);
                 await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User");
                 ViewBag.RecipientEmail = s;
+                ViewBag.FormName = f;
                 HttpContext.Session.SetString("OTPRecipientEmail", s);
+                HttpContext.Session.SetString("OTPFormName", f);
             }
             return View();
         }
@@ -76,8 +80,8 @@ namespace EvolvedTax1099_Recipient.Controllers
 
                 RecipientEmail = HttpContext.Session.GetString("OTPRecipientEmail");
             }
-
-            var response = _trailAudit1099Service.GetRecipientDataByEmailId(RecipientEmail);
+            var formName = HttpContext.Session.GetString("OTPFormName");
+            var response = _trailAudit1099Service.GetRecipientDataByEmailId(RecipientEmail, formName);
             string Otp = string.Concat(
                 formVals["Otp1"].ToString(),
                 formVals["Otp2"].ToString(),
@@ -93,7 +97,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             }
             if (Otp.Trim() == response?.OTP.Trim())
             {
-                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"], OTPExpiryTime = DateTime.Now, OTP = string.Empty };
+                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"],FormName = formName, OTPExpiryTime = DateTime.Now, OTP = string.Empty };
                 await _trailAudit1099Service.UpdateOTPStatus(request);
                 HttpContext.Session.SetString("RecipientEmail", formVals["RecipientEmail"]);
                 return RedirectToAction("Verify", "Account");
@@ -113,10 +117,12 @@ namespace EvolvedTax1099_Recipient.Controllers
         [UserSession]
         public async Task<IActionResult> Verify(int status)
         {
+            var formName = HttpContext.Session.GetString("OTPFormName");
             var request = new AuditTrail1099
             {
                 RecipientEmail = HttpContext.Session.GetString("RecipientEmail"),
-                Status = status
+                Status = status,
+                FormName = formName
             };
             var response = await _trailAudit1099Service.UpdateRecipientStatus(request);
             string jsonString = response.Description;

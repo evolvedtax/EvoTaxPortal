@@ -1,46 +1,33 @@
-﻿using Azure.Core;
-using Azure;
-using EvolvedTax.Data.Models.Entities;
+﻿using EvolvedTax.Data.Models.Entities;
 using iTextSharp.text.pdf;
-using System.Diagnostics.Metrics;
-using System.Globalization;
 using iTextSharp.text;
 using Microsoft.AspNetCore.Http;
-using iTextSharp.text.html.simpleparser;
-using EvolvedTax.Data.Models.DTOs.Request;
-using Microsoft.AspNetCore.Hosting.Server;
-using System.Drawing;
-using System.Xml.Linq;
-using SkiaSharp;
-using static iTextSharp.text.Font;
 using EvolvedTax.Common.Constants;
-using EvolvedTax.Business.Services.GeneralQuestionareService;
-using NPOI.SS.Formula.Functions;
-using Org.BouncyCastle.Asn1.Ocsp;
-using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
-using System.Linq.Expressions;
-using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using EvolvedTax.Data.Models.Entities._1099;
-using EvolvedTax.Data.Models.DTOs.Response;
 using System.IO.Compression;
-using Microsoft.AspNetCore.Mvc;
+using EvolvedTax.Business.MailService;
+using EvolvedTax.Data.Models.DTOs.Response.Form1099;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
-    public class Form1099_NEC_Service :IForm1099_NEC_Service
+    public class Form1099_NEC_Service : IForm1099_NEC_Service
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
+        readonly IMailService _mailService;
+        readonly ITrailAudit1099Service _trailAudit1099Service;
 
 
-        public Form1099_NEC_Service(EvolvedtaxContext evolvedtaxContext)
+        public Form1099_NEC_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service)
         {
             _evolvedtaxContext = evolvedtaxContext;
+            _mailService = mailService;
+            _trailAudit1099Service = trailAudit1099Service;
         }
-        public async Task<MessageResponseModel> Upload1099_NEC_Data(IFormFile file, int InstId, string UserId)
+        public async Task<MessageResponseModel> Upload1099_NEC_Data(IFormFile file, int entityId, int InstId, string UserId)
         {
             bool Status = false;
             var response = new List<Tbl1099_NEC>();
@@ -97,6 +84,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         BatchID = excelRow.GetCell(25)?.ToString(),
                         Tax_State = excelRow.GetCell(26)?.ToString(),
                         InstID = InstId,
+                        EntityId = entityId,
                         //UserId = UserId,
                         Created_Date = DateTime.Now.Date,
                         Created_By = UserId,
@@ -138,7 +126,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     else
                     {
                         entity.IsDuplicated = false;
-                        
+
 
                     }
                     necList.Add(entity);
@@ -160,14 +148,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
             .AsQueryable();
         }
 
-
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath)
         {
             return CreatePdf(Id, TemplatefilePath, SaveFolderPath, false);
 
         }
 
-        public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath,bool IsAll, string Page = "")
+        public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var request = _evolvedtaxContext.Tbl1099_NEC.FirstOrDefault(p => p.Id == Id);
             var requestInstitue = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstID);
@@ -185,7 +172,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 newFile1 = string.Concat(ClientName, "_", "Form_", AppConstants.NEC1099Form, "_", request.Id);
             }
 
-      
+
             string FilenameNew = "/1099NEC/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf"; // Add ".pdf" extension to the file name
 
@@ -376,7 +363,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfStamper.Close();
             pdfReader.Close();
 
-        
+
             if (IsAll)
             {
                 return newFilePath;
@@ -385,16 +372,14 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
         }
 
-
-
-        public string GenerateAndZipPdfs(List<int> ids,  string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
         {
             var pdfPaths = new List<string>();
 
             foreach (var id in ids)
             {
-               
-                    string TemplatePathFile  = Path.Combine(RootPath, "Forms", AppConstants.NEC_1099_TemplateFileName);
+
+                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.NEC_1099_TemplateFileName);
                 bool containsAll = selectedPages.Contains("All");
 
                 if (containsAll)
@@ -485,19 +470,14 @@ namespace EvolvedTax.Business.Services.Form1099Services
             File.Move(modifiedFilePath, finalFilePath);
 
             return finalFilePath;
-
-
-        
-
-
         }
 
-        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath,string selectedPage)
+        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_NEC.FirstOrDefault(p => p.Id == Id);
             String ClientName = request.First_Name + " " + request.Name_Line2;
-           
+
             newFile1 = string.Concat(ClientName, "_", "Form_", AppConstants.NEC1099Form, "_", request.Id, "_Page_", selectedPage);
             string FilenameNew = "/1099NEC/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
@@ -519,8 +499,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
             using (PdfCopy copy = new PdfCopy(doc, fs))
             {
                 doc.Open();
-             
-                 PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
+
+                PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
                 copy.AddPage(importedPage);
                 doc.Close();
             }
@@ -542,7 +522,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
             return finalFilePath;
         }
 
-
         public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
         {
             var pdfPaths = new List<string>();
@@ -560,7 +539,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                 #region CompilePDFs
 
-                string compileFileName = "All Form Single File.pdf"; 
+                string compileFileName = "All Form Single File.pdf";
                 string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
                 CompilepdfPaths.Add(outputFilePath);
 
@@ -596,81 +575,82 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 #endregion
 
             }
-            else { 
-            foreach (var selectedPage in selectedPages)
+            else
             {
-
-             
-                foreach (var id in ids)
+                foreach (var selectedPage in selectedPages)
                 {
-                    var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage);
-                    pdfPaths.Add(pdfPath);
-                }
-
-                #region CompilePDFs
 
 
-                string compileFileName;
-
-                switch (selectedPage)
-                {
-                    case "2":
-                        compileFileName = "For Internal Revenue Service Center.pdf";
-                        break;
-                    case "3":
-                        compileFileName = "For State Tax Department.pdf";
-                        break;
-                    case "4":
-                        compileFileName = "For Recipient.pdf";
-                        break;
-                    case "6":
-                        compileFileName = "To be filed with recipient’s state income tax return.pdf";
-                        break;
-                    case "7":
-                        compileFileName = "For Payer.pdf";
-                        break;
-                    default:
-                        compileFileName = "compiled_page.pdf";
-                        break;
-                }
-
-                string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
-                CompilepdfPaths.Add(outputFilePath);
-
-                // Create a Document object
-                Document document = new Document();
-
-                // Create a PdfCopy object to write the output PDF
-                PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
-
-                // Open the document for writing
-                document.Open();
-
-                foreach (string pdfFilePath in pdfPaths)
-                {
-                    // Open each input PDF file
-                    PdfReader pdfReader = new PdfReader(pdfFilePath);
-
-                    // Iterate through the pages of the input PDF and add them to the output PDF
-                    for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                    foreach (var id in ids)
                     {
-                        PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
-                        pdfCopy.AddPage(page);
+                        var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage);
+                        pdfPaths.Add(pdfPath);
                     }
 
-                    pdfReader.Close();
+                    #region CompilePDFs
+
+
+                    string compileFileName;
+
+                    switch (selectedPage)
+                    {
+                        case "2":
+                            compileFileName = "For Internal Revenue Service Center.pdf";
+                            break;
+                        case "3":
+                            compileFileName = "For State Tax Department.pdf";
+                            break;
+                        case "4":
+                            compileFileName = "For Recipient.pdf";
+                            break;
+                        case "6":
+                            compileFileName = "To be filed with recipient’s state income tax return.pdf";
+                            break;
+                        case "7":
+                            compileFileName = "For Payer.pdf";
+                            break;
+                        default:
+                            compileFileName = "compiled_page.pdf";
+                            break;
+                    }
+
+                    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                    CompilepdfPaths.Add(outputFilePath);
+
+                    // Create a Document object
+                    Document document = new Document();
+
+                    // Create a PdfCopy object to write the output PDF
+                    PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
+
+                    // Open the document for writing
+                    document.Open();
+
+                    foreach (string pdfFilePath in pdfPaths)
+                    {
+                        // Open each input PDF file
+                        PdfReader pdfReader = new PdfReader(pdfFilePath);
+
+                        // Iterate through the pages of the input PDF and add them to the output PDF
+                        for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                        {
+                            PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
+                            pdfCopy.AddPage(page);
+                        }
+
+                        pdfReader.Close();
+                    }
+
+
+                    document.Close();
+                    pdfCopy.Close();
+                    pdfPaths.Clear();
+
+                    #endregion
+
+
                 }
-
-
-                document.Close();
-                pdfCopy.Close();
-                pdfPaths.Clear();
-
-                #endregion
-
-
             }
-        }
 
             //Create Zip
             var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
@@ -687,7 +667,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             return zipFilePath; // Return the ZIP file path.
         }
-
 
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {
@@ -716,7 +695,25 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
         }
-
-
+        public async Task<bool> SendEmailToRecipients(int[] selectedValues, string uRL, string form)
+        {
+            var result = from ic in _evolvedtaxContext.Tbl1099_NEC
+                         where selectedValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
+                         select new Tbl1099_MISC
+                         {
+                             Rcp_Email = ic.Rcp_Email,
+                             EntityId = ic.EntityId,
+                         };
+            foreach (var item in result.ToList())
+            {
+                await _trailAudit1099Service.AddUpdateRecipientAuditDetails(new AuditTrail1099 { RecipientEmail = item.Rcp_Email, FormName = form, Token = item.EntityId.ToString() ?? "" });
+                await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, "", "Action Required", uRL, form);
+            }
+            return true;
+        }
+        public IEnumerable<Tbl1099_NEC> GetForm1099NECList()
+        {
+            return _evolvedtaxContext.Tbl1099_NEC.AsEnumerable();
+        }
     }
 }

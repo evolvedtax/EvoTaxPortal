@@ -19,6 +19,7 @@ namespace EvolvedTax.Business.MailService
     {
         private readonly IInstituteService _instituteService;
         private readonly ITrailAudit1099Service _trailAudit1099Service;
+        private readonly EmailSetting emailSetting;
         private readonly EvolvedtaxContext _evolvedtaxContext;
 
         public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service)
@@ -26,14 +27,15 @@ namespace EvolvedTax.Business.MailService
             _instituteService = instituteService;
             _evolvedtaxContext = evolvedtaxContext;
             _trailAudit1099Service = trailAudit1099Service;
+            emailSetting = _evolvedtaxContext.EmailSetting.First();
         }
 
         public async Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL, string ActionText, string userName)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort;
             foreach (var email in instituteClientResponses)
             {
                 content = AppConstants.EmailToClient
@@ -72,10 +74,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task EmailVerificationAsync(string UserFullName, String Email, string subject, string token, string URL)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.EmailForEmailVerification
                 .Replace("{{Name}}", UserFullName)
                 .Replace("{{email}}", Email)
@@ -106,10 +108,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendEmailToInstituteAsync(string UserFullName, String Email, string subject, string content, string URL)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             // Email = "mr.owaisalibaig@gmail.com";
             content = AppConstants.EmailToInstitute
                 .Replace("{{Name}}", UserFullName)
@@ -142,10 +144,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.LoginOTP
                 .Replace("{{UserName}}", Username)
                 .Replace("{{OTP}}", OTP);
@@ -174,10 +176,10 @@ namespace EvolvedTax.Business.MailService
         }
         public void SendResetPassword(string emailAddress, string subject, string resetUrl)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.ResetPassword
                 //.Replace("{{UserName}}", Username)
                 .Replace("{{ResetUrl}}", resetUrl);
@@ -199,10 +201,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             foreach (var email in invitationEmailDetails)
             {
                 var content = AppConstants.InvitationEmailForSignUp
@@ -235,10 +237,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendShareInvitaionEmailSignUp(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.InvitationEmailForShareSignUp
                 .Replace("{{Name}}", "User")
                 .Replace("{{administrator}}", administrator)
@@ -271,10 +273,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendShareInvitaionEmail(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.InvitationEmailForShare
                 .Replace("{{Name}}", userId)
                 .Replace("{{administrator}}", administrator)
@@ -308,10 +310,10 @@ namespace EvolvedTax.Business.MailService
 
         public async Task SendEmailForExpireSignUp(string email, string entityEmail, string Entity, string Role, DateTime? InviteDate, string InviteeName, string LoginUrl)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
 
 
             try
@@ -351,10 +353,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName, string adminUser, string acceptLink, string rejectLink, string Comments)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
 
 
             try
@@ -393,10 +395,10 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendOTPToRecipientAsync(string otp, string s, string subject, string user)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.LoginOTP
                 .Replace("{{UserName}}", user)
                 .Replace("{{OTP}}", otp);
@@ -422,48 +424,44 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendElectronicAcceptanceEmail(IQueryable<Tbl1099_MISC> tbl1099_MISCs, string body, string subject, string url)
+        public async Task SendElectronicAcceptanceEmail(string email,int EntityId,string body, string subject, string url,string form)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort;
-            foreach (var email in tbl1099_MISCs.ToList())
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort;
+            body = AppConstants.SendLinkToRecipient
+               .Replace("{{link}}", string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form)));
+            try
             {
-                body = AppConstants.SendLinkToRecipient
-                   .Replace("{{link}}", string.Concat(url, "?s=", EncryptionHelper.Encrypt(email.Rcp_Email), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
-                try
-                {
-                    MailMessage message = new MailMessage();
-                    SmtpClient smtp = new SmtpClient();
-                    message.From = new MailAddress(FromEmail);
-                    message.To.Add(new MailAddress(email.Rcp_Email));
-                    message.Subject = subject;
-                    message.IsBodyHtml = true; //to make message body as html
-                    message.Body = body;
-                    smtp.Port = Port;
-                    smtp.Host = Host;
-                    smtp.EnableSsl = true;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+                message.From = new MailAddress(FromEmail);
+                message.To.Add(new MailAddress(email));
+                message.Subject = subject;
+                message.IsBodyHtml = true; //to make message body as html
+                message.Body = body;
+                smtp.Port = Port;
+                smtp.Host = Host;
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(FromEmail, FromPassword);
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-                    await _trailAudit1099Service.AddUpdateRecipientAuditDetails(new AuditTrail1099 { RecipientEmail = email.Rcp_Email, Token = email.EntityId.ToString() ?? "" });
-                    await smtp.SendMailAsync(message);
+                await smtp.SendMailAsync(message);
 
-                }
-                catch (Exception ex)
-                {
-                    // Exception Details
-                }
+            }
+            catch (Exception ex)
+            {
+                // Exception Details
             }
         }
         public async Task SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject)
         {
-            var FromEmail = _evolvedtaxContext.EmailSetting.First().EmailDoamin;
-            var FromPassword = _evolvedtaxContext.EmailSetting.First().Password;
-            var Host = _evolvedtaxContext.EmailSetting.First().SMTPServer;
-            var Port = _evolvedtaxContext.EmailSetting.First().SMTPPort; ;
+            var FromEmail = emailSetting.EmailDoamin;
+            var FromPassword = emailSetting.Password;
+            var Host = emailSetting.SMTPServer;
+            var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.ConfirmationEmailToRecipient
                 .Replace("{{Country}}", ipInfo?.Country)
                 .Replace("{{City}}", ipInfo?.City)
