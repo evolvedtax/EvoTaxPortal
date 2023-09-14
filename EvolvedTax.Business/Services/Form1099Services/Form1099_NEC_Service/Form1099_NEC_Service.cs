@@ -116,8 +116,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
 
                     // Check for duplicate records based on Rcp_TIN in the database
-                    if (await _evolvedtaxContext.Tbl1099_NEC.AnyAsync(p =>
-                        p.Rcp_TIN == entity.Rcp_TIN))
+                    if (await _evolvedtaxContext.Tbl1099_NEC.AnyAsync(p => p.Rcp_TIN == entity.Rcp_TIN && p.EntityId == entity.EntityId))
                     {
                         response.Add(entity);
                         Status = true;
