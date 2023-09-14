@@ -14,8 +14,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8IMYForm = @"W-8IMY";
         public const string W8EXPForm = @"W-8EXP";
         public const string W8FormTypes = @"W8FormType";
-        public const string NEC1099Form = @"1099_NEC";
-        public const string FormPartiallySave = @"Form partially saved";
+
 
 
         public const string Entity = "Entity";
@@ -47,8 +46,11 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
         public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
 
-        public const string Form1099MISC = @"Form1099MISC";
+        public const string Form1099MISC = @"Form_1099MISC";
         public const string Form1099NEC = @"Form1099NEC";
+
+        public const string NEC1099Form = @"Form_1099NEC";
+        public const string FormPartiallySave = @"Form partially saved";
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
