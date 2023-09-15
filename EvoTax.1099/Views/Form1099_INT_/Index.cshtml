@@ -77,7 +77,7 @@
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
-                                        <th>Rcp TIN</th>
+                                        <th>Recipient TIN</th>
                                         <th>Last Name Company</th>
                                         <th>First Name</th>
                                         <th>Name Line 2</th>
@@ -92,26 +92,27 @@
                                         <th>Rcp Email</th>
                                         <th>Second TIN Notice</th>
                                         <th>FATCA Checkbox</th>
-                                        <th>Box_1_Amount</th>
-                                        <th>Box_2_Amount</th>
-                                        <th>Box_3_Amount</th>
-                                        <th>Box_4_Amount</th>
-                                        <th>Box_5_Amount</th>
-                                        <th>Box_6_Amount</th>
-                                        <th>Box_7_Foreign</th>
-                                        <th>Box_8_Amount</th>
-                                        <th>Box_9_Amount</th>
-                                        <th>Box_10_Amount</th>
-                                        <th>Box_11_Amount</th>
-                                        <th>Box_12_Amount</th>
-                                        <th>Box_13_Amount</th>
-                                        <th>Box_14_CUSIPNo</th>
-                                        <th>Box_15_State</th>
-                                        <th>Box_16_IDNumber</th>
-                                        <th>Box_17_Amount</th>
+                                        <th>Interest income</th>
+                                        <th>Early withdrawal penalty</th>
+                                        <th>Interest on U.S. Savings Bonds and Treasury obligations</th>
+                                        <th>Federal income tax withheld</th>
+                                        <th>Investment expenses</th>
+                                        <th>Foreign tax paid</th>
+                                        <th>Foreign country or U.S. possession</th>
+                                        <th>Tax-exempt interest</th>
+                                        <th>Specified private activity bond interest</th>
+                                        <th>Market discount</th>
+                                        <th>Bond premium</th>
+                                        <th>Bond premium on Treasury obligations</th>
+                                        <th>Bond premium on tax-exempt bond</th>
+                                        <th>Tax-exempt and tax credit bond CUSIP no.</th>
+                                        <th>State</th>
+                                        <th>State identification no.</th>
+                                        <th>State tax withheld</th>
                                         <th>Form Category</th>
                                         <th>Form Source</th>
                                         <th>Tax State</th>
+                                        <th>Is Corrected Form of 1099</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -166,6 +167,14 @@
                                                 <td>@item.Form_Category</td>
                                                 <td>@item.Form_Source</td>
                                                 <td>@item.Tax_State</td>
+                                                @if (@item.Corrected == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
 
 
                                                 <td @IsDuplicatedStyle class="actions">

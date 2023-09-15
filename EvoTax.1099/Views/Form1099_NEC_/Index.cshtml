@@ -104,10 +104,7 @@
                                         <th>Form Source</th>
                                         <th>Batch ID</th>
                                         <th>Tax State</th>
-                                       @* <th>Uploaded File</th>
-                                        <th>Status</th>
-                                        <th>Created By</th>
-                                        <th>Created Date</th>*@
+                                        <th>Is Corrected Form of 1099</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -154,10 +151,14 @@
                                                 <td>@item.Form_Source</td>
                                                 <td>@item.BatchID</td>
                                                 <td>@item.Tax_State</td>
-                                             @*   <td>@item.Uploaded_File</td>
-                                                <td>@item.Status</td>
-                                                <td>@item.Created_By</td>*@
-                                         @*       <td>@item.Created_Date</td>*@
+                                                @if (@item.Corrected == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
 
 
                                                 <td @IsDuplicatedStyle class="actions">
