@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
+using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1099;
 
 namespace EvolvedTax.Business.MailService
@@ -19,6 +20,6 @@ namespace EvolvedTax.Business.MailService
         Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName, string adminUser, string acceptLink, string rejectLink, string Comments);
         Task SendOTPToRecipientAsync(string otp, string Email, string Subject, string URL);
         Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form);
-        Task SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject, string acceptingStatus);
+        Task SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject, VerifyModel model);
     }
 }

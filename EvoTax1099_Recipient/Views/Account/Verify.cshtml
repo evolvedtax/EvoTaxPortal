@@ -1,4 +1,4 @@
-﻿@model EvolvedTax.Data.Models.DTOs.Request.LoginRequest
+﻿@model VerifyModel
 @{
     Layout = null;
 }
@@ -29,7 +29,26 @@
         <link rel="stylesheet" href="~/css/loader.css" />
         <link rel="stylesheet" href="~/lib/iziToast/dist/css/iziToast.min.css" />
     </environment>
+    <style>
+        /* TOOGLE SWICH */
 
+
+        .onoffswitch-inner:before {
+            content: "Accept";
+            padding-left: 0px;
+            background-color: #1ab394;
+            color: #FFFFFF;
+            padding-right: 17px;
+        }
+
+        .onoffswitch-inner:after {
+            content: "Reject";
+            padding-right: 4px;
+            background-color: #FFFFFF;
+            color: #999999;
+            text-align: right;
+        }
+    </style>
 
 </head>
 <body class="white-bg">
@@ -41,8 +60,36 @@
                     <input id="status" class="form-control" name="status" hidden>
                 </div>
                 <h3>Do you agree to receive 1099 form electronically through email?</h3>
-                <button type="button" id="accept" class="btn btn-primary block full-width m-b">Accept</button>
-                <button type="button" id="reject" class="btn btn-danger block full-width m-b">Reject</button>
+
+                <table class="table table-responsive table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:100%">Form</th>
+                            <th style="width:50%">Accept/Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Items.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.Items[i].FormName</td>
+                                <input type="text" name="Items[@i].FormName" value="@Model.Items[i].FormName" hidden>
+                                <td class="text-center">
+                                    <div class="switch">
+                                        <div class="onoffswitch">
+                                            <input type="checkbox" class="onoffswitch-checkbox" id="Items[@i].IsSelected" name="Items[@i].IsSelected" value="true">
+                                            <label class="onoffswitch-label" for="Items[@i].IsSelected">
+                                                <span class="onoffswitch-inner"></span>
+                                                <span class="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button type="submit" id="" class="btn btn-primary block full-width m-b">Submit</button>
             </form>
         </div>
     </div>
@@ -50,6 +97,7 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/switchery/switchery.js"></script>
         <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
         <script src="~/lib/validate/jquery.validate.min.js"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
@@ -62,6 +110,7 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/slimScroll/jquery.slimscroll.js"></script>
+        <script src="~/lib/switchery/switchery.js"></script>
         <script src="~/lib/iziToast/dist/js/iziToast.min.js"></script>
         <script src="~/lib/validate/jquery.validate.min.js"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
@@ -73,7 +122,7 @@
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
         $(document).ready(function () {
-            
+
         });
         $("#accept").click(function () {
             let form = $("#form");

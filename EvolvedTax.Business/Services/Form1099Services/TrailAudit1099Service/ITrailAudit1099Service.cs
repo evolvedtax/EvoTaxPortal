@@ -16,9 +16,12 @@ namespace EvolvedTax.Business.Services.Form1099Services
     {
         Task<bool> CheckIfRecipientRecordExist(string s, string e);
         Task AddUpdateRecipientAuditDetails(AuditTrail1099 request);
-        AuditTrail1099 GetRecipientDataByEmailId(string RecipientEmail, string? formName);
+        AuditTrail1099 GetRecipientDataByEmailId(string RecipientEmail);
         Task<AuditTrail1099> UpdateRecipientStatus(AuditTrail1099 request);
         Task UpdateOTPStatus(AuditTrail1099 request);
+        IList<AuditTrail1099> GetRecipientListByEmailId(string recipientEmail);
+        Task<AuditTrail1099> UpdateRcpElecAcptnceStatusStatus(List<RcpElecAcptnceStatus> request);
+        IList<RcpElecAcptnceStatus> GetRecipientStatusListByEmailId(string recipientEmail);
 
     }
 }

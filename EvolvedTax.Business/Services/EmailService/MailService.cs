@@ -12,6 +12,7 @@ using System.Data.SqlTypes;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Policy;
+using System.Text;
 
 namespace EvolvedTax.Business.MailService
 {
@@ -456,20 +457,35 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, string acceptingStatus)
+        public async Task SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model)
         {
+            var tdTemplate = "<tr><td>{{form}}</td><td>{{status}}</td></tr>";
+            var tds = new StringBuilder();
+
+            foreach (var item in model.Items)
+            {
+                var row = tdTemplate
+                    .Replace("{{form}}", item.FormName)
+                    .Replace("{{status}}", item.IsSelected ? "Accepted" : "Rejected");
+
+                tds.Append(row);
+            }
+
+            var result = tds.ToString();
+
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
-            var Port = emailSetting.SMTPPort; ;
+            var Port = emailSetting.SMTPPort;
             var content = AppConstants.ConfirmationEmailToRecipient
-                .Replace("{{acceptingStatus}}", acceptingStatus)
+                .Replace("{{tds}}", tds.ToString())
                 .Replace("{{Country}}", ipInfo?.Country)
                 .Replace("{{City}}", ipInfo?.City)
                 .Replace("{{RegionName}}", ipInfo?.RegionName)
                 .Replace("{{Timezone}}", ipInfo?.Timezone)
                 .Replace("{{IP}}", ipInfo?.Query)
                 .Replace("{{Isp}}", ipInfo?.Isp);
+            
             try
             {
                 MailMessage message = new MailMessage();

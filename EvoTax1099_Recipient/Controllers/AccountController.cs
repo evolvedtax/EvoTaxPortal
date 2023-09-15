@@ -3,11 +3,13 @@ using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Common.ExtensionMethods;
 using EvolvedTax.Data.Models.DTOs;
+using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1099;
 using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using static EvolvedTax.Data.Models.Entities.VerifyModel;
 
 namespace EvolvedTax1099_Recipient.Controllers
 {
@@ -32,7 +34,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> OTP(string? s = "", string e = "", string f="")
+        public async Task<IActionResult> OTP(string? s = "", string e = "", string f = "")
         {
             if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
@@ -81,7 +83,7 @@ namespace EvolvedTax1099_Recipient.Controllers
                 RecipientEmail = HttpContext.Session.GetString("OTPRecipientEmail");
             }
             var formName = HttpContext.Session.GetString("OTPFormName");
-            var response = _trailAudit1099Service.GetRecipientDataByEmailId(RecipientEmail, formName);
+            var response = _trailAudit1099Service.GetRecipientDataByEmailId(RecipientEmail);
             string Otp = string.Concat(
                 formVals["Otp1"].ToString(),
                 formVals["Otp2"].ToString(),
@@ -97,7 +99,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             }
             if (Otp.Trim() == response?.OTP.Trim())
             {
-                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"],FormName = formName, OTPExpiryTime = DateTime.Now, OTP = string.Empty };
+                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"], FormName = formName, OTPExpiryTime = DateTime.Now, OTP = string.Empty };
                 await _trailAudit1099Service.UpdateOTPStatus(request);
                 HttpContext.Session.SetString("RecipientEmail", formVals["RecipientEmail"]);
                 return RedirectToAction("Verify", "Account");
@@ -111,27 +113,40 @@ namespace EvolvedTax1099_Recipient.Controllers
         [HttpGet]
         public IActionResult Verify()
         {
-            return View();
+            var RecipientEmail = HttpContext.Session.GetString("RecipientEmail");
+            var result = new VerifyModel
+            {
+                Items = _trailAudit1099Service.GetRecipientStatusListByEmailId(RecipientEmail).Select(p => new CheckboxItem
+                {
+                    FormName = p.FormName,
+                    IsSelected = false
+                }).ToList()
+            };
+            return View(result);
         }
 
         [UserSession]
-        public async Task<IActionResult> Verify(int status)
+        public async Task<IActionResult> Verify(VerifyModel model)
         {
             var formName = HttpContext.Session.GetString("OTPFormName");
-            var request = new AuditTrail1099
+            var rcpEmail = HttpContext.Session.GetString("RecipientEmail");
+            var request = model.Items.Select(p => new RcpElecAcptnceStatus
             {
-                RecipientEmail = HttpContext.Session.GetString("RecipientEmail"),
-                Status = status,
-                FormName = formName
-            };
-            var response = await _trailAudit1099Service.UpdateRecipientStatus(request);
+                Rcp_Email = rcpEmail,
+                FormName = p.FormName,
+                Status = p.IsSelected ? 1 : 2
+            }).ToList();
+
+            var response = await _trailAudit1099Service.UpdateRcpElecAcptnceStatusStatus(request);
             string jsonString = response.Description;
             IpInfo? ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonString);
-            await _mailService.SendConfirmationEmailToRecipient(ipInfo,response.RecipientEmail,"Electronic Acceptance Confirmation",response.Status == 1 ? "accepted" : "rejected");
+            
+
+            await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model);
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(ResponseMessage));
         }
-        
+
         public IActionResult ResponseMessage()
         {
             return View();

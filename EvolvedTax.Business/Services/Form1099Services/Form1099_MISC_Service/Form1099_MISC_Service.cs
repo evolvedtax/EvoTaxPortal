@@ -97,7 +97,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
                          };
-            foreach (var item in result)
+            foreach (var item in result.ToList())
             {
                 await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, string.Empty, "Action Required", URL, form);
 

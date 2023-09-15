@@ -2913,7 +2913,7 @@ select.form-control:not([size]):not([multiple]) {
   display: block;
   float: left;
   width: 50%;
-  height: 16px;
+  height: 17px;
   padding: 0;
   line-height: 16px;
   font-size: 10px;
