@@ -393,8 +393,8 @@ Technology Team at Evolved LLC";
                                 
                                 <table border='1'>
                                     <tr>
-                                        <th>Form</th>
-                                        <th>Status</th>
+                                        <th style='width:20%'>Form</th>
+                                        <th style='width:20%'>Status</th>
                                     </tr>
                                   {{tds}}
                                 </table>
@@ -402,23 +402,23 @@ Technology Team at Evolved LLC";
                                 If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:
                                 <br/><br/>
                                 <table border='1'>
-                                    <tr>
-                                        <th>Country</th>
-                                        <th>City</th>
-                                        <th>RegionName</th>
-                                        <th>Timezone</th>
-                                        <th>IP</th>
-                                        <th>Isp</th>
-                                    </tr>
-                                    <tr>
-                                        <td>{{Country}}</td>
-                                        <td>{{City}}</td>
-                                        <td>{{RegionName}}</td>
-                                        <td>{{Timezone}}</td>
-                                        <td>{{IP}}</td>
-                                        <td>{{Isp}}</td>
-                                    </tr>
-                                </table>
+                                        <tr>
+                                            <th style='width:10%'>Country</th>
+                                            <th style='width:10%'>City</th>
+                                            <th style='width:10%'>RegionName</th>
+                                            <th style='width:10%'>Timezone</th>
+                                            <th style='width:10%'>IP</th>
+                                            <th style='width:10%'>ISP</th>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:center;'>{{Country}}</td>
+                                            <td style='text-align:center;'>{{City}}</td>
+                                            <td style='text-align:center;'>{{RegionName}}</td>
+                                            <td style='text-align:center;'>{{Timezone}}</td>
+                                            <td style='text-align:center;'>{{IP}}</td>
+                                            <td style='text-align:center;'>{{Isp}}</td>
+                                        </tr>
+                                    </table>
                                 
                                 <br/><br/>
                                 Thank you for your cooperation in this matter.<br/><br/>

@@ -459,14 +459,15 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model)
         {
-            var tdTemplate = "<tr><td>{{form}}</td><td>{{status}}</td></tr>";
+            var tdTemplate = "<tr><td style='text-align:center;'>{{form}}</td><td style='color:{{color}};text-align:center;'>{{status}}</td></tr>";
             var tds = new StringBuilder();
 
             foreach (var item in model.Items)
             {
                 var row = tdTemplate
                     .Replace("{{form}}", item.FormName)
-                    .Replace("{{status}}", item.IsSelected ? "Accepted" : "Rejected");
+                    .Replace("{{status}}", item.IsSelected ? "Accepted" : "Rejected")
+                    .Replace("{{color}}", item.IsSelected ? "green" : "red");
 
                 tds.Append(row);
             }

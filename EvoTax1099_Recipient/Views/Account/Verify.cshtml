@@ -89,7 +89,7 @@
                         }
                     </tbody>
                 </table>
-                <button type="submit" id="" class="btn btn-primary block full-width m-b">Submit</button>
+                <button type="submit" id="submit" class="btn btn-primary block full-width m-b">Submit</button>
             </form>
         </div>
     </div>
@@ -124,15 +124,8 @@
         $(document).ready(function () {
 
         });
-        $("#accept").click(function () {
-            let form = $("#form");
-            $("#status").val(1);
-            form.submit();
-        })
-        $("#reject").click(function () {
-            let form = $("#form");
-            $("#status").val(2);
-            form.submit();
+        $("#submit").click(function () {
+            $('#submit').prop('disbaled', false);
         })
     </script>
 </body>
