@@ -18,6 +18,5 @@ namespace EvolvedTax.Data.Models.Entities._1099
         public DateTime OTPExpiryTime { get; set; } = DateTime.Now;
         public string RecipientEmail { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; } = DateTime.Now;
-        public int Status { get; set; } = 0;
     }
 }

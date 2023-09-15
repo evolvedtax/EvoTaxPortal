@@ -14,8 +14,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8IMYForm = @"W-8IMY";
         public const string W8EXPForm = @"W-8EXP";
         public const string W8FormTypes = @"W8FormType";
-        public const string NEC1099Form = @"1099_NEC";
-        public const string FormPartiallySave = @"Form partially saved";
+
 
 
         public const string Entity = "Entity";
@@ -36,6 +35,7 @@ namespace EvolvedTax.Common.Constants
         public const string W8IMYTemplateFileName = @"Form_W8IMY.pdf";
         public const string W8EXPTemplateFileName = @"Form_W-8EXP.pdf";
         public const string NEC_1099_TemplateFileName = @"Form_1099_NEC.pdf";
+        public const string INT_1099_TemplateFileName = @"Form_1099_INT.pdf";
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
@@ -46,9 +46,15 @@ namespace EvolvedTax.Common.Constants
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
         public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
+        public const string Form1099INTExcelTemplate = "Form1099INTTemplate.xlsx";
 
-        public const string Form1099MISC = @"Form1099MISC";
+        public const string Form1099MISC = @"Form_1099MISC";
         public const string Form1099NEC = @"Form1099NEC";
+        public const string Form1099INT = @"Form1099INT";
+
+        public const string NEC1099Form = @"Form_1099NEC";
+        public const string INT1099Form = @"Form_1099INT";
+        public const string FormPartiallySave = @"Form partially saved";
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
@@ -295,7 +301,7 @@ Technology Team at Evolved LLC";
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
         public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used in the EvoTax Portal for further process. <br/><br/> {{OTP}} <br/><br/>Please check your email. The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
-        public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your email. Please find below the link to accept or reject. <br/><br/> {{link}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
+        public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your email. Please find below the link to accept or reject. <br/><br/> <a href=""{{link}}"">Click here</a> <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string RequestForChangeInstituteName = @"Dear Administrator(s), 
                                                         <br /><br />
                                                         We hope this email finds you well. <strong>{{adminUser}}</strong> of <strong>{{institute}}</strong> requested to change the name of the institute from ""{{oldInstituteName}}"" to ""{{newInstituteName}}"".
@@ -383,26 +389,36 @@ Technology Team at Evolved LLC";
     ";
 
         public static string ConfirmationEmailToRecipient = @"Dear User,<br/><br/>
-                                You {{acceptingStatus}} to receive electronic copy of 1099 forms via e-mail. If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:<br/><br/>
+                                We received your confirmation for 1099 Forms via e-mail as follows:<br/><br/>
                                 
                                 <table border='1'>
                                     <tr>
-                                        <th>Country</th>
-                                        <th>City</th>
-                                        <th>RegionName</th>
-                                        <th>Timezone</th>
-                                        <th>IP</th>
-                                        <th>Isp</th>
+                                        <th style='width:20%'>Form</th>
+                                        <th style='width:20%'>Status</th>
                                     </tr>
-                                    <tr>
-                                        <td>{{Country}}</td>
-                                        <td>{{City}}</td>
-                                        <td>{{RegionName}}</td>
-                                        <td>{{Timezone}}</td>
-                                        <td>{{IP}}</td>
-                                        <td>{{Isp}}</td>
-                                    </tr>
+                                  {{tds}}
                                 </table>
+                                <br/><br/>
+                                If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:
+                                <br/><br/>
+                                <table border='1'>
+                                        <tr>
+                                            <th style='width:10%'>Country</th>
+                                            <th style='width:10%'>City</th>
+                                            <th style='width:10%'>RegionName</th>
+                                            <th style='width:10%'>Timezone</th>
+                                            <th style='width:10%'>IP</th>
+                                            <th style='width:10%'>ISP</th>
+                                        </tr>
+                                        <tr>
+                                            <td style='text-align:center;'>{{Country}}</td>
+                                            <td style='text-align:center;'>{{City}}</td>
+                                            <td style='text-align:center;'>{{RegionName}}</td>
+                                            <td style='text-align:center;'>{{Timezone}}</td>
+                                            <td style='text-align:center;'>{{IP}}</td>
+                                            <td style='text-align:center;'>{{Isp}}</td>
+                                        </tr>
+                                    </table>
                                 
                                 <br/><br/>
                                 Thank you for your cooperation in this matter.<br/><br/>

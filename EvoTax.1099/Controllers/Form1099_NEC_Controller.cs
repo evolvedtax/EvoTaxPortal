@@ -29,13 +29,14 @@ namespace EvolvedTax_1099.Controllers
         public IActionResult Index()
         {
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
                 Selected = p.EntityId == EntityId
             });
-            return View(_form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == EntityId));
+            return View(_form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == EntityId && p.InstID== InstId));
         }
         [Route("Form1099_NEC_/uploadClients")]
         [HttpPost]
@@ -50,9 +51,11 @@ namespace EvolvedTax_1099.Controllers
         }
         public IActionResult ChangeEntity(int entityId)
         {
-            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var response = _form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == entityId);
-            return Json(new { Data = response });
+            //int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            HttpContext.Session.SetInt32("EntityId", entityId);
+            //var response = _form1099_MISC_Service.GetForm1099MISCList().Where(p => p.EntityId == entityId);
+            //return RedirectToAction("Index");
+            return Json(new { Data = "true" }); ;
         }
 
         #region PDF Creation Methods

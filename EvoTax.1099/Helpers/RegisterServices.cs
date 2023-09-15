@@ -99,6 +99,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IAnnouncementService, AnnouncementService>();
             services.AddScoped<IForm1099_MISC_Service, Form1099_MISC_Service>();
             services.AddScoped<IForm1099_NEC_Service, Form1099_NEC_Service>();
+            services.AddScoped<IForm1099_INT_Service, Form1099_INT_Service>();
             services.AddScoped<ITrailAudit1099Service, TrailAudit1099Service>();
             #endregion
 

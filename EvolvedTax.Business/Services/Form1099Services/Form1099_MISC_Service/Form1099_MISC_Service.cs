@@ -97,7 +97,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
                          };
-            foreach (var item in result)
+            foreach (var item in result.ToList())
             {
                 await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, string.Empty, "Action Required", URL, form);
 
@@ -183,7 +183,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         uniqueEINNumber.Add(clientEmailEINNumber);
                     }
                     // Check for duplicate records based on entityName in the database
-                    if (await _evolvedtaxContext.Tbl1099_MISC.AnyAsync(p => p.Rcp_TIN == request.Rcp_TIN && p.EntityId==request.EntityId))
+                    if (await _evolvedtaxContext.Tbl1099_MISC.AnyAsync(p => p.Rcp_TIN == request.Rcp_TIN && p.EntityId==request.EntityId && p.Created_Date != null &&
+                     p.Created_Date.Value.Year == DateTime.Now.Year))
                     {
                         response.Add(request);
                         Status = true;

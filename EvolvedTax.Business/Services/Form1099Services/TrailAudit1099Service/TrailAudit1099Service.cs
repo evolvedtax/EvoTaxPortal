@@ -42,18 +42,17 @@ namespace EvolvedTax.Business.Services.Form1099Services
             return !await _evolvedtaxContext.AuditTrail1099.AnyAsync(p => p.RecipientEmail == s && p.Token == e);
         }
 
-        public AuditTrail1099 GetRecipientDataByEmailId(string RecipientEmail, string? formName)
+        public AuditTrail1099 GetRecipientDataByEmailId(string RecipientEmail)
         {
-            return _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == RecipientEmail && p.FormName == formName);
+            return _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == RecipientEmail);
         }
 
         public async Task AddUpdateRecipientAuditDetails(AuditTrail1099 request)
         {
-            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName))
+            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail))
             {
-                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName);
+                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail);
                 response.OTP = request.OTP;
-                response.Status = request.Status;
                 response.OTPExpiryTime = request.OTPExpiryTime;
                 response.Description = request.Description;
                 response.Token = request.Token;
@@ -65,13 +64,19 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 await _evolvedtaxContext.AddAsync(request);
             }
             await _evolvedtaxContext.SaveChangesAsync();
+
+            if (!_evolvedtaxContext.RcpElecAcptnceStatus.Any(p => p.Rcp_Email == request.RecipientEmail && p.FormName == request.FormName))
+            {
+                var request2 = new RcpElecAcptnceStatus { Rcp_Email = request.RecipientEmail, FormName = request.FormName };
+                await _evolvedtaxContext.RcpElecAcptnceStatus.AddAsync(request2);
+                await _evolvedtaxContext.SaveChangesAsync();
+            }
         }
         public async Task<AuditTrail1099> UpdateRecipientStatus(AuditTrail1099 request)
         {
-            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName))
+            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail))
             {
-                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName);
-                response.Status = request.Status;
+                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail);
                 _evolvedtaxContext.AuditTrail1099.Update(response);
                 await _evolvedtaxContext.SaveChangesAsync();
                 request = response;
@@ -80,14 +85,42 @@ namespace EvolvedTax.Business.Services.Form1099Services
         }
         public async Task UpdateOTPStatus(AuditTrail1099 request)
         {
-            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName))
+            if (_evolvedtaxContext.AuditTrail1099.Any(p => p.RecipientEmail == request.RecipientEmail))
             {
-                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail && p.FormName == request.FormName);
+                var response = _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.RecipientEmail);
                 response.OTP = request.OTP;
                 response.OTPExpiryTime = request.OTPExpiryTime;
                 _evolvedtaxContext.AuditTrail1099.Update(response);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
+        }
+        public IList<AuditTrail1099> GetRecipientListByEmailId(string recipientEmail)
+        {
+            return _evolvedtaxContext.AuditTrail1099.Where(p => p.RecipientEmail == recipientEmail).ToList();
+        }
+        public async Task<AuditTrail1099> UpdateRcpElecAcptnceStatusStatus(List<RcpElecAcptnceStatus> request)
+        {
+            foreach (var item in request)
+            {
+
+                if (_evolvedtaxContext.RcpElecAcptnceStatus.Any(p => p.Rcp_Email == item.Rcp_Email && p.FormName == item.FormName))
+                {
+                    var response = _evolvedtaxContext.RcpElecAcptnceStatus.First(p => p.Rcp_Email == item.Rcp_Email && p.FormName == item.FormName);
+                    response.Status = item.Status;
+                    _evolvedtaxContext.RcpElecAcptnceStatus.Update(response);
+                }
+                else
+                {
+                    await _evolvedtaxContext.RcpElecAcptnceStatus.AddAsync(item);
+                }
+                await _evolvedtaxContext.SaveChangesAsync();
+            }
+
+            return _evolvedtaxContext.AuditTrail1099.First(p => p.RecipientEmail == request.First().Rcp_Email);
+        }
+        public IList<RcpElecAcptnceStatus> GetRecipientStatusListByEmailId(string recipientEmail)
+        {
+            return _evolvedtaxContext.RcpElecAcptnceStatus.Where(p => p.Rcp_Email == recipientEmail).ToList();
         }
     }
 }

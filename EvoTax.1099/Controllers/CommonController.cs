@@ -18,13 +18,15 @@ namespace EvolvedTax_1099.Controllers
         private readonly ICommonService _commonService;
         private readonly IForm1099_MISC_Service _form1099_MISC_Service;
         private readonly IForm1099_NEC_Service _form1099_NEC_Service;
+        private readonly IForm1099_INT_Service _form1099_INT_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService, IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service)
+        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService, IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service, IForm1099_INT_Service form1099_INT_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
             _form1099_MISC_Service = form1099_MISC_Service;
             _form1099_NEC_Service = form1099_NEC_Service;
+            _form1099_INT_Service = form1099_INT_Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -39,6 +41,9 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099NEC:
                     fileName = AppConstants.Form1099NECExcelTemplate;
+                    break;
+                case AppConstants.Form1099INT:
+                    fileName = AppConstants.Form1099INTExcelTemplate;
                     break;
                 default:
                     return NotFound();
@@ -81,6 +86,9 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099NEC:
                     await _form1099_NEC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099NEC);
+                    break;
+                case AppConstants.Form1099INT:
+                    await _form1099_INT_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099INT);
                     break;
             }
 
