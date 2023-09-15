@@ -29,13 +29,14 @@ namespace EvolvedTax_1099.Controllers
         public IActionResult Index()
         {
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
                 Selected = p.EntityId == EntityId
             });
-            return View(_form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == EntityId));
+            return View(_form1099_NEC_Service.GetForm1099NECList().Where(p => p.EntityId == EntityId && p.InstID== InstId));
         }
         [Route("Form1099_NEC_/uploadClients")]
         [HttpPost]

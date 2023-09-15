@@ -70,13 +70,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         Rcp_Account = excelRow.GetCell(11)?.ToString(),
                         Rcp_Email = excelRow.GetCell(12)?.ToString(),
                         Second_TIN_Notice = Second_TIN_Notice,
-                        Box_1_Amount = excelRow.GetCell(14) != null ? Convert.ToDecimal(excelRow.GetCell(14).ToString()) : (decimal?)null,
+                        Box_1_Amount = TryConvertToDecimal(excelRow.GetCell(14)),
                         Box_2_Checkbox = Box_2_Checkbox,
-                        Box_4_Amount = excelRow.GetCell(16) != null ? Convert.ToDecimal(excelRow.GetCell(16).ToString()) : (decimal?)null,
-                        Box_5_Amount = excelRow.GetCell(17) != null ? Convert.ToDecimal(excelRow.GetCell(17).ToString()) : (decimal?)null,
+                        Box_4_Amount = TryConvertToDecimal(excelRow.GetCell(16)),
+                        Box_5_Amount = TryConvertToDecimal(excelRow.GetCell(17)),
                         Box_6_IDNumber = excelRow.GetCell(18)?.ToString(),
                         Box_6_State = excelRow.GetCell(19)?.ToString(),
-                        Box_7_Amount = excelRow.GetCell(20) != null ? Convert.ToDecimal(excelRow.GetCell(20).ToString()) : (decimal?)null,
+                        Box_7_Amount = TryConvertToDecimal(excelRow.GetCell(20)),
                         OptRcpTextLine1 = excelRow.GetCell(21)?.ToString(),
                         OptRcpTextLine2 = excelRow.GetCell(22)?.ToString(),
                         Form_Category = excelRow.GetCell(23)?.ToString(),
@@ -89,6 +89,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         Created_Date = DateTime.Now.Date,
                         Created_By = UserId,
                         Corrected = Corrected
+
 
                     };
 
@@ -116,7 +117,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
 
                     // Check for duplicate records based on Rcp_TIN in the database
-                    if (await _evolvedtaxContext.Tbl1099_NEC.AnyAsync(p => p.Rcp_TIN == entity.Rcp_TIN && p.EntityId == entity.EntityId))
+                    if (await _evolvedtaxContext.Tbl1099_NEC.AnyAsync(p =>
+                    p.Rcp_TIN == entity.Rcp_TIN && p.EntityId == entity.EntityId
+                    && p.Created_Date != null &&
+                     p.Created_Date.Value.Year == DateTime.Now.Year))
                     {
                         response.Add(entity);
                         Status = true;
@@ -713,6 +717,17 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public IEnumerable<Tbl1099_NEC> GetForm1099NECList()
         {
             return _evolvedtaxContext.Tbl1099_NEC.AsEnumerable();
+        }
+        private decimal? TryConvertToDecimal(ICell cell)
+        {
+            if (cell != null && !string.IsNullOrWhiteSpace(cell.ToString()))
+            {
+                if (decimal.TryParse(cell.ToString(), out decimal result))
+                {
+                    return result;
+                }
+            }
+            return null;
         }
     }
 }
