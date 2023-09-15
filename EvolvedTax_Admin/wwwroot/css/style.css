@@ -11,6 +11,15 @@
   src: url('../fonts/glyphicons-halflings-regular.eot');
   src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg') format('svg');
 }
+/* css for heading column in single line start */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead th {
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
 .glyphicon {
   position: relative;
   top: 1px;
