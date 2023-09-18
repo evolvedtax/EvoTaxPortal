@@ -61,7 +61,7 @@ namespace EvolvedTax_1099.Controllers
         {
 
             string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.Form1099MISCTemplateFileName);
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Form1099MISC");
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099MISC);
             string pdfUrl = _form1099_MISC_Service.GeneratePdf(Id, TemplatePathFile, SavePathFolder);
             return Json(pdfUrl);
 
@@ -76,7 +76,7 @@ namespace EvolvedTax_1099.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Form1099MISC");
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099MISC);
             var zipFilePath = _form1099_MISC_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
             string contentType = "application/zip";
 
@@ -94,7 +94,7 @@ namespace EvolvedTax_1099.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099NEC");
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099MISC);
             //   bool containsAll = selectedPage.Contains("All");
 
             //    if (containsAll)

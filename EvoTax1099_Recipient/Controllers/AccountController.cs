@@ -99,9 +99,9 @@ namespace EvolvedTax1099_Recipient.Controllers
             }
             if (Otp.Trim() == response?.OTP.Trim())
             {
-                var request = new AuditTrail1099 { RecipientEmail = formVals["RecipientEmail"], FormName = formName, OTPExpiryTime = DateTime.Now, OTP = string.Empty };
+                var request = new AuditTrail1099 { RecipientEmail = RecipientEmail, FormName = formName, OTPExpiryTime = DateTime.Now, OTP = string.Empty };
                 await _trailAudit1099Service.UpdateOTPStatus(request);
-                HttpContext.Session.SetString("RecipientEmail", formVals["RecipientEmail"]);
+                HttpContext.Session.SetString("RecipientEmail", RecipientEmail);
                 return RedirectToAction("Verify", "Account");
                 //return RedirectToAction("Entities", "Institute");
             }
