@@ -145,8 +145,22 @@
                                                 <td>@item.Country</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
-                                                <td>@item.Second_TIN_Notice</td>
-                                                <td>@item.FATCA_Checkbox</td>
+                                                @if (@item.Second_TIN_Notice == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
+                                                @if (@item.FATCA_Checkbox == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
                                                 <td>@item.Box_1_Amount</td>
                                                 <td>@item.Box_2_Amount</td>
                                                 <td>@item.Box_3_Amount</td>

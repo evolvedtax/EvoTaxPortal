@@ -51,10 +51,7 @@ namespace EvolvedTax_1099.Controllers
         }
         public IActionResult ChangeEntity(int entityId)
         {
-            //int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("EntityId", entityId);
-            //var response = _form1099_MISC_Service.GetForm1099MISCList().Where(p => p.EntityId == entityId);
-            //return RedirectToAction("Index");
             return Json(new { Data = "true" }); ;
         }
 

@@ -120,7 +120,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         }
         public IList<RcpElecAcptnceStatus> GetRecipientStatusListByEmailId(string recipientEmail)
         {
-            return _evolvedtaxContext.RcpElecAcptnceStatus.Where(p => p.Rcp_Email == recipientEmail).ToList();
+            return _evolvedtaxContext.RcpElecAcptnceStatus.Where(p => p.Rcp_Email == recipientEmail && p.Status == 0).ToList();
         }
     }
 }

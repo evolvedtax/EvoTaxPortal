@@ -51,7 +51,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     string FATCA_Checkbox = string.IsNullOrEmpty(cell_value_14) ? "0" : (cell_value_14.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
 
-                    string cell_value_35 = excelRow.GetCell(27)?.ToString();
+                    string cell_value_35 = excelRow.GetCell(35)?.ToString();
                     string Corrected = string.IsNullOrEmpty(cell_value_35) ? "0" : (cell_value_35.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
                     var entity = new Tbl1099_INT
@@ -142,17 +142,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     List.Add(entity);
                 }
 
-                try
-                {
+                
                     await _evolvedtaxContext.Tbl1099_INT.AddRangeAsync(List);
                     await _evolvedtaxContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    Console.WriteLine(ex.ToString());
-                }
-
 
                 return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
             }

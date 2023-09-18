@@ -19,14 +19,20 @@ namespace EvolvedTax_1099.Controllers
         private readonly IForm1099_MISC_Service _form1099_MISC_Service;
         private readonly IForm1099_NEC_Service _form1099_NEC_Service;
         private readonly IForm1099_INT_Service _form1099_INT_Service;
+        private readonly IForm1099_A_Service _form1099_A_Service;
+        private readonly IForm1099_B_Service _form1099_B_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService, IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service, IForm1099_INT_Service form1099_INT_Service)
+        public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
+            IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
+            IForm1099_INT_Service form1099_INT_Service, IForm1099_B_Service form1099_B_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
             _form1099_MISC_Service = form1099_MISC_Service;
             _form1099_NEC_Service = form1099_NEC_Service;
             _form1099_INT_Service = form1099_INT_Service;
+            _form1099_A_Service = form1099_A_Service;
+            _form1099_B_Service = form1099_B_Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -44,6 +50,12 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099INT:
                     fileName = AppConstants.Form1099INTExcelTemplate;
+                    break;
+                case AppConstants.Form1099A:
+                    fileName = AppConstants.Form1099AExcelTemplate;
+                    break;
+                case AppConstants.Form1099B:
+                    fileName = AppConstants.Form1099_B_ExcelTemplate;
                     break;
                 default:
                     return NotFound();
@@ -89,6 +101,12 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099INT:
                     await _form1099_INT_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099INT);
+                    break;
+                case AppConstants.Form1099B:
+                    await _form1099_B_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099B);
+                    break;
+                case AppConstants.Form1099A:
+                    await _form1099_A_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099A);
                     break;
             }
 

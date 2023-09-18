@@ -77,7 +77,7 @@
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
-                                        <th>Rcp_TIN</th>
+                                        <th>Rcp TIN</th>
                                         <th>First Name</th>
                                         <th>Last Name/Company</th>
                                         <th>Name Line 2</th>
@@ -137,9 +137,23 @@
                                                 <td>@item.Country</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
-                                                <td>@item.Second_TIN_Notice</td>
+                                                @if (@item.Second_TIN_Notice == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
                                                 <td>@item.Box_1_Amount</td>
-                                                <td>@item.Box_2_Checkbox</td>
+                                                @if (@item.Box_2_Checkbox == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
                                                 <td>@item.Box_4_Amount</td>
                                                 <td>@item.Box_5_Amount</td>
                                                 <td>@item.Box_6_IDNumber</td>
