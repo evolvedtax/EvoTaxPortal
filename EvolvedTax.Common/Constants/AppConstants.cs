@@ -44,13 +44,16 @@ namespace EvolvedTax.Common.Constants
         //----------1099 TEMPLATES----------//
         //public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
         public const string Form1099MISCTemplateFileName = @"f1099msc.pdf";
+        public const string Form1099ATemplateFileName = @"f1099a.pdf";
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
+        public const string Form1099AExcelTemplate = "Form1099ATemplate.xlsx";
         public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
         public const string Form1099INTExcelTemplate = "Form1099INTTemplate.xlsx";
         public const string Form1099_B_ExcelTemplate = "Form1099_B_Template.xlsx";
 
-        public const string Form1099MISC = @"Form_1099MISC";
+        public const string Form1099MISC = @"Form1099MISC";
+        public const string Form1099A = @"Form1099A";
         public const string Form1099NEC = @"Form1099NEC";
         public const string Form1099INT = @"Form1099INT";
         public const string Form1099B = @"Form1099B";
