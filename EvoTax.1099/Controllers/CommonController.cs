@@ -24,7 +24,7 @@ namespace EvolvedTax_1099.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
             IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
-            IForm1099_INT_Service form1099_INT_Service, IForm1099_B_Service form1099_B_Service)
+            IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service, IForm1099_B_Service form1099_B_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
