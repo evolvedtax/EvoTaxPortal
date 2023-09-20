@@ -22,6 +22,7 @@ namespace EvolvedTax_1099.Controllers
         private readonly IForm1099_A_Service _form1099_A_Service;
         private readonly IForm1099_B_Service _form1099_B_Service;
         private readonly IForm1099_C_Service _form1099_C_Service;
+        private readonly IForm1099_G_Service _form1099_G_Service;
         private readonly IForm1099_CAP_Service _form1099_CAP_Service;
         private readonly IForm1099_DIV_Service _form1099_DIV_Service;
         private readonly IForm1099_LS_Service _form1099_LS_Service;
@@ -29,7 +30,8 @@ namespace EvolvedTax_1099.Controllers
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
             IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
             IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service,
-            IForm1099_B_Service form1099_B_Service, IForm1099_C_Service form1099_C_Service, IForm1099_CAP_Service form1099_CAP_Service)
+            IForm1099_B_Service form1099_B_Service, IForm1099_C_Service form1099_C_Service, IForm1099_CAP_Service form1099_CAP_Service,
+            IForm1099_G_Service form1099_G_Service, IForm1099_DIV_Service form1099_DIV_Service, IForm1099_LS_Service form1099_LS_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
@@ -42,6 +44,7 @@ namespace EvolvedTax_1099.Controllers
             _form1099_LS_Service = form1099_LS_Service;
             _form1099_C_Service = form1099_C_Service;
             _form1099_CAP_Service = form1099_CAP_Service;
+            _form1099_G_Service = form1099_G_Service;
             _form1099_G_Service = form1099_G_Service;
         }
         [HttpGet]
