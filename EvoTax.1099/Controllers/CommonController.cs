@@ -21,10 +21,11 @@ namespace EvolvedTax_1099.Controllers
         private readonly IForm1099_INT_Service _form1099_INT_Service;
         private readonly IForm1099_A_Service _form1099_A_Service;
         private readonly IForm1099_B_Service _form1099_B_Service;
+        private readonly IForm1099_DIV_Service _form1099_DIV_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
             IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
-            IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service, IForm1099_B_Service form1099_B_Service)
+            IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service, IForm1099_B_Service form1099_B_Service, IForm1099_DIV_Service form1099_DIV_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
@@ -33,6 +34,7 @@ namespace EvolvedTax_1099.Controllers
             _form1099_INT_Service = form1099_INT_Service;
             _form1099_A_Service = form1099_A_Service;
             _form1099_B_Service = form1099_B_Service;
+            _form1099_DIV_Service = form1099_DIV_Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -56,6 +58,9 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099B:
                     fileName = AppConstants.Form1099_B_ExcelTemplate;
+                    break;
+                case AppConstants.Form1099DIV:
+                    fileName = AppConstants.Form1099DIVExcelTemplate;
                     break;
                 default:
                     return NotFound();
@@ -107,6 +112,9 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099A:
                     await _form1099_A_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099A);
+                    break;
+                case AppConstants.Form1099DIV:
+                    await _form1099_DIV_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099DIV);
                     break;
             }
 
