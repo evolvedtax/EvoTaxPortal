@@ -1,6 +1,6 @@
 ﻿@using EvolvedTax.Data.Models.Entities._1099;
 @{
-    @model IEnumerable<Tbl1099_B>
+    @model IEnumerable<Tbl1099_CAP>
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
@@ -77,106 +77,31 @@
                                 <thead>
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
-
-                                        <th>Rcp TIN</th>
-
+                                        <th>Recipient TIN</th>
+                                        <th>Last Name Company</th>
                                         <th>First Name</th>
-
-                                        <th>Last Name/Company</th>
-
                                         <th>Name Line 2</th>
-
                                         <th>Address Type</th>
-
                                         <th>Address Deliv/Street</th>
-
                                         <th>Address Apt/Suite</th>
-
                                         <th>City</th>
-
                                         <th>State</th>
-
                                         <th>Zip</th>
-
                                         <th>Country</th>
-
                                         <th>Rcp Account</th>
-
                                         <th>Rcp Email</th>
-
-                                        <th>Second TIN Notice</th>
-
-                                        <th>FATCA Checkbox</th>
-
-                                        <th>CUSIP No</th>
-
-                                        <th>8949 Code</th>
-
-                                        <th>Property Description</th>
-
-                                        <th>Acquired Date</th>
-
-                                        <th>Date Sold</th>
-
-                                        <th>Cash Proceeds</th>
-
-                                        <th>Cost Basis</th>
-
-                                        <th>Accrued Discount</th>
-
-                                        <th>Wash Sale Loss</th>
-
-                                        <th>Short Term Gain Loss</th>
-
-                                        <th>Long Term Gain Loss</th>
-
-                                        <th>Ordinary</th>
-
-                                        <th>Collectibles</th>
-
-                                        <th>QOF</th>
-
-                                        <th>Federal Income Tax</th>
-
-                                        <th>Non Covered Security</th>
-
-                                        <th>Gross Proceed</th>
-
-                                        <th>Net Proceed</th>
-
-                                        <th>LossNotAllowed</th>
-
-                                        <th>RealizedPnL</th>
-
-                                        <th>UnRealized PnL 22</th>
-
-                                        <th>UnRealized PnL</th>
-
-                                        <th>Aggregate PnL</th>
-
-                                        <th>Reported IRS</th>
-
-                                        <th>Bartering</th>
-
-                                        <th>State Name</th>
-
-                                        <th>State ID Number</th>
-
-                                        <th>State Tax withheld</th>
-
+                                        <th>Box_1_Date</th>
+                                        <th>Box_2_Amount</th>
+                                        <th>Box_3_Number</th>
+                                        <th>Box_4_Class</th>
+                                        <th>Box_5_All_Lines</th>
                                         <th>Form Category</th>
-
                                         <th>Form Source</th>
-
                                         <th>Tax State</th>
-
                                         <th>Is Corrected Form of 1099</th>
-
                                         <th>Action</th>
-
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     @if (Model != null && Model.Any())
                                     {
@@ -185,6 +110,7 @@
                                             string IsDuplicatedStyle = string.Empty;
                                             @if (item.IsDuplicated) { IsDuplicatedStyle = "style=color:red"; }
                                             <tr @IsDuplicatedStyle>
+                                                @*       <td><input type="checkbox" class="rowCheckbox" value="@item.Id"></td>*@
                                                 <td @IsDuplicatedStyle>
                                                     <input type="checkbox" class="rowCheckbox" value="@item.Id">
                                                     @if (item.IsDuplicated)
@@ -205,120 +131,11 @@
                                                 <td>@item.Country</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
-                                                @if (@item.Second_TIN_Notice == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.FATCA_Checkbox == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                <td>@item.CUSIP_No</td>
-                                                <td>@item.Eight949_Code</td>
-                                                <td>@item.Box_1a_Description</td>
-                                                <td>@item.Box_1b_Date?.ToString("MM/dd/yyyy")</td>
-                                                <td>@item.Box_1c_Date?.ToString("MM/dd/yyyy")</td>
-                                                <td>@item.Box_1d_Amount</td>
-                                                <td>@item.Box_1e_Amount</td>
-                                                <td>@item.Box_1f_Amount</td>
-                                                <td>@item.Box_1g_Amount</td>
-                                                @if (@item.Box_2_Checkbox_1 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_2_Checkbox_2 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_2_Checkbox_3 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_3_Checkbox_1 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_3_Checkbox_2 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                <td>@item.Box_4_Amount</td>
-                                                @if (@item.Box_5_Checkbox == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_6_Checkbox_1 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_6_Checkbox_2 == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                @if (@item.Box_7_Checkbox == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                <td>@item.Box_8_Amount</td>
-                                                <td>@item.Box_9_Amount</td>
-                                                <td>@item.Box_10_Amount</td>
-                                                <td>@item.Box_11_Amount</td>
-                                                @if (@item.Box_12_Checkbox == "1")
-                                                {
-                                                    <td>Yes</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                <td>@item.Box_13_Amount</td>
-                                                <td>@item.Box_14_State</td>
-                                                <td>@item.Box_15_ID_Number</td>
-                                                <td>@item.Box_16_Amount</td>
+                                                <td>@item.Box_1_Date?.ToString("MM/dd/yyyy")</td>
+                                                <td>@item.Box_2_Amount</td>
+                                                <td>@item.Box_3_Number</td>
+                                                <td>@item.Box_4_Class</td>
+                                                <td>@item.Box_5_All_Lines</td>
                                                 <td>@item.Form_Category</td>
                                                 <td>@item.Form_Source</td>
                                                 <td>@item.Tax_State</td>
@@ -330,6 +147,8 @@
                                                 {
                                                     <td>No</td>
                                                 }
+
+
                                                 <td @IsDuplicatedStyle class="actions">
                                                     @if (item.IsDuplicated)
                                                     {
@@ -362,11 +181,11 @@
                                                         </div>
                                                     }
                                                 </td>
+
                                             </tr>
                                         }
                                     }
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
@@ -395,24 +214,17 @@
                                     </div>
 
                                     <div>
-                                        <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="2">
-                                        <label for="page2">Internal Revenue Service Center </label>
+                                        <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="1">
+                                        <label for="page2">Internal Revenue Service Center</label>
                                     </div>
                                     <div>
-                                        <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="3">
-                                        <label for="page3">For State Tax Department</label>
+                                        <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="2">
+                                        <label for="page3">For Shareholder</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page4" class="download-checkbox" name="page4" value="4">
-                                        <label for="page4">For Recipient</label>
+                                        <label for="page4">For Corporation</label>
                                     </div>
-
-                                    <div>
-                                        <input type="checkbox" id="page6" class="download-checkbox" name="page6" value="6">
-                                        <label for="page6">To be filed with recipient’s state income tax return</label>
-                                    </div>
-
-
                                     @* </div>*@
                                 </div>
 
@@ -460,8 +272,8 @@
                                     className: 'btn-template',
                                     action: function (e, dt, button, config) {
                                         let url = '@Url.Action("DownloadExcel","Common")';
-                                        let params = { fileType: '@AppConstants.Form1099B' }
-                                        COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099_B_ExcelTemplate');
+                                        let params = { fileType: '@AppConstants.Form1099CAP' }
+                                        COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099_CAP_ExcelTemplate');
                                     }
                                 },
                                 {
@@ -533,7 +345,7 @@
                                         $('.loading').show();
                                         // Send the selectedValues to the controller using AJAX or a form submission
                                         let url = '@Url.Action("SendLinkToRecipients","Common")';
-                                        let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099B' }
+                                        let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099CAP' }
                                         COMMON.doAjaxPostWithJSONResponse(url, params);
                                     }
                                 },
@@ -566,7 +378,7 @@
                     let entityId = 0;
                     let entityName = '';
 
-                    uploadFile_B(event, '/Form1099_B_/uploadClients', { entityId, entityName });
+                    uploadFile(event, '/Form1099_CAP_/uploadClients', { entityId, entityName });
                 }
                 bsCustomFileInput.init();
             })
@@ -633,7 +445,7 @@
                 const selectedPage = selectedPages.split(',');
                 const timestamp = new Date().getTime();
                 const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
-                const zipFolderName = `F1099B_${formattedDate}.zip`;
+                const zipFolderName = `F1099CAP_${formattedDate}.zip`;
                 $('#ajax-loader').show();
                 $("#shareModal").modal("hide");
                 fetch("@Url.Action("DownloadOneFile")", {
@@ -667,7 +479,7 @@
                 const selectedPage = selectedPages.split(',');
                 const timestamp = new Date().getTime();
                 const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
-                const zipFolderName = `F1099B_${formattedDate}.zip`;
+                const zipFolderName = `F1099CAP_${formattedDate}.zip`;
 
                 $('#ajax-loader').show();
                 $("#shareModal").modal("hide");
@@ -700,12 +512,12 @@
             $('#changeEntity').change(function () {
                 let entityId = $('#changeEntity').val();
                 let params = { entityId: entityId };
-                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_B_/ChangeEntity', params);
-                window.location.href = '/Form1099_B_/Index';
+                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_CAP_/ChangeEntity', params);
+                window.location.href = '/Form1099_CAP_/Index';
 
             });
 
-            function uploadFile_B(event, url, obj) {
+            function uploadFile(event, url, obj) {
                 var file = event.target.files[0]; // Get the selected file
                 if (file == undefined) {
                     return;

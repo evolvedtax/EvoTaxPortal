@@ -40,7 +40,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public decimal? Box_2_Amount { get; set; }
 
-        public decimal? Box_3_Number { get; set; }
+        public int? Box_3_Number { get; set; }
 
         public string? Box_4_Class { get; set; }
 
