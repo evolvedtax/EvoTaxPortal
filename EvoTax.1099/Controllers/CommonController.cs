@@ -23,11 +23,14 @@ namespace EvolvedTax_1099.Controllers
         private readonly IForm1099_B_Service _form1099_B_Service;
         private readonly IForm1099_C_Service _form1099_C_Service;
         private readonly IForm1099_CAP_Service _form1099_CAP_Service;
+        private readonly IForm1099_DIV_Service _form1099_DIV_Service;
+        private readonly IForm1099_LS_Service _form1099_LS_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
             IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
             IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service,
-            IForm1099_B_Service form1099_B_Service, IForm1099_C_Service form1099_C_Service, IForm1099_CAP_Service form1099_CAP_Service)
+            IForm1099_B_Service form1099_B_Service, IForm1099_C_Service form1099_C_Service, IForm1099_CAP_Service form1099_CAP_Service,
+            IForm1099_DIV_Service form1099_DIV_Service, IForm1099_LS_Service form1099_LS_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
@@ -36,6 +39,8 @@ namespace EvolvedTax_1099.Controllers
             _form1099_INT_Service = form1099_INT_Service;
             _form1099_A_Service = form1099_A_Service;
             _form1099_B_Service = form1099_B_Service;
+            _form1099_DIV_Service = form1099_DIV_Service;
+            _form1099_LS_Service = form1099_LS_Service;
             _form1099_C_Service = form1099_C_Service;
             _form1099_CAP_Service = form1099_CAP_Service;
         }
@@ -61,6 +66,12 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099B:
                     fileName = AppConstants.Form1099_B_ExcelTemplate;
+                    break;
+                case AppConstants.Form1099DIV:
+                    fileName = AppConstants.Form1099DIVExcelTemplate;
+                    break;
+                case AppConstants.Form1099LS:
+                    fileName = AppConstants.Form1099LSExcelTemplate;
                     break;
                 case AppConstants.Form1099C:
                     fileName = AppConstants.Form1099_C_ExcelTemplate;
@@ -118,6 +129,12 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099A:
                     await _form1099_A_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099A);
+                    break;
+                case AppConstants.Form1099DIV:
+                    await _form1099_DIV_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099DIV);
+                    break;
+                case AppConstants.Form1099LS:
+                    await _form1099_LS_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LS);
                     break;
                 case AppConstants.Form1099C:
                     await _form1099_C_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099C);

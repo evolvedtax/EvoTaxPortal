@@ -240,11 +240,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
-
-
+            string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].CalendarYear[0].f1_1[0]", "23");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].CalendarYear[0].f1_1[0]", currentYear);   //CalYear
             if (mISCresponse.Corrected == "1")
             {
                 pdfFormFields.SetField("topmostSubform[0].CopyA[0].CopyAHeader[0].c1_1[0]", "0");   //VOID
@@ -291,7 +290,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].Box17_ReadOrder[0].f1_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].f1_26[0]", mISCresponse.Box_18_Amount.ToString());   //18 State income
             pdfFormFields.SetField("topmostSubform[0].CopyA[0].f1_27[0]", mISCresponse.Box_18_Amount.ToString());   //18 State income
-            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             if (mISCresponse.Corrected == "1")
             {
                 pdfFormFields.SetField("topmostSubform[0].Copy1[0].Copy1Header[0].c2_1[0]", "0");   //VOID
@@ -334,7 +333,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform[0].Copy1[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
             pdfFormFields.SetField("topmostSubform[0].Copy1[0].f2_26[0]", "StateIncome1");   //18 State income
             pdfFormFields.SetField("topmostSubform[0].Copy1[0].f2_27[0]", "StateIncome2");   //18 State income
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             if (mISCresponse.Corrected == "0")
             {
                 pdfFormFields.SetField("topmostSubform[0].CopyB[0].CopyBHeader[0].c2_1[0]", "0");   //CORRECTED
@@ -373,7 +372,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform[0].CopyB[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
             pdfFormFields.SetField("topmostSubform[0].CopyB[0].f2_26[0]", "StateIncome1");   //18 State income
             pdfFormFields.SetField("topmostSubform[0].CopyB[0].f2_27[0]", "StateIncome2");   //18 State income
-            pdfFormFields.SetField("topmostSubform[0].Copy2[0].Copy2Header[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].Copy2[0].Copy2Header[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             if (mISCresponse.Corrected == "0")
             {
                 pdfFormFields.SetField("topmostSubform[0].Copy2[0].Copy2Header[0].c2_1[0]", "0");   //CORRECTED
@@ -412,7 +411,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform[0].Copy2[0].Box17_ReadOrder[0].f2_25[0]", mISCresponse.Box_17_State);   //17 State/Payer’s state no.
             pdfFormFields.SetField("topmostSubform[0].Copy2[0].f2_26[0]", "StateIncome1");   //18 State income
             pdfFormFields.SetField("topmostSubform[0].Copy2[0].f2_27[0]", "StateIncome2");   //18 State income
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", "23");   //CalYear
+            pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].CalendarYear[0].f2_1[0]", currentYear);   //CalYear
             if (mISCresponse.Corrected == "1")
             {
                 pdfFormFields.SetField("topmostSubform[0].CopyC[0].CopyCHeader[0].c2_1[0]", "0");   //VOID
