@@ -109,6 +109,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IForm1099_G_Service, Form1099_G_Service>();
             services.AddScoped<IForm1099_LTC_Service, Form1099_LTC_Service>();
             services.AddScoped<IForm1099_PATR_Service, Form1099_PATR_Service>();
+            services.AddScoped<IForm1099_R_Service, Form1099_R_Service>();
             services.AddScoped<ITrailAudit1099Service, TrailAudit1099Service>();
             #endregion
 
