@@ -40,6 +40,7 @@ namespace EvolvedTax.Common.Constants
         public const string C_1099_TemplateFileName = @"Form_1099_C.pdf";
         public const string CAP_1099_TemplateFileName = @"Form_1099_CAP.pdf";
         public const string G_1099_TemplateFileName = @"Form_1099_G.pdf";
+        public const string LTC_1099_TemplateFileName = @"Form_1099_LTC.pdf";
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
@@ -61,6 +62,7 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099_C_ExcelTemplate = "Form1099_C_Template.xlsx";
         public const string Form1099_CAP_ExcelTemplate = "Form1099_CAP_Template.xlsx";
         public const string Form1099_G_ExcelTemplate = "Form1099_G_Template.xlsx";
+        public const string Form1099_LTC_ExcelTemplate = "Form1099_LTC_Template.xlsx";
 
         public const string Form1099MISC = @"Form1099MISC";
         public const string Form1099A = @"Form1099A";
@@ -72,6 +74,7 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099C = @"Form1099C";
         public const string Form1099CAP = @"Form1099CAP";
         public const string Form1099G = @"Form1099G";
+        public const string Form1099LTC = @"Form1099LTC";
 
         public const string NEC1099Form = @"Form_1099NEC";
         public const string INT1099Form = @"Form_1099INT";
@@ -79,6 +82,7 @@ namespace EvolvedTax.Common.Constants
         public const string C1099Form = @"Form_1099C";
         public const string CAP1099Form = @"Form_1099CAP";
         public const string G1099Form = @"Form_1099G";
+        public const string LTC1099Form = @"Form_1099LTC";
         public const string FormPartiallySave = @"Form partially saved";
 
         //-----------BUTTON CONSTANTS--------------------//
