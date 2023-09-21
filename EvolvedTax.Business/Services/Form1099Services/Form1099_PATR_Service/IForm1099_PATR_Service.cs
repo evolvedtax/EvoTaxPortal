@@ -22,6 +22,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
         Task<MessageResponseModel> KeepRecord(int id);
         Task<MessageResponseModel> DeletePermeant(int id);
         Task<bool> SendEmailToRecipients(int[] selectedValues, string uRL, string form1099NEC);
-        IEnumerable<Tbl1099_CAP> GetForm1099List();
+        IEnumerable<Tbl1099_PATR> GetForm1099List();
     }
 }

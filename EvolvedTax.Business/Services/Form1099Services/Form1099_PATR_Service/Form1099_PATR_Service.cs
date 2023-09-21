@@ -141,18 +141,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     List.Add(entity);
                 }
 
-
-
-                try
-                {
                     await _evolvedtaxContext.Tbl1099_PATR.AddRangeAsync(List);
                     await _evolvedtaxContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
 
-                    Console.WriteLine(ex.ToString());
-                }
+           
 
                 return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
             }
@@ -167,7 +159,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
-            var request = _evolvedtaxContext.Tbl1099_CAP.FirstOrDefault(p => p.Id == Id);
+            var request = _evolvedtaxContext.Tbl1099_PATR.FirstOrDefault(p => p.Id == Id);
             var requestInstitue = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
@@ -176,15 +168,15 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             if (!String.IsNullOrEmpty(Page))
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.CAP1099Form, "_", request.Id, "_Page_", Page);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.PATR1099Form, "_", request.Id, "_Page_", Page);
             }
             else
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.CAP1099Form, "_", request.Id);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.PATR1099Form, "_", request.Id);
             }
 
 
-            string FilenameNew = "/1099CAP/" + newFile1 + ".pdf";
+            string FilenameNew = "/1099PATR/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf"; // Add ".pdf" extension to the file name
 
             string newFilePath = Path.Combine(SaveFolderPath, newFileName);
@@ -202,6 +194,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             #region PDF Columns
 
+            /*
             #region Page 1
 
             pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.CalendarYear.f1_1", currentYear);   //23
@@ -312,7 +305,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             #endregion
 
-
+            */
 
             #endregion
 
@@ -336,7 +329,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             foreach (var id in ids)
             {
 
-                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.CAP_1099_TemplateFileName);
+                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.PATR_1099_TemplateFileName);
                 bool containsAll = selectedPages.Contains("All");
 
                 if (containsAll)
@@ -373,10 +366,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl1099_CAP.FirstOrDefault(p => p.Id == Id);
+            var request = _evolvedtaxContext.Tbl1099_PATR.FirstOrDefault(p => p.Id == Id);
             String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
-            newFile1 = string.Concat(ClientName, "_", AppConstants.CAP1099Form, "_", Id);
-            string FilenameNew = "/1099CAP/" + newFile1 + ".pdf";
+            newFile1 = string.Concat(ClientName, "_", AppConstants.PATR1099Form, "_", Id);
+            string FilenameNew = "/1099PATR/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
 
             var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true);
@@ -432,11 +425,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl1099_CAP.FirstOrDefault(p => p.Id == Id);
+            var request = _evolvedtaxContext.Tbl1099_PATR.FirstOrDefault(p => p.Id == Id);
             String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");    
 
-            newFile1 = string.Concat(ClientName, "_", AppConstants.CAP1099Form, "_", request.Id, "_Page_", selectedPage);
-            string FilenameNew = "/1099CAP/" + newFile1 + ".pdf";
+            newFile1 = string.Concat(ClientName, "_", AppConstants.PATR1099Form, "_", request.Id, "_Page_", selectedPage);
+            string FilenameNew = "/1099PATR/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
 
             var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true, selectedPage);
@@ -483,7 +476,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             var pdfPaths = new List<string>();
             var CompilepdfPaths = new List<string>();
-            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.CAP_1099_TemplateFileName);
+            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.PATR_1099_TemplateFileName);
             bool containsAll = selectedPages.Contains("All");
 
             if (containsAll)
@@ -622,10 +615,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {
 
-            var recordToDelete = _evolvedtaxContext.Tbl1099_CAP.First(p => p.Id == id);
+            var recordToDelete = _evolvedtaxContext.Tbl1099_PATR.First(p => p.Id == id);
             if (recordToDelete != null)
             {
-                _evolvedtaxContext.Tbl1099_CAP.Remove(recordToDelete);
+                _evolvedtaxContext.Tbl1099_PATR.Remove(recordToDelete);
                 await _evolvedtaxContext.SaveChangesAsync();
                 return new MessageResponseModel { Status = true };
             }
@@ -636,7 +629,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public async Task<MessageResponseModel> KeepRecord(int id)
         {
 
-            var recordToUpdate = _evolvedtaxContext.Tbl1099_CAP.First(p => p.Id == id);
+            var recordToUpdate = _evolvedtaxContext.Tbl1099_PATR.First(p => p.Id == id);
             if (recordToUpdate != null)
             {
                 recordToUpdate.IsDuplicated = false;
@@ -648,9 +641,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
         }
         public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form)
         {
-            var result = from ic in _evolvedtaxContext.Tbl1099_CAP
+            var result = from ic in _evolvedtaxContext.Tbl1099_PATR
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
-                         select new Tbl1099_CAP
+                         select new Tbl1099_PATR
                          {
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
@@ -665,9 +658,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             return true;
         }
-        public IEnumerable<Tbl1099_CAP> GetForm1099List()
+        public IEnumerable<Tbl1099_PATR> GetForm1099List()
         {
-            return _evolvedtaxContext.Tbl1099_CAP.AsEnumerable();
+            return _evolvedtaxContext.Tbl1099_PATR.AsEnumerable();
         }
 
 

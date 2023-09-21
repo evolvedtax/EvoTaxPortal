@@ -1,6 +1,6 @@
 ﻿@using EvolvedTax.Data.Models.Entities._1099;
 @{
-    @model IEnumerable<Tbl1099_CAP>
+    @model IEnumerable<Tbl1099_PATR>
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
 }
@@ -90,11 +90,21 @@
                                         <th>Country</th>
                                         <th>Recepient Account</th>
                                         <th>Recepient Email</th>
-                                        <th>Date of sale or exchange</th>
-                                        <th>Aggregate amount rec’d</th>
-                                        <th>No. of shares exchanged</th>
-                                        <th>Classes of stock exchanged</th>
-                                        <th>Details</th>
+                                        <th>TIN_Notice_2nd</th>
+                                        <th>Box_1_Amount</th>
+                                        <th>Box_2_Amount</th>
+                                        <th>Box_3_Amount</th>
+                                        <th>Box_4_Amount</th>
+                                        <th>Box_5_Amount</th>
+                                        <th>Box_6_Amount</th>
+                                        <th>Box_7_Amount</th>
+                                        <th>Box_8_Amount</th>
+                                        <th>Box_9_Amount</th>
+                                        <th>Box_10_Amount</th>
+                                        <th>Box_11_Amount</th>
+                                        <th>Box_12_Amount</th>
+                                        <th>Box_12_Credit_Form</th>
+                                        <th>Box_13_Check</th>
                                         <th>Form Category</th>
                                         <th>Form Source</th>
                                         <th>Tax State</th>
@@ -131,11 +141,35 @@
                                                 <td>@item.Country</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
-                                                <td>@item.Box_1_Date?.ToString("MM/dd/yyyy")</td>
+                                                @if (@item.TIN_Notice_2nd == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
+                                                <td>@item.Box_1_Amount</td>
                                                 <td>@item.Box_2_Amount</td>
-                                                <td>@item.Box_3_Number</td>
-                                                <td>@item.Box_4_Class</td>
-                                                <td>@item.Box_5_All_Lines</td>
+                                                <td>@item.Box_3_Amount</td>
+                                                <td>@item.Box_4_Amount</td>
+                                                <td>@item.Box_5_Amount</td>
+                                                <td>@item.Box_6_Amount</td>
+                                                <td>@item.Box_7_Amount</td>
+                                                <td>@item.Box_8_Amount</td>
+                                                <td>@item.Box_9_Amount</td>
+                                                <td>@item.Box_10_Amount</td>
+                                                <td>@item.Box_11_Amount</td>
+                                                <td>@item.Box_12_Amount</td>
+                                                <td>@item.Box_12_Credit_Form</td>
+                                                @if (@item.Box_13_Check == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
                                                 <td>@item.Form_Category</td>
                                                 <td>@item.Form_Source</td>
                                                 <td>@item.Tax_State</td>

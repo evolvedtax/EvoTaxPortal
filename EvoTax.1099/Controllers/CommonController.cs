@@ -35,7 +35,7 @@ namespace EvolvedTax_1099.Controllers
             IForm1099_B_Service form1099_B_Service, IForm1099_C_Service form1099_C_Service, IForm1099_CAP_Service form1099_CAP_Service,
             IForm1099_G_Service form1099_G_Service, IForm1099_DIV_Service form1099_DIV_Service, 
             IForm1099_LS_Service form1099_LS_Service, IForm1099_LTC_Service form1099_LTC_Service,
-            Form1099_PATR_Service form1099_PATR_Service)
+            IForm1099_PATR_Service form1099_PATR_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;

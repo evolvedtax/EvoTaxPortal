@@ -52,8 +52,8 @@ namespace EvolvedTax_1099.Controllers
         #region PDF Creation Methods
         public IActionResult downlodPdf(int id)
         {
-            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.CAP_1099_TemplateFileName);
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099CAP");
+            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.PATR_1099_TemplateFileName);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099PATR");
             string pdfUrl = _form1099_PATR_Service.GeneratePdf(id, TemplatePathFile, SavePathFolder);
             return Json(pdfUrl);
 
@@ -68,7 +68,7 @@ namespace EvolvedTax_1099.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099CAP");
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099PATR");
             var zipFilePath = _form1099_PATR_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
             string contentType = "application/zip";
 
@@ -87,7 +87,7 @@ namespace EvolvedTax_1099.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099CAP");
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, "1099PATR");
             //   bool containsAll = selectedPage.Contains("All");
 
             //    if (containsAll)
