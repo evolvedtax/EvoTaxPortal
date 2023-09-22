@@ -703,10 +703,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
                         case "2":
-                            compileFileName = "For Shareholder.pdf";
+                            compileFileName = "For Policyholder .pdf";
                             break;
                         case "4":
-                            compileFileName = "For Corporation.pdf";
+                            compileFileName = "For Insured.pdf";
+                            break;
+                        case "6":
+                            compileFileName = "For Payer.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";

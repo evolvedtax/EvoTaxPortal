@@ -11,6 +11,7 @@ using EvolvedTax.Data.Models.Entities._1099;
 using System.IO.Compression;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using NPOI.SS.Formula.Functions;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -214,6 +215,462 @@ namespace EvolvedTax.Business.Services.Form1099Services
             string currentYear = Convert.ToString(currenDate % 100);
 
             #region PDF Columns
+
+            #region Page 1
+
+
+
+            if (request.Corrected.ToString() == "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.c1_1", "0");   //PageAVoid
+            }
+            if (request.Corrected.ToString() == "0")
+            {
+                pdfFormFields.SetField("efield1_topmostSubform.CopyA.c1_1", "0");   //PageACorrected
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.PayersTIN.f1_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol_ReadOrder.f1_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.c1_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.c1_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyA.Box3_ReadOrder.f1_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box5_ReadOrder.f1_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box7_ReadOrder.f1_14", request.Box_7_Code);   //Box_7_Code
+ 
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.Box7_ReadOrder.c1_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.CopyA.Box9a_ReadOrder.f1_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box10_ReadOrder.f1_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+    
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.Box12-13_ReadOrder.c1_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.CopyA.Box12-13_ReadOrder.f1_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyA.Box14_ReadOrder.f1_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box14_ReadOrder.f1_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box15_ReadOrder.f1_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.CopyA.Box15_ReadOrder.f1_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box17_ReadOrder.f1_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box17_ReadOrder.f1_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.Box18_ReadOrder.f1_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyA.Box18_ReadOrder.f1_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.CopyA.f1_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            #endregion
+
+            #region Page 2
+
+            if (request.Corrected.ToString() == "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy1.c2_1", "0");   //PageAVoid
+            }
+            if (request.Corrected.ToString() == "0")
+            {
+                pdfFormFields.SetField("efield40_topmostSubform.Copy1.c2_1", "0");   //PageACorrected
+            }
+
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.PayersTIN.f2_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol_ReadOrder.f2_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy1.c2_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy1.c2_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.Copy1.Box3_ReadOrder.f2_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box5_ReadOrder.f2_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box7_ReadOrder.f2_14", request.Box_7_Code);   //Box_7_Code
+
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy1.Box7_ReadOrder.c2_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.Copy1.Box9a_ReadOrder.f2_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box10_ReadOrder.f2_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy1.Box12-13_ReadOrder.c2_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.Copy1.Box12-13_ReadOrder.f2_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.Copy1.Box14_ReadOrder.f2_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box14_ReadOrder.f2_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box15_ReadOrder.f2_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.Copy1.Box15_ReadOrder.f2_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box17_ReadOrder.f2_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box17_ReadOrder.f2_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.Box18_ReadOrder.f2_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.Copy1.Box18_ReadOrder.f2_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.Copy1.f2_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);
+
+            #endregion
+
+            #region Page 3
+
+            if (request.Corrected != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.c2_1", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.PayersTIN.f2_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol_ReadOrder.f2_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.c2_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.c2_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyB.Box3_ReadOrder.f2_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box5_ReadOrder.f2_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box7_ReadOrder.f2_14", request.Box_7_Code);   //Box_7_Code
+
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.Box7_ReadOrder.c2_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.CopyB.Box9a_ReadOrder.f2_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box10_ReadOrder.f2_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.Box12-13_ReadOrder.c2_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.CopyB.Box12-13_ReadOrder.f2_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyB.Box14_ReadOrder.f2_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box14_ReadOrder.f2_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box15_ReadOrder.f2_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.CopyB.Box15_ReadOrder.f2_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box17_ReadOrder.f2_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box17_ReadOrder.f2_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.Box18_ReadOrder.f2_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyB.Box18_ReadOrder.f2_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.CopyB.f2_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);
+
+            #endregion
+
+            #region Page 4
+
+            if (request.Corrected != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.c2_1", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.PayersTIN.f2_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol_ReadOrder.f2_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.c2_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.c2_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyC.Box3_ReadOrder.f2_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box5_ReadOrder.f2_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box7_ReadOrder.f2_14", request.Box_7_Code);   //Box_7_Code
+
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.Box7_ReadOrder.c2_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.CopyC.Box9a_ReadOrder.f2_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box10_ReadOrder.f2_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.Box12-13_ReadOrder.c2_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.CopyC.Box12-13_ReadOrder.f2_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyC.Box14_ReadOrder.f2_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box14_ReadOrder.f2_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box15_ReadOrder.f2_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.CopyC.Box15_ReadOrder.f2_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box17_ReadOrder.f2_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box17_ReadOrder.f2_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.Box18_ReadOrder.f2_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyC.Box18_ReadOrder.f2_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.CopyC.f2_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);
+
+            #endregion
+
+            #region Page 5
+            if (request.Corrected != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy2.c2_1", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.PayersTIN.f2_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol_ReadOrder.f2_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy2.c2_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy2.c2_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.Copy2.Box3_ReadOrder.f2_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box5_ReadOrder.f2_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box7_ReadOrder.f2_14", request.Box_7_Code);   //Box_7_Code
+
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy2.Box7_ReadOrder.c2_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.Copy2.Box9a_ReadOrder.f2_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box10_ReadOrder.f2_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.Copy2.Box12-13_ReadOrder.c2_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.Copy2.Box12-13_ReadOrder.f2_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.Copy2.Box14_ReadOrder.f2_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box14_ReadOrder.f2_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box15_ReadOrder.f2_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.Copy2.Box15_ReadOrder.f2_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box17_ReadOrder.f2_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box17_ReadOrder.f2_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.Box18_ReadOrder.f2_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.Copy2.Box18_ReadOrder.f2_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.Copy2.f2_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);
+            #endregion
+
+            #region Page 6
+            if (request.Corrected.ToString() == "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyD.c2_1", "0");   //PageAVoid
+            }
+            if (request.Corrected.ToString() == "0")
+            {
+                pdfFormFields.SetField("efield193_topmostSubform.CopyD.c2_1", "0");   //PageACorrected
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_01", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.PayersTIN.f2_02", requestInstitue.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_03", request.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_04", request.First_Name + " " + request.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_05", RecipentAddress);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_06", RecipentCity);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftCol_ReadOrder.f2_07", request.Rcp_Account);   //request.Rcp_Account
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_08", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //Box_1_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_09", request.Box_2a_Amount.HasValue ? request.Box_2a_Amount.Value.ToString() : string.Empty);   //Box_2a_Amount
+            if (request.Box_2b_Checkbox1 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyD.c2_2", "1");   //PageAFATCA
+
+            }
+            if (request.Box_2b_Checkbox2 != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyD.c2_3", "1");   //PageAFATCA
+
+            }
+
+            pdfFormFields.SetField("topmostSubform.CopyD.Box3_ReadOrder.f2_10", request.Box_3_Amount.HasValue ? request.Box_3_Amount.Value.ToString() : string.Empty);   //Box_3_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_11", request.Box_4_Amount.HasValue ? request.Box_4_Amount.Value.ToString() : string.Empty);   //Box_4_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box5_ReadOrder.f2_12", request.Box_5_Amount.HasValue ? request.Box_5_Amount.Value.ToString() : string.Empty);   //Box_5_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_13", request.Box_6_Amount.HasValue ? request.Box_6_Amount.Value.ToString() : string.Empty);   //Box_6_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box7_ReadOrder.f2_14", request.Box_7_Code);   //Box_7_Code
+
+            if (request.Box_7_Checkbox != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyD.Box7_ReadOrder.c2_4", "1");   //PageAFATCA
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyD.Box7_ReadOrder.f2_15", request.Box_8_Amount.HasValue ? request.Box_8_Amount.Value.ToString() : string.Empty);   //Box_8_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_16", request.Box_8_Number.HasValue ? request.Box_8_Number.Value.ToString() : string.Empty);   //Box_8_Number
+            pdfFormFields.SetField("topmostSubform.CopyD.Box9a_ReadOrder.f2_17", request.Box_9a_Number.HasValue ? request.Box_9a_Number.Value.ToString() : string.Empty);   //Box_9a_Number
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_18", request.Box_9b_Amount.HasValue ? request.Box_9b_Amount.Value.ToString() : string.Empty);   //Box_9b_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box10_ReadOrder.f2_19", request.Box_10_Amount.HasValue ? request.Box_10_Amount.Value.ToString() : string.Empty);   //Box_10_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_20", request.Box_11_Roth_Year.HasValue ? request.Box_11_Roth_Year.Value.ToString() : string.Empty);   //Box_11_Roth_Year
+
+            if (request.Box_12_FATCA_Check != "1")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyD.Box12-13_ReadOrder.c2_5", "1");   //PageAFATCA
+
+            }
+            if (!string.IsNullOrEmpty(request.Box_13_DATE?.ToString()))
+            {
+                DateTime Box_13_DATE;
+                if (DateTime.TryParse(request.Box_13_DATE?.ToString(), out Box_13_DATE))
+                {
+                    pdfFormFields.SetField("topmostSubform.CopyD.Box12-13_ReadOrder.f2_21", Box_13_DATE.ToString("MM/dd/yyyy"));
+                }
+
+            }
+            pdfFormFields.SetField("topmostSubform.CopyD.Box14_ReadOrder.f2_22", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box14_ReadOrder.f2_23", request.Box_14_Amount.HasValue ? request.Box_14_Amount.Value.ToString() : string.Empty);   //Box_14_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box15_ReadOrder.f2_24", request.Box_15_State);   //Box_15_State
+            pdfFormFields.SetField("topmostSubform.CopyD.Box15_ReadOrder.f2_25", request.Box_15_IDNumber.HasValue ? request.Box_15_IDNumber.Value.ToString() : string.Empty);   //Box_15_IDNumber
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_26", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_27", request.Box_16_Amount.HasValue ? request.Box_16_Amount.Value.ToString() : string.Empty);   //Box_16_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box17_ReadOrder.f2_28", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box17_ReadOrder.f2_29", request.Box_17_Amount.HasValue ? request.Box_17_Amount.Value.ToString() : string.Empty);   //Box_17_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.Box18_ReadOrder.f2_30", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyD.Box18_ReadOrder.f2_31", request.Box_18_Name);   //Box_18_Name
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_32", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);   //Box_19_Amount
+            pdfFormFields.SetField("topmostSubform.CopyD.f2_33", request.Box_19_Amount.HasValue ? request.Box_19_Amount.Value.ToString() : string.Empty);
+            #endregion
 
             /*
             #region Page 1
@@ -565,15 +1022,25 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                     switch (selectedPage)
                     {
-                        case "1":
+                        case "2":
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
-                        case "2":
-                            compileFileName = "For Shareholder.pdf";
+                        case "3":
+                            compileFileName = "State, City, or Local Tax Department.pdf";
                             break;
                         case "4":
-                            compileFileName = "For Corporation.pdf";
+                            compileFileName = "Report this income on your federal tax return.pdf";
                             break;
+                        case "6":
+                            compileFileName = " For Recipient’s Records.pdf";
+                            break;
+                        case "8":
+                            compileFileName = " File this copy with your state, city, or local income tax return, when required.pdf";
+                            break;
+                        case "10":
+                            compileFileName = " For Payer.pdf";
+                            break;
+
                         default:
                             compileFileName = "compiled_page.pdf";
                             break;

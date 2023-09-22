@@ -556,14 +556,14 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                     switch (selectedPage)
                     {
-                        case "1":
+                        case "2":
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
-                        case "2":
-                            compileFileName = "For Shareholder.pdf";
+                        case "3":
+                            compileFileName = "For Recipient.pdf";
                             break;
-                        case "4":
-                            compileFileName = "For Corporation.pdf";
+                        case "5":
+                            compileFileName = "For Payer.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";
