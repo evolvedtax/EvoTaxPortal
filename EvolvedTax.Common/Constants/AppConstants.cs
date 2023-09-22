@@ -43,6 +43,8 @@ namespace EvolvedTax.Common.Constants
         public const string LTC_1099_TemplateFileName = @"Form_1099_LTC.pdf";
         public const string PATR_1099_TemplateFileName = @"Form_1099_PATR.pdf";
         public const string R_1099_TemplateFileName = @"Form_1099_R.pdf";
+        public const string SA_1099_TemplateFileName = @"Form_1099_SA.pdf";
+        public const string SB_1099_TemplateFileName = @"Form_1099_SB.pdf";
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
@@ -67,6 +69,8 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099_LTC_ExcelTemplate = "Form1099_LTC_Template.xlsx";
         public const string Form1099_PATR_ExcelTemplate = "Form1099_PATR_Template.xlsx";
         public const string Form1099_R_ExcelTemplate = "Form1099_R_Template.xlsx";
+        public const string Form1099_SA_ExcelTemplate = "Form1099_SA_Template.xlsx";
+        public const string Form1099_SB_ExcelTemplate = "Form1099_SB_Template.xlsx";
 
 
         public const string Form1099MISC = @"Form1099MISC";
@@ -82,6 +86,8 @@ namespace EvolvedTax.Common.Constants
         public const string Form1099LTC = @"Form1099LTC";
         public const string Form1099PATR = @"Form1099PATR";
         public const string Form1099R = @"Form1099R";
+        public const string Form1099SA = @"Form1099SA";
+        public const string Form1099SB = @"Form1099SB";
 
         public const string NEC1099Form = @"Form_1099NEC";
         public const string INT1099Form = @"Form_1099INT";
@@ -92,6 +98,8 @@ namespace EvolvedTax.Common.Constants
         public const string LTC1099Form = @"Form_1099LTC";
         public const string PATR1099Form = @"Form_1099PATR";
         public const string R1099Form = @"Form_1099R";
+        public const string SA1099Form = @"Form_1099SA";
+        public const string SB1099Form = @"Form_1099SB";
         public const string FormPartiallySave = @"Form partially saved";
 
         //-----------BUTTON CONSTANTS--------------------//
