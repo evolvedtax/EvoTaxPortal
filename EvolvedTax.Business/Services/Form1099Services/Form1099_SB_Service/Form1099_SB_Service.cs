@@ -40,34 +40,54 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
 
+
+       
+                var columnMapping = new Dictionary<string, int>();
+                var headerRow = sheet.GetRow(0); // Assuming the header row is the first row
+
+                if (headerRow != null)
+                {
+                    for (int columnIndex = 0; columnIndex < headerRow.LastCellNum; columnIndex++)
+                    {
+                        string columnName = headerRow.GetCell(columnIndex)?.ToString();
+
+                        if (!string.IsNullOrWhiteSpace(columnName))
+                        {
+                            columnMapping[columnName] = columnIndex;
+                        }
+                    }
+                }
+
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
 
-                    string cell_value_19 = excelRow.GetCell(19)?.ToString();
+                    string cell_value_19 = excelRow.GetCell(columnMapping["Is Corrected Form of 1099"])?.ToString();
                     string Corrected = string.IsNullOrEmpty(cell_value_19) ? "0" : (cell_value_19.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
                     var entity = new Tbl1099_SB
                     {
-                        Rcp_TIN = excelRow.GetCell(0)?.ToString(),
-                        Last_Name_Company = excelRow.GetCell(1)?.ToString(),
-                        First_Name = excelRow.GetCell(2)?.ToString(),
-                        Name_Line_2 = excelRow.GetCell(3)?.ToString(),
-                        Address_Type = excelRow.GetCell(4)?.ToString(),
-                        Address_Deliv_Street = excelRow.GetCell(5)?.ToString(),
-                        Address_Apt_Suite = excelRow.GetCell(6)?.ToString(),
-                        City = excelRow.GetCell(7)?.ToString(),
-                        State = excelRow.GetCell(8)?.ToString(),
-                        Zip = excelRow.GetCell(9)?.ToString(),
-                        Country = excelRow.GetCell(10)?.ToString(),
-                        Rcp_Account = excelRow.GetCell(11)?.ToString(),
-                        Rcp_Email = excelRow.GetCell(12)?.ToString(),
-                        Box_1_Amount = TryConvertToDecimal(excelRow.GetCell(13)),
-                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(14)),
-                        Issuer_Contact_Name = excelRow.GetCell(15)?.ToString(),
-                        Form_Category = excelRow.GetCell(16)?.ToString(),
-                        Form_Source = excelRow.GetCell(17)?.ToString(),
-                        Tax_State = excelRow.GetCell(18)?.ToString(),
+                        Rcp_TIN=excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString(),
+                        Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString(),
+                        First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString(),
+                        Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString(),
+                        Address_Type = excelRow.GetCell(columnMapping["Address Type"])?.ToString(),
+                        Country = excelRow.GetCell(columnMapping["Country"])?.ToString(),
+                        Address_Deliv_Street = excelRow.GetCell(columnMapping["Address Line 1"])?.ToString(),
+                        Address_Apt_Suite = excelRow.GetCell(columnMapping["Address Line 2"])?.ToString(),
+                        City = excelRow.GetCell(columnMapping["City"])?.ToString(),
+                        State = excelRow.GetCell(columnMapping["State"])?.ToString(),
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString(),
+                        Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString(),
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString(),
+                        Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString(),
+                        Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString(),
+                        Box_1_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 1 Amount"])),
+                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 2 Amount"])),
+                        Issuer_Contact_Name = excelRow.GetCell(columnMapping["Issuer Contact Name"])?.ToString(),
+                        Form_Category = excelRow.GetCell(columnMapping["Form Category"])?.ToString(),
+                        Form_Source = excelRow.GetCell(columnMapping["Form Source"])?.ToString(),
+                        Tax_State = excelRow.GetCell(columnMapping["Tax State"])?.ToString(),
                         InstID = InstId,
                         EntityId = entityId,
                         //UserId = UserId,
