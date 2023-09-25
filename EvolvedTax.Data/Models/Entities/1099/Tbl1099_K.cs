@@ -103,6 +103,8 @@ namespace EvolvedTax.Data.Models.Entities._1099
         public string? PSE_Checkbox { get; set; }
         public string? Other_3rd_Party_Checkbox { get; set; }
         public string? PSE_Name_Telephone_Number { get; set; }
+        public string? Province { get; set; }
+        public string? PostalCode { get; set; }
 
     }
 
