@@ -102,6 +102,10 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IForm1099_INT_Service, Form1099_INT_Service>();
             services.AddScoped<IForm1099_DIV_Service, Form1099_DIV_Service>();
             services.AddScoped<IForm1099_LS_Service, Form1099_LS_Service>();
+            services.AddScoped<IForm1099_K_Service, Form1099_K_Service>();
+            services.AddScoped<IForm1099_OID_Service, Form1099_OID_Service>();
+            services.AddScoped<IForm1099_Q_Service, Form1099_Q_Service>();
+            services.AddScoped<IForm1099_S_Service, Form1099_S_Service>();
             services.AddScoped<IForm1099_B_Service, Form1099_B_Service>();
             services.AddScoped<IForm1099_A_Service, Form1099_A_Service>();
             services.AddScoped<ITrailAudit1099Service, TrailAudit1099Service>();

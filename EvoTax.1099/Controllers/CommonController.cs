@@ -1,15 +1,7 @@
-﻿using EvolvedTax.Business.MailService;
-using EvolvedTax.Business.Services.AnnouncementService;
-using EvolvedTax.Business.Services.CommonService;
+﻿using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.Form1099Services;
-using EvolvedTax.Business.Services.W9FormService;
 using EvolvedTax.Common.Constants;
-using EvolvedTax.Data.Models.DTOs.Request;
-using EvolvedTax.Data.Models.Entities;
-using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax_1099.Controllers
 {
@@ -23,10 +15,14 @@ namespace EvolvedTax_1099.Controllers
         private readonly IForm1099_B_Service _form1099_B_Service;
         private readonly IForm1099_DIV_Service _form1099_DIV_Service;
         private readonly IForm1099_LS_Service _form1099_LS_Service;
+        private readonly IForm1099_K_Service _form1099_K_Service;
+        private readonly IForm1099_OID_Service _form1099_OID_Service;
+        private readonly IForm1099_Q_Service _form1099_Q_Service;
+        private readonly IForm1099_S_Service _form1099_S_Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
             IForm1099_MISC_Service form1099_MISC_Service, IForm1099_NEC_Service form1099_NEC_Service,
-            IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service, IForm1099_B_Service form1099_B_Service, IForm1099_DIV_Service form1099_DIV_Service, IForm1099_LS_Service form1099_LS_Service)
+            IForm1099_INT_Service form1099_INT_Service, IForm1099_A_Service form1099_A_Service, IForm1099_B_Service form1099_B_Service, IForm1099_DIV_Service form1099_DIV_Service, IForm1099_LS_Service form1099_LS_Service, IForm1099_K_Service form1099_K_Service, IForm1099_OID_Service form1099_OID_Service, IForm1099_Q_Service form1099_Q_Service, IForm1099_S_Service form1099_S_Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
@@ -37,6 +33,10 @@ namespace EvolvedTax_1099.Controllers
             _form1099_B_Service = form1099_B_Service;
             _form1099_DIV_Service = form1099_DIV_Service;
             _form1099_LS_Service = form1099_LS_Service;
+            _form1099_K_Service = form1099_K_Service;
+            _form1099_OID_Service = form1099_OID_Service;
+            _form1099_Q_Service = form1099_Q_Service;
+            _form1099_S_Service = form1099_S_Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -66,6 +66,18 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099LS:
                     fileName = AppConstants.Form1099LSExcelTemplate;
+                    break;
+                case AppConstants.Form1099K:
+                    fileName = AppConstants.Form1099KExcelTemplate;
+                    break;
+                case AppConstants.Form1099OID:
+                    fileName = AppConstants.Form1099OIDExcelTemplate;
+                    break;
+                case AppConstants.Form1099Q:
+                    fileName = AppConstants.Form1099QExcelTemplate;
+                    break;
+                case AppConstants.Form1099S:
+                    fileName = AppConstants.Form1099SExcelTemplate;
                     break;
                 default:
                     return NotFound();
@@ -123,6 +135,18 @@ namespace EvolvedTax_1099.Controllers
                     break;
                 case AppConstants.Form1099LS:
                     await _form1099_LS_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LS);
+                    break;
+                case AppConstants.Form1099K:
+                    await _form1099_K_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099K);
+                    break;
+                case AppConstants.Form1099OID:
+                    await _form1099_OID_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099OID);
+                    break;
+                case AppConstants.Form1099Q:
+                    await _form1099_Q_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099Q);
+                    break;
+                case AppConstants.Form1099S:
+                    await _form1099_S_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099S);
                     break;
             }
 

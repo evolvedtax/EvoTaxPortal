@@ -251,11 +251,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("efield2_topmostSubform.CopyA.CopyAHeader.c1_1", "0");   //Corrected
             }
             pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_3", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_4", DIVresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_5", DIVresponse.First_Name + " " + DIVresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_6", DIVresponse.Address_Deliv_Street);   //RecipentAddress
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_7", DIVresponse.Address_Apt_Suite);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_6", DIVresponse.Address_Deliv_Street + " " + DIVresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_7", DIVresponse.City + " " + DIVresponse.State + " " + DIVresponse.Country + " " + DIVresponse.Zip);   //RecipentCity
             if (DIVresponse.Second_TIN_Notice == "0")
             {
                 pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.c1_4", "0");   //Second_TIN_Notice
@@ -300,11 +300,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("efield2_topmostSubform.Copy1.Copy1Header.c2_1", "0");   //Corrected
             }
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_3", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_4", DIVresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_5", DIVresponse.First_Name + " " + DIVresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_6", DIVresponse.Address_Deliv_Street);   //RecipentAddress
-            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_7", DIVresponse.Address_Apt_Suite);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_6", DIVresponse.Address_Deliv_Street + " " + DIVresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_7", DIVresponse.City + " " + DIVresponse.State + " " + DIVresponse.Country + " " + DIVresponse.Zip);   //RecipentCity
             if (DIVresponse.Second_TIN_Notice == "0")
             {
                 pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.c2_4", "0");   //Second_TIN_Notice
@@ -349,11 +349,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("efield2_topmostSubform.CopyB.CopyBHeader.c2_1", "0");   //Corrected
             }
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_3", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_4", DIVresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_5", DIVresponse.First_Name + " " + DIVresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_6", DIVresponse.Address_Deliv_Street);   //RecipentAddress
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_7", DIVresponse.Address_Apt_Suite);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_6", DIVresponse.Address_Deliv_Street + " " + DIVresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_7", DIVresponse.City + " " + DIVresponse.State + " " + DIVresponse.Country + " " + DIVresponse.Zip);   //RecipentCity
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_8", DIVresponse.Rcp_Account);   //request.Rcp_Account
             pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_9", DIVresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_10", DIVresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -394,11 +394,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("efield2_topmostSubform.Copy2.Copy2Header.c2_1", "0");   //Corrected
             }
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_3", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_4", DIVresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_5", DIVresponse.First_Name + " " + DIVresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_6", DIVresponse.Address_Deliv_Street);   //RecipentAddress
-            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_7", DIVresponse.Address_Apt_Suite);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_6", DIVresponse.Address_Deliv_Street + " " + DIVresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_7", DIVresponse.City + " " + DIVresponse.State + " " + DIVresponse.Country + " " + DIVresponse.Zip);   //RecipentCity
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_8", DIVresponse.Rcp_Account);   //request.Rcp_Account
             pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_9", DIVresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_10", DIVresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -439,11 +439,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("efield2_topmostSubform.CopyC.CopyCHeader.c2_1", "0");   //Corrected
             }
             pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_3", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_4", DIVresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_5", DIVresponse.First_Name + " " + DIVresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_6", DIVresponse.Address_Deliv_Street);   //RecipentAddress
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_7", DIVresponse.Address_Apt_Suite);   //RecipentCity
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_6", DIVresponse.Address_Deliv_Street + " " + DIVresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_7", DIVresponse.City + " " + DIVresponse.State + " " + DIVresponse.Country + " " + DIVresponse.Zip);   //RecipentCity
             if (DIVresponse.Second_TIN_Notice == "0")
             {
                 pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.c2_4", DIVresponse.Second_TIN_Notice);   //Second_TIN_Notice
@@ -669,7 +669,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     switch (selectedPage)
                     {
                         case "2":
-                            compileFileName = "For Internal Revenue Service Center.pdf";
+                            compileFileName = "Internal Revenue Service Center.pdf";
                             break;
                         case "3":
                             compileFileName = "For State Tax Department.pdf";
@@ -678,7 +678,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                             compileFileName = "For Recipient.pdf";
                             break;
                         case "6":
-                            compileFileName = "To be filed with recipient’s state income tax return.pdf";
+                            compileFileName = "To be filed with recipient’s state income tax.pdf";
                             break;
                         case "7":
                             compileFileName = "For Payer.pdf";

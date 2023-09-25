@@ -69,42 +69,42 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
                                         <th>Recepient TIN</th>
-                                        <th>First Name</th>
-                                        <th>Name Line 2</th>
-                                        <th>Last Name/Company</th>
+                                        <th>Recepient First Name</th>
+                                        <th>Recepient Last Name</th>
+                                        <th>Company</th>
                                         <th>Address Type</th>
-                                        <th>Address Street</th>
-                                        <th>Address Appt/Suite</th>
+                                        <th>Address Line 1</th>
+                                        <th>Address Line 2</th>
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Zip</th>
                                         <th>Country</th>
                                         <th>Recepient Account</th>
-                                        <th>Recepient Email</th>
+                                        <th>Recepient E-mail</th>
                                         <th>2nd TIN Notice</th>
                                         <th>FATCA Checkbox</th>
-                                        <th>Box 1a Amount</th>
-                                        <th>Box 1b Amount</th>
-                                        <th>Box 2a Amount</th>
-                                        <th>Box 2b Amount</th>
-                                        <th>Box 2c Amount</th>
-                                        <th>Box 2d Amount</th>
-                                        <th>Box 2e Amount</th>
-                                        <th>Box 2f Amount</th>
-                                        <th>Box 3 Amount</th>
-                                        <th>Box 4 Amount</th>
-                                        <th>Box 5 Amount</th>
-                                        <th>Box 6 Amount</th>
-                                        <th>Box 7 Amount</th>
-                                        <th>Box 8 Foreign</th>
-                                        <th>Box 9 Amount</th>
-                                        <th>Box 10 Amount</th>
-                                        <th>Box 11 Amount</th>
-                                        <th>Box 12 Amount</th>
-                                        <th>Box 13 Amount</th>
-                                        <th>Box 14 State</th>
-                                        <th>Box 15 ID Number</th>
-                                        <th>Box 16 Amount</th>
+                                        <th>Total ordinary dividends</th>
+                                        <th>Qualified dividends</th>
+                                        <th>Total capital gain distr.</th>
+                                        <th>Unrecap. Sec. 1250 gain</th>
+                                        <th>Section 1202 gain</th>
+                                        <th>Collectibles (28%) gain</th>
+                                        <th>Section 897 ordinary dividends</th>
+                                        <th>Section 897 capital gain</th>
+                                        <th>Nondividend distributions</th>
+                                        <th>Federal income tax withheld</th>
+                                        <th>Section 199A dividends</th>
+                                        <th>Investment expenses</th>
+                                        <th>Foreign tax paid</th>
+                                        <th>Foreign country or U.S. possession</th>
+                                        <th>Cash liquidation distributions</th>
+                                        <th>Noncash liquidation distributions</th>
+                                        <th>FATCA filing requirement</th>
+                                        <th>Exempt-interest dividends</th>
+                                        <th>Specified private activity bond interest dividends</th>
+                                        <th>State</th>
+                                        <th>State ID Number</th>
+                                        <th>State tax withheld</th>
                                         <th>Form Category</th>
                                         <th>Form Source</th>
                                         <th>Tax State</th>
@@ -233,7 +233,7 @@
 
                                     <div>
                                         <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="2">
-                                        <label for="page2">For Internal Revenue Service Center</label>
+                                        <label for="page2">Internal Revenue Service Center</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="3">
@@ -246,7 +246,7 @@
 
                                     <div>
                                         <input type="checkbox" id="page6" class="download-checkbox" name="page6" value="6">
-                                        <label for="page6">To be filed with recipient’s state income tax return</label>
+                                        <label for="page6">To be filed with recipient’s state income tax</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page7" class="download-checkbox" name="page7" value="7">
@@ -363,7 +363,7 @@
                                 }
                             },
                             {
-                                text: '<i class="fa fa-send"></i> Electronic Acceptance Email',
+                                text: '<i class="fa fa-send"></i> Electronic Acceptance E-mail',
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
                                     var selectedValues = [];

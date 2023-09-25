@@ -16,14 +16,14 @@ using System.IO.Compression;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
-    public class Form1099_LS_Service : IForm1099_LS_Service
+    public class Form1099_Q_Service : IForm1099_Q_Service
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IInstituteService _instituteService;
         readonly IMailService _mailService;
         readonly ITrailAudit1099Service _trailAudit1099Service;
         readonly IMapper _mapper;
-        public Form1099_LS_Service(EvolvedtaxContext evolvedtaxContext, IMapper mapper, IInstituteService instituteService, IMailService mailService = null, ITrailAudit1099Service trailAudit1099Service = null)
+        public Form1099_Q_Service(EvolvedtaxContext evolvedtaxContext, IMapper mapper, IInstituteService instituteService, IMailService mailService = null, ITrailAudit1099Service trailAudit1099Service = null)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mapper = mapper;
@@ -32,9 +32,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
             _trailAudit1099Service = trailAudit1099Service;
         }
 
-        public IQueryable<Form1099LSResponse> GetForm1099LSList()
+        public IQueryable<Form1099QResponse> GetForm1099QList()
         {
-            var response = _evolvedtaxContext.Tbl1099_LS.Select(p => new Form1099LSResponse
+            var response = _evolvedtaxContext.Tbl1099_Q.Select(p => new Form1099QResponse
             {
                 Id = p.Id,
                 Corrected = p.Corrected,
@@ -42,16 +42,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 Address_Apt_Suite = p.Address_Apt_Suite,
                 Address_Deliv_Street = p.Address_Deliv_Street,
                 Address_Type = p.Address_Type,
-                Name_Line2 = p.Name_Line2,
-                Box_1_Amount = p.Box_1_Amount,
-                Box_2_Date = p.Box_2_Date,
-                Extra_address_line1 = p.Extra_address_line1,
-                Extra_address_line2 = p.Extra_address_line2,
-                Extra_address_line3 = p.Extra_address_line3,
-                Extra_address_line4 = p.Extra_address_line4,
-                Extra_contact_name = p.Extra_contact_name,
-                Extra_contact_phone = p.Extra_contact_phone,
-                Issuer_Name = p.Issuer_Name,
                 City = p.City,
                 Country = p.Country,
                 Created_By = p.Created_By,
@@ -61,9 +51,20 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 Form_Source = p.Form_Source,
                 InstID = p.InstID,
                 Last_Name_Company = p.Last_Name_Company,
+                Name_Line_2 = p.Name_Line_2,
                 Rcp_Account = p.Rcp_Account,
                 Rcp_Email = p.Rcp_Email != null ? p.Rcp_Email.Trim() : string.Empty,
                 Rcp_TIN = p.Rcp_TIN,
+                Box_1_Amount = p.Box_1_Amount,
+                Box_2_Amount = p.Box_2_Amount,
+                Box_3_Amount = p.Box_3_Amount,
+                Box_4_Checkbox = p.Box_4_Checkbox,
+                Box_5_Checkbox1 = p.Box_5_Checkbox1,
+                Box_5_Checkbox2 = p.Box_5_Checkbox2,
+                Box_5_Checkbox3 = p.Box_5_Checkbox3,
+                Box_6_Checkbox = p.Box_6_Checkbox,
+                Box_X_Amount = p.Box_X_Amount,
+                Box_X_Code = p.Box_X_Code,
                 State = p.State,
                 Status = p.Status,
                 Tax_State = p.Tax_State,
@@ -76,9 +77,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
         }
         public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form)
         {
-            var result = from ic in _evolvedtaxContext.Tbl1099_LS
+            var result = from ic in _evolvedtaxContext.Tbl1099_Q
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
-                         select new Tbl1099_LS
+                         select new Tbl1099_Q
                          {
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
@@ -91,11 +92,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             return true;
         }
-        public async Task<MessageResponseModel> Upload1099_LS_Data(IFormFile file, int InstId, int entityId, string UserId)
+        public async Task<MessageResponseModel> Upload1099_Q_Data(IFormFile file, int InstId, int entityId, string UserId)
         {
             bool Status = false;
-            var response = new List<Tbl1099_LS>();
-            var LSList = new List<Tbl1099_LS>();
+            var response = new List<Tbl1099_Q>();
+            var QList = new List<Tbl1099_Q>();
             using (var stream = file.OpenReadStream())
             {
                 IWorkbook workbook = new XSSFWorkbook(stream);
@@ -108,12 +109,12 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 {
                     IRow excelRow = sheet.GetRow(row);
 
-                    var request = new Tbl1099_LS
+                    var request = new Tbl1099_Q
                     {
                         Rcp_TIN = excelRow.GetCell(0)?.ToString() ?? string.Empty,
                         Last_Name_Company = excelRow.GetCell(1)?.ToString() ?? string.Empty,
                         First_Name = excelRow.GetCell(2)?.ToString() ?? string.Empty,
-                        Name_Line2 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
+                        Name_Line_2 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
                         Address_Type = excelRow.GetCell(4)?.ToString() ?? string.Empty,
                         Address_Deliv_Street = excelRow.GetCell(5)?.ToString() ?? string.Empty,
                         Address_Apt_Suite = excelRow.GetCell(6)?.ToString() ?? string.Empty,
@@ -124,18 +125,19 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         Rcp_Account = excelRow.GetCell(11)?.ToString() ?? string.Empty,
                         Rcp_Email = excelRow.GetCell(12)?.ToString() ?? string.Empty,
                         Box_1_Amount = excelRow.GetCell(13)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(13)?.ToString()) : 0,
-                        Box_2_Date = excelRow.GetCell(14)?.ToString() == null ? null : Convert.ToDateTime(excelRow.GetCell(14).ToString()),
-                        Issuer_Name = excelRow.GetCell(15)?.ToString() ?? string.Empty,
-                        Extra_address_line1 = excelRow.GetCell(16)?.ToString() ?? string.Empty,
-                        Extra_address_line2 = excelRow.GetCell(17)?.ToString() ?? string.Empty,
-                        Extra_address_line3 = excelRow.GetCell(18)?.ToString() ?? string.Empty,
-                        Extra_address_line4 = excelRow.GetCell(19)?.ToString() ?? string.Empty,
-                        Extra_contact_name = excelRow.GetCell(20)?.ToString() ?? string.Empty,
-                        Extra_contact_phone = excelRow.GetCell(21)?.ToString() ?? string.Empty,
-                        Form_Category = excelRow.GetCell(22)?.ToString() ?? string.Empty,
-                        Form_Source = excelRow.GetCell(23)?.ToString() ?? string.Empty,
-                        Tax_State = excelRow.GetCell(24)?.ToString() ?? string.Empty,
-                        Corrected = (excelRow.GetCell(25)?.ToString() != null && (bool)excelRow.GetCell(25)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_2_Amount = excelRow.GetCell(14)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(14)?.ToString()) : 0,
+                        Box_3_Amount = excelRow.GetCell(14)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(15)?.ToString()) : 0,
+                        Box_4_Checkbox = (excelRow.GetCell(16)?.ToString() != null && (bool)excelRow.GetCell(16)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_5_Checkbox1 = (excelRow.GetCell(17)?.ToString() != null && (bool)excelRow.GetCell(17)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_5_Checkbox2 = (excelRow.GetCell(18)?.ToString() != null && (bool)excelRow.GetCell(18)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_5_Checkbox3 = (excelRow.GetCell(19)?.ToString() != null && (bool)excelRow.GetCell(19)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_6_Checkbox = (excelRow.GetCell(20)?.ToString() != null && (bool)excelRow.GetCell(20)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_X_Amount = excelRow.GetCell(21)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(21)?.ToString()) : 0,
+                        Box_X_Code = excelRow.GetCell(22)?.ToString() != null ? Convert.ToInt32(excelRow.GetCell(22)?.ToString()) : 0,
+                        Form_Category = excelRow.GetCell(23)?.ToString() ?? string.Empty,
+                        Form_Source = excelRow.GetCell(24)?.ToString() ?? string.Empty,
+                        Tax_State = excelRow.GetCell(25)?.ToString() ?? string.Empty,
+                        Corrected = (excelRow.GetCell(26)?.ToString() != null && (bool)excelRow.GetCell(26)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
                         Created_By = UserId,
                         Created_Date = DateTime.Now,
                         InstID = InstId,
@@ -155,7 +157,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         uniqueEINNumber.Add(clientEmailEINNumber);
                     }
                     // Check for duplicate records based on entityName in the database
-                    if (await _evolvedtaxContext.Tbl1099_LS.AnyAsync(p => p.Rcp_TIN == request.Rcp_TIN && p.EntityId == request.EntityId && p.Created_Date != null &&
+                    if (await _evolvedtaxContext.Tbl1099_Q.AnyAsync(p => p.Rcp_TIN == request.Rcp_TIN && p.EntityId == request.EntityId && p.Created_Date != null &&
                      p.Created_Date.Value.Year == DateTime.Now.Year))
                     {
                         response.Add(request);
@@ -167,10 +169,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                         request.IsDuplicated = false;
                     }
-                    LSList.Add(request);
+                    QList.Add(request);
 
                 }
-                await _evolvedtaxContext.Tbl1099_LS.AddRangeAsync(LSList);
+                await _evolvedtaxContext.Tbl1099_Q.AddRangeAsync(QList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
             return new MessageResponseModel { Status = Status, Message = response, Param = "Database" };
@@ -186,24 +188,24 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
-            var LSresponse = _evolvedtaxContext.Tbl1099_LS.FirstOrDefault(p => p.Id == Id);
-            var instResponse = _instituteService.GetInstituteDataById((int)LSresponse.InstID);
+            var Qresponse = _evolvedtaxContext.Tbl1099_Q.FirstOrDefault(p => p.Id == Id);
+            var instResponse = _instituteService.GetInstituteDataById((int)Qresponse.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            String ClientName = LSresponse.First_Name + " " + LSresponse.Name_Line2?.Replace(": ", "");
+            String ClientName = Qresponse.First_Name + " " + Qresponse.Name_Line_2?.Replace(": ", "");
 
             if (!String.IsNullOrEmpty(Page))
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099LS, "_", LSresponse.Id, "_Page_", Page);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099Q, "_", Qresponse.Id, "_Page_", Page);
             }
             else
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099LS, "_", LSresponse.Id);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099Q, "_", Qresponse.Id);
             }
 
 
-            string FilenameNew = "/Form1099LS/" + newFile1 + ".pdf";
+            string FilenameNew = "/Form1099Q/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf"; // Add ".pdf" extension to the file name
 
             string newFilePath = Path.Combine(SaveFolderPath, newFileName);
@@ -215,79 +217,143 @@ namespace EvolvedTax.Business.Services.Form1099Services
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
-            pdfFormFields.SetField("Form1099-C.CopyA.FormHeader.CalendarYear.f1_1", currentYear);   //23
-            if (LSresponse.Corrected == "1")
-            {
-                pdfFormFields.SetField("Form1099-C.CopyA.FormHeader.c1_1", "0");   //Void
-            }
-            else
-            {
-                pdfFormFields.SetField("efield2_Form1099-C.CopyA.FormHeader.c1_1", "0");   //Corrected
-            }
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_4", LSresponse.Rcp_TIN);   //Rcp_TIN
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_5", LSresponse.First_Name + " " + LSresponse.Name_Line2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_6", LSresponse.Address_Deliv_Street + " " + LSresponse.Address_Apt_Suite);   //RecipentAddress
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_7", LSresponse.City + " " + LSresponse.State + " " + LSresponse.Country + " " + LSresponse.Zip);   //RecipentCity
-            pdfFormFields.SetField("Form1099-C.CopyA.LeftCol.f1_8", LSresponse.Rcp_Account);   //request.Rcp_Account
-            pdfFormFields.SetField("Form1099-C.CopyA.RightCol.f1_9", LSresponse.Box_1_Amount.ToString());   //Box_1_Amount
-            pdfFormFields.SetField("Form1099-C.CopyA.RightCol.f1_10", LSresponse.Box_2_Date?.ToString("MM/dd/yyyy"));   //Box_2_Date
-            pdfFormFields.SetField("Form1099-C.CopyA.RightCol.f1_11", LSresponse.Issuer_Name);   //Issuer_Name
-            pdfFormFields.SetField("Form1099-C.CopyA.RightCol.f1_12", LSresponse.Extra_address_line1 + " " + LSresponse.Extra_address_line2 + " " + LSresponse.Extra_address_line3 + " " + LSresponse.Extra_address_line4 + " " + LSresponse.Extra_contact_name + " " + LSresponse.Extra_contact_phone);   //Extra_address_line1 + " " + Extra_address_line2 + " " + Extra_address_line3 + " " + Extra_address_line4 + " " + Extra_contact_name + " " + Extra_contact_phone
 
-            pdfFormFields.SetField("Form1099-C.CopyB.FormHeader.CalendarYear.f2_1", currentYear);   //23
-            if (LSresponse.Corrected == "0")
+            pdfFormFields.SetField("topmostSubform.CopyA.CopyAHeader.YEAR.f1_1", currentYear);   //23
+            if (Qresponse.Corrected == "1")
             {
-                pdfFormFields.SetField("Form1099-C.CopyB.FormHeader.c2_1", "0");   //Corrected
-            }
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_4", LSresponse.Rcp_TIN);   //Rcp_TIN
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_5", LSresponse.First_Name + " " + LSresponse.Name_Line2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_6", LSresponse.Address_Deliv_Street + " " + LSresponse.Address_Apt_Suite);   //RecipentAddress
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_7", LSresponse.City + " " + LSresponse.State + " " + LSresponse.Country + " " + LSresponse.Zip);   //RecipentCity
-            pdfFormFields.SetField("Form1099-C.CopyB.LeftCol.f2_8", LSresponse.Rcp_Account);   //request.Rcp_Account
-            pdfFormFields.SetField("Form1099-C.CopyB.RightCol.f2_9", LSresponse.Box_1_Amount.ToString());   //Box_1_Amount
-            pdfFormFields.SetField("Form1099-C.CopyB.RightCol.f2_10", "Box_2_Date");   //Box_2_Date
-            pdfFormFields.SetField("Form1099-C.CopyB.RightCol.f2_11", LSresponse.Issuer_Name);   //Issuer_Name
-            pdfFormFields.SetField("Form1099-C.CopyB.RightCol.f2_12", LSresponse.Extra_address_line1 + " " + LSresponse.Extra_address_line2 + " " + LSresponse.Extra_address_line3 + " " + LSresponse.Extra_address_line4 + " " + LSresponse.Extra_contact_name + " " + LSresponse.Extra_contact_phone);   //Extra_address_line1 + " " + Extra_address_line2 + " " + Extra_address_line3 + " " + Extra_address_line4 + " " + Extra_contact_name + " " + Extra_contact_phone
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.CalendarYear.f2_1", currentYear);   //23
-            if (LSresponse.Corrected == "0")
-            {
-                pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.c2_1", "0");   //Corrected
-            }
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_4", LSresponse.Rcp_TIN);   //Rcp_TIN
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_5", LSresponse.First_Name + " " + LSresponse.Name_Line2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_6", LSresponse.Address_Deliv_Street + " " + LSresponse.Address_Apt_Suite);   //RecipentAddress
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_7", LSresponse.City + " " + LSresponse.State + " " + LSresponse.Country + " " + LSresponse.Zip);   //RecipentCity
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.LeftCol.f2_8", LSresponse.Rcp_Account);   //request.Rcp_Account
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_9", LSresponse.Box_1_Amount.ToString());   //Box_1_Amount
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_10", "Box_2_Date");   //Box_2_Date
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_11", LSresponse.Issuer_Name);   //Issuer_Name
-            pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_12", LSresponse.Extra_address_line1 + " " + LSresponse.Extra_address_line2 + " " + LSresponse.Extra_address_line3 + " " + LSresponse.Extra_address_line4 + " " + LSresponse.Extra_contact_name + " " + LSresponse.Extra_contact_phone);   //Extra_address_line1 + " " + Extra_address_line2 + " " + Extra_address_line3 + " " + Extra_address_line4 + " " + Extra_contact_name + " " + Extra_contact_phone
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.CalendarYear.f2_1", currentYear);   //23
-            if (LSresponse.Corrected == "1")
-            {
-                pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.c2_1", "0");   //Void
+                pdfFormFields.SetField("topmostSubform.CopyA.CopyAHeader.c1_1", "0");   //Void
             }
             else
             {
-                pdfFormFields.SetField("efield42_Form1099-C.CopyD.FormHeader.c2_1", "0");   //Corrected
+                pdfFormFields.SetField("efield2_topmostSubform.CopyA.CopyAHeader.c1_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_4", LSresponse.Rcp_TIN);   //Rcp_TIN
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_5", LSresponse.First_Name + " " + LSresponse.Name_Line2);   //request.First_Name + " " + request.Name_Line2
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_6", LSresponse.Address_Deliv_Street + " " + LSresponse.Address_Apt_Suite);   //RecipentAddress
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_7", LSresponse.City + " " + LSresponse.State + " " + LSresponse.Country + " " + LSresponse.Zip);   //RecipentCity
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.LeftCol.f2_8", LSresponse.Rcp_Account);   //request.Rcp_Account
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.RightCol.f2_9", LSresponse.Box_1_Amount.ToString());   //Box_1_Amount
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.RightCol.f2_10", "Box_2_Date");   //Box_2_Date
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.RightCol.f2_11", LSresponse.Issuer_Name);   //Issuer_Name
-            pdfFormFields.SetField("Form1099-C.CopyD.FormHeader.RightCol.f2_12", LSresponse.Extra_address_line1 + " " + LSresponse.Extra_address_line2 + " " + LSresponse.Extra_address_line3 + " " + LSresponse.Extra_address_line4 + " " + LSresponse.Extra_contact_name + " " + LSresponse.Extra_contact_phone);   //Extra_address_line1 + " " + Extra_address_line2 + " " + Extra_address_line3 + " " + Extra_address_line4 + " " + Extra_contact_name + " " + Extra_contact_phone
+
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_4", Qresponse.Rcp_TIN);   //Rcp_TIN
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_5", Qresponse.First_Name + " " + Qresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_6", Qresponse.Address_Deliv_Street + " " + Qresponse.Address_Apt_Suite);   //RecipentAddress
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_7", Qresponse.City + " " + Qresponse.State + " " + Qresponse.Country + " " + Qresponse.Zip);   //RecipentCity
+
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_8", Qresponse.Rcp_Account);   //request.Rcp_Account
+
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.f1_9", Qresponse.Box_1_Amount.ToString());   //Box_1_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.f1_10", Qresponse.Box_2_Amount.ToString());   //Box_2_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.f1_11", Qresponse.Box_3_Amount.ToString());   //Box_3_Amount
+            if (Qresponse.Box_4_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.c1_2", "0");   //Box_4_Checkbox
+            }
+            if (Qresponse.Box_5_Checkbox1 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.Box5.list_1.list_item_1.c1_3", "0");   //Box_5_Checkbox1
+            }
+            if (Qresponse.Box_5_Checkbox2 == "0")
+            {
+                pdfFormFields.SetField("efield15_topmostSubform.CopyA.RightColumn.Box5.list_1.list_item_1.c1_3", "0");   //Box_5_Checkbox2
+            }
+            if (Qresponse.Box_5_Checkbox3 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.Box5.list_1.list_item_2.c1_3", "0");   //Box_5_Checkbox3
+            }
+            if (Qresponse.Box_6_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.c1_4", "0");   //Box_6_Checkbox
+            }
+            pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.YEAR.f1_1", currentYear);   //23
+            if (Qresponse.Corrected == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c1_1", "0");   //Corrected
+            }
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_4", Qresponse.Rcp_TIN);   //Rcp_TIN
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_5", Qresponse.First_Name + " " + Qresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_6", Qresponse.Address_Deliv_Street + " " + Qresponse.Address_Apt_Suite);   //RecipentAddress
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_7", Qresponse.City + " " + Qresponse.State + " " + Qresponse.Country + " " + Qresponse.Zip);   //RecipentCity
+
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_8", Qresponse.Rcp_Account);   //request.Rcp_Account
+
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f1_9", Qresponse.Box_1_Amount.ToString());   //Box_1_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f1_10", Qresponse.Box_2_Amount.ToString());   //Box_2_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f1_11", Qresponse.Box_3_Amount.ToString());   //Box_3_Amount
+            if (Qresponse.Box_4_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.c1_2", "0");   //Box_4_Checkbox
+            }
+            if (Qresponse.Box_5_Checkbox1 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.Box5.list_2.list_item_1.c1_3", "0");   //Box_5_Checkbox1
+            }
+            if (Qresponse.Box_5_Checkbox2 == "0")
+            {
+                pdfFormFields.SetField("efield32_topmostSubform.CopyB.RghtCol.Box5.list_2.list_item_1.c1_3", "0");   //Box_5_Checkbox2
+            }
+            if (Qresponse.Box_5_Checkbox3 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.Box5.list_2.list_item_2.c1_3", "0");   //Box_5_Checkbox3
+            }
+            if (Qresponse.Box_6_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.c1_4", "0");   //Box_6_Checkbox
+            }
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f1_12", Qresponse.Box_X_Amount + " & " + Qresponse.Box_X_Code);   //Box_X_Amount & " " & Box_X_Code
+
+            pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.YEAR.f1_1", currentYear);   //23
+
+            pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c1_1", "Void");   //Void
+            if (Qresponse.Corrected == "0")
+            {
+                pdfFormFields.SetField("efield38_topmostSubform.CopyC.CopyCHeader.c1_1", "0");   //Corrected
+            }
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_4", Qresponse.Rcp_TIN);   //Rcp_TIN
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_5", Qresponse.First_Name + " " + Qresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_6", Qresponse.Address_Deliv_Street + " " + Qresponse.Address_Apt_Suite);   //RecipentAddress
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_7", Qresponse.City + " " + Qresponse.State + " " + Qresponse.Country + " " + Qresponse.Zip);   //RecipentCity
+
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_8", Qresponse.Rcp_Account);   //request.Rcp_Account
+
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.f1_9", Qresponse.Box_1_Amount.ToString());   //Box_1_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.f1_10", Qresponse.Box_2_Amount.ToString());   //Box_2_Amount
+
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.f1_11", Qresponse.Box_3_Amount.ToString());   //Box_3_Amount
+            if (Qresponse.Box_4_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.c1_2", "0");   //Box_4_Checkbox
+            }
+            if (Qresponse.Box_5_Checkbox1 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.Box5.list_3.list_item_1.c1_3", "0");   //Box_5_Checkbox1
+            }
+            if (Qresponse.Box_5_Checkbox2 == "0")
+            {
+                pdfFormFields.SetField("efield51_topmostSubform.CopyC.RightColumn.Box5.list_3.list_item_1.c1_3", "0");   //Box_5_Checkbox2
+            }
+            if (Qresponse.Box_5_Checkbox3 == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.Box5.list_3.list_item_2.c1_3", "0");   //Box_5_Checkbox3
+            }
+            if (Qresponse.Box_6_Checkbox == "0")
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.c1_4", "0");   //Box_6_Checkbox
+            }
             #endregion
 
             pdfStamper.FormFlattening = true;
@@ -306,10 +372,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl1099_LS.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line2?.Replace(": ", "");
-            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099LS, "_", Id);
-            string FilenameNew = "/Form1099LS/" + newFile1 + ".pdf";
+            var request = _evolvedtaxContext.Tbl1099_Q.FirstOrDefault(p => p.Id == Id);
+            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099Q, "_", Id);
+            string FilenameNew = "/Form1099Q/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
 
 
@@ -371,11 +437,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl1099_LS.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line2?.Replace(": ", "");
+            var request = _evolvedtaxContext.Tbl1099_Q.FirstOrDefault(p => p.Id == Id);
+            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
 
-            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099LS, "_", request.Id, "_Page_", selectedPage);
-            string FilenameNew = "/Form1099LS/" + newFile1 + ".pdf";
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099Q, "_", request.Id, "_Page_", selectedPage);
+            string FilenameNew = "/Form1099Q/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
 
             var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true, selectedPage);
@@ -421,7 +487,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             var pdfPaths = new List<string>();
             var CompilepdfPaths = new List<string>();
-            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099LSTemplateFileName);
+            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099QTemplateFileName);
             bool containsAll = selectedPages.Contains("All");
 
             if (containsAll)
@@ -489,17 +555,14 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                     switch (selectedPage)
                     {
-                        case "2":
+                        case "1":
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
-                        case "3":
-                            compileFileName = "For Payment Recipient.pdf";
+                        case "2":
+                            compileFileName = "For Recipient.pdf";
                             break;
-                        case "5":
-                            compileFileName = "For Issuer.pdf";
-                            break;
-                        case "7":
-                            compileFileName = "For Acquirer.pdf";
+                        case "4":
+                            compileFileName = "For Payer.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";
@@ -532,10 +595,15 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                         pdfReader.Close();
                     }
+
+
                     document.Close();
                     pdfCopy.Close();
                     pdfPaths.Clear();
+
                     #endregion
+
+
                 }
             }
 
@@ -561,7 +629,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             foreach (var id in ids)
             {
 
-                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099LSTemplateFileName);
+                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099QTemplateFileName);
                 bool containsAll = selectedPages.Contains("All");
 
                 if (containsAll)
@@ -597,10 +665,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {
 
-            var recordToDelete = _evolvedtaxContext.Tbl1099_LS.First(p => p.Id == id);
+            var recordToDelete = _evolvedtaxContext.Tbl1099_Q.First(p => p.Id == id);
             if (recordToDelete != null)
             {
-                _evolvedtaxContext.Tbl1099_LS.Remove(recordToDelete);
+                _evolvedtaxContext.Tbl1099_Q.Remove(recordToDelete);
                 await _evolvedtaxContext.SaveChangesAsync();
                 return new MessageResponseModel { Status = true };
             }
@@ -611,7 +679,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public async Task<MessageResponseModel> KeepRecord(int id)
         {
 
-            var recordToUpdate = _evolvedtaxContext.Tbl1099_LS.First(p => p.Id == id);
+            var recordToUpdate = _evolvedtaxContext.Tbl1099_Q.First(p => p.Id == id);
             if (recordToUpdate != null)
             {
                 recordToUpdate.IsDuplicated = false;

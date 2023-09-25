@@ -12,15 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EvolvedTax_1099.Controllers
 {
-    public class Form1099_OID_Controller : BaseController
+    public class Form1099_S_Controller : BaseController
     {
-        private readonly IForm1099_OID_Service _form1099_OID_Service;
+        private readonly IForm1099_S_Service _form1099_S_Service;
         private readonly IInstituteService _instituteService;
         private readonly ICommonService _commonService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public Form1099_OID_Controller(IForm1099_OID_Service form1099_OID_Service, IWebHostEnvironment webHostEnvironment, ICommonService commonService, IInstituteService instituteService)
+        public Form1099_S_Controller(IForm1099_S_Service form1099_S_Service, IWebHostEnvironment webHostEnvironment, ICommonService commonService, IInstituteService instituteService)
         {
-            _form1099_OID_Service = form1099_OID_Service;
+            _form1099_S_Service = form1099_S_Service;
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
             _instituteService = instituteService;
@@ -28,15 +28,14 @@ namespace EvolvedTax_1099.Controllers
         public IActionResult Index()
         {
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
-            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem
-            {
+             ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem{
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
                 Selected = p.EntityId == EntityId
             });
-            return View(_form1099_OID_Service.GetForm1099OIDList().Where(p => p.EntityId == EntityId));
+            return View(_form1099_S_Service.GetForm1099SList().Where(p => p.EntityId == EntityId));
         }
-        [Route("Form1099_OID_/uploadClients")]
+        [Route("Form1099_S_/uploadClients")]
         [HttpPost]
         public async Task<IActionResult> UploadClients(IFormFile file, int EntityId, string entityName)
         {
@@ -44,41 +43,41 @@ namespace EvolvedTax_1099.Controllers
             {
                 return Json(false);
             }
-            var response = await _form1099_OID_Service.Upload1099_OID_Data(file, SessionUser.InstituteId, EntityId, SessionUser.UserId);
+            var response = await _form1099_S_Service.Upload1099_S_Data(file, SessionUser.InstituteId, EntityId, SessionUser.UserId);
             return Json(response);
         }
         public IActionResult ChangeEntity(int entityId)
         {
             //int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("EntityId", entityId);
-            //var response = _form1099_OID_Service.GetForm1099OIDList().Where(p => p.EntityId == entityId);
+            //var response = _form1099_S_Service.GetForm1099SList().Where(p => p.EntityId == entityId);
             //return RedirectToAction("Index");
             return Json(new { Data = "true" });
         }
         #region PDF Creation Methods
-        [Route("Form1099_OID_/downlodPdf")]
+        [Route("Form1099_S_/downlodPdf")]
         [HttpGet]
         public IActionResult DownlodPdf(int Id)
         {
 
-            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.Form1099OIDTemplateFileName);
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099OID);
-            string pdfUrl = _form1099_OID_Service.GeneratePdf(Id, TemplatePathFile, SavePathFolder);
+            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.Form1099STemplateFileName);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099S);
+            string pdfUrl = _form1099_S_Service.GeneratePdf(Id, TemplatePathFile, SavePathFolder);
             return Json(pdfUrl);
 
         }
 
         [HttpPost]
-
-        [Route("Form1099_OID_/DownloadAll")]
+   
+        [Route("Form1099_S_/DownloadAll")]
         public IActionResult DownloadAll([FromBody] DownloadRequestModel model)
         {
 
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099OID);
-            var zipFilePath = _form1099_OID_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099S);
+            var zipFilePath = _form1099_S_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
@@ -88,14 +87,14 @@ namespace EvolvedTax_1099.Controllers
         }
 
         [HttpPost]
-        [Route("Form1099_OID_/DownloadOneFile")]
+        [Route("Form1099_S_/DownloadOneFile")]
         public IActionResult DownloadOneFile([FromBody] DownloadRequestModel model)
         {
 
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099OID);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1099S);
             //   bool containsAll = selectedPage.Contains("All");
 
             //    if (containsAll)
@@ -107,7 +106,7 @@ namespace EvolvedTax_1099.Controllers
             //    selectedPage.Add("6");
             //    selectedPage.Add("7");
             //}
-            var zipFilePath = _form1099_OID_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath);
+            var zipFilePath = _form1099_S_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
@@ -148,7 +147,7 @@ namespace EvolvedTax_1099.Controllers
 
         }
 
-        [Route("Form1099_OID_/KeepRecord")]
+        [Route("Form1099_S_/KeepRecord")]
         [HttpPost]
         public async Task<IActionResult> KeepRecord(int id)
         {
@@ -156,11 +155,11 @@ namespace EvolvedTax_1099.Controllers
             {
                 return Json(false);
             }
-            var response = await _form1099_OID_Service.KeepRecord(id);
+            var response = await _form1099_S_Service.KeepRecord(id);
             return Json(response);
         }
 
-        [Route("Form1099_OID_/DeleteRecord")]
+        [Route("Form1099_S_/DeleteRecord")]
         [HttpPost]
         public async Task<IActionResult> DeleteRecord(int id)
         {
@@ -168,9 +167,9 @@ namespace EvolvedTax_1099.Controllers
             {
                 return Json(false);
             }
-            var response = await _form1099_OID_Service.DeletePermeant(id);
+            var response = await _form1099_S_Service.DeletePermeant(id);
             return Json(response);
         }
     }
-
+ 
 }

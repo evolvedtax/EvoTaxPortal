@@ -23,6 +23,7 @@
     <Folder Include="wwwroot\Form1099DIV\" />
     <Folder Include="wwwroot\Form1099LS\" />
     <Folder Include="wwwroot\Form1099MISC\" />
+    <Folder Include="wwwroot\Form1099S\" />
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
     <Folder Include="wwwroot\1099NEC\" />
   </ItemGroup>
