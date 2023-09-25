@@ -1,4 +1,4 @@
-﻿@model IQueryable<Form1099MISCResponse>
+﻿@model IQueryable<Form1099OIDResponse>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
@@ -14,10 +14,10 @@
         text-align: center;
     }
 
-        .dropdown-menu-horizontal .dropdown-item {
-            white-space: nowrap;
-            margin-right: 10px;
-        }
+    .dropdown-menu-horizontal .dropdown-item {
+        white-space: nowrap;
+        margin-right: 10px;
+    }
 
     .center-dropdown {
         left: -650% !important;
@@ -69,12 +69,12 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
                                         <th>Recepient TIN</th>
-                                        <th>First Name</th>
-                                        <th>Name Line 2</th>
-                                        <th>Last Name/Company</th>
+                                        <th>Recepient First Name</th>
+                                        <th>Recepient Last Name</th>
+                                        <th>Company</th>
                                         <th>Address Type</th>
-                                        <th>Address Street</th>
-                                        <th>Address Appt/Suite</th>
+                                        <th>Address Line 1</th>
+                                        <th>Address Line 2</th>
                                         <th>City</th>
                                         <th>State</th>
                                         <th>Zip</th>
@@ -82,23 +82,25 @@
                                         <th>Recepient Account</th>
                                         <th>Recepient E-mail</th>
                                         <th>2nd TIN Notice</th>
-                                        <th>1 Rents</th>
-                                        <th>2 Royalties</th>
-                                        <th>3 Other income</th>
-                                        <th>4 Federal income tax withheld</th>
-                                        <th>5 Fishing boat proceeds</th>
-                                        <th>6 Medical and health care payments</th>
-                                        <th>8 Substitute payments</th>
-                                        <th>9 Crop insurance proceeds</th>
-                                        <th>10 Gross proceeds paid to an attorney</th>
-                                        <th>11 Fish purchased for resale</th>
-                                        <th>12 Section 409A deferrals</th>
-                                        <th>14 Excess golden parachute payments</th>
-                                        <th>15 Nonqualified deferred compensation</th>
-                                        <th>16 State tax withheld</th>
-                                        <th>17 State/Payer’s state no</th>
-                                        <th>17 State/Payer’s state no</th>
-                                        <th>18 State income</th>
+                                        <th>FATCA Checkbox</th>
+                                        <th>Original issue discount for the year</th>
+                                        <th>Other periodic interest</th>
+                                        <th>Early withdrawal penalty</th>
+                                        <th>Federal income tax withheld</th>
+                                        <th>Market discount</th>
+                                        <th>Acquisition premium</th>
+                                        <th>Description</th>
+                                        <th>Original issue discount on U.S. Treasury obligations</th>
+                                        <th>Investment expenses</th>
+                                        <th>Bond premium</th>
+                                        <th>Tax-exempt OID</th>
+                                        <th>State</th>
+                                        <th>State identification no.</th>
+                                        <th>State tax withheld</th>
+                                        <th>Form Category</th>
+                                        <th>Form Source</th>
+                                        <th>Batch ID</th>
+                                        <th>Tax State</th>
                                         <th>Corrected</th>
                                         <th>Action</th>
                                     </tr>
@@ -119,10 +121,9 @@
                                                         <span class="fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="Duplicate Record"></span>
                                                     }
                                                 </td>
-                                            @*    <td><input type="checkbox" class="rowCheckbox" value="@item.Id"></td>*@
                                                 <td>@item.Rcp_TIN</td>
                                                 <td>@item.First_Name</td>
-                                                <td>@item.Name_Line_2</td>
+                                                <td>@item.Name_Line2</td>
                                                 <td>@item.Last_Name_Company</td>
                                                 <td>@item.Address_Type</td>
                                                 <td>@item.Address_Deliv_Street</td>
@@ -134,23 +135,25 @@
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
                                                 <td>@item.Second_TIN_Notice</td>
+                                                <td>@item.FATCA_Checkbox</td>
                                                 <td>@item.Box_1_Amount</td>
                                                 <td>@item.Box_2_Amount</td>
                                                 <td>@item.Box_3_Amount</td>
                                                 <td>@item.Box_4_Amount</td>
                                                 <td>@item.Box_5_Amount</td>
                                                 <td>@item.Box_6_Amount</td>
+                                                <td>@item.Box_7_All_Lines</td>
                                                 <td>@item.Box_8_Amount</td>
                                                 <td>@item.Box_9_Amount</td>
                                                 <td>@item.Box_10_Amount</td>
                                                 <td>@item.Box_11_Amount</td>
-                                                <td>@item.Box_12_Amount</td>
+                                                <td>@item.Box_12_State</td>
+                                                <td>@item.Box_13_StateID</td>
                                                 <td>@item.Box_14_Amount</td>
-                                                <td>@item.Box_15_Amount</td>
-                                                <td>@item.Box_16_Amount</td>
-                                                <td>@item.Box_17_State</td>
-                                                <td>@item.Box_17_ID_Number</td>
-                                                <td>@item.Box_18_Amount</td>
+                                                <td>@item.Form_Category</td>
+                                                <td>@item.Form_Source</td>
+                                                <td>@item.Batch_ID</td>
+                                                <td>@item.Tax_State</td>
                                                 <td>@item.Corrected</td>
 
                                                 <td @IsDuplicatedStyle class="actions">
@@ -184,20 +187,6 @@
                                                             </div>
                                                         </div>
                                                     }
-                                            @*    <td>
-                                                    <div class="dropdown">
-                                                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <span class="fa fa-bars"></span>
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <div class="dropdown-menu-horizontal">
-                                                                <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
-                                                                <a class="dropdown-item" href="javascript:void()">Mail to the recipient and send to IRS</a>
-                                                                <a class="dropdown-item" href="javascript:void()">File with IRS</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>*@
                                             </tr>
                                         }
                                     }
@@ -221,7 +210,6 @@
 
 
                                 <div class="col-md-12">
-                                    @*<div class="mt-2">*@
                                     <label>Download Page(s)</label>
                                     <div>
                                         <input type="checkbox" id="All" class="download-checkbox" name="All" value="All">
@@ -230,7 +218,7 @@
 
                                     <div>
                                         <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="2">
-                                        <label for="page2">For Internal Revenue Service Center</label>
+                                        <label for="page2">Internal Revenue Service Center</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="3">
@@ -240,17 +228,14 @@
                                         <input type="checkbox" id="page4" class="download-checkbox" name="page4" value="4">
                                         <label for="page4">For Recipient</label>
                                     </div>
-
                                     <div>
                                         <input type="checkbox" id="page6" class="download-checkbox" name="page6" value="6">
-                                        <label for="page6">To be filed with recipient’s state income tax return</label>
+                                        <label for="page6">To be filed with recipient’s state income tax return, when required</label>
                                     </div>
                                     <div>
-                                        <input type="checkbox" id="page7" class="download-checkbox" name="page7" value="7">
+                                        <input type="checkbox" id="page8" class="download-checkbox" name="page8" value="8">
                                         <label for="page7">For Payer</label>
                                     </div>
-
-                                    @* </div>*@
                                 </div>
 
                                 <div class="modal-footer">
@@ -298,8 +283,8 @@
                                 className: 'btn-template',
                                 action: function (e, dt, button, config) {
                                     let url = '@Url.Action("DownloadExcel","Common")';
-                                    let params = { fileType: '@AppConstants.Form1099MISC' }
-                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099MISCExcelTemplate');
+                                    let params = { fileType: '@AppConstants.Form1099OID' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099OIDExcelTemplate');
                                 }
                             },
                             ,
@@ -376,7 +361,7 @@
                                     $('.loading').show();
                                     // Send the selectedValues to the controller using AJAX or a form submission
                                     let url = '@Url.Action("SendLinkToRecipients","Common")';
-                                    let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099MISC' }
+                                    let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099OID' }
                                     COMMON.doAjaxPostWithJSONResponse(url, params);
                                 }
                             },
@@ -411,8 +396,8 @@
             $('#changeEntity').change(function () {
                 let entityId = $('#changeEntity').val();
                 let params = { entityId: entityId };
-                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_MISC_/ChangeEntity', params);
-                window.location.href = '/Form1099_MISC_/Index'; 
+                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_OID_/ChangeEntity', params);
+                window.location.href = '/Form1099_OID_/Index';
 
                 /*
                 // Clear the existing table rows
@@ -484,8 +469,8 @@
             function uploadData(event) {
                 let entityId = $('#changeEntity').val();
                 let entityName = $('#changeEntity option:selected').text().trim();
-                //COMMON.uploadFile(event, '/Form1099_MISC_/uploadClients', { entityId, entityName });
-                uploadFile(event, '/Form1099_MISC_/uploadClients', { entityId, entityName });
+                //COMMON.uploadFile(event, '/Form1099_OID_/uploadClients', { entityId, entityName });
+                uploadFile(event, '/Form1099_OID_/uploadClients', { entityId, entityName });
             }
             bsCustomFileInput.init();
         });
@@ -541,7 +526,7 @@
             const selectedPage = selectedPages.split(',');
             const timestamp = new Date().getTime();
             const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
-            const zipFolderName = `F1099MISC_${formattedDate}.zip`;
+            const zipFolderName = `F1099OID_${formattedDate}.zip`;
             $('#ajax-loader').show();
             $("#downloadModal").modal("hide");
             fetch("@Url.Action("DownloadOneFile")", {
@@ -569,7 +554,7 @@
                 });
         }
 
-    
+
 
 
         function DownloadAll(id, selectedPages) {
@@ -578,7 +563,7 @@
             const selectedPage = selectedPages.split(',');
             const timestamp = new Date().getTime();
             const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
-            const zipFolderName = `F1099MISC_${formattedDate}.zip`;
+            const zipFolderName = `F1099OID_${formattedDate}.zip`;
 
             $('#ajax-loader').show();
             $("#downloadModal").modal("hide");
@@ -623,8 +608,8 @@
             var response = COMMON.doAjaxGetWithJSONResponse("downlodPdf", { Id: id })
             window.open(response);
         }
-        function sen(){
-            
+        function sen() {
+
         }
 
         function ConfirmForProfessionalReview(confirmTitle, confirmMessage, confirmType, confirmBtnText, url, params, gridId) {
@@ -641,7 +626,7 @@
             },
                 function (isConfirm) {
                     if (isConfirm) {
-                        
+
                         confirmed = true;
                     } else {
                         swal("Cancelled", "You have cancelled delete operation!", "error");
@@ -651,51 +636,52 @@
             return confirmed;
         };
 
-     function uploadFile  (event, url, obj) {
-                var file = event.target.files[0]; // Get the selected file
-                if (file == undefined) {
-                    return;
-                }
-                // Create a new XMLHttpRequest object
-                var xhr = new XMLHttpRequest();
-
-                // Set up the AJAX request
-                xhr.open('POST', url, true);
-                // Create a FormData object and append the file to it
-                var formData = new FormData();
-                formData.append('file', file);
-                formData.append('EntityId', obj.entityId); // Here obj is Entity Id
-                formData.append('entityName', obj.entityName); // Here obj is Entity Id
-    
-
-                $('#ajax-loader').show();
-                xhr.onload = function () {
-                    if (xhr.status === 200) {
-                        // File upload successful
-                        console.log('File uploaded successfully');
-                        $('#ajax-loader').hide();
-                        window.location.reload();
-                        // Check the response from the server
-                        var response = JSON.parse(xhr.responseText);
-                        if (response.Status) {
-                            if (response.Param == "Entity" && response.Message.length > 0) {
-   
-                            }
-                            console.log('Upload completed successfully');
-                        } else {
-                            // Continue showing the progress bar until completion record is received
-                            COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
-                        }
-                    } else {
-                        // File upload failed
-                        console.log('File upload failed');
-                    }
-                };
-
-                // Send the AJAX request
-                xhr.send(formData);
-
-
+        function uploadFile(event, url, obj) {
+            var file = event.target.files[0]; // Get the selected file
+            if (file == undefined) {
+                return;
             }
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+
+            // Set up the AJAX request
+            xhr.open('POST', url, true);
+            // Create a FormData object and append the file to it
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('EntityId', obj.entityId); // Here obj is Entity Id
+            formData.append('entityName', obj.entityName); // Here obj is Entity Id
+
+
+            $('#ajax-loader').show();
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // File upload successful
+                    console.log('File uploaded successfully');
+                    $('#ajax-loader').hide();
+                    window.location.reload();
+                    // Check the response from the server
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.Status) {
+                        if (response.Param == "Entity" && response.Message.length > 0) {
+
+                        }
+                        console.log('Upload completed successfully');
+                    } else {
+                        // Continue showing the progress bar until completion record is received
+                        COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
+                    }
+                } else {
+                    // File upload failed
+                    console.log('File upload failed');
+                }
+            };
+
+            // Send the AJAX request
+            xhr.send(formData);
+
+
+        }
     </script>
+}
 }

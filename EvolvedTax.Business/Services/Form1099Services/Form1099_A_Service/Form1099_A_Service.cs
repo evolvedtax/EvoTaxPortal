@@ -217,7 +217,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             pdfFormFields.SetField("ALenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
             pdfFormFields.SetField("AYear", currentYear);   //23
-            pdfFormFields.SetField("ALenderTIN", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("ALenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("ABorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("AAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("ABalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount
@@ -244,7 +244,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             pdfFormFields.SetField("BLenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
             pdfFormFields.SetField("BYear", currentYear);   //23
-            pdfFormFields.SetField("BLenderTIN", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("BLenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("BBorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("BAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("BBalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount
@@ -270,7 +270,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             pdfFormFields.SetField("CLenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
             pdfFormFields.SetField("CYear", currentYear);   //23
-            pdfFormFields.SetField("CLenderTIN", instResponse.Ftin);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("CLenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("CBorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("CAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("CBalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount
@@ -481,26 +481,18 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
 
                     #region CompilePDFs
-
-
                     string compileFileName;
 
                     switch (selectedPage)
                     {
                         case "2":
-                            compileFileName = "For Internal Revenue Service Center.pdf";
+                            compileFileName = "Internal Revenue Service Center.pdf";
                             break;
                         case "3":
-                            compileFileName = "For State Tax Department.pdf";
+                            compileFileName = "For Borrower.pdf";
                             break;
-                        case "4":
-                            compileFileName = "For Recipient.pdf";
-                            break;
-                        case "6":
-                            compileFileName = "To be filed with recipient’s state income tax return.pdf";
-                            break;
-                        case "7":
-                            compileFileName = "For Payer.pdf";
+                        case "5":
+                            compileFileName = "For Lender.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";
