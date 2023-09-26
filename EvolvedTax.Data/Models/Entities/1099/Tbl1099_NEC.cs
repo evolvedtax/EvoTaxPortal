@@ -78,6 +78,9 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public string? Corrected { get; set; }
         public bool IsDuplicated { get; set; }
+        public string? Province { get; set; }
+
+        public string? PostalCode { get; set; }
 
     }
 

@@ -37,6 +37,14 @@ namespace EvolvedTax.Common.Constants
         public const string NEC_1099_TemplateFileName = @"Form_1099_NEC.pdf";
         public const string INT_1099_TemplateFileName = @"Form_1099_INT.pdf";
         public const string B_1099_TemplateFileName = @"Form_1099_B.pdf";
+        public const string C_1099_TemplateFileName = @"Form_1099_C.pdf";
+        public const string CAP_1099_TemplateFileName = @"Form_1099_CAP.pdf";
+        public const string G_1099_TemplateFileName = @"Form_1099_G.pdf";
+        public const string LTC_1099_TemplateFileName = @"Form_1099_LTC.pdf";
+        public const string PATR_1099_TemplateFileName = @"Form_1099_PATR.pdf";
+        public const string R_1099_TemplateFileName = @"Form_1099_R.pdf";
+        public const string SA_1099_TemplateFileName = @"Form_1099_SA.pdf";
+        public const string SB_1099_TemplateFileName = @"Form_1099_SB.pdf";
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
         public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
         public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
@@ -45,22 +53,65 @@ namespace EvolvedTax.Common.Constants
         //public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
         public const string Form1099MISCTemplateFileName = @"f1099msc.pdf";
         public const string Form1099ATemplateFileName = @"f1099a.pdf";
+        public const string Form1099DIVTemplateFileName = @"f1099div.pdf";
+        public const string Form1099LSTemplateFileName = @"f1099ls.pdf";
+        public const string Form1099KTemplateFileName = @"f1099k.pdf";
+        public const string Form1099OIDTemplateFileName = @"f1099oid.pdf";
+        public const string Form1099QTemplateFileName = @"f1099q.pdf";
+        public const string Form1099STemplateFileName = @"f1099s.pdf";
 
         public const string Form1099MISCExcelTemplate = "Form1099MISCTemplate.xlsx";
         public const string Form1099AExcelTemplate = "Form1099ATemplate.xlsx";
         public const string Form1099NECExcelTemplate = "Form1099NECTemplate.xlsx";
         public const string Form1099INTExcelTemplate = "Form1099INTTemplate.xlsx";
+        public const string Form1099DIVExcelTemplate = "Form1099DIVTemplate.xlsx";
+        public const string Form1099LSExcelTemplate = "Form1099LSTemplate.xlsx";
+        public const string Form1099KExcelTemplate = "Form1099Kemplate.xlsx";
+        public const string Form1099OIDExcelTemplate = "Form1099OIDemplate.xlsx";
+        public const string Form1099QExcelTemplate = "Form1099Qemplate.xlsx";
+        public const string Form1099SExcelTemplate = "Form1099Semplate.xlsx";
         public const string Form1099_B_ExcelTemplate = "Form1099_B_Template.xlsx";
+        public const string Form1099_C_ExcelTemplate = "Form1099_C_Template.xlsx";
+        public const string Form1099_CAP_ExcelTemplate = "Form1099_CAP_Template.xlsx";
+        public const string Form1099_G_ExcelTemplate = "Form1099_G_Template.xlsx";
+        public const string Form1099_LTC_ExcelTemplate = "Form1099_LTC_Template.xlsx";
+        public const string Form1099_PATR_ExcelTemplate = "Form1099_PATR_Template.xlsx";
+        public const string Form1099_R_ExcelTemplate = "Form1099_R_Template.xlsx";
+        public const string Form1099_SA_ExcelTemplate = "Form1099_SA_Template.xlsx";
+        public const string Form1099_SB_ExcelTemplate = "Form1099_SB_Template.xlsx";
+
 
         public const string Form1099MISC = @"Form1099MISC";
         public const string Form1099A = @"Form1099A";
         public const string Form1099NEC = @"Form1099NEC";
         public const string Form1099INT = @"Form1099INT";
+        public const string Form1099DIV = @"Form1099DIV";
+        public const string Form1099LS = @"Form1099LS";
+        public const string Form1099K = @"Form1099K";
+        public const string Form1099OID = @"Form1099OID";
+        public const string Form1099Q = @"Form1099Q";
+        public const string Form1099S = @"Form1099S";
         public const string Form1099B = @"Form1099B";
+        public const string Form1099C = @"Form1099C";
+        public const string Form1099CAP = @"Form1099CAP";
+        public const string Form1099G = @"Form1099G";
+        public const string Form1099LTC = @"Form1099LTC";
+        public const string Form1099PATR = @"Form1099PATR";
+        public const string Form1099R = @"Form1099R";
+        public const string Form1099SA = @"Form1099SA";
+        public const string Form1099SB = @"Form1099SB";
 
         public const string NEC1099Form = @"Form_1099NEC";
         public const string INT1099Form = @"Form_1099INT";
         public const string B1099Form = @"Form_1099B";
+        public const string C1099Form = @"Form_1099C";
+        public const string CAP1099Form = @"Form_1099CAP";
+        public const string G1099Form = @"Form_1099G";
+        public const string LTC1099Form = @"Form_1099LTC";
+        public const string PATR1099Form = @"Form_1099PATR";
+        public const string R1099Form = @"Form_1099R";
+        public const string SA1099Form = @"Form_1099SA";
+        public const string SB1099Form = @"Form_1099SB";
         public const string FormPartiallySave = @"Form partially saved";
 
         //-----------BUTTON CONSTANTS--------------------//
@@ -77,7 +128,7 @@ namespace EvolvedTax.Common.Constants
         //-----------EMAIL TEMPLATE---------------------//
         public static string EmailToClient = @"Dear {{Name}},
 <br/><br/>
-We hope this email finds you well. As you are aware, {{InstituteName}} is required to comply with tax laws and regulations of the United States.
+We hope this e-mail finds you well. As you are aware, {{InstituteName}} is required to comply with tax laws and regulations of the United States.
 <br/><br/>
 To ensure compliance with these regulations, we kindly request that you provide us with your tax information as soon as possible using our online portal, EvoTax.
 <br/>
@@ -129,7 +180,7 @@ Regards,
 Technology Team at Evolved LLC";
         public static string InvitationEmailForSignUp = @"Dear {{Name}},
                                                         <br /><br />
-                                                        We hope this email finds you well. <strong>{{administrator}}</strong> invited you to register with EvoTax Portal.
+                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> invited you to register with EvoTax Portal.
                                                         <br /><br />
                                                         To access the EvoTax Portal, please follow the instructions below:
                                                         <br /><br />
@@ -173,7 +224,7 @@ Technology Team at Evolved LLC";
                                                         Technology Team at Evolved LLC";
         public static string InvitationEmailForShareSignUp = @"Dear {{Name}},
                                                         <br /><br />
-                                                        We hope this email finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to register with EvoTax Portal and access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
+                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to register with EvoTax Portal and access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
                                                         <br /><br />
                                                         To access the EvoTax Portal, please follow the instructions below:
                                                         <br /><br />
@@ -217,7 +268,7 @@ Technology Team at Evolved LLC";
                                                         Technology Team at Evolved LLC";
         public static string InvitationEmailForShare = @"Dear {{Name}},
                                                         <br /><br />
-                                                        We hope this email finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
+                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
                                                         <br /><br />
                                                         To access the EvoTax Portal, please follow the instructions below:
                                                         <br /><br />
@@ -308,10 +359,10 @@ Technology Team at Evolved LLC";
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
         public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used in the EvoTax Portal for further process. <br/><br/> {{OTP}} <br/><br/>Please check your email. The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
-        public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your email. Please find below the link to accept or reject. <br/><br/> <a href=""{{link}}"">Click here</a> <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
+        public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your e-mail. Please find below the link to accept or reject. <br/><br/> <a href=""{{link}}"">Click here</a> <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string RequestForChangeInstituteName = @"Dear Administrator(s), 
                                                         <br /><br />
-                                                        We hope this email finds you well. <strong>{{adminUser}}</strong> of <strong>{{institute}}</strong> requested to change the name of the institute from ""{{oldInstituteName}}"" to ""{{newInstituteName}}"".
+                                                        We hope this e-mail finds you well. <strong>{{adminUser}}</strong> of <strong>{{institute}}</strong> requested to change the name of the institute from ""{{oldInstituteName}}"" to ""{{newInstituteName}}"".
                                                         <br /><br />
                                                         Your approval is required in this regard.
                                                         <br /><br />
@@ -372,11 +423,11 @@ Technology Team at Evolved LLC";
         public const string EmailForExpireSignUp = @"
         Dear {{InviteeName}},
         <br><br>
-        We hope this email finds you well. Below user(s) invite links have expired due to non-acceptance of the invites:
+        We hope this e-mail finds you well. Below user(s) invite links have expired due to non-acceptance of the invites:
         <br><br>
         <table border='1'>
             <tr>
-                <th>Name of the User/Email</th>
+                <th>Name of the User/E-mail</th>
                 <th>Name of the Entity</th>
                 <th>Role</th>
                 <th>Invite Date</th>

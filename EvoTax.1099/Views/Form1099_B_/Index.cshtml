@@ -102,7 +102,7 @@
 
                                         <th>Rcp Account</th>
 
-                                        <th>Rcp Email</th>
+                                        <th>Rcp E-mail</th>
 
                                         <th>Second TIN Notice</th>
 
@@ -224,8 +224,8 @@
                                                 <td>@item.CUSIP_No</td>
                                                 <td>@item.Eight949_Code</td>
                                                 <td>@item.Box_1a_Description</td>
-                                                <td>@item.Box_1b_Date</td>
-                                                <td>@item.Box_1c_Date</td>
+                                                <td>@item.Box_1b_Date?.ToString("MM/dd/yyyy")</td>
+                                                <td>@item.Box_1c_Date?.ToString("MM/dd/yyyy")</td>
                                                 <td>@item.Box_1d_Amount</td>
                                                 <td>@item.Box_1e_Amount</td>
                                                 <td>@item.Box_1f_Amount</td>
@@ -517,7 +517,7 @@
                                     }
                                 },
                                 {
-                                    text: '<i class="fa fa-send"></i> Electronic Acceptance Email',
+                                    text: '<i class="fa fa-send"></i> Electronic Acceptance E-mail',
                                     className: 'btn-imp-data',
                                     action: function (e, dt, button, config) {
                                         var selectedValues = [];

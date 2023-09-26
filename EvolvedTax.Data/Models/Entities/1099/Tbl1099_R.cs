@@ -66,7 +66,7 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public decimal? Box_10_Amount { get; set; }
 
-        public int? Box_11__Roth_Year { get; set; }
+        public int? Box_11_Roth_Year { get; set; }
 
         public string? Box_12_FATCA_Check { get; set; }
 
@@ -106,6 +106,9 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public int? InstID { get; set; }
         public bool IsDuplicated { get; set; }
+        public string? Province { get; set; }
+
+        public string? PostalCode { get; set; }
 
     }
 

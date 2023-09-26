@@ -1,0 +1,561 @@
+﻿@using EvolvedTax.Data.Models.Entities._1099;
+@{
+    @model IEnumerable<Tbl1099_SB>
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+
+
+    .dropdown-menu-horizontal {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+
+
+        .dropdown-menu-horizontal .dropdown-item {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+
+
+    .center-dropdown {
+        left: -650% !important;
+        transform: translateX(-50%) !important;
+    }
+
+    .dropdown-toggle::after {
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: none;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+
+    .actions {
+        text-align: center;
+    }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto">Select Entity for Further Details</label>
+                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:fit-content">
+                                </select>
+                            </div>
+                        </div>
+                        <div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
+                            <div style="display:flex">
+                                <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
+                                        <label class="custom-file-label" for="uploadClients">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>Recepient TIN</th>
+                                        <th>Recepient First Name</th>
+                                        <th>Recepient Last Name</th>
+                                        <th>Company</th>
+                                        <th>Address Type</th>
+                                        <th>Address Line 1</th>
+                                        <th>Address Line 2</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Zip</th>
+                                        <th>Country</th>
+                                        <th>Recepient Account</th>
+                                        <th>Recepient Email</th>
+                                        <th>Investment in contract</th>
+                                        <th>Surrender amount</th>
+                                        <th>Issuer’s information</th>
+                                        <th>Form Category</th>
+                                        <th>Form Source</th>
+                                        <th>Tax State</th>
+                                        <th>Is Corrected Form of 1099</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        @foreach (var item in Model)
+                                        {
+                                            string IsDuplicatedStyle = string.Empty;
+                                            @if (item.IsDuplicated) { IsDuplicatedStyle = "style=color:red"; }
+                                            <tr @IsDuplicatedStyle>
+                                                @*       <td><input type="checkbox" class="rowCheckbox" value="@item.Id"></td>*@
+                                                <td @IsDuplicatedStyle>
+                                                    <input type="checkbox" class="rowCheckbox" value="@item.Id">
+                                                    @if (item.IsDuplicated)
+                                                    {
+                                                        <span class="fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="Duplicate Record"></span>
+                                                    }
+                                                </td>
+                                                <td>@item.Rcp_TIN</td>
+                                                <td>@item.Last_Name_Company</td>
+                                                <td>@item.First_Name</td>
+                                                <td>@item.Name_Line_2</td>
+                                                <td>@item.Address_Type</td>
+                                                <td>@item.Address_Deliv_Street</td>
+                                                <td>@item.Address_Apt_Suite</td>
+                                                <td>@item.City</td>
+                                                <td>@item.State</td>
+                                                <td>@item.Zip</td>
+                                                <td>@item.Country</td>
+                                                <td>@item.Rcp_Account</td>
+                                                <td>@item.Rcp_Email</td>
+                                                <td>@item.Box_1_Amount</td>
+                                                <td>@item.Box_2_Amount</td>
+                                                <td>@item.Issuer_Contact_Name</td>
+                                                <td>@item.Form_Category</td>
+                                                <td>@item.Form_Source</td>
+                                                <td>@item.Tax_State</td>
+                                                @if (@item.Corrected == "1")
+                                                {
+                                                    <td>Yes</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No</td>
+                                                }
+
+
+                                                <td @IsDuplicatedStyle class="actions">
+                                                    @if (item.IsDuplicated)
+                                                    {
+                                                        <div class="dropdown">
+                                                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="fa fa-bars"></span>
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <div class="dropdown-menu-horizontal">
+                                                                    <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','KeepRecord','id=@item.Id','')">Keep</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="dropdown">
+                                                            <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <span class="fa fa-bars"></span>
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <div class="dropdown-menu-horizontal">
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
+                                                                    <a class="dropdown-item" href="javascript:void()">Mail to the recipient and send to IRS</a>
+                                                                    <a class="dropdown-item" href="javascript:void()">File with IRS</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Modal -->
+                <div class="modal inmodal" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content animated fadeIn">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 id="shareModelHeader" class="modal-title"></h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <input id="hdnSelectedId" name="hdnSelectedId" type="hidden" />
+                                <input id="hdnSelectedPages" name="hdnSelectedPages" type="hidden" />
+
+
+                                <div class="col-md-12">
+                                    @*<div class="mt-2">*@
+                                    <label>Download Page(s)</label>
+                                    <div>
+                                        <input type="checkbox" id="All" class="download-checkbox" name="All" value="All">
+                                        <label for="All">All Pages</label>
+                                    </div>
+
+                                    <div>
+                                        <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="1">
+                                        <label for="page2">Internal Revenue Service Center </label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="2">
+                                        <label for="page3">For Seller</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="page4" class="download-checkbox" name="page4" value="4">
+                                        <label for="page4">For Issuer</label>
+                                    </div>
+                                    @* </div>*@
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" id="downloadBtn">Download All In Separate File</button>
+                                    <button type="button" class="btn btn-primary" id="downloadBtnOne">Download All In One File</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @section Scripts {
+        <script type="text/javascript">
+
+            function DownloadFile(id) {
+                var response = COMMON.doAjaxGetWithJSONResponse("downlodPdf", { Id: id })
+                window.open(response);
+
+            }
+            $(document).ready(function () {
+                var table = $('.dataTables-example').DataTable({
+                    "order": [[0, "desc"]],
+                    pageLength: 25,
+                    fixedColumns: {
+                        left: 3,
+                        right: 1
+                    },
+                    fixedHeader: true,
+                    scrollX: true,
+                    dom: '<"html5buttons"B>lTfgitp',
+                    buttons: [
+                        {
+                            extend: 'collection',
+                            text: '<i class="fa fa-ellipsis-h"></i>',
+                            className: 'btn-menu-toggle',
+                            buttons: [
+                                {
+                                    text: '<i class="fa fa-download"></i> Download New Template',
+                                    className: 'btn-template',
+                                    action: function (e, dt, button, config) {
+                                        let url = '@Url.Action("DownloadExcel","Common")';
+                                        let params = { fileType: '@AppConstants.Form1099SB' }
+                                        COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099_SB_ExcelTemplate');
+                                    }
+                                },
+                                {
+                                    text: '<i class= "fa fa-download" ></i> Download In PDF',
+                                    className: 'btn-template',
+                                    action: function (e, dt, button, config) {
+                                        // Get selected rows
+                                        var selectedRows = [];
+                                        $('.rowCheckbox:checked').each(function () {
+                                            var checkboxValue = $(this).val();
+                                            //var rowData = dt.row('#' + checkboxValue).data();
+
+                                            if (checkboxValue) {
+                                                selectedRows.push(checkboxValue);
+                                            }
+                                        });
+                                        if (selectedRows.length === 0) {
+                                            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                            return;
+                                        }
+
+                                        //DownloadAll(selectedRows);
+                                        showModalForDownload(selectedRows);
+
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    title: 'EvolvedTax',
+                                    text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                    className: 'btn-excel'
+                                },
+
+                                {
+                                    text: '<i class="fa fa-upload"></i> Import Data',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+                                        $('#uploadDataDiv').prop('hidden', false);
+                                    }
+                                },
+                                {
+                                    text: '<i class="fa fa-send"></i> Mail to the recipient and send to IRS',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+                                        COMMON.confirmAlertWitMessages("Professional Review Confirmation", "Kindly note that this service is chargable. If you agree please click on confirm for further process.", "info", "Confirm", "", "", "");
+                                    }
+                                },
+                                {
+                                    text: '<i class="fa fa-send"></i> File with IRS',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+
+                                    }
+                                },
+                                {
+                                    text: '<i class="fa fa-send"></i> Electronic Acceptance Email',
+                                    className: 'btn-imp-data',
+                                    action: function (e, dt, button, config) {
+                                        var selectedValues = [];
+                                        $('.rowCheckbox:checked').each(function () {
+                                            selectedValues.push($(this).val());
+                                        });
+
+                                        if (selectedValues.length === 0) {
+                                            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                            return;
+                                        }
+
+                                        $('.loading').show();
+                                        // Send the selectedValues to the controller using AJAX or a form submission
+                                        let url = '@Url.Action("SendLinkToRecipients","Common")';
+                                        let params = { selectedValues: selectedValues, form: '@AppConstants.Form1099SB' }
+                                        COMMON.doAjaxPostWithJSONResponse(url, params);
+                                    }
+                                },
+                            ],
+                        },
+                        {
+                            text: 'Share <i class="fa fa-share"></i>',
+                            className: 'email-btn',
+                            action: function (e, dt, button, config) {
+                                $("#shareModal").modal("show");
+                            }
+                        },
+                    ],
+                    initComplete: function () {
+                        //$('.dataTables_length').hide(); // Hide the original page length dropdown
+                        $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                        // Add custom CSS class to the dropdown list container
+                        $('.btn-menu-toggle').on('click', function () {
+                            var dropdown = $(this).siblings('.dt-button-collection');
+                            dropdown.addClass('center-dropdown');
+                        });
+                    },
+                });
+
+                // Get the file input element
+                var fileInput = document.getElementById('uploadClients');
+                // Add an event listener to the file input
+                fileInput.addEventListener('change', uploadData);
+                function uploadData(event) {
+                    let entityId = 0;
+                    let entityName = '';
+
+                    uploadFile(event, '/Form1099_SB_/uploadClients', { entityId, entityName });
+                }
+                bsCustomFileInput.init();
+            })
+
+
+            // Select All checkbox
+            $('#selectAll').change(function () {
+                $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
+                //$('.email-btn').text('Send Email to All');
+                var selectedValues = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+                if (selectedValues.length === 0) {
+                    //$('.email-btn').text('Send Email');
+                }
+            });
+
+            $('#importData').click(function () {
+                $('#uploadDataDiv').prop('hidden', false);
+            });
+
+
+            function showModalForDownload(ids) {
+                // $("#hdnSelectedId").val(ids.join(","));
+                $("#hdnSelectedId").val(ids);
+                $("#shareModal").modal("show");
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Attach a click event listener to the "Download" button
+                const downloadButton = document.getElementById("downloadBtn");
+                downloadButton.addEventListener("click", function () {
+                    const selectedCheckboxes = $(".download-checkbox:checked");
+                    const selectedPages = selectedCheckboxes.map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    // Set the value of the hidden field to the selected pages
+                    $("#hdnSelectedPages").val(selectedPages.join(','));
+
+                    DownloadAll($("#hdnSelectedId").val(), $("#hdnSelectedPages").val());
+                });
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Attach a click event listener to the "Download" button
+                const downloadButton = document.getElementById("downloadBtnOne");
+                downloadButton.addEventListener("click", function () {
+                    const selectedCheckboxes = $(".download-checkbox:checked");
+                    const selectedPages = selectedCheckboxes.map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    // Set the value of the hidden field to the selected pages
+                    $("#hdnSelectedPages").val(selectedPages.join(','));
+
+                    DownloadOneAll($("#hdnSelectedId").val(), $("#hdnSelectedPages").val());
+                });
+            });
+
+            function DownloadOneAll(id, selectedPages) {
+                const ids = id.split(',');
+                const selectedPage = selectedPages.split(',');
+                const timestamp = new Date().getTime();
+                const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
+                const zipFolderName = `F1099SB_${formattedDate}.zip`;
+                $('#ajax-loader').show();
+                $("#shareModal").modal("hide");
+                fetch("@Url.Action("DownloadOneFile")", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({ ids, selectedPage })
+                })
+                    .then((response) => {
+                        response.blob().then((blob) => {
+                            const downloadUrl = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.setAttribute('href', downloadUrl);
+                            link.setAttribute('download', zipFolderName);
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            window.URL.revokeObjectURL(link.href);
+                            document.body.removeChild(link);
+
+                            $('#ajax-loader').hide();
+
+                        })
+                    });
+            }
+
+
+            function DownloadAll(id, selectedPages) {
+                const ids = id.split(',');
+                const selectedPage = selectedPages.split(',');
+                const timestamp = new Date().getTime();
+                const formattedDate = new Date(timestamp).toLocaleDateString(); // Format the timestamp as date only
+                const zipFolderName = `F1099SB_${formattedDate}.zip`;
+
+                $('#ajax-loader').show();
+                $("#shareModal").modal("hide");
+                fetch("@Url.Action("DownloadAll")", {
+                    method: "POST",
+                    headers: {
+                        "content-type": "application/json"
+                    },
+                    body: JSON.stringify({ ids, selectedPage })
+                })
+                    .then((response) => {
+                        response.blob().then((blob) => {
+                            const downloadUrl = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.setAttribute('href', downloadUrl);
+                            link.setAttribute('download', zipFolderName);
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            window.URL.revokeObjectURL(link.href);
+                            document.body.removeChild(link);
+
+                            $('#ajax-loader').hide();
+
+                        })
+                    });
+            }
+
+            // On change the entity
+            $('#changeEntity').change(function () {
+                let entityId = $('#changeEntity').val();
+                let params = { entityId: entityId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/Form1099_SB_/ChangeEntity', params);
+                window.location.href = '/Form1099_SB_/Index';
+
+            });
+
+            function uploadFile(event, url, obj) {
+                var file = event.target.files[0]; // Get the selected file
+                if (file == undefined) {
+                    return;
+                }
+                // Create a new XMLHttpRequest object
+                var xhr = new XMLHttpRequest();
+
+                // Set up the AJAX request
+                xhr.open('POST', url, true);
+                // Create a FormData object and append the file to it
+                var formData = new FormData();
+                formData.append('file', file);
+                formData.append('EntityId', $('#changeEntity').val()); // Here obj is Entity Id
+                formData.append('entityName', $('#changeEntity option:selected').text().trim()); // Here obj is Entity Id
+
+
+                $('#ajax-loader').show();
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // File upload successful
+                        console.log('File uploaded successfully');
+                        $('#ajax-loader').hide();
+                        window.location.reload();
+                        // Check the response from the server
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.Status) {
+                            if (response.Param == "Entity" && response.Message.length > 0) {
+
+                            }
+                            console.log('Upload completed successfully');
+                        } else {
+                            // Continue showing the progress bar until completion record is received
+                            COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
+                        }
+                    } else {
+                        // File upload failed
+                        console.log('File upload failed');
+                    }
+                };
+
+                // Send the AJAX request
+                xhr.send(formData);
+            }
+        </script>
+    }

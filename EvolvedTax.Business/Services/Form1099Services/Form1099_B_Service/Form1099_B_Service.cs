@@ -189,16 +189,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     List.Add(entity);
                 }
 
-                try
-                {
                     await _evolvedtaxContext.Tbl1099_B.AddRangeAsync(List);
                     await _evolvedtaxContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    Console.WriteLine(ex.ToString());
-                }
+              
 
 
                 return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };

@@ -100,6 +100,11 @@ namespace EvolvedTax.Data.Models.Entities._1099
 
         public int? InstID { get; set; }
         public bool IsDuplicated { get; set; }
+        public string? PSE_Checkbox { get; set; }
+        public string? Other_3rd_Party_Checkbox { get; set; }
+        public string? PSE_Name_Telephone_Number { get; set; }
+        public string? Province { get; set; }
+        public string? PostalCode { get; set; }
 
     }
 

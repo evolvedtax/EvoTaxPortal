@@ -8,11 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\NewFolder1\**" />
+    <Compile Remove="wwwroot\NewFolder\**" />
+    <Content Remove="wwwroot\NewFolder1\**" />
+    <Content Remove="wwwroot\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\NewFolder1\**" />
+    <EmbeddedResource Remove="wwwroot\NewFolder\**" />
+    <None Remove="wwwroot\NewFolder1\**" />
+    <None Remove="wwwroot\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\Form1099A\" />
+    <Folder Include="wwwroot\Form1099DIV\" />
+    <Folder Include="wwwroot\Form1099LS\" />
     <Folder Include="wwwroot\Form1099MISC\" />
+    <Folder Include="wwwroot\Form1099S\" />
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
     <Folder Include="wwwroot\1099NEC\" />
-    <Folder Include="wwwroot\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
