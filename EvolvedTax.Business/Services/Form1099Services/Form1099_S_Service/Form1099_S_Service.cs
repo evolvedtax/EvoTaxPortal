@@ -100,36 +100,54 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
+                // Define a dictionary to map column names to their indexes
+                Dictionary<string, int> columnMapping = new Dictionary<string, int>();
 
+                // Assuming you have access to the header row (excelHeaderRow)
+                IRow excelHeaderRow = sheet.GetRow(0);
+
+                // Loop through the header row to populate the columnMapping dictionary
+                for (int columnIndex = 0; columnIndex < excelHeaderRow.LastCellNum; columnIndex++)
+                {
+                    ICell cell = excelHeaderRow.GetCell(columnIndex);
+                    if (cell != null)
+                    {
+                        // Assuming the header text is stored as a string
+                        string columnHeader = cell.ToString() ?? string.Empty;
+                        columnMapping[columnHeader] = columnIndex;
+                    }
+                }
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
 
                     var request = new Tbl1099_S
                     {
-                        Rcp_TIN = excelRow.GetCell(0)?.ToString() ?? string.Empty,
-                        Last_Name_Company = excelRow.GetCell(1)?.ToString() ?? string.Empty,
-                        First_Name = excelRow.GetCell(2)?.ToString() ?? string.Empty,
-                        Name_Line_2 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
-                        Address_Type = excelRow.GetCell(4)?.ToString() ?? string.Empty,
-                        Address_Deliv_Street = excelRow.GetCell(5)?.ToString() ?? string.Empty,
-                        Address_Apt_Suite = excelRow.GetCell(6)?.ToString() ?? string.Empty,
-                        City = excelRow.GetCell(7)?.ToString() ?? string.Empty,
-                        State = excelRow.GetCell(8)?.ToString() ?? string.Empty,
-                        Zip = excelRow.GetCell(9)?.ToString() ?? string.Empty,
-                        Country = excelRow.GetCell(10)?.ToString() ?? string.Empty,
-                        Rcp_Account = excelRow.GetCell(11)?.ToString() ?? string.Empty,
-                        Rcp_Email = excelRow.GetCell(12)?.ToString() ?? string.Empty,
-                        Box_1_Date = excelRow.GetCell(13)?.ToString() == null ? null : Convert.ToDateTime(excelRow.GetCell(13).ToString()),
-                        Box_2_Amount = excelRow.GetCell(14)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(14)?.ToString()) : 0,
-                        Box_3_AllLine = excelRow.GetCell(15)?.ToString() ?? string.Empty,
-                        Box_4_Checkbox = (excelRow.GetCell(16)?.ToString() != null && (bool)excelRow.GetCell(16)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        Box_5_Checkbox = (excelRow.GetCell(17)?.ToString() != null && (bool)excelRow.GetCell(17)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        Box_6_Amount = excelRow.GetCell(18)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(18)?.ToString()) : 0,
-                        Form_Category = excelRow.GetCell(19)?.ToString() ?? string.Empty,
-                        Form_Source = excelRow.GetCell(20)?.ToString() ?? string.Empty,
-                        Tax_State = excelRow.GetCell(21)?.ToString() ?? string.Empty,
-                        Corrected = (excelRow.GetCell(22)?.ToString() != null && (bool)excelRow.GetCell(22)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Rcp_TIN = excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString() ?? string.Empty,
+                        Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString() ?? string.Empty,
+                        First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString() ?? string.Empty,
+                        Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString() ?? string.Empty,
+                        Address_Type = excelRow.GetCell(columnMapping["Address Type"])?.ToString() ?? string.Empty,
+                        Address_Deliv_Street = excelRow.GetCell(columnMapping["Address Line 1"])?.ToString() ?? string.Empty,
+                        Address_Apt_Suite = excelRow.GetCell(columnMapping["Address Line 2"])?.ToString() ?? string.Empty,
+                        City = excelRow.GetCell(columnMapping["City"])?.ToString() ?? string.Empty,
+                        State = excelRow.GetCell(columnMapping["State"])?.ToString() ?? string.Empty,
+                        Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString() ?? string.Empty,
+                        Country = excelRow.GetCell(columnMapping["Country"])?.ToString() ?? string.Empty,
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString() ?? string.Empty,
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString() ?? string.Empty,
+                        Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString() ?? string.Empty,
+                        Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString() ?? string.Empty,
+                        Box_1_Date = excelRow.GetCell(columnMapping["Box 1 Date"])?.ToString() == null ? null : Convert.ToDateTime(excelRow.GetCell(columnMapping["Box 1 Date"]).ToString()),
+                        Box_2_Amount = excelRow.GetCell(columnMapping["Box 2 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2 Amount"])?.ToString()) : 0,
+                        Box_3_AllLine = excelRow.GetCell(columnMapping["Box 3 All Lines"])?.ToString() ?? string.Empty,
+                        Box_4_Checkbox = (excelRow.GetCell(columnMapping["Box 4 Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box 4 Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_5_Checkbox = (excelRow.GetCell(columnMapping["Box 5 Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box 5 Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_6_Amount = excelRow.GetCell(columnMapping["Box 6 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 6 Amount"])?.ToString()) : 0,
+                        Form_Category = excelRow.GetCell(columnMapping["Form Category"])?.ToString() ?? string.Empty,
+                        Form_Source = excelRow.GetCell(columnMapping["Form Source"])?.ToString() ?? string.Empty,
+                        Tax_State = excelRow.GetCell(columnMapping["Tax State"])?.ToString() ?? string.Empty,
+                        Corrected = (excelRow.GetCell(columnMapping["Is Corrected"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Is Corrected"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
                         Created_By = UserId,
                         Created_Date = DateTime.Now,
                         InstID = InstId,
