@@ -153,6 +153,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
                         State = excelRow.GetCell(columnMapping["State"])?.ToString() ?? string.Empty,
                         Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString() ?? string.Empty,
                         Country = excelRow.GetCell(columnMapping["Country"])?.ToString() ?? string.Empty,
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString() ?? string.Empty,
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString() ?? string.Empty,
                         Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString() ?? string.Empty,
                         Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString() ?? string.Empty,
                         Second_TIN_Notice = (excelRow.GetCell(columnMapping["2nd TIN Notice"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["2nd TIN Notice"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",

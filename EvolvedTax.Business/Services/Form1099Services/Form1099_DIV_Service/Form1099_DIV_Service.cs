@@ -8,11 +8,15 @@ using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1099;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.parser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Collections.Generic;
 using System.IO.Compression;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -118,54 +122,71 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
+                // Define a dictionary to map column names to their indexes
+                Dictionary<string, int> columnMapping = new Dictionary<string, int>();
 
+                // Assuming you have access to the header row (excelHeaderRow)
+                IRow excelHeaderRow = sheet.GetRow(0);
+
+                // Loop through the header row to populate the columnMapping dictionary
+                for (int columnIndex = 0; columnIndex < excelHeaderRow.LastCellNum; columnIndex++)
+                {
+                    ICell cell = excelHeaderRow.GetCell(columnIndex);
+                    if (cell != null)
+                    {
+                        // Assuming the header text is stored as a string
+                        string columnHeader = cell.ToString() ?? string.Empty;
+                        columnMapping[columnHeader] = columnIndex;
+                    }
+                }
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
-
                     var request = new Tbl1099_DIV
                     {
-                        Rcp_TIN = excelRow.GetCell(0)?.ToString() ?? string.Empty,
-                        Last_Name_Company = excelRow.GetCell(1)?.ToString() ?? string.Empty,
-                        First_Name = excelRow.GetCell(2)?.ToString() ?? string.Empty,
-                        Name_Line_2 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
-                        Address_Type = excelRow.GetCell(4)?.ToString() ?? string.Empty,
-                        Address_Deliv_Street = excelRow.GetCell(5)?.ToString() ?? string.Empty,
-                        Address_Apt_Suite = excelRow.GetCell(6)?.ToString() ?? string.Empty,
-                        City = excelRow.GetCell(7)?.ToString() ?? string.Empty,
-                        State = excelRow.GetCell(8)?.ToString() ?? string.Empty,
-                        Zip = excelRow.GetCell(9)?.ToString() ?? string.Empty,
-                        Country = excelRow.GetCell(10)?.ToString() ?? string.Empty,
-                        Rcp_Account = excelRow.GetCell(11)?.ToString() ?? string.Empty,
-                        Rcp_Email = excelRow.GetCell(12)?.ToString() ?? string.Empty,
-                        Second_TIN_Notice = (excelRow.GetCell(13)?.ToString() != null && (bool)excelRow.GetCell(13)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        FATCA_Checkbox = (excelRow.GetCell(14)?.ToString() != null && (bool)excelRow.GetCell(14)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        Box_1a_Amount = excelRow.GetCell(15)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(15)?.ToString()) : 0,
-                        Box_1b_Amount = excelRow.GetCell(16)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(16)?.ToString()) : 0,
-                        Box_2a_Amount = excelRow.GetCell(17)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(17)?.ToString()) : 0,
-                        Box_2b_Amount = excelRow.GetCell(18)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(18)?.ToString()) : 0,
-                        Box_2c_Amount = excelRow.GetCell(19)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(19)?.ToString()) : 0,
-                        Box_2d_Amount = excelRow.GetCell(20)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(20)?.ToString()) : 0,
-                        Box_2e_Amount = excelRow.GetCell(21)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(21)?.ToString()) : 0,
-                        Box_2f_Amount = excelRow.GetCell(22)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(22)?.ToString()) : 0,
-                        Box_3_Amount = excelRow.GetCell(23)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(23)?.ToString()) : 0,
-                        Box_4_Amount = excelRow.GetCell(24)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(24)?.ToString()) : 0,
-                        Box_5_Amount = excelRow.GetCell(25)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(25)?.ToString()) : 0,
-                        Box_6_Amount = excelRow.GetCell(26)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(26)?.ToString()) : 0,
-                        Box_7_Amount = excelRow.GetCell(27)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(27)?.ToString()) : 0,
-                        Box_8_Foreign = excelRow.GetCell(28)?.ToString() ?? string.Empty,
-                        Box_9_Amount = excelRow.GetCell(29)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(29)?.ToString()) : 0,
-                        Box_10_Amount = excelRow.GetCell(30)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(30)?.ToString()) : 0,
-                        Box_11_Amount = excelRow.GetCell(31)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(31)?.ToString()) : 0,
-                        Box_12_Amount = excelRow.GetCell(32)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(32)?.ToString()) : 0,
-                        Box_13_Amount = excelRow.GetCell(33)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(33)?.ToString()) : 0,
-                        Box_14_State = excelRow.GetCell(34)?.ToString() ?? string.Empty,
-                        Box_15_ID_Number = excelRow.GetCell(35)?.ToString() ?? string.Empty,
-                        Box_16_Amount = excelRow.GetCell(36)?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(15)?.ToString()) : 0,
-                        Form_Category = excelRow.GetCell(37)?.ToString() ?? string.Empty,
-                        Form_Source = excelRow.GetCell(38)?.ToString() ?? string.Empty,
-                        Tax_State = excelRow.GetCell(39)?.ToString() ?? string.Empty,
-                        Corrected = (excelRow.GetCell(40)?.ToString() != null && (bool)excelRow.GetCell(40)?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Rcp_TIN = excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString() ?? string.Empty,
+                        Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString() ?? string.Empty,
+                        First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString() ?? string.Empty,
+                        Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString() ?? string.Empty,
+                        Address_Type = excelRow.GetCell(columnMapping["Address Type"])?.ToString() ?? string.Empty,
+                        Address_Deliv_Street = excelRow.GetCell(columnMapping["Address Line 1"])?.ToString() ?? string.Empty,
+                        Address_Apt_Suite = excelRow.GetCell(columnMapping["Address Line 2"])?.ToString() ?? string.Empty,
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString() ?? string.Empty,
+                        City = excelRow.GetCell(columnMapping["City"])?.ToString() ?? string.Empty,
+                        State = excelRow.GetCell(columnMapping["State"])?.ToString() ?? string.Empty,
+                        Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString() ?? string.Empty,
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString() ?? string.Empty,
+                        Country = excelRow.GetCell(columnMapping["Country"])?.ToString() ?? string.Empty,
+                        Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString() ?? string.Empty,
+                        Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString() ?? string.Empty,
+                        Second_TIN_Notice = (excelRow.GetCell(columnMapping["2nd TIN Notice"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["2nd TIN Notice"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        FATCA_Checkbox = (excelRow.GetCell(columnMapping["FATCA Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["FATCA Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box_1a_Amount = excelRow.GetCell(columnMapping["Box 1a Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 1a Amount"])?.ToString()) : 0,
+                        Box_1b_Amount = excelRow.GetCell(columnMapping["Box 1b Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 1b Amount"])?.ToString()) : 0,
+                        Box_2a_Amount = excelRow.GetCell(columnMapping["Box 2a Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2a Amount"])?.ToString()) : 0,
+                        Box_2b_Amount = excelRow.GetCell(columnMapping["Box 2b Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2b Amount"])?.ToString()) : 0,
+                        Box_2c_Amount = excelRow.GetCell(columnMapping["Box 2c Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2c Amount"])?.ToString()) : 0,
+                        Box_2d_Amount = excelRow.GetCell(columnMapping["Box 2d Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2d Amount"])?.ToString()) : 0,
+                        Box_2e_Amount = excelRow.GetCell(columnMapping["Box 2e Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2e Amount"])?.ToString()) : 0,
+                        Box_2f_Amount = excelRow.GetCell(columnMapping["Box 2f Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 2f Amount"])?.ToString()) : 0,
+                        Box_3_Amount = excelRow.GetCell(columnMapping["Box 3 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 3 Amount"])?.ToString()) : 0,
+                        Box_4_Amount = excelRow.GetCell(columnMapping["Box 4 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 4 Amount"])?.ToString()) : 0,
+                        Box_5_Amount = excelRow.GetCell(columnMapping["Box 5 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 5 Amount"])?.ToString()) : 0,
+                        Box_6_Amount = excelRow.GetCell(columnMapping["Box 6 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 6 Amount"])?.ToString()) : 0,
+                        Box_7_Amount = excelRow.GetCell(columnMapping["Box 7 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 7 Amount"])?.ToString()) : 0,
+                        Box_8_Foreign = excelRow.GetCell(columnMapping["Box 8 Foreign"])?.ToString() ?? string.Empty,
+                        Box_9_Amount = excelRow.GetCell(columnMapping["Box 9 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 9 Amount"])?.ToString()) : 0,
+                        Box_10_Amount = excelRow.GetCell(columnMapping["Box 10 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 10 Amount"])?.ToString()) : 0,
+                        Box_11_Amount = excelRow.GetCell(columnMapping["Box 11 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 11 Amount"])?.ToString()) : 0,
+                        Box_12_Amount = excelRow.GetCell(columnMapping["Box 12 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 12 Amount"])?.ToString()) : 0,
+                        Box_13_Amount = excelRow.GetCell(columnMapping["Box 13 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 13 Amount"])?.ToString()) : 0,
+                        Box_14_State = excelRow.GetCell(columnMapping["Box 14 State"])?.ToString() ?? string.Empty,
+                        Box_15_ID_Number = excelRow.GetCell(columnMapping["Box 15 ID Number"])?.ToString() ?? string.Empty,
+                        Box_16_Amount = excelRow.GetCell(columnMapping["Box 16 Amount"])?.ToString() != null ? Convert.ToDecimal(excelRow.GetCell(columnMapping["Box 16 Amount"])?.ToString()) : 0,
+                        Form_Category = excelRow.GetCell(columnMapping["Form Category"])?.ToString() ?? string.Empty,
+                        Form_Source = excelRow.GetCell(columnMapping["Form Source"])?.ToString() ?? string.Empty,
+                        Tax_State = excelRow.GetCell(columnMapping["Tax State"])?.ToString() ?? string.Empty,
+                        Corrected = (excelRow.GetCell(columnMapping["Is Corrected"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Is Corrected"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
                         Created_By = UserId,
                         Created_Date = DateTime.Now,
                         InstID = InstId,
@@ -186,7 +207,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
                     // Check for duplicate records based on entityName in the database
                     if (await _evolvedtaxContext.Tbl1099_DIV.AnyAsync(p => p.Rcp_TIN == request.Rcp_TIN && p.EntityId == request.EntityId && p.Created_Date != null &&
-                     p.Created_Date.Value.Year == DateTime.Now.Year))
+                    p.Created_Date.Value.Year == DateTime.Now.Year))
                     {
                         response.Add(request);
                         Status = true;
@@ -194,33 +215,26 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
                     else
                     {
-
                         request.IsDuplicated = false;
                     }
                     DIVList.Add(request);
-
                 }
                 await _evolvedtaxContext.Tbl1099_DIV.AddRangeAsync(DIVList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
             return new MessageResponseModel { Status = Status, Message = response, Param = "Database" };
         }
-
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath)
         {
             return CreatePdf(Id, TemplatefilePath, SaveFolderPath, false);
-
         }
-
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var DIVresponse = _evolvedtaxContext.Tbl1099_DIV.FirstOrDefault(p => p.Id == Id);
             var instResponse = _instituteService.GetInstituteDataById((int)DIVresponse.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
-
             String ClientName = DIVresponse.First_Name + " " + DIVresponse.Name_Line_2?.Replace(": ", "");
-
             if (!String.IsNullOrEmpty(Page))
             {
                 newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099DIV, "_", DIVresponse.Id, "_Page_", Page);
@@ -229,11 +243,10 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 newFile1 = string.Concat(ClientName, "_", AppConstants.Form1099DIV, "_", DIVresponse.Id);
             }
-
             string FilenameNew = "/Form1099DIV/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf"; // Add ".pdf" extension to the file name
 
-            string newFilePath = Path.Combine(SaveFolderPath, newFileName);
+            string newFilePath = System.IO.Path.Combine(SaveFolderPath, newFileName);
 
             PdfReader pdfReader = new PdfReader(templatefile);
             PdfReader.unethicalreading = true;
@@ -503,7 +516,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true);
 
             // Create a copy of the generated PDF
-            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            string tempFilePath = System.IO.Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
             File.Copy(newFilePath, tempFilePath);
 
             // Open the copied PDF
@@ -511,7 +524,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
 
             // Create a new PDF document to save the modified pages
-            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            string modifiedFilePath = System.IO.Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
             using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
             using (Document doc = new Document())
             using (PdfCopy copy = new PdfCopy(doc, fs))
@@ -542,7 +555,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             // Rename the modified PDF by removing "_modified" from the filename
             string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            string finalFilePath = System.IO.Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
             File.Move(modifiedFilePath, finalFilePath);
 
             return finalFilePath;
@@ -560,7 +573,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true, selectedPage);
 
             // Create a copy of the generated PDF
-            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            string tempFilePath = System.IO.Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
             File.Copy(newFilePath, tempFilePath);
 
             // Open the copied PDF
@@ -568,7 +581,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
 
             // Create a new PDF document to save the modified pages
-            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            string modifiedFilePath = System.IO.Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
             using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
             using (Document doc = new Document())
             using (PdfCopy copy = new PdfCopy(doc, fs))
@@ -591,7 +604,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             // Rename the modified PDF by removing "_modified" from the filename
             string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            string finalFilePath = System.IO.Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
             File.Move(modifiedFilePath, finalFilePath);
 
             return finalFilePath;
@@ -600,7 +613,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             var pdfPaths = new List<string>();
             var CompilepdfPaths = new List<string>();
-            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099DIVTemplateFileName);
+            string TemplatePathFile = System.IO.Path.Combine(RootPath, "Forms", AppConstants.Form1099DIVTemplateFileName);
             bool containsAll = selectedPages.Contains("All");
 
             if (containsAll)
@@ -614,7 +627,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 #region CompilePDFs
 
                 string compileFileName = "All Form Single File.pdf";
-                string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                string outputFilePath = System.IO.Path.Combine(SaveFolderPath, compileFileName);
                 CompilepdfPaths.Add(outputFilePath);
 
                 // Create a Document object
@@ -688,7 +701,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                             break;
                     }
 
-                    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                    string outputFilePath = System.IO.Path.Combine(SaveFolderPath, compileFileName);
                     CompilepdfPaths.Add(outputFilePath);
 
                     // Create a Document object
@@ -728,13 +741,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             //Create Zip
             var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+            var zipFilePath = System.IO.Path.Combine(SaveFolderPath, zipFileName);
 
             using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
             {
                 foreach (var pdfPath in CompilepdfPaths)
                 {
-                    var pdfFileName = Path.GetFileName(pdfPath);
+                    var pdfFileName = System.IO.Path.GetFileName(pdfPath);
                     zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
                 }
             }
@@ -748,7 +761,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             foreach (var id in ids)
             {
 
-                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1099DIVTemplateFileName);
+                string TemplatePathFile = System.IO.Path.Combine(RootPath, "Forms", AppConstants.Form1099DIVTemplateFileName);
                 bool containsAll = selectedPages.Contains("All");
 
                 if (containsAll)
@@ -767,13 +780,13 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
 
             var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+            var zipFilePath = System.IO.Path.Combine(SaveFolderPath, zipFileName);
 
             using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
             {
                 foreach (var pdfPath in pdfPaths)
                 {
-                    var pdfFileName = Path.GetFileName(pdfPath);
+                    var pdfFileName = System.IO.Path.GetFileName(pdfPath);
                     zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
                 }
             }
