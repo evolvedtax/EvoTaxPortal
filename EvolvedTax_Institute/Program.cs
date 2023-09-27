@@ -35,6 +35,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.ExpireTimeSpan = new TimeSpan(1, 0, 0, 0);
         });
 builder.Services.AddSession();
+builder.Services.AddMvc(options =>
+{
+    options.EnableEndpointRouting = false;
+});
 var configuration = builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -73,14 +77,15 @@ app.MapHub<AnnouncementHub>("/announcementHub"); // Map the SignalR hub
 app.UseStatusCodePagesWithRedirects("~/Account/AccessDenied?statusCode={0}");
 
 app.UseSession();
+
 #pragma warning disable ASP0014 // Suggest using top level route registrations
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-       name: "Account",
-       pattern: "{controller=Account}/{action=Login}");
-    endpoints.MapRazorPages();
-});
+app.MapControllerRoute(
+    name: "MyArea",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Account}/{action=Login}");
 #pragma warning restore ASP0014 // Suggest using top level route registrations
 
 app.Run();

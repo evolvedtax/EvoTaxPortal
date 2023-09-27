@@ -15,6 +15,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\1099B\" />
+    <Folder Include="wwwroot\1099CAP\" />
+    <Folder Include="wwwroot\1099C\" />
+    <Folder Include="wwwroot\1099G\" />
+    <Folder Include="wwwroot\1099INT\" />
+    <Folder Include="wwwroot\1099LTC\" />
+    <Folder Include="wwwroot\1099NEC\" />
+    <Folder Include="wwwroot\1099PATR\" />
+    <Folder Include="wwwroot\1099R\" />
+    <Folder Include="wwwroot\1099SA\" />
+    <Folder Include="wwwroot\1099SB\" />
+    <Folder Include="wwwroot\Form1099A\" />
+    <Folder Include="wwwroot\Form1099DIV\" />
+    <Folder Include="wwwroot\Form1099K\" />
+    <Folder Include="wwwroot\Form1099LS\" />
+    <Folder Include="wwwroot\Form1099MISC\" />
+    <Folder Include="wwwroot\Form1099OID\" />
+    <Folder Include="wwwroot\Form1099Q\" />
+    <Folder Include="wwwroot\Form1099S\" />
     <Folder Include="wwwroot\lib\jquery-idletimer\.vs\jquery-idletimer\v17\" />
   </ItemGroup>
 
