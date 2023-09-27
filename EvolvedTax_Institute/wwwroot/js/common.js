@@ -513,7 +513,7 @@ var COMMON = (function () {
         var today = now.getFullYear() + "-" + (month) + "-" + (day);
         $('#datePicker').val(today);
     };
-    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText, url, params, gridId) {
+    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText,canceBtnTxt, url, params, gridId) {
         var confirmed = false;
 
         swal({
@@ -523,7 +523,8 @@ var COMMON = (function () {
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
             confirmButtonText: confirmBtnText,
-            cancelButtonText: "Cancel"
+            cancelButtonColor: "red",
+            cancelButtonText: canceBtnTxt
         },
             function (isConfirm) {
                 if (isConfirm) {
