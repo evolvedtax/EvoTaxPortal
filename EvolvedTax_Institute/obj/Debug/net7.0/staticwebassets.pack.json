@@ -165,6 +165,10 @@
       "PackagePath": "staticwebassets\\1099B\\GeneratedPDFs_20230918130810.zip"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\GeneratedPDFs_20230927073909.zip",
+      "PackagePath": "staticwebassets\\1099B\\GeneratedPDFs_20230927073909.zip"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\Internal Revenue Service Center.pdf",
       "PackagePath": "staticwebassets\\1099B\\Internal Revenue Service Center.pdf"
     },
@@ -251,6 +255,14 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_3.pdf",
       "PackagePath": "staticwebassets\\1099B\\LILLIAN _Form_1099B_1_Page_3.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_4.pdf",
+      "PackagePath": "staticwebassets\\1099B\\LILLIAN _Form_1099B_1_Page_4.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_6.pdf",
+      "PackagePath": "staticwebassets\\1099B\\LILLIAN _Form_1099B_1_Page_6.pdf"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\Lewis _Form_1099B_7.pdf",
@@ -2211,6 +2223,10 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099PATR\\Internal Revenue Service Center.pdf",
       "PackagePath": "staticwebassets\\1099PATR\\Internal Revenue Service Center.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_7.pdf",
+      "PackagePath": "staticwebassets\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_7.pdf"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_8.pdf",

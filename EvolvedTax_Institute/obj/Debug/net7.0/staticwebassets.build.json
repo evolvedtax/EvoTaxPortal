@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+Gs597b7S0XMOIiOz59XgPPcrtb6tix5m8ehmQ4x91A=",
+  "Hash": "AbhbXE52XQT94+tt70IDw/l6N0J6tJOFJrSGtePMf1U=",
   "Source": "EvolvedTax_Institute",
   "BasePath": "_content/EvolvedTax_Institute",
   "Mode": "Default",
@@ -559,6 +559,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\1099B\\GeneratedPDFs_20230918130810.zip"
+    },
+    {
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\GeneratedPDFs_20230927073909.zip",
+      "SourceId": "EvolvedTax_Institute",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
+      "BasePath": "_content/EvolvedTax_Institute",
+      "RelativePath": "1099B/GeneratedPDFs_20230927073909.zip",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\1099B\\GeneratedPDFs_20230927073909.zip"
     },
     {
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\GERRY T AMY L. BROWN_Form_1099B_3.pdf",
@@ -1137,6 +1154,40 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_3.pdf"
+    },
+    {
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_4.pdf",
+      "SourceId": "EvolvedTax_Institute",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
+      "BasePath": "_content/EvolvedTax_Institute",
+      "RelativePath": "1099B/LILLIAN _Form_1099B_1_Page_4.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_4.pdf"
+    },
+    {
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_6.pdf",
+      "SourceId": "EvolvedTax_Institute",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
+      "BasePath": "_content/EvolvedTax_Institute",
+      "RelativePath": "1099B/LILLIAN _Form_1099B_1_Page_6.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\1099B\\LILLIAN _Form_1099B_1_Page_6.pdf"
     },
     {
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\LILLIAN _Form_1099B_13.pdf",
@@ -9501,6 +9552,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\1099PATR\\Internal Revenue Service Center.pdf"
+    },
+    {
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_7.pdf",
+      "SourceId": "EvolvedTax_Institute",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
+      "BasePath": "_content/EvolvedTax_Institute",
+      "RelativePath": "1099PATR/JAMES % JANE OSAKI_Form_1099PATR_7.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_7.pdf"
     },
     {
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099PATR\\JAMES % JANE OSAKI_Form_1099PATR_8.pdf",
