@@ -203,9 +203,54 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
+            string Institution_CountryCode = "";
+            if (requestInstitue.Mcountry != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == requestInstitue.Mcountry);
+                if (country != null)
+                {
+                    Institution_CountryCode = country.CountryId;
+                }
+            }
 
-            string PayData = string.Concat(requestInstitue.InstitutionName, "\r\n", requestInstitue.Madd1, "\r\n", requestInstitue.Madd2, "\r\n", requestInstitue.Mcity, ", ", requestInstitue.Mstate, requestInstitue.Mprovince, ", ", requestInstitue.Mcountry, ", ", requestInstitue.Mzip, ", ", requestInstitue.Phone);
-            string RecipentCity = string.Concat(request.City, ", ", request.State, ", ", request.Zip, ", ", request.Country);
+
+            string PayData = string.Concat(
+                requestInstitue.InstitutionName, "\r\n",
+                requestInstitue.Madd1, "\r\n",
+                requestInstitue.Madd2, "\r\n",
+                requestInstitue.Mcity, ", ",
+                requestInstitue.Mstate, " ",
+                requestInstitue.Mprovince, ", ",
+                !string.IsNullOrWhiteSpace(Institution_CountryCode) ? Institution_CountryCode + ", " : "",
+                requestInstitue.Mzip, ", ",
+                requestInstitue.Phone
+            );
+
+
+            string Recepient_CountryCode = "";
+            if (request.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == request.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+               new[]
+               {
+                    request.City,
+                    request.State,
+                    string.IsNullOrWhiteSpace(request.Province) ? null : request.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    request.Zip,
+                    string.IsNullOrWhiteSpace(request.PostalCode) ? null : request.PostalCode
+
+               }.Where(s => !string.IsNullOrWhiteSpace(s))
+           );
+
+
             String RecipentAddress = string.Concat(request.Address_Deliv_Street, ", ", request.Address_Apt_Suite);
             int currenDate = DateTime.Now.Year;
             string currentYear = Convert.ToString(currenDate % 100);

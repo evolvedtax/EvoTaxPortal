@@ -78,27 +78,19 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
 
-                                        <th>Rcp TIN</th>
-
+                                        <th>Recepient TIN</th>
                                         <th>First Name</th>
-
-                                        <th>Last Name/Company</th>
-
-                                        <th>Name Line 2</th>
-
+                                        <th>Last Name</th>
+                                        <th>Company</th>
                                         <th>Address Type</th>
-
-                                        <th>Address Deliv/Street</th>
-
-                                        <th>Address Apt/Suite</th>
-
-                                        <th>City</th>
-
-                                        <th>State</th>
-
-                                        <th>Zip</th>
-
                                         <th>Country</th>
+                                        <th>Address Line 1</th>
+                                        <th>Address Line 2</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Province</th>
+                                        <th>Zip</th>
+                                        <th>Postal Code</th>
 
                                         <th>Rcp Account</th>
 
@@ -197,12 +189,14 @@
                                                 <td>@item.First_Name</td>
                                                 <td>@item.Name_Line_2</td>
                                                 <td>@item.Address_Type</td>
+                                                <td>@item.Country</td>
                                                 <td>@item.Address_Deliv_Street</td>
                                                 <td>@item.Address_Apt_Suite</td>
                                                 <td>@item.City</td>
                                                 <td>@item.State</td>
+                                                <td>@item.Province</td>
                                                 <td>@item.Zip</td>
-                                                <td>@item.Country</td>
+                                                <td>@item.PostalCode</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
                                                 @if (@item.Second_TIN_Notice == "1")
