@@ -40,57 +40,75 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
 
+                var columnMapping = new Dictionary<string, int>();
+                var headerRow = sheet.GetRow(0); // Assuming the header row is the first row
+
+                if (headerRow != null)
+                {
+                    for (int columnIndex = 0; columnIndex < headerRow.LastCellNum; columnIndex++)
+                    {
+                        string columnName = headerRow.GetCell(columnIndex)?.ToString();
+
+                        if (!string.IsNullOrWhiteSpace(columnName))
+                        {
+                            columnMapping[columnName] = columnIndex;
+                        }
+                    }
+                }
+
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
 
-                    string cell_value_13 = excelRow.GetCell(13)?.ToString();
+                    string cell_value_13 = excelRow.GetCell(columnMapping[" 2nd TIN Notice"])?.ToString();
                     string Second_TIN_Notice = string.IsNullOrEmpty(cell_value_13) ? "0" : (cell_value_13.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
-                    string cell_value_14 = excelRow.GetCell(14)?.ToString();
+                    string cell_value_14 = excelRow.GetCell(columnMapping["FATCA Checkbox"])?.ToString();
                     string FATCA_Checkbox = string.IsNullOrEmpty(cell_value_14) ? "0" : (cell_value_14.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
 
-                    string cell_value_35 = excelRow.GetCell(35)?.ToString();
+                    string cell_value_35 = excelRow.GetCell(columnMapping["Is Corrected Form of 1099"]  )?.ToString();
                     string Corrected = string.IsNullOrEmpty(cell_value_35) ? "0" : (cell_value_35.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
                     var entity = new Tbl1099_INT
                     {
-                        Rcp_TIN = excelRow.GetCell(0)?.ToString(),
-                        Last_Name_Company = excelRow.GetCell(1)?.ToString(),
-                        First_Name = excelRow.GetCell(2)?.ToString(),
-                        Name_Line_2 = excelRow.GetCell(3)?.ToString(),
-                        Address_Type = excelRow.GetCell(4)?.ToString(),
-                        Address_Deliv_Street = excelRow.GetCell(5)?.ToString(),
-                        Address_Apt_Suite = excelRow.GetCell(6)?.ToString(),
-                        City = excelRow.GetCell(7)?.ToString(),
-                        State = excelRow.GetCell(8)?.ToString(),
-                        Zip = excelRow.GetCell(9)?.ToString(),
-                        Country = excelRow.GetCell(10)?.ToString(),
-                        Rcp_Account = excelRow.GetCell(11)?.ToString(),
-                        Rcp_Email = excelRow.GetCell(12)?.ToString(),
+                        Rcp_TIN = excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString(),
+                        Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString(),
+                        First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString(),
+                        Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString(),
+                        Address_Type = excelRow.GetCell(columnMapping["Address Type"])?.ToString(),
+                        Country = excelRow.GetCell(columnMapping["Country"])?.ToString(),
+                        Address_Deliv_Street = excelRow.GetCell(columnMapping["Address Line 1"])?.ToString(),
+                        Address_Apt_Suite = excelRow.GetCell(columnMapping["Address Line 2"])?.ToString(),
+                        City = excelRow.GetCell(columnMapping["City"])?.ToString(),
+                        State = excelRow.GetCell(columnMapping["State"])?.ToString(),
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString(),
+                        Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString(),
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString(),
+                        Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString(),
+                        Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString(),
                         Second_TIN_Notice = Second_TIN_Notice,
                         FATCA_Checkbox = FATCA_Checkbox,
-                        Box_1_Amount = TryConvertToDecimal(excelRow.GetCell(15)),
-                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(16)),
-                        Box_3_Amount = TryConvertToDecimal(excelRow.GetCell(17)),
-                        Box_4_Amount = TryConvertToDecimal(excelRow.GetCell(18)),
-                        Box_5_Amount = TryConvertToDecimal(excelRow.GetCell(19)),
-                        Box_6_Amount = TryConvertToDecimal(excelRow.GetCell(20)),
-                        Box_7_Foreign = excelRow.GetCell(21)?.ToString(),
-                        Box_8_Amount = TryConvertToDecimal(excelRow.GetCell(22)),
-                        Box_9_Amount = TryConvertToDecimal(excelRow.GetCell(23)),
-                        Box_10_Amount = TryConvertToDecimal(excelRow.GetCell(24)),
-                        Box_11_Amount = TryConvertToDecimal(excelRow.GetCell(25)),
-                        Box_12_Amount = TryConvertToDecimal(excelRow.GetCell(26)),
-                        Box_13_Amount = TryConvertToDecimal(excelRow.GetCell(27)),
-                        Box_14_CUSIPNo = excelRow.GetCell(28)?.ToString(),
-                        Box_15_State = excelRow.GetCell(29)?.ToString(),
-                        Box_16_IDNumber = excelRow.GetCell(30)?.ToString(),
-                        Box_17_Amount = TryConvertToDecimal(excelRow.GetCell(31)),
-                        Form_Category = excelRow.GetCell(32)?.ToString(),
-                        Form_Source = excelRow.GetCell(33)?.ToString(),
-                        Tax_State = excelRow.GetCell(34)?.ToString(),
+                        Box_1_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 1 Amount"])),
+                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 2 Amount"])),
+                        Box_3_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 3 Amount"])),
+                        Box_4_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 4 Amount"])),
+                        Box_5_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 5 Amount"])),
+                        Box_6_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 6 Amount"])),
+                        Box_7_Foreign = excelRow.GetCell(columnMapping["Box 7 Foreign"])?.ToString(),
+                        Box_8_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 8 Amount"])),
+                        Box_9_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 9 Amount"])),
+                        Box_10_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 10 Amount"])),
+                        Box_11_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 11 Amount"])),
+                        Box_12_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 12 Amount"])),
+                        Box_13_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 13 Amount"])),
+                        Box_14_CUSIPNo = excelRow.GetCell(columnMapping["Box 14 CUSIP No"])?.ToString(),
+                        Box_15_State = excelRow.GetCell(columnMapping["Box 15 State"])?.ToString(),
+                        Box_16_IDNumber = excelRow.GetCell(columnMapping["Box 16 ID Number"])?.ToString(),
+                        Box_17_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 17 Amount"])),
+                        Form_Category = excelRow.GetCell(columnMapping["Form Category"])?.ToString(),
+                        Form_Source = excelRow.GetCell(columnMapping["Form Source"])?.ToString(),
+                        Tax_State = excelRow.GetCell(columnMapping["Tax State"])?.ToString(),
                         InstID = InstId,
                         EntityId = entityId,
                         //UserId = UserId,
