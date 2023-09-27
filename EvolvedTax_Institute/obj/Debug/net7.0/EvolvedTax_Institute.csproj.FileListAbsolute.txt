@@ -222,3 +222,5 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\proj
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.csproj.CopyComplete
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.genruntimeconfig.cache
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\ref\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1099\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1099\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css

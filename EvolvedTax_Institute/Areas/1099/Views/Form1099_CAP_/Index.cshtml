@@ -78,16 +78,18 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
                                         <th>Recepient TIN</th>
-                                        <th>Recepient First Name</th>
-                                        <th>Recepient Last Name</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
                                         <th>Company</th>
                                         <th>Address Type</th>
+                                        <th>Country</th>
                                         <th>Address Line 1</th>
                                         <th>Address Line 2</th>
                                         <th>City</th>
                                         <th>State</th>
+                                        <th>Province</th>
                                         <th>Zip</th>
-                                        <th>Country</th>
+                                        <th>Postal Code</th>
                                         <th>Recepient Account</th>
                                         <th>Recepient Email</th>
                                         <th>Date of sale or exchange</th>
@@ -118,17 +120,20 @@
                                                         <span class="fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="Duplicate Record"></span>
                                                     }
                                                 </td>
+
                                                 <td>@item.Rcp_TIN</td>
                                                 <td>@item.Last_Name_Company</td>
                                                 <td>@item.First_Name</td>
                                                 <td>@item.Name_Line_2</td>
                                                 <td>@item.Address_Type</td>
+                                                <td>@item.Country</td>
                                                 <td>@item.Address_Deliv_Street</td>
                                                 <td>@item.Address_Apt_Suite</td>
                                                 <td>@item.City</td>
                                                 <td>@item.State</td>
+                                                <td>@item.Province</td>
                                                 <td>@item.Zip</td>
-                                                <td>@item.Country</td>
+                                                <td>@item.PostalCode</td>
                                                 <td>@item.Rcp_Account</td>
                                                 <td>@item.Rcp_Email</td>
                                                 <td>@item.Box_1_Date?.ToString("MM/dd/yyyy")</td>

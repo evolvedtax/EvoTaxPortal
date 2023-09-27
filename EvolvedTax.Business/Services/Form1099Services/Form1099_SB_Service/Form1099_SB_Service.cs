@@ -11,6 +11,7 @@ using EvolvedTax.Data.Models.Entities._1099;
 using System.IO.Compression;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using SkiaSharp;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -41,7 +42,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
 
 
-       
+
                 var columnMapping = new Dictionary<string, int>();
                 var headerRow = sheet.GetRow(0); // Assuming the header row is the first row
 
@@ -67,7 +68,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                     var entity = new Tbl1099_SB
                     {
-                        Rcp_TIN=excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString(),
+                        Rcp_TIN = excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString(),
                         Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString(),
                         First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString(),
                         Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString(),
@@ -121,11 +122,11 @@ namespace EvolvedTax.Business.Services.Form1099Services
                     }
 
                     // Check for duplicate records based on Rcp_TIN in the database
-                    if (await _evolvedtaxContext.Tbl1099_SB.AnyAsync(p => 
+                    if (await _evolvedtaxContext.Tbl1099_SB.AnyAsync(p =>
                         p.Rcp_TIN == entity.Rcp_TIN && p.EntityId == entity.EntityId
                          && p.Created_Date != null &&
             p.Created_Date.Value.Year == DateTime.Now.Year))
-                        {
+                    {
                         response.Add(entity);
                         Status = true;
                         entity.IsDuplicated = true;
@@ -141,9 +142,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
 
 
-                    await _evolvedtaxContext.Tbl1099_SB.AddRangeAsync(List);
-                    await _evolvedtaxContext.SaveChangesAsync();
-          
+                await _evolvedtaxContext.Tbl1099_SB.AddRangeAsync(List);
+                await _evolvedtaxContext.SaveChangesAsync();
+
 
                 return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
             }
@@ -185,8 +186,55 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
 
-            string PayData = string.Concat(requestInstitue.InstitutionName, "\r\n", requestInstitue.Madd1, "\r\n", requestInstitue.Madd2, "\r\n", requestInstitue.Mcity, ", ", requestInstitue.Mstate, requestInstitue.Mprovince, ", ", requestInstitue.Mcountry, ", ", requestInstitue.Mzip, ", ", requestInstitue.Phone);
-            string RecipentCity = string.Concat(request.City, ", ", request.State, ", ", request.Zip, ", ", request.Country);
+
+            string Institution_CountryCode = "";
+            if (requestInstitue.Mcountry != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == requestInstitue.Mcountry);
+                if (country != null)
+                {
+                    Institution_CountryCode = country.CountryId;
+                }
+            }
+
+            
+            string PayData = string.Concat(
+                requestInstitue.InstitutionName, "\r\n",
+                requestInstitue.Madd1, "\r\n",
+                requestInstitue.Madd2, "\r\n",
+                requestInstitue.Mcity, ", ",
+                requestInstitue.Mstate, " ",
+                requestInstitue.Mprovince, ", ",
+                !string.IsNullOrWhiteSpace(Institution_CountryCode) ? Institution_CountryCode + ", " : "",
+                requestInstitue.Mzip, ", ",
+                requestInstitue.Phone
+            );
+
+
+            string Recepient_CountryCode = "";
+            if (request.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == request.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+                new[]
+                {
+                    request.City,
+                    request.State,
+                    string.IsNullOrWhiteSpace(request.Province) ? null : request.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    request.Zip,
+                    string.IsNullOrWhiteSpace(request.PostalCode) ? null : request.PostalCode
+
+                }.Where(s => !string.IsNullOrWhiteSpace(s))
+            );
+
+
             String RecipentAddress = string.Concat(request.Address_Deliv_Street, ", ", request.Address_Apt_Suite);
             int currenDate = DateTime.Now.Year;
             string currentYear = Convert.ToString(currenDate % 100);
@@ -195,7 +243,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             #region Page 1
             pdfFormFields.SetField("Form1099-C.CopyA.PgHeader.CalendarYear.f1_1", currentYear);   //23
-       
+
             if (request.Corrected.ToString() == "1")
             {
                 pdfFormFields.SetField("Form1099-C.CopyA.PgHeader.c1_1", "0");   //PageAVoid
@@ -258,7 +306,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_10", request.Box_2_Amount.HasValue ? request.Box_2_Amount.Value.ToString() : string.Empty);   //Box_2_Amount
             pdfFormFields.SetField("Form1099-C.CopyC.FormHeader.RightCol.f2_11", request.Issuer_Contact_Name);   //Issuer_Contact_Name
             #endregion
-       
+
 
             #endregion
 
@@ -379,7 +427,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl1099_SB.FirstOrDefault(p => p.Id == Id);
-            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");    
+            String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
 
             newFile1 = string.Concat(ClientName, "_", AppConstants.SB1099Form, "_", request.Id, "_Page_", selectedPage);
             string FilenameNew = "/1099SB/" + newFile1 + ".pdf";
@@ -596,7 +644,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         {
             var result = from ic in _evolvedtaxContext.Tbl1099_SB
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
-                         select new Tbl1099_SB  
+                         select new Tbl1099_SB
                          {
                              Rcp_Email = ic.Rcp_Email,
                              EntityId = ic.EntityId,
