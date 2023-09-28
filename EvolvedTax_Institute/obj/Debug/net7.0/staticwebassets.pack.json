@@ -2921,6 +2921,10 @@
       "PackagePath": "staticwebassets\\Templates\\InstituteEntitiesTemplate.xlsx"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\~$Form1099_B_Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\~$Form1099_B_Template.xlsx"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\api\\typehead_collection.json",
       "PackagePath": "staticwebassets\\api\\typehead_collection.json"
     },
