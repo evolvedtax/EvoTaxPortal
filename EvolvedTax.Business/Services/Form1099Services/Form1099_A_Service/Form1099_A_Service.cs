@@ -197,7 +197,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var Aresponse = _evolvedtaxContext.Tbl1099_A.FirstOrDefault(p => p.Id == Id);
-            var instResponse = _instituteService.GetInstituteDataById((int)Aresponse.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)Aresponse.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
@@ -222,6 +222,31 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
+
+            string Recepient_CountryCode = "";
+            if (Aresponse.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == Aresponse.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+               new[]
+               {
+                    Aresponse.City,
+                    Aresponse.State,
+                    string.IsNullOrWhiteSpace(Aresponse.Province) ? null : Aresponse.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    Aresponse.Zip,
+                    string.IsNullOrWhiteSpace(Aresponse.PostalCode) ? null : Aresponse.PostalCode
+
+               }.Where(s => !string.IsNullOrWhiteSpace(s))
+           );
+
+            String RecipentAddress = string.Concat(Aresponse.Address_Deliv_Street, ", ", Aresponse.Address_Apt_Suite);
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
@@ -233,9 +258,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("ACorrected", "0");   //Corrected
             }
-            pdfFormFields.SetField("ALenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+            pdfFormFields.SetField("ALenderName", requestInstitue.PayeeData);   //PayData
             pdfFormFields.SetField("AYear", currentYear);   //23
-            pdfFormFields.SetField("ALenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("ALenderTIN", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("ABorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("AAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("ABalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount
@@ -260,9 +285,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("BCorrected", "0");   //Corrected
             }
-            pdfFormFields.SetField("BLenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+            pdfFormFields.SetField("BLenderName", requestInstitue.PayeeData);   //PayData
             pdfFormFields.SetField("BYear", currentYear);   //23
-            pdfFormFields.SetField("BLenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("BLenderTIN", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("BBorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("BAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("BBalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount
@@ -286,9 +311,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("CCorrected", "0");   //Corrected
             }
-            pdfFormFields.SetField("CLenderName", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
+            pdfFormFields.SetField("CLenderName", requestInstitue.PayeeData);   //PayData
             pdfFormFields.SetField("CYear", currentYear);   //23
-            pdfFormFields.SetField("CLenderTIN", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("CLenderTIN", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("CBorrowerTIN", Aresponse.Rcp_TIN);   //request.Rcp_TIN
             pdfFormFields.SetField("CAcquisitionDate", Aresponse.Box_1_Date?.ToString("MM/dd/yyyy"));   //Box_1_Date
             pdfFormFields.SetField("CBalanceOutstanding", Aresponse.Box_2_Amount?.ToString());   //Box_2_Amount

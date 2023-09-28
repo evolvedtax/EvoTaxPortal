@@ -11,6 +11,7 @@ using EvolvedTax.Data.Models.Entities._1099;
 using System.IO.Compression;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using EvolvedTax.Business.Services.InstituteService;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -18,14 +19,16 @@ namespace EvolvedTax.Business.Services.Form1099Services
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IMailService _mailService;
+        readonly IInstituteService _instituteService;
         readonly ITrailAudit1099Service _trailAudit1099Service;
 
 
-        public Form1099_CAP_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service)
+        public Form1099_CAP_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service, IInstituteService instituteService)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mailService = mailService;
             _trailAudit1099Service = trailAudit1099Service;
+            _instituteService = instituteService;
         }
         public async Task<MessageResponseModel> Upload1099_Data(IFormFile file, int entityId, int InstId, string UserId)
         {
@@ -39,38 +42,55 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
                 HashSet<string> uniqueEINNumber = new HashSet<string>();
                 HashSet<string> uniqueEntityNames = new HashSet<string>();
+                var columnMapping = new Dictionary<string, int>();
+                var headerRow = sheet.GetRow(0); // Assuming the header row is the first row
+
+                if (headerRow != null)
+                {
+                    for (int columnIndex = 0; columnIndex < headerRow.LastCellNum; columnIndex++)
+                    {
+                        string columnName = headerRow.GetCell(columnIndex)?.ToString();
+
+                        if (!string.IsNullOrWhiteSpace(columnName))
+                        {
+                            columnMapping[columnName] = columnIndex;
+                        }
+                    }
+                }
 
                 for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                 {
                     IRow excelRow = sheet.GetRow(row);
 
 
-                    string cell_value_21 = excelRow.GetCell(21)?.ToString();
+                    string cell_value_21 = excelRow.GetCell(columnMapping["Is Corrected Form of 1099"])?.ToString();
                     string Corrected = string.IsNullOrEmpty(cell_value_21) ? "0" : (cell_value_21.Equals("Yes", StringComparison.OrdinalIgnoreCase) ? "1" : "0");
 
                     var entity = new Tbl1099_CAP
                     {
-                        Rcp_TIN = excelRow.GetCell(0)?.ToString(),
-                        Last_Name_Company = excelRow.GetCell(1)?.ToString(),
-                        First_Name = excelRow.GetCell(2)?.ToString(),
-                        Name_Line_2 = excelRow.GetCell(3)?.ToString(),
-                        Address_Type = excelRow.GetCell(4)?.ToString(),
-                        Address_Deliv_Street = excelRow.GetCell(5)?.ToString(),
-                        Address_Apt_Suite = excelRow.GetCell(6)?.ToString(),
-                        City = excelRow.GetCell(7)?.ToString(),
-                        State = excelRow.GetCell(8)?.ToString(),
-                        Zip = excelRow.GetCell(9)?.ToString(),
-                        Country = excelRow.GetCell(10)?.ToString(),
-                        Rcp_Account = excelRow.GetCell(11)?.ToString(),
-                        Rcp_Email = excelRow.GetCell(12)?.ToString(),
-                        Box_1_Date =  !string.IsNullOrWhiteSpace(excelRow.GetCell(13)?.ToString()) ? (DateTime?)Convert.ToDateTime(excelRow.GetCell(13)?.ToString()) : null,
-                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(14)),
-                        Box_3_Number = TryConvertToInt(excelRow.GetCell(15)),
-                        Box_4_Class = excelRow.GetCell(16)?.ToString(),
-                        Box_5_All_Lines = excelRow.GetCell(17)?.ToString(),
-                        Form_Category = excelRow.GetCell(18)?.ToString(),
-                        Form_Source = excelRow.GetCell(19)?.ToString(),
-                        Tax_State = excelRow.GetCell(20)?.ToString(),
+                        Rcp_TIN = excelRow.GetCell(columnMapping["Rcp TIN"])?.ToString(),
+                        Last_Name_Company = excelRow.GetCell(columnMapping["Company"])?.ToString(),
+                        First_Name = excelRow.GetCell(columnMapping["First Name"])?.ToString(),
+                        Name_Line_2 = excelRow.GetCell(columnMapping["Last Name"])?.ToString(),
+                        Address_Type = excelRow.GetCell(columnMapping["Address Type"])?.ToString(),
+                        Country = excelRow.GetCell(columnMapping["Country"])?.ToString(),
+                        Address_Deliv_Street = excelRow.GetCell(columnMapping["Address Line 1"])?.ToString(),
+                        Address_Apt_Suite = excelRow.GetCell(columnMapping["Address Line 2"])?.ToString(),
+                        City = excelRow.GetCell(columnMapping["City"])?.ToString(),
+                        State = excelRow.GetCell(columnMapping["State"])?.ToString(),
+                        Province = excelRow.GetCell(columnMapping["Province"])?.ToString(),
+                        Zip = excelRow.GetCell(columnMapping["Zip"])?.ToString(),
+                        PostalCode = excelRow.GetCell(columnMapping["Postal Code"])?.ToString(),
+                        Rcp_Account = excelRow.GetCell(columnMapping["Rcp Account"])?.ToString(),
+                        Rcp_Email = excelRow.GetCell(columnMapping["Rcp Email"])?.ToString(),
+                        Box_1_Date =  !string.IsNullOrWhiteSpace(excelRow.GetCell(columnMapping["Box 1 Date"])?.ToString()) ? (DateTime?)Convert.ToDateTime(excelRow.GetCell(columnMapping["Box 1 Date"])?.ToString()) : null,
+                        Box_2_Amount = TryConvertToDecimal(excelRow.GetCell(columnMapping["Box 2 Amount"])),
+                        Box_3_Number = TryConvertToInt(excelRow.GetCell(columnMapping["Box 3 Number"])),
+                        Box_4_Class = excelRow.GetCell(columnMapping["Box 4 Class"])?.ToString(),
+                        Box_5_All_Lines = excelRow.GetCell(columnMapping["Box 5 All Lines"])?.ToString(),
+                        Form_Category = excelRow.GetCell(columnMapping["Form Category"])?.ToString(),
+                        Form_Source = excelRow.GetCell(columnMapping["Form Source"])?.ToString(),
+                        Tax_State = excelRow.GetCell(columnMapping["Tax State"])?.ToString(),
                         InstID = InstId,
                         EntityId = entityId,
                         //UserId = UserId,
@@ -140,7 +160,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var request = _evolvedtaxContext.Tbl1099_CAP.FirstOrDefault(p => p.Id == Id);
-            var requestInstitue = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)request.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
@@ -166,8 +186,29 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
 
-            string PayData = string.Concat(requestInstitue.InstitutionName, "\r\n", requestInstitue.Madd1, "\r\n", requestInstitue.Madd2, "\r\n", requestInstitue.Mcity, ", ", requestInstitue.Mstate, requestInstitue.Mprovince, ", ", requestInstitue.Mcountry, ", ", requestInstitue.Mzip, ", ", requestInstitue.Phone);
-            string RecipentCity = string.Concat(request.City, ", ", request.State, ", ", request.Zip, ", ", request.Country);
+            string Recepient_CountryCode = "";
+            if (request.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == request.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+               new[]
+               {
+                    request.City,
+                    request.State,
+                    string.IsNullOrWhiteSpace(request.Province) ? null : request.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    request.Zip,
+                    string.IsNullOrWhiteSpace(request.PostalCode) ? null : request.PostalCode
+
+               }.Where(s => !string.IsNullOrWhiteSpace(s))
+           );
+
             String RecipentAddress = string.Concat(request.Address_Deliv_Street, ", ", request.Address_Apt_Suite);
             int currenDate = DateTime.Now.Year;
             string currentYear = Convert.ToString(currenDate % 100);
@@ -185,7 +226,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield2_topmostSubform.CopyA.CopyHeader.c1_1", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);
@@ -219,7 +260,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("topmostSubform.CopyB.CopyHeader.c1_1", "1");   //PageAFATCA
 
             }
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);
@@ -258,7 +299,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
 
 
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);

@@ -42,6 +42,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<bool> CheckIfClientRecordExist(string clientEmail, string user);
         Task<MessageResponseModel> UpdateEmailFrequncy(int EntityId, int emailFrequency);
         InstituteMasterResponse GetInstituteDataById(int instId);
+        (string Idnumber, string PayeeData) GetPayeeData(int instId);
         bool UpdateInstituteMaster(InstituteMasterRequest request);
         Task<MessageResponseModel> AddClient(InstituteClientRequest request);
         Task<MessageResponseModel> AddEntity(InstituteEntityRequest request);
