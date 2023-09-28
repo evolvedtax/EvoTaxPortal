@@ -11,6 +11,7 @@ using EvolvedTax.Data.Models.Entities._1099;
 using System.IO.Compression;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using EvolvedTax.Business.Services.InstituteService;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -18,14 +19,16 @@ namespace EvolvedTax.Business.Services.Form1099Services
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IMailService _mailService;
+        readonly IInstituteService _instituteService;
         readonly ITrailAudit1099Service _trailAudit1099Service;
 
 
-        public Form1099_INT_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service)
+        public Form1099_INT_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service, IInstituteService instituteService)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mailService = mailService;
             _trailAudit1099Service = trailAudit1099Service;
+            _instituteService = instituteService;
         }
         public async Task<MessageResponseModel> Upload1099_Data(IFormFile file, int entityId, int InstId, string UserId)
         {
@@ -178,7 +181,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var request = _evolvedtaxContext.Tbl1099_INT.FirstOrDefault(p => p.Id == Id);
-            var requestInstitue = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)request.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
@@ -203,30 +206,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
-
-            string Institution_CountryCode = "";
-            if (requestInstitue.Mcountry != "United States")
-            {
-                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == requestInstitue.Mcountry);
-                if (country != null)
-                {
-                    Institution_CountryCode = country.CountryId;
-                }
-            }
-
-
-            string PayData = string.Concat(
-                requestInstitue.InstitutionName, "\r\n",
-                requestInstitue.Madd1, "\r\n",
-                requestInstitue.Madd2, "\r\n",
-                requestInstitue.Mcity, ", ",
-                requestInstitue.Mstate, " ",
-                requestInstitue.Mprovince, ", ",
-                !string.IsNullOrWhiteSpace(Institution_CountryCode) ? Institution_CountryCode + ", " : "",
-                requestInstitue.Mzip, ", ",
-                requestInstitue.Phone
-            );
-
 
             string Recepient_CountryCode = "";
             if (request.Country != "United States")
@@ -267,7 +246,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("ACorrected", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("APayerNameAddress", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("APayerNameAddress", requestInstitue.PayeeData);   //PageAPayerNameAddress
             //pdfFormFields.SetField("APayerRTN", "APayerRTN");   //PageAPayerRTN
             pdfFormFields.SetField("A1", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //PageA1
             pdfFormFields.SetField("ACalendarYear", currentYear);   //PageACalendarYear
@@ -320,7 +299,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("1Corrected", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("1PayerNameAddress", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("1PayerNameAddress", requestInstitue.PayeeData);   //PageAPayerNameAddress
             //pdfFormFields.SetField("1PayerRTN", "APayerRTN");   //PageAPayerRTN
             pdfFormFields.SetField("A1", request.Box_1_Amount.HasValue ? request.Box_1_Amount.Value.ToString() : string.Empty);   //PageA1
             pdfFormFields.SetField("1CalendarYear", currentYear);   //PageACalendarYear
@@ -369,7 +348,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("BCorrected", "0");   //PageACorrected
             }
 
-            pdfFormFields.SetField("BPayerNameAddress", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("BPayerNameAddress", requestInstitue.PayeeData);   //PageAPayerNameAddress
            //pdfFormFields.SetField("BPayerRTN", "APayerRTN");   //PageAPayerRTN
             pdfFormFields.SetField("BCalendarYear", currentYear);   //PageACalendarYear
             pdfFormFields.SetField("BRecipientTIN", request.Rcp_TIN);   //PageARecipientTIN
@@ -413,7 +392,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("2Corrected", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("2PayerNameAddress", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("2PayerNameAddress", requestInstitue.PayeeData);   //PageAPayerNameAddress
             //pdfFormFields.SetField("2PayerRTN", "APayerRTN");   //PageAPayerRTN
             pdfFormFields.SetField("2CalendarYear", currentYear);   //PageACalendarYear
             pdfFormFields.SetField("2PayerTIN", requestInstitue.Idnumber);   //Page2PayerTIN
@@ -462,7 +441,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("CCorrected", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("CPayerNameAddress", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("CPayerNameAddress", requestInstitue.PayeeData);   //PageAPayerNameAddress
             //pdfFormFields.SetField("CPayerRTN", "APayerRTN");   //PageAPayerRTN
             pdfFormFields.SetField("CCalendarYear", currentYear);   //PageACalendarYear
             pdfFormFields.SetField("CPayerTIN", requestInstitue.Idnumber);   //Page2PayerTIN

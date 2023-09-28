@@ -47,7 +47,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 userId = httpContext.Session.GetString("UserId");
 
             }
-      
+
 
             var userEntityIds = _evolvedtaxContext.EntitiesUsers
                                 .Where(ue => ue.UserId == userId)
@@ -827,8 +827,24 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             if (IsuperAdmin)
             {
-                 alerts = _evolvedtaxContext.Alert
-               .Where(a =>  a.IsRead == false)
+                alerts = _evolvedtaxContext.Alert
+              .Where(a => a.IsRead == false)
+                 .OrderByDescending(a => a.Id)
+                   .Take(20)
+              .Select(a => new AlertRequest
+              {
+                  Id = a.Id,
+                  Title = a.Title,
+                  AlertText = a.AlertText,
+                  CreatedDate = (DateTime)a.CreatedDate
+              })
+              .ToList();
+            }
+            else
+            {
+
+                alerts = _evolvedtaxContext.Alert
+               .Where(a => a.InstituteID == instituteId && a.IsRead == false)
                   .OrderByDescending(a => a.Id)
                     .Take(20)
                .Select(a => new AlertRequest
@@ -840,23 +856,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                })
                .ToList();
             }
-            else
-            {
 
-                 alerts = _evolvedtaxContext.Alert
-                .Where(a => a.InstituteID == instituteId && a.IsRead == false)
-                   .OrderByDescending(a => a.Id)
-                     .Take(20)
-                .Select(a => new AlertRequest
-                {
-                    Id = a.Id,
-                    Title = a.Title,
-                    AlertText = a.AlertText,
-                    CreatedDate = (DateTime)a.CreatedDate
-                })
-                .ToList();
-            }
-        
 
             return alerts;
         }
@@ -926,22 +926,50 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             return _mapper.Map<IQueryable<InstituteEntitiesResponse>>(result);
         }
-        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText, int EntityId,string Category)
+        public async Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy, string buttonText, int EntityId, string Category)
         {
             var auditLog = new AuditLog
             {
-                TableName = "", 
+                TableName = "",
                 Action = buttonText,
                 CreatedAt = DateTime.Now,
                 CreatedBy = CreatedBy,
                 EntityId = EntityId,
-                Category= Category  
+                Category = Category
             };
 
             _evolvedtaxContext.AuditLog.Add(auditLog);
             _evolvedtaxContext.SaveChanges();
             return new MessageResponseModel { Status = true };
 
+        }
+
+        public (string, string) GetPayeeData(int instId)
+        {
+            var requestInstitue = GetInstituteDataById(instId);
+
+            string Institution_CountryCode = "";
+            if (requestInstitue.Mcountry != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == requestInstitue.Mcountry);
+                if (country != null)
+                {
+                    Institution_CountryCode = country.CountryId;
+                }
+            }
+            string PayData = string.Concat(
+                 requestInstitue.InstitutionName, "\r\n",
+                 requestInstitue.Madd1, "\r\n",
+                 requestInstitue.Madd2, "\r\n",
+                 requestInstitue.Mcity, ", ",
+                 requestInstitue.Mstate, " ",
+                 requestInstitue.Mprovince, ", ",
+                 !string.IsNullOrWhiteSpace(Institution_CountryCode) ? Institution_CountryCode + ", " : "",
+                 requestInstitue.Mzip, ", ",
+                 requestInstitue.Phone
+             );
+
+            return (requestInstitue.Idnumber ?? string.Empty, PayData);
         }
     }
 }

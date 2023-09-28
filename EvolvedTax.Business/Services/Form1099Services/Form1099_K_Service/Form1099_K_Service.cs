@@ -232,12 +232,9 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var Kresponse = _evolvedtaxContext.Tbl1099_K.FirstOrDefault(p => p.Id == Id);
-            var instResponse = _instituteService.GetInstituteDataById((int)Kresponse.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)Kresponse.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
-            string PayData = string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, ", ", instResponse.Phone);
-            string RecipentCity = string.Concat(Kresponse.City, ", ", Kresponse.State, ", ", Kresponse.Zip, ", ", Kresponse.Country);
-            string RecipentAddress = string.Concat(Kresponse.Address_Deliv_Street, ", ", Kresponse.Address_Apt_Suite);
             String ClientName = Kresponse.First_Name + " " + Kresponse.Name_Line2?.Replace(": ", "");
             if (!String.IsNullOrEmpty(Page))
             {
@@ -254,6 +251,31 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
+
+            string Recepient_CountryCode = "";
+            if (Kresponse.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == Kresponse.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+               new[]
+               {
+                    Kresponse.City,
+                    Kresponse.State,
+                    string.IsNullOrWhiteSpace(Kresponse.Province) ? null : Kresponse.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    Kresponse.Zip,
+                    string.IsNullOrWhiteSpace(Kresponse.PostalCode) ? null : Kresponse.PostalCode
+
+               }.Where(s => !string.IsNullOrWhiteSpace(s))
+           );
+
+            String RecipentAddress = string.Concat(Kresponse.Address_Deliv_Street, ", ", Kresponse.Address_Apt_Suite);
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
@@ -266,7 +288,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield2_topmostSubform.CopyA.CopyAHeader.c1_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_2", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.f1_2", requestInstitue.PayeeData);   //PayData
             if (Kresponse.PSE_Checkbox == "0")
             {
                 pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.FILERCheckboxes_ReadOrder.c1_2", "0");   //PSE_Checkbox
@@ -293,7 +315,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("topmostSubform.CopyA.LeftCol.c1_6", "0");   //Second_TIN_Notice
             }
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_8", instResponse.Idnumber);   //instResponse.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_8", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_9", Kresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_10", Kresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.Box1b_ReadOrder.f1_11", Kresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -327,7 +349,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield41_topmostSubform.Copy1.Copy1Header.c2_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_2", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
             if (Kresponse.PSE_Checkbox == "0")
             {
                 pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.FILERCheckbox_ReadOrder.c2_2", "0");   //PSE_Checkbox
@@ -349,7 +371,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_5", RecipentCity);   //RecipentCity
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_6", Kresponse.PSE_Name_Telephone_Number);   //PSE_Name_Telephone_Number
             pdfFormFields.SetField("topmostSubform.Copy1.LeftCol.f2_7", Kresponse.Rcp_Account);   //Kresponse.Rcp_Account
-            pdfFormFields.SetField("topmostSubform.Copy1.RghtCol.f2_8", instResponse.Idnumber);   //instResponse.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy1.RghtCol.f2_8", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.Copy1.RghtCol.f2_9", Kresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.Copy1.RghtCol.f2_10", Kresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.Copy1.RghtCol.Box1b_ReadOrder.f2_11", Kresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -379,7 +401,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c2_1", "0");   //Corrected 
             }
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_2", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
             if (Kresponse.PSE_Checkbox == "0")
             {
                 pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.FILERCheckbox_ReadOrder.c2_2", "0");   //PSE_Checkbox 
@@ -401,7 +423,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_5", RecipentCity);   //RecipentCity
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_6", Kresponse.PSE_Name_Telephone_Number);   //PSE_Name_Telephone_Number
             pdfFormFields.SetField("topmostSubform.CopyB.LeftCol.f2_7", Kresponse.Rcp_Account);   //Kresponse.Rcp_Account
-            pdfFormFields.SetField("topmostSubform.CopyB.RightCol.f2_8", "instResponse.Idnumber");   //instResponse.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyB.RightCol.f2_8", "requestInstitue.Idnumber");   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyB.RightCol.f2_9", Kresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyB.RightCol.f2_10", Kresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.CopyB.RightCol.Box1b_ReadOrder.f2_11", Kresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -431,7 +453,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("topmostSubform.Copy2.Copy2Header.c2_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_2", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
             if (Kresponse.PSE_Checkbox == "0")
             {
                 pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.FILERCheckbox_ReadOrder.c2_2", "0");   //PSE_Checkbox
@@ -453,7 +475,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_5", RecipentCity);   //RecipentCity
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_6", Kresponse.PSE_Name_Telephone_Number);   //PSE_Name_Telephone_Number
             pdfFormFields.SetField("topmostSubform.Copy2.LeftCol.f2_7", Kresponse.Rcp_Account);   //Kresponse.Rcp_Account
-            pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_8", "instResponse.Idnumber");   //instResponse.Idnumber
+            pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_8", "requestInstitue.Idnumber");   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_9", Kresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.f2_10", Kresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.Copy2.RghtCol.Box1b_ReadOrder.f2_11", Kresponse.Box_1b_Amount.ToString());   //Box_1b_Amount
@@ -487,7 +509,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield153_topmostSubform.CopyC.CopyCHeader.c2_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_2", PayData);   //PayData
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
             if (Kresponse.PSE_Checkbox == "0")
             {
                 pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.FILERCheckbox_ReadOrder.c2_2", "0");   //PSE_Checkbox
@@ -513,7 +535,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("topmostSubform.CopyC.LeftCol.c2_6", "0");   //Second_TIN_Notice
             }
-            pdfFormFields.SetField("topmostSubform.CopyC.RightCol.f2_8", "instResponse.Idnumber");   //instResponse.Idnumber
+            pdfFormFields.SetField("topmostSubform.CopyC.RightCol.f2_8", "requestInstitue.Idnumber");   //requestInstitue.Idnumber
             pdfFormFields.SetField("topmostSubform.CopyC.RightCol.f2_9", Kresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyC.RightCol.f2_10", Kresponse.Box_1a_Amount.ToString());   //Box_1a_Amount
             pdfFormFields.SetField("topmostSubform.CopyC.RightCol.Box1b_ReadOrder.f2_11", Kresponse.Box_1b_Amount.ToString());   //Box_1b_Amount

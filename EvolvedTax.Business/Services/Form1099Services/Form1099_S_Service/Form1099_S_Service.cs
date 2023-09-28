@@ -199,7 +199,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var Sresponse = _evolvedtaxContext.Tbl1099_S.FirstOrDefault(p => p.Id == Id);
-            var instResponse = _instituteService.GetInstituteDataById((int)Sresponse.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)Sresponse.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
@@ -224,6 +224,31 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
+
+            string Recepient_CountryCode = "";
+            if (Sresponse.Country != "United States")
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == Sresponse.Country);
+                if (country != null)
+                {
+                    Recepient_CountryCode = country.CountryId;
+                }
+            }
+
+            string RecipentCity = string.Join(", ",
+               new[]
+               {
+                    Sresponse.City,
+                    Sresponse.State,
+                    string.IsNullOrWhiteSpace(Sresponse.Province) ? null : Sresponse.Province,
+                     string.IsNullOrWhiteSpace(Recepient_CountryCode) ? null : Recepient_CountryCode,
+                    Sresponse.Zip,
+                    string.IsNullOrWhiteSpace(Sresponse.PostalCode) ? null : Sresponse.PostalCode
+
+               }.Where(s => !string.IsNullOrWhiteSpace(s))
+           );
+
+            String RecipentAddress = string.Concat(Sresponse.Address_Deliv_Street, ", ", Sresponse.Address_Apt_Suite);
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
@@ -236,8 +261,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield2_Form1099-S.CopyA.CopyAHeader.c1_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_2", requestInstitue.PayeeData);   //PayData
+            pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_3", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_4", Sresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_5", Sresponse.First_Name + " " + Sresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
             pdfFormFields.SetField("Form1099-S.CopyA.LeftCol.f1_6", Sresponse.Address_Deliv_Street + " " + Sresponse.Address_Apt_Suite);   //RecipentAddress
@@ -260,8 +285,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("Form1099-S.CopyB.CopyBHeader.c2_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
+            pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_3", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_4", Sresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_5", Sresponse.First_Name + " " + Sresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
             pdfFormFields.SetField("Form1099-S.CopyB.LeftCol.f2_6", Sresponse.Address_Deliv_Street + " " + Sresponse.Address_Apt_Suite);   //RecipentAddress
@@ -288,8 +313,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield33_Form1099-S.CopyC.CopyCHeader.c2_1", "0");   //Corrected
             }
-            pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_2", string.Concat(instResponse.InstitutionName, "\r\n", instResponse.Madd1, "\r\n", instResponse.Madd2, "\r\n", instResponse.Mcity, ", ", instResponse.Mstate, instResponse.Mprovince, ", ", instResponse.Mcountry, ", ", instResponse.Mzip, "\r\n", instResponse.Phone));   //PayData
-            pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_3", instResponse.Idnumber);   //requestInstitue.Idnumber
+            pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_2", requestInstitue.PayeeData);   //PayData
+            pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_3", requestInstitue.Idnumber);   //requestInstitue.Idnumber
             pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_4", Sresponse.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_5", Sresponse.First_Name + " " + Sresponse.Name_Line_2);   //request.First_Name + " " + request.Name_Line2
             pdfFormFields.SetField("Form1099-S.CopyC.LeftCol.f2_6", Sresponse.Address_Deliv_Street + " " + Sresponse.Address_Apt_Suite);   //RecipentAddress

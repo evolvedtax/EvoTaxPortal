@@ -11,6 +11,7 @@ using EvolvedTax.Data.Models.Entities._1099;
 using System.IO.Compression;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
+using EvolvedTax.Business.Services.InstituteService;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -18,14 +19,16 @@ namespace EvolvedTax.Business.Services.Form1099Services
     {
         readonly EvolvedtaxContext _evolvedtaxContext;
         readonly IMailService _mailService;
+        readonly IInstituteService _instituteService;
         readonly ITrailAudit1099Service _trailAudit1099Service;
 
 
-        public Form1099_CAP_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service)
+        public Form1099_CAP_Service(EvolvedtaxContext evolvedtaxContext, IMailService mailService, ITrailAudit1099Service trailAudit1099Service, IInstituteService instituteService)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _mailService = mailService;
             _trailAudit1099Service = trailAudit1099Service;
+            _instituteService = instituteService;
         }
         public async Task<MessageResponseModel> Upload1099_Data(IFormFile file, int entityId, int InstId, string UserId)
         {
@@ -157,7 +160,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, bool IsAll, string Page = "")
         {
             var request = _evolvedtaxContext.Tbl1099_CAP.FirstOrDefault(p => p.Id == Id);
-            var requestInstitue = _evolvedtaxContext.InstituteMasters.FirstOrDefault(p => p.InstId == request.InstID);
+            var requestInstitue = _instituteService.GetPayeeData((int)request.InstID);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
@@ -182,30 +185,6 @@ namespace EvolvedTax.Business.Services.Form1099Services
             PdfReader.unethicalreading = true;
             PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(newFilePath, FileMode.Create));
             AcroFields pdfFormFields = pdfStamper.AcroFields;
-
-            string Institution_CountryCode = "";
-            if (requestInstitue.Mcountry != "United States")
-            {
-                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == requestInstitue.Mcountry);
-                if (country != null)
-                {
-                    Institution_CountryCode = country.CountryId;
-                }
-            }
-
-
-            string PayData = string.Concat(
-                requestInstitue.InstitutionName, "\r\n",
-                requestInstitue.Madd1, "\r\n",
-                requestInstitue.Madd2, "\r\n",
-                requestInstitue.Mcity, ", ",
-                requestInstitue.Mstate, " ",
-                requestInstitue.Mprovince, ", ",
-                !string.IsNullOrWhiteSpace(Institution_CountryCode) ? Institution_CountryCode + ", " : "",
-                requestInstitue.Mzip, ", ",
-                requestInstitue.Phone
-            );
-
 
             string Recepient_CountryCode = "";
             if (request.Country != "United States")
@@ -247,7 +226,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             {
                 pdfFormFields.SetField("efield2_topmostSubform.CopyA.CopyHeader.c1_1", "0");   //PageACorrected
             }
-            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);
@@ -281,7 +260,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                 pdfFormFields.SetField("topmostSubform.CopyB.CopyHeader.c1_1", "1");   //PageAFATCA
 
             }
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);
@@ -320,7 +299,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
 
 
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_2", PayData);   //PageAPayerNameAddress
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_2", requestInstitue.PayeeData);   //PageAPayerNameAddress
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_3", requestInstitue.Idnumber);
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_4", request.Rcp_TIN);   //Rcp_TIN
             pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f1_5", request.First_Name + " " + request.Name_Line_2);
