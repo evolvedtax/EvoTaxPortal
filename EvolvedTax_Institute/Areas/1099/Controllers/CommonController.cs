@@ -152,14 +152,15 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             if (_webHostEnvironment.IsDevelopment())
             {
                 //host = HttpContext.Request.Host.Value;
-                host = "localhost:7228";
+                host = "localhost:7163";
             }
             else
             {
-                host = URLConstants.RecipientUrl; // Hostname (e.g., example.com)
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
             }
+            //host = HttpContext.Request.Host.Value; // Comment this line if the project is other than institute
             var fullUrl = $"{scheme}://{host}";
-            string URL = string.Concat(fullUrl, "/Account", "/OTP");
+            string URL = string.Concat(fullUrl, "/AuthRecVerify/Account", "/OTP");
             switch (form)
             {
                 case AppConstants.Form1099MISC:

@@ -55,7 +55,10 @@ namespace EvolvedTax.Business.Services.InstituteService
                                 .ToList();
 
             var query = from p in _evolvedtaxContext.InstituteEntities
-                        where userEntityIds.Contains(p.EntityId) && p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
+                            //where userEntityIds.Contains(p.EntityId) && p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
+                        where (userEntityIds.Count == 0 || userEntityIds.Contains(p.EntityId))
+                && p.InstituteId == InstId
+                && p.IsActive == RecordStatusEnum.Active
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,

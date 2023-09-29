@@ -8,6 +8,6 @@ namespace EvolvedTax.Common.Constants
         public const string InstituteUrl = @"www.admin.evolvedforms.com";
         public const string EvoTaxPortalUrl = @"www.sysadmin.evolvedforms.com";
         public const string ClientUrl = @"www.evolvedforms.com";
-        public const string RecipientUrl = @"";
+        public const string RecipientUrl = @"admin.evolvedforms.com";
     }
 }

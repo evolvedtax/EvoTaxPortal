@@ -79,7 +79,7 @@ namespace EvolvedTax_Institute.Controllers
 
             var userFullName = SessionUser.FirstName + " " + SessionUser.LastName;
             await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
-            return Json(new { Status = true });
+            return Json(new { Status = true }); 
         }
         //[HttpGet]
         //public IActionResult ChangeInstituteName(string u, string s)
@@ -333,6 +333,10 @@ namespace EvolvedTax_Institute.Controllers
             });
             string UserId = HttpContext.Session.GetString("UserId");
             string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == UserId && p.EntityId == EntityId)?.Role.Trim();
+            if (userRole == null)
+            {
+                userRole = SessionUser.UserRole;
+            }
             ViewBag.UserRole = userRole;
 
 

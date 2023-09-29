@@ -128,8 +128,10 @@ namespace EvolvedTax_Institute.Controllers
             }).AsQueryable();
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
-            ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
-            ViewData["TransactionHistory"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
             return View(model);
         }
         [HttpPost]

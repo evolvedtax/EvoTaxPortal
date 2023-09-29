@@ -110,7 +110,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             TempData["Message"] = "Please enter correct OTP";
             return View(nameof(OTP));
         }
-        [UserSession]
+        [RecipientSession]
         [HttpGet]
         public IActionResult Verify()
         {
@@ -126,7 +126,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             return View(result);
         }
 
-        [UserSession]
+        [RecipientSession]
         public async Task<IActionResult> Verify(VerifyModel model)
         {
             var formName = HttpContext.Session.GetString("OTPFormName");

@@ -70,7 +70,7 @@
                         <ul class="nav nav-tabs">
                             @*<li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>*@
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>*@
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-4">Announcements</a></li>
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-6">E-mail Settings</a></li>
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-7">Undelivered E-mails</a></li>*@
@@ -84,9 +84,9 @@
                             </li>
                         </ul>
                         <div class="tab-content">
-                            @if (SuperAdminOrAdmin)
+                           @* @if (SuperAdminOrAdmin)
                             {
-                                <div id="tab-1" class="tab-pane active">
+                                <div id="tab-1" class="tab-pane">
                                     <div class="panel-body">
                                         <div class="row">
                                             <form id="formInviteEmail" style="width:100%"
@@ -111,7 +111,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            }
+                            }*@
                             <div id="tab-3" class="tab-pane">
                                 <div class="panel-body">
                                     <!-- User Guidance -->
@@ -172,7 +172,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <div id="tab-4" class="tab-pane">
+                            <div id="tab-4" class="tab-pane active">
                                 <div class="panel-body">
                                     <form id="formPostAnnouncement" style="width:100%"
                                           method="post"
