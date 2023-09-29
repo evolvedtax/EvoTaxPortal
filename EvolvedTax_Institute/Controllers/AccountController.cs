@@ -408,7 +408,8 @@ namespace EvolvedTax_Institute.Controllers
                 var userModel = new User { UserName = model.SUEmailAddress, Email = model.SUEmailAddress };
                 var token = await _userManager.GenerateEmailConfirmationTokenAsync(userModel);
                 //var confirmationLink = Url.Action(nameof(Verify), "Account", new { s = token, e = model.SUEmailAddress }, Request.Scheme) ?? "";
-                var confirmationLink = Url.Action(nameof(Login), "Account", Request.Scheme) ?? "";
+                var confirmationLink = Url.Action("Login", "Account", null, Request.Scheme) ?? "";
+                //var confirmationLink = Url.Action(nameof(Login), "Account", Request.Scheme) ?? "";
                 await _mailService.EmailVerificationAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", confirmationLink);
                 return View("Index");
             }

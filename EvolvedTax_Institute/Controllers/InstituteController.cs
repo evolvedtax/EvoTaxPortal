@@ -333,6 +333,10 @@ namespace EvolvedTax_Institute.Controllers
             });
             string UserId = HttpContext.Session.GetString("UserId");
             string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == UserId && p.EntityId == EntityId)?.Role.Trim();
+            if (userRole == null)
+            {
+                userRole = SessionUser.UserRole;
+            }
             ViewBag.UserRole = userRole;
 
 
