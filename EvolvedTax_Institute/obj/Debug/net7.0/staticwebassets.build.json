@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "FSY0cpZEdeNHURC0m0KLXwNL3glAUvkQHNPhLXbDA/o=",
+  "Hash": "AbhbXE52XQT94+tt70IDw/l6N0J6tJOFJrSGtePMf1U=",
   "Source": "EvolvedTax_Institute",
   "BasePath": "_content/EvolvedTax_Institute",
   "Mode": "Default",
@@ -84692,23 +84692,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Rotativa\\wkhtmltopdf.exe"
-    },
-    {
-      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\~$Form1099_B_Template.xlsx",
-      "SourceId": "EvolvedTax_Institute",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
-      "BasePath": "_content/EvolvedTax_Institute",
-      "RelativePath": "Templates/~$Form1099_B_Template.xlsx",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Templates\\~$Form1099_B_Template.xlsx"
     },
     {
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_B_Template.xlsx",
