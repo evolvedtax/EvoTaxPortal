@@ -13,6 +13,7 @@ using static EvolvedTax.Data.Models.Entities.VerifyModel;
 
 namespace EvolvedTax1099_Recipient.Controllers
 {
+    [Area("AuthRecVerify")]
     public class AccountController : Controller
     {
         #region Fields

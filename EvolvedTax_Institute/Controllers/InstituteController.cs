@@ -79,7 +79,7 @@ namespace EvolvedTax_Institute.Controllers
 
             var userFullName = SessionUser.FirstName + " " + SessionUser.LastName;
             await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
-            return Json(new { Status = true });
+            return Json(new { Status = true }); 
         }
         //[HttpGet]
         //public IActionResult ChangeInstituteName(string u, string s)

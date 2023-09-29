@@ -45,15 +45,12 @@
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
             </li>
-            <li class="@Html.IsSelected(controller: "Setting")">
-                <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
-                @* <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Account", cssClass: "in")">
-                <li class="@Html.IsSelected(action: "UpdateProfile")"><a href="@Url.Action("UpdateProfile", "Account")">Update Profile</a></li>
-                <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "UserManagement")">User Management</a></li>
-                <li class="@Html.IsSelected(action: "EmailReminder")"><a href="@Url.Action("EmailReminder", "Account")">Set Email Reminder</a></li>
-                </ul>*@
-            </li>
-
+            @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
+            {
+                <li class="@Html.IsSelected(controller: "Setting")">
+                    <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
+                </li>
+            }
             @*   <li class="@Html.IsSelected(controller: "Individual")">
 
             <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Individual", cssClass: "in")">
