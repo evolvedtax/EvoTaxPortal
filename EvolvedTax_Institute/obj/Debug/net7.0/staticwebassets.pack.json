@@ -5,6 +5,7 @@
       "PackagePath": "staticwebassets\\EvolvedTax_Institute.bundle.scp.css"
     },
     {
+<<<<<<< HEAD
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\All Form Single File.pdf",
       "PackagePath": "staticwebassets\\1099B\\All Form Single File.pdf"
     },
@@ -2901,6 +2902,8 @@
       "PackagePath": "staticwebassets\\Forms\\f1099s.pdf"
     },
     {
+=======
+>>>>>>> 0e54e59c00cbd4091bc571b979d56b8361eafb65
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\ProfileImage\\5091e683-0a75-4df1-9277-06c6a8a25c2d.png",
       "PackagePath": "staticwebassets\\ProfileImage\\5091e683-0a75-4df1-9277-06c6a8a25c2d.png"
     },
@@ -2919,82 +2922,6 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
       "PackagePath": "staticwebassets\\Rotativa\\wkhtmltopdf.exe"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099ATemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099ATemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099DIVTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099DIVTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099INTTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099INTTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099KTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099KTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099LSTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099LSTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099MISCTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099MISCTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099NECTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099NECTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099OIDTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099OIDTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099QTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099QTemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099STemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099STemplate.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_B_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_B_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_CAP_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_CAP_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_C_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_C_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_G_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_G_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_LTC_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_LTC_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_PATR_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_PATR_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_R_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_R_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_SA_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_SA_Template.xlsx"
-    },
-    {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_SB_Template.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\Form1099_SB_Template.xlsx"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteClientsTemplate.xlsx",

@@ -16,6 +16,7 @@ using static System.Net.WebRequestMethods;
 
 namespace EvolvedTax.Controllers
 {
+
     public class AdminController : BaseController
     {
         #region Fields
@@ -81,6 +82,7 @@ namespace EvolvedTax.Controllers
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Login));
         }
+        [AllowAnonymous]
         public ActionResult AccessDenied(short statusCode)
         {
             ViewBag.StatusCode = statusCode;
