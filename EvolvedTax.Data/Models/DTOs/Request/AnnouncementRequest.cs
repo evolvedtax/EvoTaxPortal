@@ -15,7 +15,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         [StringLength(100)]
         public string Title { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
-        public DateTime EndDate { get; set; }
+        public DateTime EndDate { get; set; } = DateTime.Now; 
         public DateTime CreatedDate { get; set; }
 
     }
