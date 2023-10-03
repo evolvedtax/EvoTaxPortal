@@ -1,14 +1,6 @@
 {
   "Version": 1,
-<<<<<<< HEAD
-  "Hash": "JCABtrHhjBxJcvqZOnVvy5OlEDorYdM5cnwf4Au+/Lg=",
-=======
-<<<<<<< HEAD
-  "Hash": "Z7XrEpLTOilbRlLuCG6KHhjGB27l2RLIDZpoHQS7AZg=",
-=======
-  "Hash": "AbhbXE52XQT94+tt70IDw/l6N0J6tJOFJrSGtePMf1U=",
->>>>>>> Naeem_Branch
->>>>>>> 0e54e59c00cbd4091bc571b979d56b8361eafb65
+  "Hash": "uGkb126YCy4ypeljQ1gCOeRtumkuz47L7p+Q+WCJbEU=",
   "Source": "EvolvedTax_Institute",
   "BasePath": "_content/EvolvedTax_Institute",
   "Mode": "Default",
@@ -59,7 +51,6 @@
       "OriginalItemSpec": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\EvolvedTax_Institute.bundle.scp.css"
     },
     {
-<<<<<<< HEAD
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099B\\All Form Single File.pdf",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",
@@ -11926,8 +11917,6 @@
       "OriginalItemSpec": "wwwroot\\1099SB\\WALLACE G _Form_1099SB_4.pdf"
     },
     {
-=======
->>>>>>> 0e54e59c00cbd4091bc571b979d56b8361eafb65
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\api\\typehead_collection.json",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",
@@ -84620,8 +84609,6 @@
       "OriginalItemSpec": "wwwroot\\Rotativa\\wkhtmltopdf.exe"
     },
     {
-<<<<<<< HEAD
-=======
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_B_Template.xlsx",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",
@@ -84945,7 +84932,6 @@
       "OriginalItemSpec": "wwwroot\\Templates\\Form1099STemplate.xlsx"
     },
     {
->>>>>>> Naeem_Branch
       "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteClientsTemplate.xlsx",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",

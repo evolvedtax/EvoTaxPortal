@@ -81,6 +81,20 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             _evolvedtaxContext.SaveChanges();
         }
 
-        
+        public List<AlertRequest> GetAlertsSuperAdmin()
+        {
+            var alerts = _evolvedtaxContext.Alert
+                 .OrderByDescending(a => a.Id)
+                   .Take(20)
+              .Select(a => new AlertRequest
+              {
+                  Title = a.Title,
+                  AlertText = a.AlertText,
+                  CreatedDate = (DateTime)a.CreatedDate
+              })
+              .ToList();
+
+            return alerts;
+        }
     }
 }

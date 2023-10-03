@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Azure;
 using EvolvedTax.Business.MailService;
+using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Business.Services.UserService;
@@ -32,10 +33,11 @@ namespace EvolvedTax_Admin.Controllers
         readonly SignInManager<User> _signInManager;
         readonly IMapper _mapper;
         private readonly EvolvedtaxContext _evolvedtaxContext;
+        readonly IAnnouncementService _announcementService;
         #endregion
 
         #region Ctor
-        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null, UserManager<User> userManager = null, SignInManager<User> signInManager = null)
+        public AccountController(IUserService userService, IGeneralQuestionareService generalQuestionareService, IInstituteService instituteService, IMailService mailService, EvolvedtaxContext evolvedtaxContext, IAnnouncementService announcementService, IMapper mapper = null, IWebHostEnvironment webHostEnvironment = null, UserManager<User> userManager = null, SignInManager<User> signInManager = null)
         {
             _generalQuestionareService = generalQuestionareService;
             _userService = userService;
@@ -46,6 +48,7 @@ namespace EvolvedTax_Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
             _signInManager = signInManager;
+            _announcementService = announcementService;
         }
         #endregion
 
@@ -537,7 +540,7 @@ namespace EvolvedTax_Admin.Controllers
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
             // for local email otp 
-            //user.Email = "niqbal@mailinator.com";
+           // user.Email = "niqbal@mailinator.com";
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
@@ -882,7 +885,8 @@ namespace EvolvedTax_Admin.Controllers
             bool IsuperAdmin= User.IsInRole("SuperAdmin");
             
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId, IsuperAdmin);
+            //List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId, IsuperAdmin);
+            List<AlertRequest> alerts = _announcementService.GetAlertsSuperAdmin();
             return Json(alerts);
         }
 
@@ -896,7 +900,8 @@ namespace EvolvedTax_Admin.Controllers
         public IActionResult MarkAllAlertsAsRead()
         {
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var response = _instituteService.MarkAllAlertsAsRead(instId);
+            //var response = _instituteService.MarkAllAlertsAsRead(instId);
+            var response = true;
             return Json(new { success = response });
         }
 
