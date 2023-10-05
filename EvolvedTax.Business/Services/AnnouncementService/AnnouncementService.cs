@@ -80,6 +80,20 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             _evolvedtaxContext.Announcements.Add(model);
             _evolvedtaxContext.SaveChanges();
         }
+        public void SaveSubscription(FormAccessRequest request)
+        {
+
+            var model = new FormAccess
+            {
+               Form_Name=request.Form_Name,
+               CreatedDate=DateTime.Now,
+               InstituteID=request.InstituteID,
+
+            };
+
+            _evolvedtaxContext.FormAccess.Add(model);
+            _evolvedtaxContext.SaveChanges();
+        }
 
         public List<AlertRequest> GetAlertsSuperAdmin()
         {

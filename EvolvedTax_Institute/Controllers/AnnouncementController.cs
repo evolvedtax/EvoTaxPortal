@@ -48,6 +48,25 @@ namespace EvolvedTax_Institute.Controllers
             //return Task.FromResult<IActionResult>(RedirectToAction("Index"));
             return Json(new { Status = true });
         }
+        [HttpPost]
+        public IActionResult PostSubscription(SettingRequest model)
+        {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+           
+            foreach (var selectedFormName in model.FormAccessRequest.SelectedFormNames)
+            {
+                if (!string.IsNullOrEmpty(selectedFormName))
+                {
+                    model.FormAccessRequest.InstituteID = instId;
+                    model.FormAccessRequest.Form_Name = selectedFormName;
+                    _announcementService.SaveSubscription(model.FormAccessRequest);
+                }
+      
+            }
+    
+        
+            return Json(new { Status = true });
+        }
 
         public IActionResult GetAnnouncements()
         {
