@@ -8,6 +8,7 @@ namespace EvolvedTax.Data.Models.DTOs
         public string? FirstName { get; set; } = string.Empty;
         public string? LastName { get; set; } = string.Empty;
         public string? UserName { get; set; } = string.Empty;
+        public string? TypeOfEntity { get; set; } = string.Empty;
         public int InstituteId { get; set; }
     }
 }

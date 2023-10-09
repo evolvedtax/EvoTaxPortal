@@ -70,14 +70,14 @@
             <div class="ibox ">
                 <div class="ibox-title">
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div style="display:flex">
                                 <label class="ml-2 mr-2" style="margin:auto">Select Entity for Further Details</label>
                                 <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:fit-content">
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-5 mb-2">
+                        <div class="col-md-4 mb-2">
                             <form id="formUpdateEmailFrequency"
                                   method="post"
                                   data-ajax="true"
@@ -100,18 +100,8 @@
                                 </div>
                             </form>
                         </div>
-             
-                        @{
-                            var userRole = ViewBag.UserRole as string;
-                        }
-                        @if (userRole != "Viewer")
-                        {
-                            <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        }
 
-                        <div id="uploadDataDiv" class="col-md-3 mb-2 mb-2 pull-right" hidden>
+                        <div id="uploadDataDiv" class="col-md-3 mb-2 mr-5 pull-right" hidden>
                             <div style="display:flex">
                                 <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
                                 <div class="input-group">
@@ -122,6 +112,16 @@
                                 </div>
                             </div>
                         </div>
+                        @{
+                            var userRole = ViewBag.UserRole as string;
+                        }
+                        @if (userRole != "Viewer")
+                        {
+                            <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                        }
+
                     </div>
                 </div>
                 <div class="ibox-content">
