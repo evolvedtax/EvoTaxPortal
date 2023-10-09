@@ -174,12 +174,78 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
             entity.ToTable("Tbl1099_MISC", tb => tb.HasTrigger("trg_tbl1099_MISC_UpdateHistory"));
         });
 
-        //modelBuilder.Entity<Tbl1099_NEC>(entity =>
-        //{
-        //    entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
-        //});
-
-
+        modelBuilder.Entity<Tbl1099_A>(entity =>
+        {
+            entity.ToTable("tbl1099_A", tb => tb.HasTrigger("trg_tbl1099_A_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_B>(entity =>
+        {
+            entity.ToTable("Tbl1099_B", tb => tb.HasTrigger("trg_tbl1099_B_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_C>(entity =>
+        {
+            entity.ToTable("Tbl1099_C", tb => tb.HasTrigger("trg_tbl1099_C_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_CAP>(entity =>
+        {
+            entity.ToTable("Tbl1099_CAP", tb => tb.HasTrigger("trg_tbl1099_CAP_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_DIV>(entity =>
+        {
+            entity.ToTable("Tbl1099_DIV", tb => tb.HasTrigger("trg_tbl1099_DIV_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_G>(entity =>
+        {
+            entity.ToTable("Tbl1099_G", tb => tb.HasTrigger("trg_tbl1099_G_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_INT>(entity =>
+        {
+            entity.ToTable("Tbl1099_INT", tb => tb.HasTrigger("trg_tbl1099_INT_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_K>(entity =>
+        {
+            entity.ToTable("Tbl1099_K", tb => tb.HasTrigger("trg_tbl1099_K_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_LS>(entity =>
+        {
+            entity.ToTable("Tbl1099_LS", tb => tb.HasTrigger("trg_tbl1099_LS_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_LTC>(entity =>
+        {
+            entity.ToTable("Tbl1099_LTC", tb => tb.HasTrigger("trg_tbl1099_LTC_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_NEC>(entity =>
+        {
+            entity.ToTable("Tbl1099_NEC", tb => tb.HasTrigger("trg_tbl1099_NEC_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_OID>(entity =>
+        {
+            entity.ToTable("Tbl1099_OID", tb => tb.HasTrigger("trg_tbl1099_OID_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_PATR>(entity =>
+        {
+            entity.ToTable("Tbl1099_PATR", tb => tb.HasTrigger("trg_tbl1099_PATR_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_Q>(entity =>
+        {
+            entity.ToTable("Tbl1099_Q", tb => tb.HasTrigger("trg_tbl1099_Q_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_R>(entity =>
+        {
+            entity.ToTable("Tbl1099_R", tb => tb.HasTrigger("trg_tbl1099_R_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_S>(entity =>
+        {
+            entity.ToTable("Tbl1099_S", tb => tb.HasTrigger("trg_tbl1099_S_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_SA>(entity =>
+        {
+            entity.ToTable("Tbl1099_SA", tb => tb.HasTrigger("trg_tbl1099_SA_UpdateHistory"));
+        });
+        modelBuilder.Entity<Tbl1099_SB>(entity =>
+        {
+            entity.ToTable("Tbl1099_SB", tb => tb.HasTrigger("trg_tbl1099_SB_UpdateHistory"));
+        });
         modelBuilder.Entity<RoleHierarchy>().HasNoKey();
         modelBuilder.Entity<Announcement>(entity =>
         {
