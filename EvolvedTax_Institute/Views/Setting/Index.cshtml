@@ -77,6 +77,7 @@
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-9">Subscription</a></li>
                         </ul>
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
@@ -363,6 +364,48 @@
                                     @Html.Raw(ViewData["TransactionHistory"])
                                 </div>
                             </div>
+                            <div id="tab-9" class="tab-pane">
+                                <div class="panel-body">
+                                    <form id="formPostSubscription" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessPostSubscription"
+                                          data-ajax-url="@Url.Action("PostSubscription","Announcement")">
+                                        
+                                         
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                    <label>Select Application(s)</label>
+                                                            <br />
+                                                            @foreach (var item in ViewBag.CheckBoxFormNameList)
+                                                            {
+                                                                var isChecked = ViewBag.SelectedFormNames.Contains(item.Form_Name) ? "checked" : "";
+
+                                                              <label>
+                                                                    <input type="checkbox" name="FormAccessRequest.SelectedFormNames" value="@item.Form_Name" @isChecked />
+                                                                    @item.Form_Name
+                                                        </label>
+                                                        <br />
+                                                                
+                                                            }
+                                                            <input type="hidden" asp-for="FormAccessRequest.SelectedFormNames" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                   
+                                        <div class="pull-left mt-2">
+                                            <button type="button" id="submitPostSubscription" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -609,6 +652,14 @@
         //-------------- END EMAIL SETTING ---------------------------//
         //-------------- START EMAIL SETTING ---------------------------//
 
+        $('#submitPostSubscription').click(function () {
+            let form = $('#formPostSubscription');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+
         $('#submitPostAnnouncement').click(function () {
             let form = $('#formPostAnnouncement');
             if (form.valid()) {
@@ -619,6 +670,13 @@
         function ajaxsuccessPostAnnouncement(response) {
             if (response.Status == true) {
                 COMMON.notification(1, "Announcement posted.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        function ajaxsuccessPostSubscription(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Subscribe");
             } else {
                 COMMON.notification(2, "Something went wrong");
             }

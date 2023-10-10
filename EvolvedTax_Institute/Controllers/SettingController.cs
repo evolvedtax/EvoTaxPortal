@@ -132,6 +132,18 @@ namespace EvolvedTax_Institute.Controllers
             ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
             ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            //----------- subscription -------------//
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+            var instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var selectedFormNames = _evolvedtaxContext.FormAccess
+                              .Where(f => f.InstituteID == instituteId)
+                              .Select(f => f.Form_Name)
+                              .ToList();
+
+            ViewBag.CheckBoxFormNameList = FormNameItems;
+            ViewBag.SelectedFormNames = selectedFormNames;
+
             return View(model);
         }
         [HttpPost]
@@ -149,5 +161,7 @@ namespace EvolvedTax_Institute.Controllers
             return Json(new { Status = true });
         }
         #endregion
+
+
     }
 }

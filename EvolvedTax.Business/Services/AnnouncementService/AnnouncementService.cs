@@ -80,7 +80,35 @@ namespace EvolvedTax.Business.Services.AnnouncementService
             _evolvedtaxContext.Announcements.Add(model);
             _evolvedtaxContext.SaveChanges();
         }
+        public void SaveSubscription(FormAccessRequest request)
+        {
 
-        
+            var model = new FormAccess
+            {
+               Form_Name=request.Form_Name,
+               CreatedDate=DateTime.Now,
+               InstituteID=request.InstituteID,
+
+            };
+
+            _evolvedtaxContext.FormAccess.Add(model);
+            _evolvedtaxContext.SaveChanges();
+        }
+
+        public List<AlertRequest> GetAlertsSuperAdmin()
+        {
+            var alerts = _evolvedtaxContext.Alert
+                 .OrderByDescending(a => a.Id)
+                   .Take(20)
+              .Select(a => new AlertRequest
+              {
+                  Title = a.Title,
+                  AlertText = a.AlertText,
+                  CreatedDate = (DateTime)a.CreatedDate
+              })
+              .ToList();
+
+            return alerts;
+        }
     }
 }
