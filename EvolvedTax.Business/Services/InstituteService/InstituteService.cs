@@ -259,7 +259,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                     //    return new MessageResponseModel { Status = Status, Message = new { Title = entityNameExcel + " " + "entity does not appear", TagLine = "Name of the selected entity does not appear in the uploaded excel sheet" }, Param = "Client" };
                     //}
                     // Check for duplicate records within the Excel sheet
-                    if (uniqueClientEmailIds.Contains(clientEmailId) || uniqueEntityNames.Contains(entityNameExcel))
+                    if (uniqueClientEmailIds.Contains(clientEmailId))
                     {
                         // This client is a duplicate within the Excel sheet
                         Status = false;
