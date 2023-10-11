@@ -160,8 +160,8 @@
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <div class="dropdown-menu-horizontal">
-                                                                    <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','KeepRecord','id=@item.Id','')">Keep</a>
-                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                    <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','/1099/Form1099_SB_/KeepRecord','id=@item.Id','')">Keep</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Form1099_SB_/DeleteRecord','id=@item.Id','')">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -177,7 +177,8 @@
                                                                     <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
                                                                     <a class="dropdown-item" href="javascript:void()">E-mail to the recipient and send to IRS</a>
                                                                     <a class="dropdown-item" href="javascript:void()">File with IRS</a>
-                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Form1099_SB_/DeleteRecord','id=@item.Id','')">Delete</a>
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -563,5 +564,71 @@
                 // Send the AJAX request
                 xhr.send(formData);
             }
+            confirmAlert1099 = function (message, url, params, gridId) {
+                var confirmed = false;
+                swal({
+                    title: "Are you sure you want to delete this record?",
+                    text: "Please check before deleting the record!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#1ab394",
+                    confirmButtonText: "Delete",
+                    cancelButtonText: "Cancel"
+                },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            debugger
+                            $('.loading').show();
+                            var jsonResponse =doAjaxPostWithJSONResponse1099(url, params);
+                            if (jsonResponse.Status === true) {
+                                COMMON.notification(1, "Record deleted")
+                                //COMMON.dataTableInitialized();
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 5000);
+                            } else if (jsonResponse.Status === false) {
+                                //COMMON.notification(2, "Something went wrong")
+                                //COMMON.AlertSuccessMessage(jsonResponse.Message,'Warning','warning');
+                                COMMON.notification(3, jsonResponse.Message);
+                            }
+                            confirmed = true;
+                        } else {
+                            swal("Cancelled", "You have cancelled delete operation!", "error");
+                            return false;
+                        }
+                    });
+                return confirmed;
+            };
+
+            doAjaxPostWithJSONResponse1099 = function (url, params) {
+                debugger;
+                var data = params;
+                //var data = {
+                //    entityId: params.entityId,
+                //    isLocked: params.isLocked
+                //};
+                var jsonResponse = null;
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: params,
+                    async: false,
+                    success: function (response) {
+                        $('.loading').hide();
+                        COMMON.notification(response.type, response.message);
+                        //$('#changeEntity').change();
+                        jsonResponse = response;
+                    },
+                    error: function (xhr, status, error) {
+                        debugger;
+                        COMMON.displayError(xhr.responseText, xhr.status);
+                        $('.loading').hide();
+
+                        COMMON.notification(2, "There's some technical error.");
+                        jsonResponse = null;
+                    }
+                });
+                return jsonResponse;
+            };
         </script>
     }

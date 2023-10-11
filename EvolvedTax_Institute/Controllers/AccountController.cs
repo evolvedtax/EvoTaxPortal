@@ -215,11 +215,10 @@ namespace EvolvedTax_Institute.Controllers
             });
 
 
-            ViewBag.EntityType = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
-            {
-                Text = p.EntityType,
-                Value = p.EntityType
-            });
+            ViewBag.EntityType = new List<SelectListItem>{
+                new SelectListItem{ Text = AppConstants.IndividualEntityType, Value = AppConstants.IndividualEntityType},
+                new SelectListItem{ Text = AppConstants.BusinessEntityType, Value = AppConstants.BusinessEntityType}
+            };
 
             ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
             {
@@ -336,7 +335,7 @@ namespace EvolvedTax_Institute.Controllers
                                 var scheme = HttpContext.Request.Scheme; // "http" or "https"
                                 var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
                                 var fullUrl = $"{scheme}://{host}";
-                                var URL = string.Concat(fullUrl, "Account/", "Login");
+                                var URL = string.Concat(fullUrl, "/Account/", "Login");
                                 var user = await _userManager.GetUserAsync(User);
                                 var invitee = await _userManager.GetUserAsync(User);
                                 await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role);
@@ -349,7 +348,7 @@ namespace EvolvedTax_Institute.Controllers
             return Json(new { Status = true, Message = "Invited link has been sent." });
         }
 
-      
+
 
         public async Task<IActionResult> SignUp()
         {
@@ -380,11 +379,10 @@ namespace EvolvedTax_Institute.Controllers
             });
 
 
-            ViewBag.EntityType = _evolvedtaxContext.MasterEntityTypes.Select(p => new SelectListItem
-            {
-                Text = p.EntityType,
-                Value = p.EntityType
-            });
+            ViewBag.EntityType = new List<SelectListItem>{
+                new SelectListItem{ Text = AppConstants.IndividualEntityType, Value = AppConstants.IndividualEntityType},
+                new SelectListItem{ Text = AppConstants.BusinessEntityType, Value = AppConstants.BusinessEntityType}
+            };
 
             ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
             {
@@ -593,7 +591,7 @@ namespace EvolvedTax_Institute.Controllers
                 HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
                 HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
                 HttpContext.Session.SetString("UserId", user.Id);
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Summary");
             }
             else if (result.IsLockedOut)
             {
@@ -901,8 +899,8 @@ namespace EvolvedTax_Institute.Controllers
         public async Task<IActionResult> GetAlertsNotification()
         {
             //var user = await _userManager.GetUserAsync(User);
-            bool IsuperAdmin= User.IsInRole("SuperAdmin");
-            
+            bool IsuperAdmin = User.IsInRole("SuperAdmin");
+
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             List<AlertRequest> alerts = _instituteService.GetAlertsNotification(instId, IsuperAdmin);
             return Json(alerts);

@@ -111,7 +111,6 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         #endregion
 
 
-        [Route("Form1099_PATR_/KeepRecord")]
         [HttpPost]
         public async Task<IActionResult> KeepRecord(int id)
         {
@@ -123,7 +122,6 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             return Json(response);
         }
 
-        [Route("Form1099_PATR_/DeleteRecord")]
         [HttpPost]
         public async Task<IActionResult> DeleteRecord(int id)
         {

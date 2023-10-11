@@ -148,7 +148,6 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
 
         }
 
-        [Route("Form1099_LS_/KeepRecord")]
         [HttpPost]
         public async Task<IActionResult> KeepRecord(int id)
         {
@@ -159,8 +158,6 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             var response = await _form1099_LS_Service.KeepRecord(id);
             return Json(response);
         }
-
-        [Route("Form1099_LS_/DeleteRecord")]
         [HttpPost]
         public async Task<IActionResult> DeleteRecord(int id)
         {

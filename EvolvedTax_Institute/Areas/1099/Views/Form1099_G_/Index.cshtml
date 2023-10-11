@@ -214,8 +214,8 @@
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <div class="dropdown-menu-horizontal">
-                                                                    <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','KeepRecord','id=@item.Id','')">Keep</a>
-                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                    <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','/1099/Form1099_G_/KeepRecord','id=@item.Id','')">Keep</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Form1099_G_/DeleteRecord','id=@item.Id','')">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -231,7 +231,7 @@
                                                                     <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
                                                                     <a class="dropdown-item" href="javascript:void()">E-mail to the recipient and send to IRS</a>
                                                                     <a class="dropdown-item" href="javascript:void()">File with IRS</a>
-                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteRecord','id=@item.Id','')">Delete</a>
+                                                                    <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Form1099_G_/DeleteRecord','id=@item.Id','')">Delete</a>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -1,4 +1,5 @@
 ﻿using EvolvedTax.Business.Services.AnnouncementService;
+using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
@@ -9,13 +10,16 @@ namespace EvolvedTax_Institute.Controllers
     public class DashboardController : BaseController
     {
         readonly IAnnouncementService _announcementService;
-        public DashboardController(IAnnouncementService announcementService)
+        readonly IInstituteService _instituteService;
+        public DashboardController(IAnnouncementService announcementService, IInstituteService instituteService)
         {
             _announcementService = announcementService;
+            _instituteService = instituteService;
         }
         public IActionResult Index()
         {
-            return View();
+            DashboardRequest model = _instituteService.DashboardDataByInstituteId(SessionUser.InstituteId);
+            return View(model);
         }
         public IActionResult GetAnnouncements()
         {

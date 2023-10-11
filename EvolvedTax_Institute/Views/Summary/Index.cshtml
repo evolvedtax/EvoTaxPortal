@@ -1,0 +1,452 @@
+﻿@{
+    ViewData["Title"] = "Summary";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+    .tab {
+        display: none;
+    }
+
+    .modal-dialog {
+        width: 580px;
+        height: 300px;
+        margin: 18rem auto;
+    }
+
+    .modal-content {
+        border-radius: 0.75rem
+    }
+    /* .modal-dialog-centered {
+                    display: flex;
+                    align-items: center;
+                }*/
+</style>
+<button class="btn btn-primary" data-toggle="modal" data-target="#Individual" data-backdrop="static" data-keyboard="false">Open Individual Modal</button>
+@*<button class="btn btn-primary" data-toggle="modal" data-target="#Business" data-backdrop="static" data-keyboard="false">Open Business Modal</button>*@
+
+<div class="modal fade" id="Individual" tabindex="-1" role="dialog" aria-labelledby="IndividualLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Questionare</h4>
+            </div>
+            <div class="">
+                <div class="">
+                    <form id="regForm"
+                          method="post"
+                          data-ajax="true"
+                          data-ajax-method="post"
+                          data-ajax-mode="replace"
+                          data-ajax-failure="COMMON.ajaxfailure"
+                          data-ajax-loading="#ajax-loader"
+                          data-ajax-success="ajaxsuccess"
+                          data-ajax-url="@Url.Action("","")">
+
+                        <!-- One "tab" for each step in the form: -->
+                        <div class="ml-4 mr-4">
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group mt-3">
+                                        <label>Is your personal information up to date?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q1" id="Q1Op1" value="true">
+                                                <label class="form-check-label" for="Q1Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q1" id="Q1Op2" value="false">
+                                                <label class="form-check-label" for="Q1Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group  mt-3">
+                                        <label>Do you have all your tax documents ready?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q2" id="Q2Op1" value="true">
+                                                <label class="form-check-label" for="Q2Op1"> Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q2" id="Q2Op2" value="false">
+                                                <label class="form-check-label" for="Q2Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Do you want a professional review at Evolved LLC?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q7" id="Q7Op1" value="true">
+                                                <label class="form-check-label" for="Q7Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q7" id="Q7Op2" value="false">
+                                                <label class="form-check-label" for="Q7Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Hidden field for isPartialSave -->
+                        <!-- Circles which indicates the steps of the form: -->
+                        <div id="stepsDiv" style="text-align:center;margin-top:40px;">
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
+                <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="BusinessLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Questionare</h4>
+            </div>
+            <div class="">
+                <div class="">
+                    <form id="regForm"
+                          method="post"
+                          data-ajax="true"
+                          data-ajax-method="post"
+                          data-ajax-mode="replace"
+                          data-ajax-failure="COMMON.ajaxfailure"
+                          data-ajax-loading="#ajax-loader"
+                          data-ajax-success="ajaxsuccess"
+                          data-ajax-url="@Url.Action("","")">
+
+                        <!-- One "tab" for each step in the form: -->
+                        <div class="ml-4 mr-4">
+                            <div class="tab">
+                                <div>
+                                    <div class="form-group mt-3">
+                                        <label>How many business entities are you filing for?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" name="Q1" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab">
+                                <div>
+                                    <div class="form-group  mt-3">
+                                        <label>Do you want to import data or enter it manually?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q2" id="Q2Op1" value="true">
+                                                <label class="form-check-label" for="Q2Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q2" id="Q2Op2" value="false">
+                                                <label class="form-check-label" for="Q2Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <label>Which types of 1099 forms are you filing.<span class="text-danger"> *</span></label>
+                                    <div class="form-group">
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099A" value="">
+                                            <label class="form-check-label" for="1099A"> 1099-A </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099B" value="">
+                                            <label class="form-check-label" for="1099B"> 1099-B </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099C" value="">
+                                            <label class="form-check-label" for="1099C"> 1099-C </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099CAP" value="">
+                                            <label class="form-check-label" for="1099CAP"> 1099-CAP </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099G" value="">
+                                            <label class="form-check-label" for="1099G"> 1099-G </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099INT" value="">
+                                            <label class="form-check-label" for="1099INT"> 1099-INT </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099LTC" value="">
+                                            <label class="form-check-label" for="1099LTC"> 1099-LTC </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099NEC" value="">
+                                            <label class="form-check-label" for="1099NEC"> 1099-NEC </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099PATR" value="">
+                                            <label class="form-check-label" for="1099PATR"> 1099-PATR </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099R" value="">
+                                            <label class="form-check-label" for="1099R"> 1099-R </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099SA" value="">
+                                            <label class="form-check-label" for="1099SA"> 1099-SA </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099SB" value="">
+                                            <label class="form-check-label" for="1099SB"> 1099-SB </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099DIV" value="">
+                                            <label class="form-check-label" for="1099DIV"> 1099-DIV </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099K" value="">
+                                            <label class="form-check-label" for="1099K"> 1099-K </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099LS" value="">
+                                            <label class="form-check-label" for="1099LS"> 1099-LS </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099MISC" value="">
+                                            <label class="form-check-label" for="1099MISC"> 1099-MISC </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099OID" value="">
+                                            <label class="form-check-label" for="1099OID"> 1099-OID </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099Q" value="">
+                                            <label class="form-check-label" for="1099Q"> 1099-Q </label>
+                                        </div>
+                                        <div class="col-md-3 form-check abc-checkbox abc-checkbox-success form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="1099S" value="">
+                                            <label class="form-check-label" for="1099S"> 1099-S </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Are there any specific state requirements to consider?<span class="text-danger"> *</span></label>
+                                        <input id="" name="Q4" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Would you like assistance with tax planning or compliance?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q5" id="Q5Op1" value="true">
+                                                <label class="form-check-label" for="Q5Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q5" id="Q5Op2" value="false">
+                                                <label class="form-check-label" for="Q5Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Do you have any tax advisors or accountants you'd like to invite?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q6" id="Q6Op1" value="true">
+                                                <label class="form-check-label" for="Q6Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q6" id="Q6Op2" value="false">
+                                                <label class="form-check-label" for="Q6Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab mt-3">
+                                <div>
+                                    <div class="form-group">
+                                        <label>Do you want a professional review at Evolved LLC?<span class="text-danger"> *</span></label>
+                                        <div class="form-group">
+                                            <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q7" id="Q7Op1" value="true">
+                                                <label class="form-check-label" for="Q7Op1">Yes </label>
+                                            </div>
+                                            <div class="form-check abc-radio form-check-inline">
+                                                <input class="form-check-input" type="radio" name="Q7" id="Q7Op2" value="false">
+                                                <label class="form-check-label" for="Q7Op2"> No </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- Hidden field for isPartialSave -->
+                        <!-- Circles which indicates the steps of the form: -->
+                        <div id="stepsDiv" style="text-align:center;margin-top:40px;">
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="prevBtn" class="btn btn-md btn-dark" onclick="nextPrev(-1)"> << Previous Page</button>
+                <button type="button" id="nextBtn" class="btn btn-md btn-primary" onclick="nextPrev(1)">Next Page >></button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+@section Scripts {
+    <script>
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
+        function showTab(n) {
+            // This function will display the specified tab of the form ...
+            var x = document.querySelectorAll('.tab:not([hidden])');
+
+            x[n].style.display = "block";
+            // ... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+            }
+            else {
+                document.getElementById("prevBtn").style.display = "inline";
+                document.getElementById("nextBtn").innerHTML = "Next Page >>";
+            }
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Submit";
+                //document.getElementById("nextBtn").innerHTML = "Next Page >>";
+            }
+            // ... and run a function that displays the correct step indicator:
+            fixStepIndicator(n)
+        }
+
+        function nextPrev(n) {
+            var x = document.getElementsByClassName("tab");
+            if (n == 1 && !$('#regForm').valid()) return false;
+            if (currentTab < x.length) {
+
+                // Hide the current tab:
+                x[currentTab].style.display = "none";
+                // Increase or decrease the current tab by 1:
+            }
+            currentTab = currentTab + n;
+            // if you have reached the end of the form... :
+            if (currentTab >= x.length) {
+                //...the form gets submitted:
+                // document.getElementById("regForm").submit();
+                let form = $('#regForm');
+                if (form.valid()) {
+                    $('#isPartialSave').val('false');
+                    form.submit();
+                }
+                return false;
+            }
+
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+        }
+
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            //x = document.getElementsByClassName("tab");
+            var x = document.querySelectorAll('.tab:not([hidden])');
+            sp = x[currentTab].getElementsByTagName("span");
+            y = x[currentTab].getElementsByTagName("input");
+            z = x[currentTab].getElementsByTagName("select");
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].hasAttribute("required") && y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+                if (y[i].id == "socialSecurityNumber" && y[i].value.length < 11) {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < z.length; i++) {
+                // If a field is empty...
+                if (z[i].hasAttribute("required") && z[i].value == "") {
+                    // add an "invalid" class to the field:
+                    sp[7].style.backgroundColor = "#ffdddd"
+                    // and set the current valid status to false:
+                    valid = false;
+                }
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < y.length; i++) {
+                    // If a field is empty...
+                    if (y[i].hasAttribute("required") && y[i].value != "") {
+                        // add an "invalid" class to the field:
+                        y[i].classList.remove("invalid")
+                        // and set the current valid status to false:
+                    }
+                }
+
+                // A loop that checks every input field in the current tab:
+                for (i = 0; i < z.length; i++) {
+                    // If a field is empty...
+                    if (z[i].hasAttribute("required") && z[i].value != "") {
+                        // add an "invalid" class to the field:
+                        sp[7].style.backgroundColor = "";
+                        // and set the current valid status to false:
+                    }
+                }
+                document.getElementsByClassName("step")[currentTab].className += " finish";
+            }
+            return valid; // return the valid status
+        }
+
+        function fixStepIndicator(n) {
+            // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("step");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" active", "");
+            }
+            //... and adds the "active" class to the current step:
+            x[n].className += " active";
+        }
+    </script>
+}

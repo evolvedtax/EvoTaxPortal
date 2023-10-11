@@ -25,8 +25,8 @@ namespace EvolvedTax_Admin.Controllers
         }
         public IActionResult GetAlerts()
         {
-            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            List<AlertRequest> alerts = _announcementService.GetAlerts(instId);
+  
+            List<AlertRequest> alerts = _announcementService.GetAlertsSuperAdmin();
             return PartialView("/Views/Announcement/_Alerts.cshtml", alerts);
         }
     }

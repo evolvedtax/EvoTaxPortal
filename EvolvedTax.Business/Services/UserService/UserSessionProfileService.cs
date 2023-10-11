@@ -23,6 +23,7 @@ namespace EvolvedTax.Business.Services.SessionProfileUser
                 ob.FirstName = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "FirstName")?.Value;
                 ob.LastName = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "LastName")?.Value;
                 ob.UserName = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+                ob.TypeOfEntity = httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "TypeOfEntity")?.Value;
                 ob.InstituteId = Convert.ToInt16(httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "InstituteId")?.Value == "" ? 0.ToString() : httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "InstituteId")?.Value);
                 return ob;
             }
