@@ -286,11 +286,10 @@ var COMMON = (function () {
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
                 if (response.Status) {
-                    
+
                     // Show the progress bar
                     var progressDiv = document.getElementById('progress');
                     progressDiv.style.display = 'block';
-
                     if (response.Param == "Client" && response.Message.length > 0) {
                         $('#dupplication-ibox').prop('hidden', false);
                         //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
@@ -364,7 +363,7 @@ var COMMON = (function () {
                     console.log('Upload completed successfully');
                 } else {
                     // Continue showing the progress bar until completion record is received
-                    COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
+                    location.reload();
                 }
             } else {
                 // File upload failed
@@ -375,7 +374,7 @@ var COMMON = (function () {
         // Send the AJAX request
         xhr.send(formData);
 
-        
+
     }
     COMMON.doAjaxToDownloadFile = function (url, params, fileName) {
         $.ajax({
@@ -513,7 +512,7 @@ var COMMON = (function () {
         var today = now.getFullYear() + "-" + (month) + "-" + (day);
         $('#datePicker').val(today);
     };
-    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText,canceBtnTxt, url, params, gridId) {
+    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText, canceBtnTxt, url, params, gridId) {
         var confirmed = false;
 
         swal({

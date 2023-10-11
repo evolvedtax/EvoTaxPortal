@@ -47,5 +47,18 @@
 /EvolvedTax.Business/bin/Release/net7.0
 /EvolvedTax.Common/bin/Release/net7.0
 /EvolvedTax.Data/bin/Release/net7.0
+<<<<<<< HEAD
+/EvolvedTax_Institute/obj/Release/net7.0
+/EvolvedTax_Institute/bin/Debug/net7.0
+=======
 /EvolvedTax_Institute
 /EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.AssemblyReference.cache
+>>>>>>> Owais_Branch
+/EvolvedTax_Institute/bin/Debug/net7.0/EvolvedTax_Institute.staticwebassets.runtime.json
+/EvolvedTax_Institute/obj/Debug/net7.0/staticwebassets/msbuild.EvolvedTax_Institute.Microsoft.AspNetCore.StaticWebAssets.props
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.AssemblyReference.cache
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.CoreCompileInputs.cache
+/EvolvedTax_Institute/obj/Debug/net7.0/EvolvedTax_Institute.csproj.FileListAbsolute.txt
+/EvolvedTax_Institute/obj/Debug/net7.0/staticwebassets.build.json
+/EvolvedTax_Institute/obj/Debug/net7.0/staticwebassets.development.json
+/EvolvedTax_Institute/obj/Debug/net7.0/staticwebassets.pack.json

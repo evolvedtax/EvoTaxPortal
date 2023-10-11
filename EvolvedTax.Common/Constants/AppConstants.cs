@@ -19,6 +19,9 @@ namespace EvolvedTax.Common.Constants
 
         public const string Entity = "Entity";
         public const string Client = "Client";
+        
+        public const string IndividualEntityType = "Individual";
+        public const string BusinessEntityType = "Business";
 
         public const string IndividualStatus = "IndividualStatus";
         public const string EntityStatus = "EntityStatus";

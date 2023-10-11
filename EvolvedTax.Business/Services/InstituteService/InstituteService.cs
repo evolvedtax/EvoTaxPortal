@@ -160,7 +160,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
                     var entity = new InstituteEntity
                     {
-                        EntityName = excelRow.GetCell(0)?.ToString(),
+                        EntityName = excelRow.GetCell(0)?.ToString()?.Trim(),
                         Ein = excelRow.GetCell(1)?.ToString(),
                         EntityRegistrationDate = DateTime.Parse(excelRow.GetCell(2)?.ToString() ?? "01/01/0001"),
                         Address1 = excelRow.GetCell(3)?.ToString(),
@@ -973,6 +973,43 @@ namespace EvolvedTax.Business.Services.InstituteService
              );
 
             return (requestInstitue.Idnumber ?? string.Empty, PayData);
+        }
+        public DashboardRequest DashboardDataByInstituteId(int instituteId)
+        {
+            var instituteData = _evolvedtaxContext.InstitutesClients.Where(p => p.InstituteId == instituteId);
+            var emailSubmittedRequest = new EmailNotSendCountRequest
+            {
+                W8_BEN_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENForm && p.ClientStatus == 1),
+                W8_BEN_E_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENEForm && p.ClientStatus == 1),
+                W8_ECI_Counts = instituteData.Count(p => p.FormName == AppConstants.W8ECIForm && p.ClientStatus == 1),
+                W8_EXP_Counts = instituteData.Count(p => p.FormName == AppConstants.W8EXPForm && p.ClientStatus == 1),
+                W8_IMY_Counts = instituteData.Count(p => p.FormName == AppConstants.W8IMYForm && p.ClientStatus == 1),
+                W9_Counts = instituteData.Count(p => p.FormName == AppConstants.W9Form && p.ClientStatus == 1),
+            };
+            var formPendingRequest = new FormPendingCountRequest
+            {
+                W8_BEN_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENForm && p.ClientStatus == 2),
+                W8_BEN_E_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENEForm && p.ClientStatus == 2),
+                W8_ECI_Counts = instituteData.Count(p => p.FormName == AppConstants.W8ECIForm && p.ClientStatus == 2),
+                W8_EXP_Counts = instituteData.Count(p => p.FormName == AppConstants.W8EXPForm && p.ClientStatus == 2),
+                W8_IMY_Counts = instituteData.Count(p => p.FormName == AppConstants.W8IMYForm && p.ClientStatus == 2),
+                W9_Counts = instituteData.Count(p => p.FormName == AppConstants.W9Form && p.ClientStatus == 2),
+            };
+            var formSubmittedRequest = new FormSubmittedCountRequest
+            {
+                W8_BEN_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENForm && p.ClientStatus == 3),
+                W8_BEN_E_Counts = instituteData.Count(p => p.FormName == AppConstants.W8BENEForm && p.ClientStatus == 3),
+                W8_ECI_Counts = instituteData.Count(p => p.FormName == AppConstants.W8ECIForm && p.ClientStatus == 3),
+                W8_EXP_Counts = instituteData.Count(p => p.FormName == AppConstants.W8EXPForm && p.ClientStatus == 3),
+                W8_IMY_Counts = instituteData.Count(p => p.FormName == AppConstants.W8IMYForm && p.ClientStatus == 3),
+                W9_Counts = instituteData.Count(p => p.FormName == AppConstants.W9Form && p.ClientStatus == 3),
+            };
+            var request = new DashboardRequest();
+            request.EmailNotSentCount = emailSubmittedRequest;
+            request.FormPendingCount = formPendingRequest;
+            request.FormSubmittedCount = formSubmittedRequest;
+
+            return request;
         }
     }
 }
