@@ -14,6 +14,7 @@ namespace EvolvedTax_Institute.Controllers
         }
         public IActionResult Index()
         {
+            var sd = SessionUser.TypeOfEntity;
             return View();
         }
 
