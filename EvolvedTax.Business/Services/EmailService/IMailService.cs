@@ -20,6 +20,6 @@ namespace EvolvedTax.Business.MailService
         Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName, string adminUser, string acceptLink, string rejectLink, string Comments);
         Task SendOTPToRecipientAsync(string otp, string Email, string Subject, string URL);
         Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form);
-        Task SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject, VerifyModel model);
+        Task<string> SendConfirmationEmailToRecipient(IpInfo? ipInfo,string email, string subject, VerifyModel model);
     }
 }

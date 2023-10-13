@@ -460,31 +460,42 @@ Technology Team at Evolved LLC";
                                   {{tds}}
                                 </table>
                                 <br/><br/>
-                                If it was not you, please contact us at technology@evolvedtax.com immediately. Your login details are below:
-                                <br/><br/>
-                                <table border='1'>
-                                        <tr>
-                                            <th style='width:10%'>Country</th>
-                                            <th style='width:10%'>City</th>
-                                            <th style='width:10%'>RegionName</th>
-                                            <th style='width:10%'>Timezone</th>
-                                            <th style='width:10%'>IP</th>
-                                            <th style='width:10%'>ISP</th>
-                                        </tr>
-                                        <tr>
-                                            <td style='text-align:center;'>{{Country}}</td>
-                                            <td style='text-align:center;'>{{City}}</td>
-                                            <td style='text-align:center;'>{{RegionName}}</td>
-                                            <td style='text-align:center;'>{{Timezone}}</td>
-                                            <td style='text-align:center;'>{{IP}}</td>
-                                            <td style='text-align:center;'>{{Isp}}</td>
-                                        </tr>
-                                    </table>
-                                
+                                If it was not you, please contact us at technology@evolvedtax.com immediately.
                                 <br/><br/>
                                 Thank you for your cooperation in this matter.<br/><br/>
                                 Regards,<br/>
                                 Technology Team at Evolved LLC";
+
+        public static string PdfEmailTempForElecAccep = @"
+                                <!DOCTYPE html>
+                                <html>
+                                <body>
+                                <strong>From:</strong> {{fromEmail}}
+                                <br/>
+                                <strong>Sent:</strong> {{sentTime}}
+                                <br/>    
+                                <strong>To:</strong> {{toEmail}}
+                                <br/>
+                                <strong>Subject:</strong> {{subject}}
+                                <br/><br/>
+                                Dear User,<br/><br/>
+                                We received your confirmation for 1099 Forms via e-mail as follows:<br/><br/>
+                                
+                                <table border='1'>
+                                    <tr>
+                                        <th style='width:20%'>Form</th>
+                                        <th style='width:20%'>Status</th>
+                                    </tr>
+                                  {{tds}}
+                                </table>
+                                <br/><br/>
+                                If it was not you, please contact us at technology@evolvedtax.com immediately.
+                                <br/><br/>
+                                Thank you for your cooperation in this matter.<br/><br/>
+                                Regards,<br/>
+                                Technology Team at Evolved LLC
+                                </body>
+                                </html>";
 
     }
 }
