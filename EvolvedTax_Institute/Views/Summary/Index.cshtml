@@ -21,10 +21,10 @@
                     align-items: center;
                 }*/
 </style>
-<button class="btn btn-primary" data-toggle="modal" data-target="#Individual" data-backdrop="static" data-keyboard="false">Open Individual Modal</button>
-@*<button class="btn btn-primary" data-toggle="modal" data-target="#Business" data-backdrop="static" data-keyboard="false">Open Business Modal</button>*@
+@*<button class="btn btn-primary" data-toggle="modal" data-target="#Individual" data-backdrop="static" data-keyboard="false">Open Individual Modal</button>*@
+<button class="btn btn-primary" data-toggle="modal" data-target="#Business" data-backdrop="static" data-keyboard="false">Open Business Modal</button>
 
-<div class="modal fade" id="Individual" tabindex="-1" role="dialog" aria-labelledby="IndividualLabel" aria-hidden="true">
+@*<div class="modal fade" id="Individual" tabindex="-1" role="dialog" aria-labelledby="IndividualLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -112,9 +112,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
-@*<div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="BusinessLabel" aria-hidden="true">
+<div class="modal fade" id="Business" tabindex="-1" role="dialog" aria-labelledby="BusinessLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -139,7 +139,24 @@
                                     <div class="form-group mt-3">
                                         <label>How many business entities are you filing for?<span class="text-danger"> *</span></label>
                                         <div class="form-group">
-                                            <input class="form-control" type="number" name="Q1" />
+                                            <div class="form-group">
+                                                <div class="form-check abc-radio abc-radio-info form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="Q1" id="Q1Op1" value="true">
+                                                    <label class="form-check-label" for="Q1Op1">1-10</label>
+                                                </div>
+                                                <div class="form-check abc-radio form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="Q1" id="Q1Op2" value="false">
+                                                    <label class="form-check-label" for="Q1Op2">11-25</label>
+                                                </div>
+                                                <div class="form-check abc-radio form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="Q1" id="Q1Op3" value="false">
+                                                    <label class="form-check-label" for="Q1Op3">26-50</label>
+                                                </div>
+                                                <div class="form-check abc-radio form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="Q1" id="Q1Op4" value="false">
+                                                    <label class="form-check-label" for="Q1Op4">50+</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -325,7 +342,7 @@
             </div>
         </div>
     </div>
-</div>*@
+</div>
 
 @section Scripts {
     <script>
