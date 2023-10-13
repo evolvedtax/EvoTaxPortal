@@ -1,12 +1,14 @@
 ﻿using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Common.ExtensionMehtods;
 using EvolvedTax.Common.ExtensionMethods;
 using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1099;
 using EvolvedTax.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 using System.Net;
 using static EvolvedTax.Data.Models.Entities.VerifyModel;
@@ -18,14 +20,16 @@ namespace EvolvedTax1099_Recipient.Controllers
     {
         #region Fields
         readonly ITrailAudit1099Service _trailAudit1099Service;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         readonly IMailService _mailService;
         #endregion
 
         #region Ctor
-        public AccountController(ITrailAudit1099Service trailAudit1099Service, IMailService mailService)
+        public AccountController(ITrailAudit1099Service trailAudit1099Service, IMailService mailService, IWebHostEnvironment webHostEnvironment)
         {
             _trailAudit1099Service = trailAudit1099Service;
             _mailService = mailService;
+            _webHostEnvironment = webHostEnvironment;
         }
         #endregion
 
@@ -141,9 +145,10 @@ namespace EvolvedTax1099_Recipient.Controllers
             var response = await _trailAudit1099Service.UpdateRcpElecAcptnceStatusStatus(request);
             string jsonString = response.Description;
             IpInfo? ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonString);
-            
 
-            await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model);
+            var pdfContent = await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model);
+            var path = string.Concat(_webHostEnvironment.WebRootPath, "/ElecAccepEmailsInPdf", "/", response.RecipientEmail, "_", DateTime.Now.ToString("yyyyMMddHHmmss"), ".pdf");
+            AppCommonMethods.GeneratePdfFromHtml(path, pdfContent); // creating pdf from html
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(ResponseMessage));
         }

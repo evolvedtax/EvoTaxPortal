@@ -425,7 +425,7 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendElectronicAcceptanceEmail(string email,int EntityId,string body, string subject, string url,string form)
+        public async Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form)
         {
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
@@ -457,7 +457,7 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model)
+        public async Task<string> SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model)
         {
             var tdTemplate = "<tr><td style='text-align:center;'>{{form}}</td><td style='color:{{color}};text-align:center;'>{{status}}</td></tr>";
             var tds = new StringBuilder();
@@ -472,21 +472,19 @@ namespace EvolvedTax.Business.MailService
                 tds.Append(row);
             }
 
-            var result = tds.ToString();
-
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
             var content = AppConstants.ConfirmationEmailToRecipient
+                .Replace("{{tds}}", tds.ToString());
+            var psdfContent = AppConstants.PdfEmailTempForElecAccep
                 .Replace("{{tds}}", tds.ToString())
-                .Replace("{{Country}}", ipInfo?.Country)
-                .Replace("{{City}}", ipInfo?.City)
-                .Replace("{{RegionName}}", ipInfo?.RegionName)
-                .Replace("{{Timezone}}", ipInfo?.Timezone)
-                .Replace("{{IP}}", ipInfo?.Query)
-                .Replace("{{Isp}}", ipInfo?.Isp);
-            
+                .Replace("{{fromEmail}}", FromEmail)
+                .Replace("{{sentTime}}", DateTime.Now.ToString())
+                .Replace("{{toEmail}}", email)
+                .Replace("{{subject}}", subject
+                );
             try
             {
                 MailMessage message = new MailMessage();
@@ -508,6 +506,7 @@ namespace EvolvedTax.Business.MailService
             {
                 // Exception Details
             }
+            return psdfContent;
         }
 
     }
