@@ -39,13 +39,14 @@ namespace EvolvedTax1099_Recipient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> OTP(string? s = "", string e = "", string f = "")
+        public async Task<IActionResult> OTP(string? s = "", string e = "", string f = "", string i = "")
         {
             if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
                 s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 f = EncryptionHelper.Decrypt(f.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                i = EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 if (await _trailAudit1099Service.CheckIfRecipientRecordExist(s, e))
                 {
                     return RedirectToAction("AccessDenied", new { statusCode = 400 });
@@ -66,7 +67,7 @@ namespace EvolvedTax1099_Recipient.Controllers
                     FormName = f
                 };
                 await _trailAudit1099Service.AddUpdateRecipientAuditDetails(request);
-                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User");
+                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User",Convert.ToInt32(i));
                 ViewBag.RecipientEmail = s;
                 ViewBag.FormName = f;
                 HttpContext.Session.SetString("OTPRecipientEmail", s);

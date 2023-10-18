@@ -52,20 +52,27 @@
 
 </head>
 <body class="white-bg">
-
-    <div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div class="middle-box text-center loginscreen animated fadeInDown">
         <div>
             <form id="form" class="m-t" role="form" method="post" asp-action="Verify" asp-controller="Account">
                 <div class="form-group">
-                    <input id="status" class="form-control" name="status" hidden>
+                    <input id="status" class="form-control" name="status" hidden="">
                 </div>
                 <h3>Do you agree to receive 1099 form electronically through email?</h3>
-
                 <table class="table table-responsive table-bordered">
                     <thead>
                         <tr>
                             <th style="width:100%">Form</th>
-                            <th style="width:50%">Accept/Reject</th>
+                            <th style="width:50%">
+                                Accept
+                                <br/>
+                                <input type="radio" id="selectAllAccept">
+                            </th>
+                            <th style="width:50%">
+                                Reject
+                                <br />
+                                <input type="radio" id="selectAllReject">
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,17 +80,12 @@
                         {
                             <tr>
                                 <td>@Model.Items[i].FormName</td>
-                                <input type="text" name="Items[@i].FormName" value="@Model.Items[i].FormName" hidden>
+                                <input type="text" name="Items[@i].FormName" value="@Model.Items[i].FormName" hidden="">
                                 <td class="text-center">
-                                    <div class="switch">
-                                        <div class="onoffswitch">
-                                            <input type="checkbox" class="onoffswitch-checkbox" id="Items[@i].IsSelected" name="Items[@i].IsSelected" value="true">
-                                            <label class="onoffswitch-label" for="Items[@i].IsSelected">
-                                                <span class="onoffswitch-inner"></span>
-                                                <span class="onoffswitch-switch"></span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <input type="radio"  id="AcceptItems[@i].IsAccepted" name="Items[@i].Action" value="Accept">
+                                </td>
+                                <td class="text-center">
+                                    <input type="radio" id="RejectItems[@i].IsRejected" name="Items[@i].Action" value="Reject">
                                 </td>
                             </tr>
                         }
@@ -93,6 +95,8 @@
             </form>
         </div>
     </div>
+   
+
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -119,14 +123,73 @@
         <!-- Only for demo purpose -->
         <script src="~/js/common.js"></script>
     </environment>
+
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
-        $(document).ready(function () {
 
+        //$(document).ready(function () {
+        //    // Function to update the IsSelected property based on radio button selections
+        //    function updateIsSelected() {
+        //        $("input[type=radio]").each(function () {
+        //            var isSelectedName = $(this).attr("name").replace(".Action", ".IsSelected");
+        //            var isSelectedValue = $(this).val() === "Accept";
+        //            $("input[name='" + isSelectedName + "']").val(isSelectedValue);
+        //        });
+        //    }
+
+        //    // Click event for radio buttons
+        //    $("input[type=radio]").click(function () {
+        //        updateIsSelected();
+        //    });
+
+        //    // Click event for "Select All Accept"
+        //    $("#selectAllAccept").click(function () {
+        //        var isChecked = $(this).prop("checked");
+        //        $(":radio[name$='.Action'][value='Accept']").prop("checked", isChecked);
+        //        updateIsSelected();
+        //    });
+
+        //    // Click event for "Select All Reject"
+        //    $("#selectAllReject").click(function () {
+        //        var isChecked = $(this).prop("checked");
+        //        $(":radio[name$='.Action'][value='Reject']").prop("checked", isChecked);
+        //        updateIsSelected();
+        //    });
+        //});
+       $(document).ready(function () {
+        // Function to check/uncheck "Select All" based on individual radio buttons
+        function updateSelectAll() {
+            var allAcceptChecked = $("input[name^='Items'][value='Accept']:checked").length === $("input[name^='Items'][value='Accept']").length;
+            var allRejectChecked = $("input[name^='Items'][value='Reject']:checked").length === $("input[name^='Items'][value='Reject']").length;
+
+            $("#selectAllAccept").prop('checked', allAcceptChecked);
+            $("#selectAllReject").prop('checked', allRejectChecked);
+        }
+
+        // Check/uncheck individual radio buttons
+        $("input[name^='Items']").click(function () {
+            updateSelectAll();
         });
+
+        // Click event for "Select All Accept"
+        $("#selectAllAccept").click(function () {
+            var isChecked = $(this).prop('checked');
+            $("input[name^='Items'][value='Accept']").prop('checked', isChecked);
+            $("input[name^='Items'][value='Reject']").prop('checked', false);
+        });
+
+        // Click event for "Select All Reject"
+        $("#selectAllReject").click(function () {
+            var isChecked = $(this).prop('checked');
+            $("input[name^='Items'][value='Reject']").prop('checked', isChecked);
+            $("input[name^='Items'][value='Accept']").prop('checked', false);
+        });
+    });
+
         $("#submit").click(function () {
-            $('#submit').prop('disbaled', false);
-        })
+            $('#submit').prop('disabled', false);
+        });
     </script>
 </body>
+
 </html>

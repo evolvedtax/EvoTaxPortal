@@ -100,21 +100,25 @@ namespace EvolvedTax_Institute.Controllers
             model.InstituteMasterRequest = _mapper.Map<InstituteMasterRequest>(response ?? new InstituteMasterResponse());
             //------------ EMAIL REMINDER -------------//
 
-            var emailSettingModel = _evolvedtaxContext.EmailSetting.Select(p => new EmailSettingRequest
-            {
-                EmailDoamin = p.EmailDoamin,
-                Password = p.Password,
-                SMTPPort = p.SMTPPort,
-                SMTPServer = p.SMTPServer,
-                POPServer = p.POPServer,
-                POPPort = p.POPPort,
-            }).First();
+            var emailSettingModel = _evolvedtaxContext.EmailSetting
+        .Where(es => es.InstID == instId) 
+        .Select(p => new EmailSettingRequest
+        {
+            EmailDoamin = p.EmailDoamin,
+            Password = p.Password,
+            SMTPPort = p.SMTPPort,
+            SMTPServer = p.SMTPServer,
+            POPServer = p.POPServer,
+            POPPort = p.POPPort,
+        })
+        .FirstOrDefault();
+
             model.EmailSettingRequest = emailSettingModel;
             //----------- REQUEST NAME CHANGE ----------//
             var requestChangeName = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n.RequestedOn).LastOrDefault(p => p.RequesterUserId == SessionUser.UserId);
             model.InstituteRequestNameChange.IsApproved = requestChangeName != null ? requestChangeName.IsApproved : RequestChangeNameStatusEnum.Approved;
             var users = _userManager.Users;
-            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p=>p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
+            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p => p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
             {
                 Id = p.Id,
                 InstituteId = p.InstituteId,
@@ -124,7 +128,7 @@ namespace EvolvedTax_Institute.Controllers
                 ApprovedOn = p.ApprovedOn,
                 RequestedOn = p.RequestedOn,
                 RequesterUserId = p.RequesterUserId,
-                UserName = users.First(x=>x.Id == p.RequesterUserId).UserName ?? ""
+                UserName = users.First(x => x.Id == p.RequesterUserId).UserName ?? ""
             }).AsQueryable();
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
@@ -149,16 +153,46 @@ namespace EvolvedTax_Institute.Controllers
         [HttpPost]
         public IActionResult EmailSetting(SettingRequest request)
         {
-            var model = _evolvedtaxContext.EmailSetting.First();
-            model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
-            model.Password = request.EmailSettingRequest.Password;
-            model.SMTPPort = request.EmailSettingRequest.SMTPPort;
-            model.SMTPServer = request.EmailSettingRequest.SMTPServer;
-            model.POPServer = request.EmailSettingRequest.POPServer;
-            model.POPPort = request.EmailSettingRequest.POPPort;
-            _evolvedtaxContext.EmailSetting.Update(model);
+            var instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var model = _evolvedtaxContext.EmailSetting.FirstOrDefault(e => e.InstID == instituteId);
+
+            if (model != null)
+            {
+
+                model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
+                model.Password = request.EmailSettingRequest.Password;
+                model.SMTPPort = request.EmailSettingRequest.SMTPPort;
+                model.SMTPServer = request.EmailSettingRequest.SMTPServer;
+                model.POPServer = request.EmailSettingRequest.POPServer;
+                model.POPPort = request.EmailSettingRequest.POPPort;
+                if (instituteId != 0)
+                {
+                    model.InstID = instituteId;
+                }
+                _evolvedtaxContext.EmailSetting.Update(model);
+            }
+            else
+            {
+
+                model = new EmailSetting
+                {
+                    EmailDoamin = request.EmailSettingRequest.EmailDoamin,
+                    Password = request.EmailSettingRequest.Password,
+                    SMTPPort = request.EmailSettingRequest.SMTPPort,
+                    SMTPServer = request.EmailSettingRequest.SMTPServer,
+                    POPServer = request.EmailSettingRequest.POPServer,
+                    POPPort = request.EmailSettingRequest.POPPort
+                };
+                if (instituteId != 0)
+                {
+                    model.InstID = instituteId;
+                }
+                _evolvedtaxContext.EmailSetting.Add(model);
+            }
+
             _evolvedtaxContext.SaveChanges();
             return Json(new { Status = true });
+
         }
         #endregion
 

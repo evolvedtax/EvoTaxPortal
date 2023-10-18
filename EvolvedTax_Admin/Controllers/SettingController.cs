@@ -100,21 +100,24 @@ namespace EvolvedTax_Admin.Controllers
             model.InstituteMasterRequest = _mapper.Map<InstituteMasterRequest>(response);
             //------------ EMAIL REMINDER -------------//
 
-            var emailSettingModel = _evolvedtaxContext.EmailSetting.Select(p => new EmailSettingRequest
-            {
-                EmailDoamin = p.EmailDoamin,
-                Password = p.Password,
-                SMTPPort = p.SMTPPort,
-                SMTPServer = p.SMTPServer,
-                POPServer = p.POPServer,
-                POPPort = p.POPPort,
-            }).First();
+            var emailSettingModel = _evolvedtaxContext.EmailSetting
+                                     .Where(es => es.InstID == -1)
+                                     .Select(p => new EmailSettingRequest
+                                     {
+                                         EmailDoamin = p.EmailDoamin,
+                                         Password = p.Password,
+                                         SMTPPort = p.SMTPPort,
+                                         SMTPServer = p.SMTPServer,
+                                         POPServer = p.POPServer,
+                                         POPPort = p.POPPort,
+                                     })
+                                     .FirstOrDefault();
             model.EmailSettingRequest = emailSettingModel;
             //----------- REQUEST NAME CHANGE ----------//
             var requestChangeName = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n.RequestedOn).LastOrDefault(p => p.RequesterUserId == SessionUser.UserId);
             model.InstituteRequestNameChange.IsApproved = requestChangeName != null ? requestChangeName.IsApproved : RequestChangeNameStatusEnum.Approved;
             var users = _userManager.Users;
-            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p=>p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
+            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p => p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
             {
                 Id = p.Id,
                 InstituteId = p.InstituteId,
@@ -124,7 +127,7 @@ namespace EvolvedTax_Admin.Controllers
                 ApprovedOn = p.ApprovedOn,
                 RequestedOn = p.RequestedOn,
                 RequesterUserId = p.RequesterUserId,
-                UserName = users.First(x=>x.Id == p.RequesterUserId).UserName ?? ""
+                UserName = users.First(x => x.Id == p.RequesterUserId).UserName ?? ""
             }).AsQueryable();
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
@@ -135,7 +138,7 @@ namespace EvolvedTax_Admin.Controllers
         [HttpPost]
         public IActionResult EmailSetting(SettingRequest request)
         {
-            var model = _evolvedtaxContext.EmailSetting.First();
+            var model = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
             model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
             model.Password = request.EmailSettingRequest.Password;
             model.SMTPPort = request.EmailSettingRequest.SMTPPort;

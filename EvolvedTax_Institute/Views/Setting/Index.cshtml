@@ -76,8 +76,11 @@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-6">E-mail Settings</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
+
                             <li><a class="nav-link" data-toggle="tab" href="#tab-9">Subscription</a></li>
+                            
                         </ul>
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
@@ -359,6 +362,76 @@
                                     @Html.Raw(ViewData["UserManagement"])
                                 </div>
                             </div>
+                            <div id="tab-6" class="tab-pane">
+                                <div class="panel-body">
+                                    <form id="formEmailSetting" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessEmailSetting"
+                                          data-ajax-url="@Url.Action("EmailSetting","Setting")">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Domain E-mail Address</label>
+                                                    <input class="form-control" asp-for="EmailSettingRequest.EmailDoamin" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Password</label>
+                                                    <input class="form-control" type="password" asp-for="EmailSettingRequest.Password" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <section class="wrapper-sec">
+                                            <header class="float">
+                                                <h4>Outgoing Server</h4>
+                                            </header>
+                                            <div class="row" style="margin:20px">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>SMTP Server</label>
+                                                        <input class="form-control" asp-for="EmailSettingRequest.SMTPServer" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Port Number</label>
+                                                        <input class="form-control" asp-for="EmailSettingRequest.SMTPPort" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+                                        <section class="wrapper-sec mt-4">
+                                            <header class="float">
+                                                <h4>Incoming Server</h4>
+                                            </header>
+                                            <div class="row" style="margin:20px">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>POP Server</label>
+                                                        <input class="form-control" asp-for="EmailSettingRequest.POPServer">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Port Number</label>
+                                                        <input class="form-control" asp-for="EmailSettingRequest.POPPort">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                        <div class="pull-right mt-2">
+                                            <button type="button" id="submitEmailSetting" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             <div id="tab-8" class="tab-pane">
                                 <div class="panel-body">
                                     @Html.Raw(ViewData["TransactionHistory"])
@@ -406,6 +479,7 @@
                                     </form>
                                 </div>
                             </div>
+                          
                         </div>
                     </div>
                 </div>

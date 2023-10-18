@@ -20,19 +20,29 @@ namespace EvolvedTax.Business.MailService
     {
         private readonly IInstituteService _instituteService;
         private readonly ITrailAudit1099Service _trailAudit1099Service;
-        private readonly EmailSetting emailSetting;
+        private  EmailSetting emailSetting;
         private readonly EvolvedtaxContext _evolvedtaxContext;
 
-        public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service)
+        public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
         {
             _instituteService = instituteService;
             _evolvedtaxContext = evolvedtaxContext;
             _trailAudit1099Service = trailAudit1099Service;
-            emailSetting = _evolvedtaxContext.EmailSetting.First();
+            //emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == instituteId);
         }
 
-        public async Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL, string ActionText, string userName)
+        public void EmailSetting(int instituteId=-1)
         {
+            emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == instituteId);
+            if (emailSetting == null)
+            {
+                emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
+            }
+        }
+
+        public async Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL, string ActionText, string userName, int InstituteId = -1)
+        {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -73,8 +83,9 @@ namespace EvolvedTax.Business.MailService
                 }
             }
         }
-        public async Task EmailVerificationAsync(string UserFullName, String Email, string subject, string token, string URL)
+        public async Task EmailVerificationAsync(string UserFullName, String Email, string subject, string token, string URL, int InstituteId = -1)
         {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -143,8 +154,9 @@ namespace EvolvedTax.Business.MailService
             }
 
         }
-        public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL)
+        public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL,int InstituteId=-1)
         {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -200,8 +212,9 @@ namespace EvolvedTax.Business.MailService
             smtp.Send(message);
 
         }
-        public async Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator)
+        public async Task SendInvitaionEmail(List<InvitationEmailDetalsRequest> invitationEmailDetails, string uRL, int InstituteId, string subject, string administrator, int instituteId = -1)
         {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -236,8 +249,9 @@ namespace EvolvedTax.Business.MailService
                 }
             }
         }
-        public async Task SendShareInvitaionEmailSignUp(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role)
+        public async Task SendShareInvitaionEmailSignUp(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role, int InstituteId = -1)
         {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -272,8 +286,9 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendShareInvitaionEmail(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role)
+        public async Task SendShareInvitaionEmail(string email, string uRL, string userId, string subject, string administrator, string businessName, string nameOfEntity, string role, int instituteId = -1)
         {
+            EmailSetting(instituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -309,8 +324,9 @@ namespace EvolvedTax.Business.MailService
             }
         }
 
-        public async Task SendEmailForExpireSignUp(string email, string entityEmail, string Entity, string Role, DateTime? InviteDate, string InviteeName, string LoginUrl)
+        public async Task SendEmailForExpireSignUp(string email, string entityEmail, string Entity, string Role, DateTime? InviteDate, string InviteeName, string LoginUrl, int InstituteId = -1)
         {
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -394,8 +410,10 @@ namespace EvolvedTax.Business.MailService
                 // Handle exception
             }
         }
-        public async Task SendOTPToRecipientAsync(string otp, string s, string subject, string user)
+        public async Task SendOTPToRecipientAsync(string otp, string s, string subject, string user, int InstituteId = -1)
         {
+
+            EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -425,14 +443,15 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form)
+        public async Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form, int instituteId = -1)
         {
+            EmailSetting(instituteId);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
             body = AppConstants.SendLinkToRecipient
-               .Replace("{{link}}", string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form)));
+               .Replace("{{link}}", string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form), "&i=", EncryptionHelper.Encrypt(instituteId.ToString())));
             try
             {
                 MailMessage message = new MailMessage();

@@ -14,5 +14,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public string SMTPServer { get; set; } = string.Empty;
         public int? POPPort { get; set; }
         public string? POPServer { get; set; }
+        public int? InstID { get; set; } = 0;
     }
 }
