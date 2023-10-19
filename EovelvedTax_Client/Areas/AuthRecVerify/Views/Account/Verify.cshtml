@@ -58,18 +58,18 @@
                 <div class="form-group">
                     <input id="status" class="form-control" name="status" hidden="">
                 </div>
-                <h3>Do you agree to receive 1099 form electronically through email?</h3>
+                <h3>Please select your preferred method to receive below form1099(s) </h3>
                 <table class="table table-responsive table-bordered">
                     <thead>
                         <tr>
                             <th style="width:100%">Form</th>
                             <th style="width:50%">
-                                Accept
+                                Electronic Mail
                                 <br/>
                                 <input type="radio" id="selectAllAccept">
                             </th>
                             <th style="width:50%">
-                                Reject
+                                Paper Format
                                 <br />
                                 <input type="radio" id="selectAllReject">
                             </th>
@@ -81,17 +81,21 @@
                             <tr>
                                 <td>@Model.Items[i].FormName</td>
                                 <input type="text" name="Items[@i].FormName" value="@Model.Items[i].FormName" hidden="">
+                                <input type="hidden" name="Items[@i].Rcp_Email" class="hidden-email" value="@Model.Items[i].Rcp_Email" >
                                 <td class="text-center">
-                                    <input type="radio"  id="AcceptItems[@i].IsAccepted" name="Items[@i].Action" value="Accept">
+                                    @*<input type="radio"  id="AcceptItems[@i].IsAccepted" name="Items[@i].Action" value="Accept">*@
+                                    <input type="radio" name="Items[@i].Action" value="Accept">
                                 </td>
                                 <td class="text-center">
-                                    <input type="radio" id="RejectItems[@i].IsRejected" name="Items[@i].Action" value="Reject">
+                                    @*<input type="radio" id="RejectItems[@i].IsRejected" name="Items[@i].Action" value="Reject">*@
+                                    <input type="radio" name="Items[@i].Action" value="Reject">
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
                 <button type="submit" id="submit" class="btn btn-primary block full-width m-b">Submit</button>
+                <h3><label id="dynamicNote">Please note that email will be sent to <b style="font-weight: bold;">{emailaddress}</b></label></h3>
             </form>
         </div>
     </div>
@@ -127,36 +131,18 @@
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
 
-        //$(document).ready(function () {
-        //    // Function to update the IsSelected property based on radio button selections
-        //    function updateIsSelected() {
-        //        $("input[type=radio]").each(function () {
-        //            var isSelectedName = $(this).attr("name").replace(".Action", ".IsSelected");
-        //            var isSelectedValue = $(this).val() === "Accept";
-        //            $("input[name='" + isSelectedName + "']").val(isSelectedValue);
-        //        });
-        //    }
 
-        //    // Click event for radio buttons
-        //    $("input[type=radio]").click(function () {
-        //        updateIsSelected();
-        //    });
-
-        //    // Click event for "Select All Accept"
-        //    $("#selectAllAccept").click(function () {
-        //        var isChecked = $(this).prop("checked");
-        //        $(":radio[name$='.Action'][value='Accept']").prop("checked", isChecked);
-        //        updateIsSelected();
-        //    });
-
-        //    // Click event for "Select All Reject"
-        //    $("#selectAllReject").click(function () {
-        //        var isChecked = $(this).prop("checked");
-        //        $(":radio[name$='.Action'][value='Reject']").prop("checked", isChecked);
-        //        updateIsSelected();
-        //    });
-        //});
        $(document).ready(function () {
+
+            var emailValue = $(".hidden-email").val();
+
+            // Set the dynamic note with the email address
+            if (emailValue) {
+                var labelText = $("#dynamicNote").text();
+                labelText = labelText.replace("{emailaddress}", emailValue);
+                $("#dynamicNote").text(labelText);
+            }
+
         // Function to check/uncheck "Select All" based on individual radio buttons
         function updateSelectAll() {
             var allAcceptChecked = $("input[name^='Items'][value='Accept']:checked").length === $("input[name^='Items'][value='Accept']").length;

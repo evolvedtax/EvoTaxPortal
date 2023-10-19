@@ -82,7 +82,7 @@ namespace EvolvedTax.Business.Services.UserService
             var model = new InstituteMaster
             {
                 InstitutionName = request.SUInstitutionName,
-
+                EmailAddress = request.SUEmailAddress,
                 SupportEmail = string.IsNullOrEmpty(request.SupportEmailAddress) ? request.SUEmailAddress : request.SupportEmailAddress,
                 Idtype = request.SUIDType,
                 Idnumber = request.SUIDNumber,

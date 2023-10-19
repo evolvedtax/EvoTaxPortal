@@ -10,6 +10,9 @@ namespace EvolvedTax.Data.Models.Entities
         public class CheckboxItem
         {
             public string FormName { get; set; }
+            public string Rcp_Email { get; set; }
+            public string Action { get; set; }
+            public int Status { get; set; } // Use an integer to represent status
             public bool IsSelected { get; set; }
         }
     }

@@ -20,8 +20,11 @@ namespace EvolvedTax.Business.MailService
     {
         private readonly IInstituteService _instituteService;
         private readonly ITrailAudit1099Service _trailAudit1099Service;
-        private  EmailSetting emailSetting;
+        private EmailSetting emailSetting;
+        private InstituteMaster instituteMaster;
         private readonly EvolvedtaxContext _evolvedtaxContext;
+        private string SupportEmailForInstitute="";
+        private string NameForInstitute="";
 
         public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
         {
@@ -31,12 +34,20 @@ namespace EvolvedTax.Business.MailService
             //emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == instituteId);
         }
 
-        public void EmailSetting(int instituteId=-1)
+        public void EmailSetting(int instituteId = -1)
         {
             emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == instituteId);
+            instituteMaster = _evolvedtaxContext.InstituteMasters.FirstOrDefault(es => es.InstId == instituteId);
+            if (instituteMaster != null)
+            {
+                SupportEmailForInstitute = instituteMaster.SupportEmail != null ? instituteMaster.SupportEmail : instituteMaster.EmailAddress;
+                NameForInstitute =instituteMaster.InstitutionName;
+
+            }
             if (emailSetting == null)
             {
                 emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
+            
             }
         }
 
@@ -154,7 +165,7 @@ namespace EvolvedTax.Business.MailService
             }
 
         }
-        public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL,int InstituteId=-1)
+        public async Task SendOTPAsync(string OTP, string Email, string subject, string Username, string URL, int InstituteId = -1)
         {
             EmailSetting(InstituteId);
             var FromEmail = emailSetting.EmailDoamin;
@@ -476,8 +487,9 @@ namespace EvolvedTax.Business.MailService
                 // Exception Details
             }
         }
-        public async Task<string> SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model)
+        public async Task<string> SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model, int InstituteId)
         {
+            EmailSetting(InstituteId);
             var tdTemplate = "<tr><td style='text-align:center;'>{{form}}</td><td style='color:{{color}};text-align:center;'>{{status}}</td></tr>";
             var tds = new StringBuilder();
 
@@ -485,8 +497,8 @@ namespace EvolvedTax.Business.MailService
             {
                 var row = tdTemplate
                     .Replace("{{form}}", item.FormName)
-                    .Replace("{{status}}", item.IsSelected ? "Accepted" : "Rejected")
-                    .Replace("{{color}}", item.IsSelected ? "green" : "red");
+                  .Replace("{{status}}", item.Action == "Accept" ? "Accepted" : "Rejected")
+                .Replace("{{color}}", item.Action == "Accept" ? "green" : "red");
 
                 tds.Append(row);
             }
