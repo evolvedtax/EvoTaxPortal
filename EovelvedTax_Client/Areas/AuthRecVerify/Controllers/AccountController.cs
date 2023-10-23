@@ -68,7 +68,7 @@ namespace EvolvedTax1099_Recipient.Controllers
                     FormName = f
                 };
                 await _trailAudit1099Service.AddUpdateRecipientAuditDetails(request);
-                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User",Convert.ToInt32(i));
+                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User");
                 ViewBag.RecipientEmail = s;
                 ViewBag.FormName = f;
                 HttpContext.Session.SetString("OTPRecipientEmail", s);
@@ -157,7 +157,7 @@ namespace EvolvedTax1099_Recipient.Controllers
             string jsonString = response.Description;
             IpInfo? ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonString);
 
-            var pdfContent = await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model);
+            var pdfContent = await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model, Convert.ToInt32(InstituteId));
             var path = string.Concat(_webHostEnvironment.WebRootPath, "/ElecAccepEmailsInPdf", "/", response.RecipientEmail, "_", DateTime.Now.ToString("yyyyMMddHHmmss"), ".pdf");
             AppCommonMethods.GeneratePdfFromHtml(path, pdfContent); // creating pdf from html
             HttpContext.Session.Clear();

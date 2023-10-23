@@ -553,7 +553,7 @@ namespace EvolvedTax_Institute.Controllers
             // for local email otp 
             //user.Email = "niqbal@mailinator.com";
 
-            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "", user.InstituteId);
+            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }

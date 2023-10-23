@@ -23,8 +23,9 @@ namespace EvolvedTax.Business.MailService
         private EmailSetting emailSetting;
         private InstituteMaster instituteMaster;
         private readonly EvolvedtaxContext _evolvedtaxContext;
-        private string SupportEmailForInstitute="";
-        private string NameForInstitute="";
+        private string SupportEmailForInstitute = "";
+        private string NameForInstitute = "";
+        private string ClientName = "";
 
         public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
         {
@@ -41,16 +42,33 @@ namespace EvolvedTax.Business.MailService
             if (instituteMaster != null)
             {
                 SupportEmailForInstitute = instituteMaster.SupportEmail != null ? instituteMaster.SupportEmail : instituteMaster.EmailAddress;
-                NameForInstitute =instituteMaster.InstitutionName;
+                NameForInstitute = instituteMaster.InstitutionName;
 
+            }
+            if (emailSetting != null && string.IsNullOrEmpty(SupportEmailForInstitute) && string.IsNullOrEmpty(NameForInstitute))
+            {
+                SupportEmailForInstitute = emailSetting.EmailDoamin;
+                NameForInstitute = "Technology Team at Evolved LLC";
             }
             if (emailSetting == null)
             {
                 emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
-            
+                SupportEmailForInstitute = emailSetting.EmailDoamin;
+                NameForInstitute = "Technology Team at Evolved LLC";
+
             }
         }
+        public void SetClientName(int instituteId, String Email )
+        {
+            var response = _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == Email && p.InstituteId== instituteId).FirstOrDefault();
+     
+            if (response != null)
+            {
+              ClientName= string.Concat(response.PartnerName1," ", response.PartnerName2);
 
+            }
+      
+        }
         public async Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL, string ActionText, string userName, int InstituteId = -1)
         {
             EmailSetting(InstituteId);
@@ -63,6 +81,8 @@ namespace EvolvedTax.Business.MailService
                 content = AppConstants.EmailToClient
                     .Replace("{{Name}}", email.InstituteUserName)
                     .Replace("{{InstituteName}}", email.InstituteName)
+                      .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{NameForInstitute}}", NameForInstitute)
                     .Replace("{{link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
                 try
                 {
@@ -174,6 +194,8 @@ namespace EvolvedTax.Business.MailService
             var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.LoginOTP
                 .Replace("{{UserName}}", Username)
+                 .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                 .Replace("{{NameForInstitute}}", NameForInstitute)
                 .Replace("{{OTP}}", OTP);
             try
             {
@@ -236,6 +258,8 @@ namespace EvolvedTax.Business.MailService
                     .Replace("{{Name}}", "User")
                     .Replace("{{administrator}}", administrator)
                     .Replace("{{InstituteName}}", "Default")
+                    .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{NameForInstitute}}", NameForInstitute)
                     .Replace("{{link}}", uRL.Replace("id", EncryptionHelper.Encrypt(InstituteId.ToString())).Replace("email", EncryptionHelper.Encrypt(email.InvitaionEmail)));
                 try
                 {
@@ -274,6 +298,8 @@ namespace EvolvedTax.Business.MailService
                 .Replace("{{entity}}", nameOfEntity)
                 .Replace("{{role}}", role)
                 .Replace("{{InstituteName}}", "Default")
+                .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                .Replace("{{NameForInstitute}}", NameForInstitute)
                 .Replace("{{link}}", uRL.Replace("id", userId).Replace("email", EncryptionHelper.Encrypt(email)));
             try
             {
@@ -311,6 +337,8 @@ namespace EvolvedTax.Business.MailService
                 .Replace("{{entity}}", nameOfEntity)
                 .Replace("{{role}}", role)
                 .Replace("{{InstituteName}}", "Default")
+                .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                .Replace("{{NameForInstitute}}", NameForInstitute)
                 .Replace("{{link}}", uRL);
             try
             {
@@ -431,6 +459,8 @@ namespace EvolvedTax.Business.MailService
             var Port = emailSetting.SMTPPort; ;
             var content = AppConstants.LoginOTP
                 .Replace("{{UserName}}", user)
+                     .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{NameForInstitute}}", NameForInstitute)
                 .Replace("{{OTP}}", otp);
             try
             {
@@ -457,12 +487,21 @@ namespace EvolvedTax.Business.MailService
         public async Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form, int instituteId = -1)
         {
             EmailSetting(instituteId);
+            SetClientName(instituteId,email);
+            DateTime currentDate = DateTime.Now.Date; 
+            DateTime DeadLinedDate = currentDate.AddDays(7);
+            subject = "Request for Your Form 1099 Delivery Preference";
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
             body = AppConstants.SendLinkToRecipient
-               .Replace("{{link}}", string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form), "&i=", EncryptionHelper.Encrypt(instituteId.ToString())));
+               .Replace("{{link}}",
+               string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form), "&i=", EncryptionHelper.Encrypt(instituteId.ToString())))
+                 .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                 .Replace("{{ClientName}}", ClientName)
+                 .Replace("{{DeadLinedDate}}", DeadLinedDate.ToString("MM/dd/yyyy"))
+                    .Replace("{{NameForInstitute}}", NameForInstitute);
             try
             {
                 MailMessage message = new MailMessage();
@@ -489,7 +528,9 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task<string> SendConfirmationEmailToRecipient(IpInfo? ipInfo, string email, string subject, VerifyModel model, int InstituteId)
         {
+            subject = "Response Email";
             EmailSetting(InstituteId);
+            SetClientName(InstituteId, email);
             var tdTemplate = "<tr><td style='text-align:center;'>{{form}}</td><td style='color:{{color}};text-align:center;'>{{status}}</td></tr>";
             var tds = new StringBuilder();
 
@@ -497,7 +538,10 @@ namespace EvolvedTax.Business.MailService
             {
                 var row = tdTemplate
                     .Replace("{{form}}", item.FormName)
-                  .Replace("{{status}}", item.Action == "Accept" ? "Accepted" : "Rejected")
+                       .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{NameForInstitute}}", NameForInstitute)
+                      .Replace("{{ClientName}}", ClientName)
+                  .Replace("{{status}}", item.Action == "Accept" ? "Electronic Mail" : "Paper Format")
                 .Replace("{{color}}", item.Action == "Accept" ? "green" : "red");
 
                 tds.Append(row);
@@ -508,7 +552,10 @@ namespace EvolvedTax.Business.MailService
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
             var content = AppConstants.ConfirmationEmailToRecipient
-                .Replace("{{tds}}", tds.ToString());
+                .Replace("{{tds}}", tds.ToString())
+                    .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{NameForInstitute}}", NameForInstitute)
+                    .Replace("{{ClientName}}", ClientName);
             var psdfContent = AppConstants.PdfEmailTempForElecAccep
                 .Replace("{{tds}}", tds.ToString())
                 .Replace("{{fromEmail}}", FromEmail)
