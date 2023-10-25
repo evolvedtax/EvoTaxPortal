@@ -335,14 +335,14 @@ Regards,
     </tr>
   </table>
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
-        public static string EmailForEmailVerification = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoTax Platform. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their registration before they can access the full features of the platform. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your identity, kindly click on the verification link provided below.<br/><br/> <!--[if mso]>
-  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
+        public static string EmailForEmailVerification = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoForms. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their account. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your account, kindly click on the verification link provided below.<br/><br/> <!--[if mso]>
+  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""left"" style=""margin: 0 auto;"">
     <tr>
-      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+      <td align=""left"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
         <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
           <w:anchorlock/>
-          <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
-            GET STARTED
+          <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; font-weight: bold;"">
+           Verify
           </center>
         </v:roundrect>
       </td>
@@ -350,17 +350,17 @@ Regards,
   </table>
 <![endif]-->
 <!--[if !mso]><!-->
-  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
+  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""left"" style=""margin: 0 auto;"">
     <tr>
-      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
-        <a href=""{{link}}"" target=""_blank"" style=""font-size: 16px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
-          GET STARTED
+      <td align=""left"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+        <a href=""{{link}}"" target=""_blank"" style=""font-size: 14px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
+         Verify
         </a>
       </td>
     </tr>
   </table>
-<!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
-        public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used in the EvoTax Portal for further process. <br/><br/> {{OTP}} <br/><br/>Please check your email. The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>{{SupportEmailForInstitute}}<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>{{NameForInstitute}}";
+<!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your account has been verified, you will be able to access the full features of the EvoForms, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoForms.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
+        public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used for logging into EvoForms. <br/><br/> {{OTP}} <br/><br/> The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>{{SupportEmailForInstitute}}<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>{{NameForInstitute}}";
         public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         //public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your e-mail. Please find below the link to accept or reject. <br/><br/> <a href=""{{link}}"">Click here</a> <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string SendLinkToRecipient = "<p>Dear {{ClientName}},</p>\n" +
@@ -481,25 +481,25 @@ Regards,
 
         public static string ConfirmationEmailToRecipient = @"Dear {{ClientName}},
 
-    <p>I hope this message finds you well. I am writing to confirm that your choice to receive the following Form 1099s via e-mail or regular mail has been successfully recorded, and we will ensure that your tax document is delivered to you as per your preference.</p>
+    <p>We hope this message finds you well. We are writing to confirm that your choice to receive the following Form 1099s via e-mail or regular mail has been successfully recorded, and we will ensure that your tax document is delivered to you as per your preference.</p>
 
         <table border='1'>
                                     <tr>
                                         <th style='width:20%'>Form</th>
-                                        <th style='width:20%'>Status</th>
+                                        <th style='width:20%'>Selected method of delivery</th>
                                     </tr>
                                   {{tds}}
                                 </table>
 								    <br/><br/>
 
-    <p>If you selected electronic delivery via email, please keep an eye on your inbox in the coming weeks for the electronic version of your Form 1099.</p>
+    <p>If you choose to receive a soft copy via email, please keep an eye on your inbox in the coming weeks for the electronic version of your Form 1099.</p>
 
-    <p>For those who have opted to receive a paper copy via mail, please ensure that your contact information, including your mailing address, is up to date in our records. If any updates are required, please contact our HR or Finance team promptly.</p>
+    <p>For those who have opted to receive a paper copy, please ensure that your contact information, including your mailing address, is up to date in our records. If any updates are required, please contact at {{SupportEmailForInstitute}}.</p>
 
     <p>If this selection was not made by you, we kindly request that you contact us immediately to rectify the situation. Your security and privacy are of utmost importance to us, and we want to ensure that your Form 1099 is delivered to the correct recipient.</p>
 
     <p>We appreciate your prompt response, as it helps us tailor our services to better meet your needs during this tax season. If you have any further questions or require additional assistance, please do not hesitate to reach out to our support team at {{SupportEmailForInstitute}}.</p>
-
+    <p>If you face any technical difficulties in submitting your response, please reach out to us at {{SupportEmailForTechnology}}.</p>
     <p>Thank you for your cooperation, and we look forward to continuing to serve you effectively.</p>
 
     <p>Warm regards,</p>
@@ -525,7 +525,7 @@ Regards,
                                 <table border='1'>
                                     <tr>
                                         <th style='width:20%'>Form</th>
-                                        <th style='width:20%'>Status</th>
+                                     <th style='width:20%'>Selected method of delivery</th>
                                     </tr>
                                   {{tds}}
                                 </table>

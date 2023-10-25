@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Utilities;
 using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 
@@ -409,7 +410,7 @@ namespace EvolvedTax_Institute.Controllers
                 //var confirmationLink = Url.Action(nameof(Verify), "Account", new { s = token, e = model.SUEmailAddress }, Request.Scheme) ?? "";
                 var confirmationLink = Url.Action("Login", "Account", null, Request.Scheme) ?? "";
                 //var confirmationLink = Url.Action(nameof(Login), "Account", Request.Scheme) ?? "";
-                await _mailService.EmailVerificationAsync(fullnaame, email, "Action Required: Verify Your Registration with EvoTax Portal", "", confirmationLink);
+                await _mailService.EmailVerificationAsync(fullnaame, email, "Action Required: Verify Your Account with EvoForms", "", confirmationLink);
                 return View("Index");
             }
             else
@@ -550,10 +551,17 @@ namespace EvolvedTax_Institute.Controllers
                 return View(nameof(Error));
             }
             var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            //var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+            //var totp = new Totp(bytes);
+            //var token = totp.ComputeTotp();
+            //var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
             // for local email otp 
             //user.Email = "niqbal@mailinator.com";
-
-            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
+            //if(response)
+            //{
+                await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
+            //}
+            
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -569,12 +577,28 @@ namespace EvolvedTax_Institute.Controllers
                 formVals["Otp4"].ToString(),
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
-            //if (response.OTP == "")
+
+            //var user = await _userManager.FindByEmailAsync(emailId);
+            //if (user.OTP.Trim() == string.Empty || user.OTPExpiryDate < DateTime.Now)
             //{
             //    TempData["Type"] = ResponseMessageConstants.ErrorStatus;
             //    TempData["Message"] = "OTP has expired";
             //    return View(nameof(Auth));
             //}
+            //if (Otp.Trim() == user?.OTP.Trim())
+            //{
+            
+            //    var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+            //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
+            //    HttpContext.Session.SetString("UserName", user.UserName);
+            //    HttpContext.Session.SetString("EmailId", user.Email);
+            //    HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
+            //    HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
+            //    HttpContext.Session.SetString("UserId", user.Id);
+            //    return RedirectToAction("Index", "Summary");
+            //}
+
+            
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
@@ -582,6 +606,7 @@ namespace EvolvedTax_Institute.Controllers
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(Auth));
             }
+
             var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
             if (result.Succeeded)
             {
@@ -602,6 +627,8 @@ namespace EvolvedTax_Institute.Controllers
                 TempData["Message"] = "The account is locked out";
                 return View();
             }
+
+            
             //if (Otp == response.OTP)
             //{
             //var institute = _instituteService.GetInstituteDataById(user.InstituteId);
@@ -634,7 +661,7 @@ namespace EvolvedTax_Institute.Controllers
                 var totp = new Totp(bytes);
                 var otp = totp.ComputeTotp();
                 var userName = _instituteService.GetClientDataByClientEmailId(s);
-                await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
+                await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoForms", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
                 _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60));
                 ViewBag.ClientEmail = s;
                 HttpContext.Session.SetString("OTPClientEmail", s);

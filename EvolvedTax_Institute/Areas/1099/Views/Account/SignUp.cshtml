@@ -146,6 +146,15 @@
         margin: 20px;
     }
 
+    .top-left-message {
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        margin: 0;
+        z-index: 1000; /* Ensures the message is on top of other content */
+    }
+
 </style>
 
 <body class="gray-bg">
@@ -184,8 +193,8 @@
         </div>
     </div>
 
-    <div id="responseDiv" class="mt-5 ml-5" hidden>
-        <h3>Thank you for registering for the EvoTax Platform. Please check your e-mail for further process.</h3>
+    <div id="responseDiv" class="top-left-message" hidden>
+        <h3>Thank You for registering with EvoForms. Please check your e-mail for the next step regarding account verification.</h3>
     </div>
     <div style="margin-top:2%; left: 0; right: 0; bottom: 10px; text-align: center;">
         <button type="button" id="prevBtn" class="btn btn-md btn-default" onclick="nextPrev(-1)"> << Previous Page</button>

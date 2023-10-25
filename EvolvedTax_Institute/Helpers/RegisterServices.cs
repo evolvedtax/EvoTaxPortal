@@ -60,6 +60,11 @@ namespace EvolvedTax.Helpers
                 options.Lockout.AllowedForNewUsers = true;
             });
 
+            //services.Configure<DataProtectionTokenProviderOptions>(options =>
+            //{
+            //    options.TokenLifespan = TimeSpan.FromMinutes(60);
+            //});
+
             // configure DI for application services
             services.AddControllers().AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
 

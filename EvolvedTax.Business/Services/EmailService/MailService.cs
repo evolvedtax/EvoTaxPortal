@@ -26,6 +26,8 @@ namespace EvolvedTax.Business.MailService
         private string SupportEmailForInstitute = "";
         private string NameForInstitute = "";
         private string ClientName = "";
+        private string SupportEmailForTechnology = "technology@evolvedtax.com";
+
 
         public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
         {
@@ -490,6 +492,11 @@ namespace EvolvedTax.Business.MailService
             SetClientName(instituteId,email);
             DateTime currentDate = DateTime.Now.Date; 
             DateTime DeadLinedDate = currentDate.AddDays(7);
+            var Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instituteId).FirstOrDefault();
+            if (Response != null && Response.ReminderDays > 0 )
+            {
+                DeadLinedDate= currentDate.AddDays(Convert.ToDouble( Response.ReminderDays));
+            }
             subject = "Request for Your Form 1099 Delivery Preference";
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
@@ -541,8 +548,8 @@ namespace EvolvedTax.Business.MailService
                        .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
                     .Replace("{{NameForInstitute}}", NameForInstitute)
                       .Replace("{{ClientName}}", ClientName)
-                  .Replace("{{status}}", item.Action == "Accept" ? "Electronic Mail" : "Paper Format")
-                .Replace("{{color}}", item.Action == "Accept" ? "green" : "red");
+                  .Replace("{{status}}", item.Action == "Accept" ? "E-Mail" : "Paper Copy");
+                //.Replace("{{color}}", item.Action == "Accept" ? "green" : "red");
 
                 tds.Append(row);
             }
@@ -555,6 +562,7 @@ namespace EvolvedTax.Business.MailService
                 .Replace("{{tds}}", tds.ToString())
                     .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
                     .Replace("{{NameForInstitute}}", NameForInstitute)
+                       .Replace("{{SupportEmailForTechnology}}", SupportEmailForTechnology)
                     .Replace("{{ClientName}}", ClientName);
             var psdfContent = AppConstants.PdfEmailTempForElecAccep
                 .Replace("{{tds}}", tds.ToString())

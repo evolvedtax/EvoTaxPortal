@@ -70,15 +70,16 @@
     </div>
 
 </div>
+
 <div class="tab">
-     <div style="margin-bottom:5%">
+    <div style="margin-bottom:5%">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        @* <h3>Welcome to EvoTax Portal</h3>*@
+        <h3>Please enter your address </h3>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="text-align:left">
 
-        <select id="country" asp-for="SUMCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2 ddl" required>
+        <select title="Select Country Of Address" id="country" asp-for="SUMCountry" asp-items="ViewBag.CountriesList" onChange="ShowHideProvince(this)" class="select2 ddl  form-input" required>
             <option value="" disabled selected>Select Country</option>
         </select>
     </div>
@@ -86,39 +87,45 @@
     <div id="AddressFields" hidden>
 
         <div class="form-group">
-            <input id="adreess1" asp-for="SUMMAdd1" type="text" class="form-control bordertext" required placeholder="Address Line1">
+            <input id="adreess1" asp-for="SUMMAdd1" type="text" class="form-control bordertext  form-input" required placeholder="Address Line1">
             <span asp-validation-for="SUMMAdd1" class="text-danger"></span>
         </div>
 
 
         <div class="form-group">
-            <input id="adreess2" asp-for="SUMMAdd2" type="text" class="form-control bordertext" placeholder="Address Line2">
+            <input id="adreess2" asp-for="SUMMAdd2" type="text" class="form-control bordertext  form-input" placeholder="Address Line2">
         </div>
 
 
         <div class="form-group">
-            <input id="city" asp-for="SUMCity" type="text" class="form-control bordertext" required placeholder="City">
+            <input id="city" asp-for="SUMCity" type="text" class="form-control bordertext  form-input" required placeholder="City">
         </div>
 
 
-        <div id="stateDiv" class="form-group" hidden>
-            <select id="state" asp-items="ViewBag.StatesList" asp-for="SUMState" class="select2">
-                <option value="" disabled>Select State</option>
+        <div id="stateDiv" class="form-group" style="text-align:left">
+
+            <select id="state" asp-for="SUMState" asp-items="ViewBag.StatesList" class="select2 ddl" required>
+                <option value="" disabled selected>Select State</option>
             </select>
         </div>
+        @*        <div id="stateDiv" class="form-group">
+        <select id="state" asp-items="ViewBag.StatesList" asp-for="SUMState" class="select2 ddl ">
+        <option value="" disabled>Select State</option>
+        </select>
+        </div>*@
         <div id="provinceDiv" class="form-group">
-            <input id="province" asp-for="SUMProvince" type="text" class="form-control bordertext" placeholder="Province">
+            <input id="province" asp-for="SUMProvince" type="text" class="form-control bordertext  form-input" placeholder="Province">
         </div>
 
         <div class="form-group">
-            <input id="zipCode" asp-for="SUMZip" type="text" class="form-control bordertext" required placeholder="Zip Code">
+            <input id="zipCode" asp-for="SUMZip" type="text" class="form-control bordertext  form-input" required placeholder="Zip Code">
         </div>
 
         <div class="form-group">
-            <input id="Phone" asp-for="Phone" type="text" class="form-control bordertext" required placeholder="Phone Number">
+            <input id="Phone" asp-for="Phone" type="text" class="form-control bordertext  form-input" required placeholder="Phone Number">
         </div>
         <div class="form-group">
-            <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control bordertext" placeholder="Support E-mail">
+            <input id="SupportEmailAddress" asp-for="SupportEmailAddress" type="email" class="form-control form-input bordertext" placeholder="Support Email for technical inquiries regarding tax forms">
         </div>
 
     </div>
@@ -191,7 +198,7 @@
 
     <div style="margin-bottom:5%">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        <h3 style="white-space: nowrap;  margin-left: -1px;">Please answer below questions to recover password</h3>
+        <h3 style="margin-left: -1px;">Please answer the following questions to facilitate password recovery.</h3>
     </div>
 
     <div class="form-group">

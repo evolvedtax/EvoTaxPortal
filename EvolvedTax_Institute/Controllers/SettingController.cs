@@ -148,6 +148,18 @@ namespace EvolvedTax_Institute.Controllers
             ViewBag.CheckBoxFormNameList = FormNameItems;
             ViewBag.SelectedFormNames = selectedFormNames;
 
+            //1099 Reminder Email days
+            var ReminderDays_Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instId).FirstOrDefault();
+
+            if (ReminderDays_Response != null)
+            {
+                model.Tbl1099_ReminderDaysRequest = new Tbl1099_ReminderDaysRequest
+                {
+                    InstId = ReminderDays_Response.InstId,
+                    ReminderDays = ReminderDays_Response.ReminderDays
+                };
+            }
+
             return View(model);
         }
         [HttpPost]
@@ -195,6 +207,36 @@ namespace EvolvedTax_Institute.Controllers
 
         }
         #endregion
+
+        [HttpPost]
+        public IActionResult ReminderDays1099(SettingRequest request)
+        {
+            var instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var model = _evolvedtaxContext.Tbl1099_ReminderDays.FirstOrDefault(e => e.InstId == instituteId);
+
+            if (model != null)
+            {
+
+                model.InstId = request.Tbl1099_ReminderDaysRequest.InstId;
+                model.ReminderDays = request.Tbl1099_ReminderDaysRequest.ReminderDays;
+                _evolvedtaxContext.Tbl1099_ReminderDays.Update(model);
+            }
+            else
+            {
+
+                model = new Tbl1099_ReminderDays
+                {
+                    InstId = instituteId,
+                    ReminderDays = request.Tbl1099_ReminderDaysRequest.ReminderDays,
+                };
+                _evolvedtaxContext.Tbl1099_ReminderDays.Add(model);
+            }
+
+            _evolvedtaxContext.SaveChanges();
+            return Json(new { Status = true });
+
+        }
+      
 
 
     }

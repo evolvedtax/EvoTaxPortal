@@ -78,8 +78,8 @@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-6">E-mail Settings</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
-
                             <li><a class="nav-link" data-toggle="tab" href="#tab-9">Subscription</a></li>
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-10">Electornic Confirmation</a></li>
                             
                         </ul>
                         <div class="tab-content">
@@ -479,6 +479,33 @@
                                     </form>
                                 </div>
                             </div>
+                               <div id="tab-10" class="tab-pane">
+                                <div class="panel-body">
+                                    <form id="form1099ReminderDays" style="width:100%"
+                                          method="post"
+                                          data-ajax="true"
+                                          data-ajax-method="post"
+                                          data-ajax-mode="replace"
+                                          data-ajax-failure="COMMON.ajaxfailure"
+                                          data-ajax-loading="#ajax-loader"
+                                          data-ajax-success="ajaxsuccessEmailReminder"
+                                          data-ajax-url="@Url.Action("ReminderDays1099","Setting")">
+
+                                        <div class="row">
+                                            <div class="col-md-6 d-flex align-items-center">
+                                                <label class="ml-2 mr-2">Receiving 1099 Forms method deadline</label>
+                                                <input class="form-control hide-counter" min="0" id="ReminderDays" type="number" asp-for="Tbl1099_ReminderDaysRequest.ReminderDays" style="width:15%; text-align:right">
+                                                <span class="ml-2 mr-2">days</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div class="pull-left mt-2">
+                                            <button type="button" id="submitReminderDays1099" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                           
                         </div>
                     </div>
@@ -594,6 +621,19 @@
         $(window).on('load', function () {
             $('select').change();
         });
+
+
+
+        //-------------- START 1099 Reminder Days  ---------------------------//
+
+        $('#submitReminderDays1099').click(function () {
+            let form = $('#form1099ReminderDays');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        //-------------- End 1099 Reminder Days   ---------------------------//
         //-------------- START USER MANAGEMENT ---------------------------//
         function addNewEmail() {
             var htmlResponse = COMMON.doAjaxPostHTMLResponse('@Url.Action("AddEmail", "UserManagement")', null);

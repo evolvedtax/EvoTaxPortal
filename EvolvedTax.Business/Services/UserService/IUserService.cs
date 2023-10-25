@@ -26,5 +26,6 @@ namespace EvolvedTax.Business.Services.UserService
         Task<bool> AddRoles();
         Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId,string AssignedBy);
         Task<IdentityResult> UpdateInvitedUserForShare(UserRequest model);
+        Task<bool> UpdateUsertOTP(string emailId, string otp, DateTime expiryDate);
     }
 }
