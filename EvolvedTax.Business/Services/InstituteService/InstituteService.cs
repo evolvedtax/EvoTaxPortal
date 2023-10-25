@@ -146,67 +146,77 @@ namespace EvolvedTax.Business.Services.InstituteService
             bool Status = false;
             var response = new List<InstituteEntity>();
             var entityList = new List<InstituteEntity>();
-            using (var stream = file.OpenReadStream())
+            try
             {
-                IWorkbook workbook = new XSSFWorkbook(stream);
-                ISheet sheet = workbook.GetSheetAt(0); // Assuming the data is in the first sheet
-
-                HashSet<string> uniqueEINNumber = new HashSet<string>();
-                HashSet<string> uniqueEntityNames = new HashSet<string>();
-
-                for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
+                using (var stream = file.OpenReadStream())
                 {
-                    IRow excelRow = sheet.GetRow(row);
+                    IWorkbook workbook = new XSSFWorkbook(stream);
+                    ISheet sheet = workbook.GetSheetAt(0); // Assuming the data is in the first sheet
 
-                    var entity = new InstituteEntity
+                    HashSet<string> uniqueEINNumber = new HashSet<string>();
+                    HashSet<string> uniqueEntityNames = new HashSet<string>();
+
+                    for (int row = 1; row <= sheet.LastRowNum; row++) // Starting from the second row
                     {
-                        EntityName = excelRow.GetCell(0)?.ToString()?.Trim(),
-                        Ein = excelRow.GetCell(1)?.ToString(),
-                        EntityRegistrationDate = DateTime.Parse(excelRow.GetCell(2)?.ToString() ?? "01/01/0001"),
-                        Address1 = excelRow.GetCell(3)?.ToString(),
-                        Address2 = excelRow.GetCell(4)?.ToString(),
-                        City = excelRow.GetCell(5)?.ToString(),
-                        State = excelRow.GetCell(6)?.ToString(),
-                        Province = excelRow.GetCell(7)?.ToString(),
-                        Zip = excelRow.GetCell(8)?.ToString(),
-                        Country = excelRow.GetCell(9)?.ToString(),
-                        InstituteId = InstId,
-                        InstituteName = InstituteName,
-                        IsActive = RecordStatusEnum.Active,
-                        IsLocked = false,
-                        LastUpdatedDate = DateTime.Now.Date,
-                        LastUpdatedBy = InstId
-                    };
-                    string clientEmailEINNumber = entity.Ein ?? string.Empty;
-                    string entityNameExcel = entity.EntityName ?? string.Empty;
-                    if (uniqueEINNumber.Contains(clientEmailEINNumber) || uniqueEntityNames.Contains(entityNameExcel))
-                    {
-                        // This entity is a duplicate within the Excel sheet
-                        Status = false;
-                        return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Client" };
+                        IRow excelRow = sheet.GetRow(row);
+
+                        var entity = new InstituteEntity
+                        {
+                            EntityName = excelRow.GetCell(0)?.ToString()?.Trim(),
+                            Ein = excelRow.GetCell(1)?.ToString(),
+                            EntityRegistrationDate = DateTime.Parse(excelRow.GetCell(2)?.ToString() ?? "01/01/0001"),
+                            Address1 = excelRow.GetCell(3)?.ToString(),
+                            Address2 = excelRow.GetCell(4)?.ToString(),
+                            City = excelRow.GetCell(5)?.ToString(),
+                            State = excelRow.GetCell(6)?.ToString(),
+                            Province = excelRow.GetCell(7)?.ToString(),
+                            Zip = excelRow.GetCell(8)?.ToString(),
+                            Country = excelRow.GetCell(9)?.ToString(),
+                            InstituteId = InstId,
+                            InstituteName = InstituteName,
+                            IsActive = RecordStatusEnum.Active,
+                            IsLocked = false,
+                            LastUpdatedDate = DateTime.Now.Date,
+                            LastUpdatedBy = InstId
+                        };
+                        string clientEmailEINNumber = entity.Ein ?? string.Empty;
+                        string entityNameExcel = entity.EntityName ?? string.Empty;
+                        if (uniqueEINNumber.Contains(clientEmailEINNumber) || uniqueEntityNames.Contains(entityNameExcel))
+                        {
+                            // This entity is a duplicate within the Excel sheet
+                            Status = false;
+                            return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Client" };
+                        }
+                        else
+                        {
+                            // Add the values to the HashSet to track dzuplicates
+                            uniqueEINNumber.Add(clientEmailEINNumber);
+                            uniqueEntityNames.Add(entityNameExcel);
+                        }
+                        // Check for duplicate records based on entityName in the database
+                        if (await _evolvedtaxContext.InstituteEntities.AnyAsync(p =>
+                            p.Ein == entity.Ein &&
+                            p.EntityName == entity.EntityName &&
+                            p.InstituteId == entity.InstituteId))
+                        {
+                            response.Add(entity);
+                            Status = true;
+                        }
+                        else
+                        {
+                            entityList.Add(entity);
+                        }
                     }
-                    else
-                    {
-                        // Add the values to the HashSet to track dzuplicates
-                        uniqueEINNumber.Add(clientEmailEINNumber);
-                        uniqueEntityNames.Add(entityNameExcel);
-                    }
-                    // Check for duplicate records based on entityName in the database
-                    if (await _evolvedtaxContext.InstituteEntities.AnyAsync(p =>
-                        p.Ein == entity.Ein &&
-                        p.EntityName == entity.EntityName &&
-                        p.InstituteId == entity.InstituteId))
-                    {
-                        response.Add(entity);
-                        Status = true;
-                    }
-                    else
-                    {
-                        entityList.Add(entity);
-                    }
+                    await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
+                    await _evolvedtaxContext.SaveChangesAsync();
+                  
                 }
-                await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
-                await _evolvedtaxContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.ToString());
+                return new MessageResponseModel { ErrorStatus = true, Message = ex.ToString(), Param = "Entity" };
             }
             return new MessageResponseModel { Status = Status, Message = response, Param = "Entity" };
         }
