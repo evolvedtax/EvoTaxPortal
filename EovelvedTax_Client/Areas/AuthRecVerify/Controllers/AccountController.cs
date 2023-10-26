@@ -39,18 +39,20 @@ namespace EvolvedTax1099_Recipient.Controllers
             return View();
         }
 
-        public async Task<IActionResult> OTP(string? s = "", string e = "", string f = "")
+        public async Task<IActionResult> OTP(string? s = "", string e = "", string f = "", string i = "")
         {
             if (!string.IsNullOrEmpty(s) && !string.IsNullOrEmpty(s))
             {
                 s = EncryptionHelper.Decrypt(s.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 e = EncryptionHelper.Decrypt(e.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 f = EncryptionHelper.Decrypt(f.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
+                i = EncryptionHelper.Decrypt(i.Replace(' ', '+').Replace('-', '+').Replace('_', '/'));
                 if (await _trailAudit1099Service.CheckIfRecipientRecordExist(s, e))
                 {
                     return RedirectToAction("AccessDenied", new { statusCode = 400 });
                 }
                 HttpContext.Session.SetString("RecipientEmail", s);
+                HttpContext.Session.SetString("InstituteId", i);
                 var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
                 var totp = new Totp(bytes);
                 var otp = totp.ComputeTotp();
@@ -124,7 +126,8 @@ namespace EvolvedTax1099_Recipient.Controllers
                 Items = _trailAudit1099Service.GetRecipientStatusListByEmailId(RecipientEmail).Select(p => new CheckboxItem
                 {
                     FormName = p.FormName,
-                    IsSelected = false
+                    IsSelected = false,
+                    Rcp_Email = RecipientEmail
                 }).ToList()
             };
             return View(result);
@@ -135,18 +138,26 @@ namespace EvolvedTax1099_Recipient.Controllers
         {
             var formName = HttpContext.Session.GetString("OTPFormName");
             var rcpEmail = HttpContext.Session.GetString("RecipientEmail");
+            var InstituteId = HttpContext.Session.GetString("InstituteId");
+            //var request = model.Items.Select(p => new RcpElecAcptnceStatus
+            //{
+            //    Rcp_Email = rcpEmail,
+            //    FormName = p.FormName,
+            //    Status = p.IsSelected ? 1 : 2
+            //}).ToList();
+
             var request = model.Items.Select(p => new RcpElecAcptnceStatus
             {
                 Rcp_Email = rcpEmail,
                 FormName = p.FormName,
-                Status = p.IsSelected ? 1 : 2
+                Status = p.Action == "Accept" ? 1 : 2 // Set status to 1 for "Accept" and 2 for "Reject"
             }).ToList();
 
             var response = await _trailAudit1099Service.UpdateRcpElecAcptnceStatusStatus(request);
             string jsonString = response.Description;
             IpInfo? ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonString);
 
-            var pdfContent = await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model);
+            var pdfContent = await _mailService.SendConfirmationEmailToRecipient(ipInfo, response.RecipientEmail, "Electronic Acceptance Confirmation", model, Convert.ToInt32(InstituteId));
             var path = string.Concat(_webHostEnvironment.WebRootPath, "/ElecAccepEmailsInPdf", "/", response.RecipientEmail, "_", DateTime.Now.ToString("yyyyMMddHHmmss"), ".pdf");
             AppCommonMethods.GeneratePdfFromHtml(path, pdfContent); // creating pdf from html
             HttpContext.Session.Clear();

@@ -22,7 +22,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
         public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
         Task<MessageResponseModel> KeepRecord(int id);
         Task<MessageResponseModel> DeletePermeant(int id);
-        Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form1099A);
+        Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form1099A, int instituteId = -1);
         //tring GeneratePdf(int id, string BasePath);
     }
 }

@@ -239,13 +239,13 @@
                                                                     <div class="dropdown-menu-horizontal">
                                                                         @if (item?.IsLocked ?? false)
                                                                         {
-                                                                            @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>*@
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>
                                                                         }
                                                                         else
                                                                         {
                                                                             <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
                                                                             <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
-                                                                            @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>*@
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>
                                                                         }
                                                                         @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
                                                                         {
@@ -836,7 +836,7 @@
                                 className: 'btn-excel'
                             },
                             {
-                                text: '<i class="fa fa-upload"></i> Import Client Data',
+                                text: '<i class="fa fa-upload"></i> Import Client Template',
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
                                     $('#uploadDataDiv').prop('hidden', false);
@@ -882,7 +882,7 @@
                             //    }
                             //},
                             {
-                                text: '<i class="fa fa-unlock"></i> Unlock All',
+                                text: '<i class="fa fa-unlock"></i> Unlock All Clients',
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
                                     var selectedValues = [];
@@ -901,7 +901,7 @@
                                 }
                             },
                             {
-                                text: '<i class="fa fa-lock"></i> Lock All',
+                                text: '<i class="fa fa-lock"></i> Lock All Clients',
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
                                     var selectedValues = [];

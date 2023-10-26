@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="~/evolved_tax_mark_logo.ico">
-    <title>@ViewData["Title"] - Login to EvoTax Portal</title>
+    <title>@ViewData["Title"] - Login to EvoForms</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -112,20 +112,24 @@
     <partial name="_busyIndicator" />
     <div class="container text-center">
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
-        <h3>Welcome to EvoTax Portal</h3>
+        <h3>Welcome to EvoForms</h3>
         <p class="text-danger">@TempData["Message"]</p>
         <p>To verify your identity, please enter the OTP (One-Time Password) that was sent to your e-mail.</p>
         <form id="form" class="m-t" role="form" method="post" asp-action="Auth" asp-controller="Account" asp-route-returnUrl="@ViewData["ReturnUrl"]">
-            <div class="inputfield">
-                <input type="number" name="Otp1" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp2" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp3" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp4" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp5" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp6" maxlength="1" class="input" disabled />
+            <div class="inputfield" id="otpContainer">
+                <input type="number" name="Otp1" maxlength="1" class="input"  />
+                <input type="number" name="Otp2" maxlength="1" class="input"  />
+                <input type="number" name="Otp3" maxlength="1" class="input"  />
+                <input type="number" name="Otp4" maxlength="1" class="input"  />
+                <input type="number" name="Otp5" maxlength="1" class="input"  />
+                <input type="number" name="Otp6" maxlength="1" class="input"  />
             </div>
             <button type="submit" class="btn btn-primary full-width hide" id="submit">Proceed</button>
+      
+
+
         </form>
+        <button type="submit" class="btn btn-primary full-width" style="margin-top: 10px;" id="resetOTP">Request Another OTP</button>
     </div>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -152,6 +156,18 @@
         <script src="~/js/common.js"></script>
     </environment>
     <script>
+        function resendOTP() {
+            $('.loading').show();
+            $.get("/Account/Auth", function (data) {
+                $('.loading').hide();
+               // alert('New OTP has been sent to your email')
+                COMMON.notification('@ResponseMessageConstants.SuccessStatus', 'New OTP has been sent to your email.');
+            });
+        }
+        document.getElementById("resetOTP").addEventListener("click", function () {
+            resendOTP();
+        });
+
         function displayBusyIndicator() {
             $('.loading').show();
         }
@@ -162,11 +178,42 @@
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
 
+
         const input = document.querySelectorAll(".input");
         const inputField = document.querySelector(".inputfield");
         const submitButton = document.getElementById("submit");
         let inputCount = 0,
             finalInput = "";
+
+
+        //copy paste OTP Code
+
+
+        document.getElementById('otpContainer').addEventListener('paste', function (e) {
+            e.preventDefault();
+
+            var pastedText = e.clipboardData.getData('text');
+            var otpInputs = document.querySelectorAll('.input');
+
+            // pasted text is 6 characters
+            if (pastedText.length === 6) {
+                for (var i = 0; i < 6; i++) {
+                    otpInputs[i].value = pastedText[i];
+                }
+            }
+            submitButton.classList.remove("hide");
+            submitButton.classList.add("show");
+            if (e.key == "Backspace") {
+                finalInput = finalInput.substring(0, finalInput.length - 1);
+                updateInputConfig(inputField.lastElementChild, false);
+                inputField.lastElementChild.value = "";
+                inputCount -= 1;
+                submitButton.classList.add("hide");
+            } else {
+                enableInputs();
+                submitButton.click();
+            }
+        });
 
         //Update input
         const updateInputConfig = (element, disabledStatus) => {

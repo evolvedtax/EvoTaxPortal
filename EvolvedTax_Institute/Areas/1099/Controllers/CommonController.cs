@@ -147,6 +147,7 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         [HttpPost]
         public async Task<IActionResult> SendLinkToRecipients(int[] selectedValues, string form)
         {
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = string.Empty;
             if (_webHostEnvironment.IsDevelopment())
@@ -164,61 +165,61 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             switch (form)
             {
                 case AppConstants.Form1099MISC:
-                    await _form1099_MISC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099MISC);
+                    await _form1099_MISC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099MISC, instId);
                     break;
                 case AppConstants.Form1099NEC:
-                    await _form1099_NEC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099NEC);
+                    await _form1099_NEC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099NEC, instId);
                     break;
                 case AppConstants.Form1099INT:
-                    await _form1099_INT_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099INT);
+                    await _form1099_INT_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099INT, instId);
                     break;
                 case AppConstants.Form1099B:
-                    await _form1099_B_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099B);
+                    await _form1099_B_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099B, instId);
                     break;
                 case AppConstants.Form1099A:
-                    await _form1099_A_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099A);
+                    await _form1099_A_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099A, instId);
                     break;
                 case AppConstants.Form1099DIV:
-                    await _form1099_DIV_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099DIV);
+                    await _form1099_DIV_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099DIV, instId);
                     break;
                 case AppConstants.Form1099LS:
-                    await _form1099_LS_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LS);
+                    await _form1099_LS_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LS, instId);
                     break;
                 case AppConstants.Form1099C:
-                    await _form1099_C_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099C);
+                    await _form1099_C_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099C, instId);
                     break;
                 case AppConstants.Form1099CAP:
-                    await _form1099_CAP_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099CAP);
+                    await _form1099_CAP_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099CAP, instId);
                     break;
                 case AppConstants.Form1099G:
-                    await _form1099_G_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099G);
+                    await _form1099_G_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099G, instId);
                     break;
                 case AppConstants.Form1099LTC:
-                    await _form1099_LTC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LTC);
+                    await _form1099_LTC_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099LTC, instId);
                     break;
                 case AppConstants.Form1099PATR:
-                    await _form1099_PATR_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099PATR);
+                    await _form1099_PATR_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099PATR, instId);
                     break;
                 case AppConstants.Form1099R:
-                    await _form1099_R_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099R);
+                    await _form1099_R_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099R, instId);
                     break;
                 case AppConstants.Form1099SA:
-                    await _form1099_SA_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099SA);
+                    await _form1099_SA_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099SA, instId);
                     break;
                 case AppConstants.Form1099SB:
-                    await _form1099_SB_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099SB);
+                    await _form1099_SB_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099SB,instId);
                     break;
                 case AppConstants.Form1099K:
-                    await _form1099_K_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099K);
+                    await _form1099_K_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099K, instId);
                     break;
                 case AppConstants.Form1099OID:
-                    await _form1099_OID_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099OID);
+                    await _form1099_OID_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099OID, instId);
                     break;
                 case AppConstants.Form1099Q:
-                    await _form1099_Q_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099Q);
+                    await _form1099_Q_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099Q, instId);
                     break;
                 case AppConstants.Form1099S:
-                    await _form1099_S_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099S);
+                    await _form1099_S_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1099S, instId);
                     break;
             }
 

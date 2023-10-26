@@ -11,5 +11,6 @@ namespace EvolvedTax.Data.Models.DTOs
         public bool Status { get; set; }
         public object? Message { get; set; }
         public string? Param { get; set; }
+        public bool ErrorStatus { get; set; }
     }
 }

@@ -659,7 +659,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
 
             return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
         }
-        public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form)
+        public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form, int instituteId = -1)
         {
             var result = from ic in _evolvedtaxContext.Tbl1099_CAP
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.Rcp_Email)
@@ -670,7 +670,7 @@ namespace EvolvedTax.Business.Services.Form1099Services
                          };
             foreach (var item in result.ToList())
             {
-                await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, string.Empty, "Action Required", URL, form);
+                await _mailService.SendElectronicAcceptanceEmail(item.Rcp_Email, (int)item.EntityId, string.Empty, "Action Required", URL, form, instituteId);
 
 
 

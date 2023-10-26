@@ -13,6 +13,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public InstituteMasterRequest InstituteMasterRequest { get; set; } = new InstituteMasterRequest();
         public UserManagementRequest UserManagementRequest { get; set; } = new UserManagementRequest();
         public EmailSettingRequest EmailSettingRequest { get; set; } = new EmailSettingRequest();
+        public Tbl1099_ReminderDaysRequest Tbl1099_ReminderDaysRequest { get; set; } = new Tbl1099_ReminderDaysRequest();
         public AnnouncementRequest AnnouncementRequest { get; set; } = new AnnouncementRequest();
         public FormAccessRequest FormAccessRequest { get; set; } = new FormAccessRequest();
         public InstituteRequestNameChange InstituteRequestNameChange { get; set; } = new InstituteRequestNameChange();

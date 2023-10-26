@@ -29,6 +29,20 @@ namespace EvolvedTax.Business.Services.UserService
             _roleManager = roleManager;
         }
 
+        public async Task <bool> UpdateUsertOTP(string Id, string otp, DateTime expiryDate)
+        {
+            //var response = _evolvedtaxContext.Users.FirstOrDefault(p => p.Id == Id);
+            var response = await _userManager.FindByIdAsync(Id);
+            if (response != null)
+            {
+                response.OTPExpiryDate = expiryDate;
+                response.OTP = otp;
+                await _userManager.UpdateAsync(response);
+                return true;
+            }
+            return false;
+        }
+
         public async Task<UserRequest> Login(LoginRequest model)
         {
             var request = new UserRequest();
@@ -82,7 +96,7 @@ namespace EvolvedTax.Business.Services.UserService
             var model = new InstituteMaster
             {
                 InstitutionName = request.SUInstitutionName,
-
+                EmailAddress = request.SUEmailAddress,
                 SupportEmail = string.IsNullOrEmpty(request.SupportEmailAddress) ? request.SUEmailAddress : request.SupportEmailAddress,
                 Idtype = request.SUIDType,
                 Idnumber = request.SUIDNumber,

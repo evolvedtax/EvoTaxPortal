@@ -285,8 +285,12 @@ var COMMON = (function () {
                 console.log('File uploaded successfully');
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
+                if (response.ErrorStatus == true) {
+                    COMMON.notification(2, 'There is some issue in excel file. Kindly recheck data and upload it again.');
+                    console.log(response);
+                    return;
+                }
                 if (response.Status) {
-
                     // Show the progress bar
                     var progressDiv = document.getElementById('progress');
                     progressDiv.style.display = 'block';
@@ -331,9 +335,10 @@ var COMMON = (function () {
 
                         // Draw the updated DataTable
                         dataTable.draw();
-                        alert('here');
+                        //alert('here');
                     }
-                    if (response.Param == "Entity" && response.Message.length > 0) {
+                   if (response.Param == "Entity" && response.Message.length > 0) {
+            
                         $('#dupplication-ibox').prop('hidden', false);
                         //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
                         // Clear the existing table rows
@@ -361,13 +366,20 @@ var COMMON = (function () {
                         dataTable.draw();
                     }
                     console.log('Upload completed successfully');
-                } else {
+                
+                }
+                else {
+                 
+                 // COMMON.notification(2, 'There is some issue in excel file. Kindly recheck data and upload it again.');
+ 
+                    console.log(response);
                     // Continue showing the progress bar until completion record is received
                     location.reload();
                 }
             } else {
                 // File upload failed
                 console.log('File upload failed');
+             
             }
         };
 
@@ -545,7 +557,7 @@ var COMMON = (function () {
 
         swal({
             title: "Are you sure you want to delete this record?",
-            text: "Please check before deleting the record!",
+            text: "",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
