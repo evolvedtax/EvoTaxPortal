@@ -9,7 +9,7 @@ namespace EvolvedTax_Institute.Controllers
 {
     public class SummaryController : BaseController
     {
-        public SummaryController()
+        public SummaryController()  
         {
         }
         public IActionResult Index()

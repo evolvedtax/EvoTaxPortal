@@ -550,16 +550,16 @@ namespace EvolvedTax_Institute.Controllers
             {
                 return View(nameof(Error));
             }
-            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-            //var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
-            //var totp = new Totp(bytes);
-            //var token = totp.ComputeTotp();
-            //var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
+            //var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+            var totp = new Totp(bytes);
+            var token = totp.ComputeTotp();
+            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
             // for local email otp 
             //user.Email = "niqbal@mailinator.com";
             //if(response)
             //{
-                await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
+            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
             //}
             
             ViewData["ReturnUrl"] = returnUrl;
@@ -578,71 +578,74 @@ namespace EvolvedTax_Institute.Controllers
                 formVals["Otp5"].ToString(),
                 formVals["Otp6"].ToString());
 
-            //var user = await _userManager.FindByEmailAsync(emailId);
-            //if (user.OTP.Trim() == string.Empty || user.OTPExpiryDate < DateTime.Now)
-            //{
-            //    TempData["Type"] = ResponseMessageConstants.ErrorStatus;
-            //    TempData["Message"] = "OTP has expired";
-            //    return View(nameof(Auth));
-            //}
-            //if (Otp.Trim() == user?.OTP.Trim())
-            //{
-            
-            //    var institute = _instituteService.GetInstituteDataById(user.InstituteId);
-            //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
-            //    HttpContext.Session.SetString("UserName", user.UserName);
-            //    HttpContext.Session.SetString("EmailId", user.Email);
-            //    HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
-            //    HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
-            //    HttpContext.Session.SetString("UserId", user.Id);
-            //    return RedirectToAction("Index", "Summary");
-            //}
-
-            
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            var user = await _userManager.FindByEmailAsync(emailId);
+            if (user.OTP.Trim() == string.Empty || user.OTPExpiryDate < DateTime.Now)
             {
                 TempData["Type"] = ResponseMessageConstants.ErrorStatus;
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(Auth));
             }
-
-            var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
-            if (result.Succeeded)
+            if (Otp.Trim() == user?.OTP.Trim())
             {
+
                 var institute = _instituteService.GetInstituteDataById(user.InstituteId);
                 HttpContext.Session.SetInt32("InstId", user.InstituteId);
                 HttpContext.Session.SetString("UserName", user.UserName);
                 HttpContext.Session.SetString("EmailId", user.Email);
                 HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
                 HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
-                HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetString("UserId", user.Id); 
                 return RedirectToAction("Index", "Summary");
-            }
-            else if (result.IsLockedOut)
-            {
-                //Same logic as in the Login action
-                ModelState.AddModelError("", "The account is locked out");
-                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
-                TempData["Message"] = "The account is locked out";
-                return View();
+           
             }
 
-            
-            //if (Otp == response.OTP)
-            //{
-            //var institute = _instituteService.GetInstituteDataById(user.InstituteId);
-            //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
-            //    HttpContext.Session.SetString("UserName", user.UserName);
-            //    HttpContext.Session.SetString("EmailId", user.Email);
-            //    HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
-            //    HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
-            //    _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
-            //    return RedirectToAction("Index", "Dashboard");
-            //}
+            /*
+                        var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+                        if (user == null)
+                        {
+                            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                            TempData["Message"] = "OTP has expired";
+                            return View(nameof(Auth));
+                        }
+
+                        var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
+                        if (result.Succeeded)
+                        {
+                            var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+                            HttpContext.Session.SetInt32("InstId", user.InstituteId);
+                            HttpContext.Session.SetString("UserName", user.UserName);
+                            HttpContext.Session.SetString("EmailId", user.Email);
+                            HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
+                            HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
+                            HttpContext.Session.SetString("UserId", user.Id);
+                            return RedirectToAction("Index", "Summary");
+                        }
+                        else if (result.IsLockedOut)
+                        {
+                            //Same logic as in the Login action
+                            ModelState.AddModelError("", "The account is locked out");
+                            TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+                            TempData["Message"] = "The account is locked out";
+                            return View();
+                        }
+
+
+                        //if (Otp == response.OTP)
+                        //{
+                        //var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+                        //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
+                        //    HttpContext.Session.SetString("UserName", user.UserName);
+                        //    HttpContext.Session.SetString("EmailId", user.Email);
+                        //    HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
+                        //    HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
+                        //    _userService.UpdateInstituteMasterOTP(response.EmailId, "", DateTime.Now);
+                        //    return RedirectToAction("Index", "Dashboard");
+                        //}
+             */
             TempData["Type"] = ResponseMessageConstants.ErrorStatus;
             TempData["Message"] = "Invalid OTP entered. Please try again.";
             return View(nameof(Auth));
+           
         }
         public async Task<IActionResult> OTP(string? s = "", string e = "")
         {
