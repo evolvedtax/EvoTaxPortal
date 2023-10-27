@@ -557,7 +557,7 @@ var COMMON = (function () {
 
         swal({
             title: "Are you sure you want to delete this record?",
-            text: "Please check before deleting the record!",
+            text: "",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
