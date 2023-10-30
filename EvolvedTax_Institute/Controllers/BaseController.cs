@@ -5,10 +5,12 @@ global using Microsoft.AspNetCore.Authorization;
 using EvolvedTax.Business.Services.SessionProfileUser;
 using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Common.Utils;
+using EvolvedTax.Helpers;
 
 namespace EvolvedTax.Web.Controllers
 {
     [Authorize]
+    [SessionTimeout]
     public class BaseController : Controller
     {
         public UserSessionProfileDTO SessionUser

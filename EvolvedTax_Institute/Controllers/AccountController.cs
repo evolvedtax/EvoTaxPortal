@@ -80,13 +80,14 @@ namespace EvolvedTax_Institute.Controllers
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
                 if (result.Succeeded)
                 {
-                    //return RedirectToLocal(returnUrl);
-                }
-                if (result.RequiresTwoFactor)
-                {
                     HttpContext.Session.SetString("EmailId", userDTO.UserName);
                     return RedirectToAction(nameof(Auth), new { returnUrl = returnUrl });
                 }
+                //if (result.RequiresTwoFactor)
+                //{
+                //    HttpContext.Session.SetString("EmailId", userDTO.UserName);
+                //    return RedirectToAction(nameof(Auth), new { returnUrl = returnUrl });
+                //}
                 //if (result.Succeeded)
                 //{
                 //    HttpContext.Session.SetString("EmailId", response.EmailId);

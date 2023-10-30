@@ -150,7 +150,7 @@ namespace EvolvedTax.Business.Services.UserService
                 Zip = request.SUMZip,
                 Province = request.SUMProvince,
                 EmailConfirmed = true,
-                TwoFactorEnabled = true,
+                //TwoFactorEnabled = true,
             };
 
             
@@ -296,7 +296,7 @@ namespace EvolvedTax.Business.Services.UserService
                 Email = email,
                 InstituteId = instituteId,
                 IsSuperAdmin = false,
-                TwoFactorEnabled = true,
+                //TwoFactorEnabled = true,
             };
 
             var user = await _userManager.FindByEmailAsync(email);
