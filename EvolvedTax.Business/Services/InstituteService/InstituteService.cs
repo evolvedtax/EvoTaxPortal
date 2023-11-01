@@ -17,6 +17,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
 using NPOI.OpenXmlFormats.Dml;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 
 namespace EvolvedTax.Business.Services.InstituteService
 {
@@ -181,11 +182,23 @@ namespace EvolvedTax.Business.Services.InstituteService
                         };
                         string clientEmailEINNumber = entity.Ein ?? string.Empty;
                         string entityNameExcel = entity.EntityName ?? string.Empty;
+                        if (entity.EntityRegistrationDate > DateTime.Now)
+                        {
+                            // This entity is a duplicate within the Excel sheet
+                            Status = false;
+                            return new MessageResponseModel { Status = Status, Message = new { Title = "Invalid Date", TagLine = "There are invalid date(s) in the records. Please correct and upload again." }, Param = "Entity" };
+                        }
+                        if (Regex.IsMatch(entity.Ein ?? "", AppConstants.EINPattern))
+                        {
+                            // This entity is a duplicate within the Excel sheet
+                            Status = false;
+                            return new MessageResponseModel { Status = Status, Message = new { Title = "Invalid EIN", TagLine = "There are invalid EIN(s) in the records. Please correct and upload again." }, Param = "Entity" };
+                        }
                         if (uniqueEINNumber.Contains(clientEmailEINNumber) || uniqueEntityNames.Contains(entityNameExcel))
                         {
                             // This entity is a duplicate within the Excel sheet
                             Status = false;
-                            return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Client" };
+                            return new MessageResponseModel { Status = Status, Message = new { Title = "Duplication Record In Excel", TagLine = "Record not uploaded due to duplication record in excel" }, Param = "Entity" };
                         }
                         else
                         {
@@ -209,7 +222,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                     }
                     await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
                     await _evolvedtaxContext.SaveChangesAsync();
-                  
+
                 }
             }
             catch (Exception ex)

@@ -15,6 +15,8 @@ namespace EvolvedTax.Common.Constants
         public const string W8EXPForm = @"W-8EXP";
         public const string W8FormTypes = @"W8FormType";
 
+        // Patterns 
+        public const string EINPattern = @"^\d{2}-\d{7}$";
 
 
         public const string Entity = "Entity";
@@ -49,8 +51,8 @@ namespace EvolvedTax.Common.Constants
         public const string SA_1099_TemplateFileName = @"Form_1099_SA.pdf";
         public const string SB_1099_TemplateFileName = @"Form_1099_SB.pdf";
         public const string NEC_1099_Page2_TemplateFileName = @"Form_1099_NEC_2.pdf";
-        public const string InstituteEntityTemplate = "InstituteEntitiesTemplate.xlsx";
-        public const string InstituteClientTemplate = "InstituteClientsTemplate.xlsx";
+        public const string InstituteEntityTemplate = "New_Entity_Template.xlsx";
+        public const string InstituteClientTemplate = "New_Partner_Template.xlsx";
 
         //----------1099 TEMPLATES----------//
         //public const string Form1099MISCTemplateFileName = @"Forms/f1099msc.pdf";
@@ -360,8 +362,8 @@ Regards,
     </tr>
   </table>
 <!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your account has been verified, you will be able to access the full features of the EvoForms, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoForms.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
-        public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Please find below your one time Password (OTP) to be used for logging into EvoForms. <br/><br/> {{OTP}} <br/><br/> The validity of this OTP is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>{{SupportEmailForInstitute}}<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>{{NameForInstitute}}";
-        public static string ResetPassword = @"Dear User,<br/><br/>Please find below your reset password link, please click on the link to reset your password. <br/><br/> {{ResetUrl}} <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
+        public static string LoginOTP = @"Dear {{UserName}},<br/><br/>Here's your verification code to access EvoForms:<br/><br/> {{OTP}} <br/><br/> This code is only valid for 60 minutes. Enter it on our website and you'll be on your way.<br/><br/>If you didn't request this code, please update your password to secure your account.<br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/>{{SupportEmailForInstitute}}<br/><br/>Sincerely,<br/><br/>EvoForms";
+        public static string ResetPassword = @"Dear User,<br/><br/>A request to change your password has been made.<br/><br/>To reset your password, click on the link below: <br/><br/> {{ResetUrl}} <br/><br/>If the above URL does not work, try copying and pasting it into your browser.<br/><br/>Please feel free to contact us, if you continue to face any problems. <br/><br/>Thank you for your cooperation in this matter.<br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/>{{SupportEmailForInstitute}}<br/><br/>Sincerely,<br/><br/>EvoForms";
         //public static string SendLinkToRecipient = @"Dear User,<br/><br/>Please give us permission to send you an electronic copy of 1099 form through your e-mail. Please find below the link to accept or reject. <br/><br/> <a href=""{{link}}"">Click here</a> <br/><br/>The validity of this link is 60 minutes <br/><br/>Should you have any questions or concerns, please do not hesitate to reach out to our support team at<br/><br/>technology@evolvedtax.com<br/><br/>Thank you for your cooperation in this matter.<br/><br/>Regards,<br/>Technology Team at Evolved LLC";
         public static string SendLinkToRecipient = "<p>Dear {{ClientName}},</p>\n" +
      "<p>I hope this message finds you well. As the tax season approaches, we want to ensure a smooth and efficient process for our valued associates and contractors. To this end, we are reaching out to inquire about your preferred method of receiving your Form 1099.</p>\n" +
