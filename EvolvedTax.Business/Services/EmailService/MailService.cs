@@ -224,6 +224,7 @@ namespace EvolvedTax.Business.MailService
         }
         public void SendResetPassword(string emailAddress, string subject, string resetUrl)
         {
+            EmailSetting(-1);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
@@ -411,6 +412,7 @@ namespace EvolvedTax.Business.MailService
         }
         public async Task SendEmailForChangeInstituteNameRequest(string oldInstituteName, string newInstituteName, string adminUser, string acceptLink, string rejectLink, string Comments)
         {
+            EmailSetting(-1);
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
