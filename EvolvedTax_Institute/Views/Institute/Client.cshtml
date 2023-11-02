@@ -33,13 +33,10 @@
         border-right: 0.3em solid transparent;
         border-bottom: 0;
         border-left: 0.3em solid transparent;
+
     }
-    /* CSS */
-    .show-container {
-        transition: opacity 0.5s, max-height 0.5s;
-        opacity: 1;
-        //max-height: 200px; /* You can adjust the max height as needed */
-    }
+
+
     .dataTables_filter {
         /*position: absolute;
                                                                                         top: 0;
@@ -650,33 +647,34 @@
                 $('input[name="EmailFrequency"]').removeAttr('data-original-title');
             }
         }
-
         function HideAndShowShareOption() {
             var toggleButton = document.getElementById("toggleButton");
             var sharedUsersContainer = document.getElementById("sharedUsersContainer");
             var maintableWrapper = $("#maintable");
 
             if (toggleButton != null) {
-                // Add click event listener to the button
                 toggleButton.addEventListener("click", function () {
-                    // Toggle the visibility of the container with animation
                     if (sharedUsersContainer.style.display === "none") {
-                        sharedUsersContainer.style.display = "block";
                         toggleButton.title = "Hide Users";
-                        maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
-                        sharedUsersContainer.classList.add("show-container");
+                        maintableWrapper.animate({ width: '97%' }, 300, function () {
+                            sharedUsersContainer.style.display = "block";
+                            maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+                        });
                     } else {
-                        sharedUsersContainer.style.display = "none";
-                        toggleButton.title = "Show Users";
                         maintableWrapper.unwrap();
-                        sharedUsersContainer.classList.remove("show-container");
+                        sharedUsersContainer.style.display = "none";
+                        maintableWrapper.animate({ width: '100%' }, 300, function () {
+                            toggleButton.title = "Show Users";
+                        });
                     }
                 });
             }
         }
 
+
         $(document).ready(function () {
 
+            HideAndShowShareOption();
             $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
                 event.preventDefault(); // Prevent the default anchor behavior
                 var buttonText = $(this).find('span').text().trim();
@@ -707,7 +705,7 @@
                 $("#maintable").unwrap();
             }
 
-            HideAndShowShareOption();
+          
 
 
             $("#openModalButton").click(function () {
@@ -840,6 +838,7 @@
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
                                     $('#uploadDataDiv').prop('hidden', false);
+                                    document.getElementById("uploadClients").click();
                                 }
                             },
                             {

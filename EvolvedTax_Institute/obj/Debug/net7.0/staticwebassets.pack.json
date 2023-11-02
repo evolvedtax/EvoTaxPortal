@@ -3417,12 +3417,12 @@
       "PackagePath": "staticwebassets\\Templates\\Form1099_SB_Template.xlsx"
     },
     {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteClientsTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\InstituteClientsTemplate.xlsx"
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\New_Entity_Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\New_Entity_Template.xlsx"
     },
     {
-      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteEntitiesTemplate.xlsx",
-      "PackagePath": "staticwebassets\\Templates\\InstituteEntitiesTemplate.xlsx"
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\New_Partner_Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\New_Partner_Template.xlsx"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\api\\typehead_collection.json",

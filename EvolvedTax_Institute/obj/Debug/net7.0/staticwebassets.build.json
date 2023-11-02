@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "t9WoDIZ1BWzj5rgvM3umkXql+YCjRAKAbNx22uTUvyQ=",
+  "Hash": "lsRJ6cyOgUVVjivM1Xrk9PuwL6T+58X4pYEDlnYQ9ws=",
   "Source": "EvolvedTax_Institute",
   "BasePath": "_content/EvolvedTax_Institute",
   "Mode": "Default",
@@ -87159,12 +87159,12 @@
       "OriginalItemSpec": "wwwroot\\Templates\\Form1099STemplate.xlsx"
     },
     {
-      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteClientsTemplate.xlsx",
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\New_Entity_Template.xlsx",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
       "BasePath": "_content/EvolvedTax_Institute",
-      "RelativePath": "Templates/InstituteClientsTemplate.xlsx",
+      "RelativePath": "Templates/New_Entity_Template.xlsx",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -87173,15 +87173,15 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Templates\\InstituteClientsTemplate.xlsx"
+      "OriginalItemSpec": "wwwroot\\Templates\\New_Entity_Template.xlsx"
     },
     {
-      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\InstituteEntitiesTemplate.xlsx",
+      "Identity": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\New_Partner_Template.xlsx",
       "SourceId": "EvolvedTax_Institute",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\",
       "BasePath": "_content/EvolvedTax_Institute",
-      "RelativePath": "Templates/InstituteEntitiesTemplate.xlsx",
+      "RelativePath": "Templates/New_Partner_Template.xlsx",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -87190,7 +87190,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Templates\\InstituteEntitiesTemplate.xlsx"
+      "OriginalItemSpec": "wwwroot\\Templates\\New_Partner_Template.xlsx"
     }
   ]
 }
