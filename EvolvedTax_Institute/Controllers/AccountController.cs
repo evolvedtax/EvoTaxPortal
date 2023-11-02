@@ -560,7 +560,7 @@ namespace EvolvedTax_Institute.Controllers
             //user.Email = "niqbal@mailinator.com";
             //if(response)
             //{
-            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
+            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your Verification Code with EvoForms", user.FirstName + " " + user.LastName, "");
             //}
             
             ViewData["ReturnUrl"] = returnUrl;
@@ -665,7 +665,7 @@ namespace EvolvedTax_Institute.Controllers
                 var totp = new Totp(bytes);
                 var otp = totp.ComputeTotp();
                 var userName = _instituteService.GetClientDataByClientEmailId(s);
-                await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoForms", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
+                await _mailService.SendOTPAsync(otp, s, "Action Required: Your Verification Code with EvoForms", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
                 _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60));
                 ViewBag.ClientEmail = s;
                 HttpContext.Session.SetString("OTPClientEmail", s);
