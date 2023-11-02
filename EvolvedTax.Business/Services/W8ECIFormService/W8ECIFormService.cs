@@ -243,7 +243,8 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
                 Status = "1",
                 W8eciemailAddress = request.EmailId,
                 W8ecionBehalfName = request.W8ECIOnBehalfName,
-                ActiveTabIndex = request.activeTabIndex
+                ActiveTabIndex = request.activeTabIndex,
+                IsActive=true
             };
             if (_evolvedtaxContext.TblW8eciforms.Any(p => p.W8eciemailAddress == request.EmailId))
             {

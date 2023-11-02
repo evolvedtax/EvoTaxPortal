@@ -59,8 +59,8 @@
 
         .input {
             height: 3em;
-            width: 2.8em;
-            border: 1px solid #dad9df;
+            width: 18.8em;
+            border: 2px solid #dad9df;
             outline: none;
             text-align: center;
             font-size: 1.3em;
@@ -102,7 +102,7 @@
         }
 
         .input:focus {
-            border: 1px solid #1ab394;
+            border: 2px solid #1ab394;
         }
 
     </style>
@@ -116,13 +116,13 @@
         <p class="text-danger">@TempData["Message"]</p>
         <p>To verify your identity, please enter the OTP (One-Time Password) that was sent to your e-mail inbox. Once you've entered the OTP, click 'Proceed' to continue.</p>
         <form id="form" class="m-t" role="form" method="post" asp-action="OTP" asp-controller="Account">
-            <div class="inputfield">
-                <input type="number" name="Otp1" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp2" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp3" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp4" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp5" maxlength="1" class="input" disabled />
-                <input type="number" name="Otp6" maxlength="1" class="input" disabled />
+            <div class="inputfield" id="otpContainer">
+                <input type="number" id="otpInput" name="Otp1" maxlength="1" class="input" />
+                @*<input type="number" name="Otp2" maxlength="1" class="input"  />
+                <input type="number" name="Otp3" maxlength="1" class="input"  />
+                <input type="number" name="Otp4" maxlength="1" class="input"  />
+                <input type="number" name="Otp5" maxlength="1" class="input"  />
+                <input type="number" name="Otp6" maxlength="1" class="input"  />*@
             </div>
             <button type="submit" class="btn btn-primary full-width hide" id="submit">Proceed</button>
             <input name="clientEmail" value="@ViewBag.ClientEmail" hidden/>
@@ -163,6 +163,22 @@
     <script>
         COMMON.notification('@TempData["Type"]', '@TempData["Message"]');
 
+        const submitButton = document.getElementById("submit");
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const otpInput = document.getElementById("otpInput");
+            const form = document.getElementById("form");
+
+            otpInput.addEventListener("input", function () {
+                if (otpInput.value.length === 6) {
+                    submitButton.classList.remove("hide");
+                    submitButton.classList.add("show");
+                    submitButton.click();
+                }
+            });
+        });
+
+        /*
         const input = document.querySelectorAll(".input");
         const inputField = document.querySelector(".inputfield");
         const submitButton = document.getElementById("submit");
@@ -250,6 +266,7 @@
                 inputs[i].disabled = false;
             }
         }
+        */
     </script>
 </body>
 </html>

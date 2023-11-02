@@ -668,7 +668,7 @@ namespace EvolvedTax_Client.Controllers
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(OTP));
             }
-            if (Otp == response?.Otp)
+            if (Otp == response?.Otp && response.OtpexpiryDate >= DateTime.Now)
             {
                 _userService.UpdateInstituteClientOTP(formVals["clientEmail"], "", DateTime.Now);
                 HttpContext.Session.SetString("ClientEmail", formVals["clientEmail"]);

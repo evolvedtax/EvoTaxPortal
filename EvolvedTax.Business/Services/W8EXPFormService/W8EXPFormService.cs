@@ -131,7 +131,8 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 _21 = request._21,
                 _21Text = request._21_Text,
                 EmailAddress = request.EmailId,
-                ActiveTabIndex = request.activeTabIndex
+                ActiveTabIndex = request.activeTabIndex,
+                IsActive=true
 
             };
 

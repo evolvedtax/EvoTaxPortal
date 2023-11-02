@@ -40,6 +40,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
             model.PermanentResidenceAddress = string.Concat(request.PAddress1, " ", request.PAddress2);
             model.SignatureDateMmDdYyyy = DateTime.Now.ToString("MM-dd-yyyy");
             model.W8beneemailAddress = request.EmailId;
+            model.IsActive = true;
             //var model = new TblW8ebeneform
             //{
             //    NameOfOrganization = request.NameOfOrganization,

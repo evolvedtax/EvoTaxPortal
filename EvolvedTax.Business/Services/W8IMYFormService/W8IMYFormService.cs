@@ -273,7 +273,8 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
                 EmailAddress = request.EmailId,
                 PrintNameOfSigner = request.PrintNameOfSignerW8IMY,
                 OnBehalfName = request.W8IMYOnBehalfName,
-                ActiveTabIndex = request.activeTabIndex
+                ActiveTabIndex = request.activeTabIndex,
+                IsActive = true
 
 
             };
