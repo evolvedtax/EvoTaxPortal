@@ -656,10 +656,9 @@
                 toggleButton.addEventListener("click", function () {
                     if (sharedUsersContainer.style.display === "none") {
                         toggleButton.title = "Hide Users";
-                        maintableWrapper.animate({ width: '97%' }, 300, function () {
-                            sharedUsersContainer.style.display = "block";
-                            maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
-                        });
+                        sharedUsersContainer.style.display = "block";
+                        maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+                        maintableWrapper.animate({ width: '97%' }, 300);
                     } else {
                         maintableWrapper.unwrap();
                         sharedUsersContainer.style.display = "none";
@@ -670,6 +669,33 @@
                 });
             }
         }
+
+        //function HideAndShowShareOption() {
+           
+        //    var toggleButton = document.getElementById("toggleButton");
+        //    var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+        //    var maintableWrapper = $("#maintable");
+
+        //    if (toggleButton != null) {
+           
+        //        toggleButton.addEventListener("click", function () {
+            
+        //            if (sharedUsersContainer.style.display === "none") {
+        //                toggleButton.title = "Hide Users";
+        //                maintableWrapper.animate({ width: '97%' }, 300, function () {
+        //                    sharedUsersContainer.style.display = "block";
+        //                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+        //                });
+        //            } else {
+        //                maintableWrapper.unwrap();
+        //                sharedUsersContainer.style.display = "none";
+        //                maintableWrapper.animate({ width: '100%' }, 300, function () {
+        //                    toggleButton.title = "Show Users";
+        //                });
+        //            }
+        //        });
+        //    }
+        //}
 
 
         $(document).ready(function () {
