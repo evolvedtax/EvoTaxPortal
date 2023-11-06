@@ -34,6 +34,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         MessageResponseModel RestoreClients(int[] selectedValues);
         Task<MessageResponseModel> DeleteClient(int id, RecordStatusEnum RecordStatus);
         Task<MessageResponseModel> DeleteMultipleClient(int[] id, RecordStatusEnum RecordStatus);
+        Task<MessageResponseModel> DeleteRecentRecordClient(int timeInterval, int instId);
         Task<MessageResponseModel> DeleteClientPermeant(int id);
         Task<MessageResponseModel> KeepClienRecord(int id);
         Task<MessageResponseModel> UpdateClient(InstituteClientRequest request);
