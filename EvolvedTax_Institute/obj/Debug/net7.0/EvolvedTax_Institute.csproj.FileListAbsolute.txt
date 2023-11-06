@@ -122,6 +122,7 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\AutoMapper.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Azure.Core.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Azure.Identity.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\BouncyCastle.Crypto.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\DinkToPdf.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Enums.NET.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Humanizer.dll
@@ -183,7 +184,6 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\Newtonsoft.Jso
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OOXML.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OpenXml4Net.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.OpenXmlFormats.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.Common.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.Configuration.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.DependencyResolver.Core.dll
@@ -193,7 +193,6 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.Packagin
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.ProjectModel.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.Protocol.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NuGet.Versioning.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\BouncyCastle.Crypto.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\ICSharpCode.SharpZipLib.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\SixLabors.Fonts.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\SixLabors.ImageSharp.dll
@@ -359,13 +358,10 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-a
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\osx\native\libSkiaSharp.dylib
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-arm64\native\libSkiaSharp.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x64\native\libSkiaSharp.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win-x86\native\libSkiaSharp.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
@@ -403,3 +399,11 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\refint\Evolved
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.pdb
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.genruntimeconfig.cache
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\ref\EvolvedTax_Institute.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EPPlus.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EPPlus.Interfaces.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\EPPlus.System.Drawing.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\NPOI.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll

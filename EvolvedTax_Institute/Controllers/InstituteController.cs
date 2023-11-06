@@ -496,6 +496,14 @@ namespace EvolvedTax_Institute.Controllers
             return Json(response);
         }
 
+        [Route("institute/DeleteMultipleClient")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultipleClient(int[] selectedValues)
+        {
+            var response = await _instituteService.DeleteMultipleClient(selectedValues, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+
         [Route("institute/DeleteClienRecord")]
         [HttpPost]
         public async Task<IActionResult> DeleteClienRecord(int id)

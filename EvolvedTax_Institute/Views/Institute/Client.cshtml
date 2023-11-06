@@ -735,7 +735,9 @@
 
 
             $("#openModalButton").click(function () {
-                $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
+                //$('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text().trim() + '\'');
+                var entityName = $("#changeEntity option:selected").text().trim();
+                $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
                 $("#shareModal").modal("show");
             });
 
@@ -943,6 +945,25 @@
                                     // Send the selectedValues to the controller using AJAX or a form submission
                                     COMMON.confirmAlertActiveAll('Lock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'true' })
                                 }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Delete',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Delete', 'DeleteMultipleClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
                             }
                         ],
                     },
@@ -1129,7 +1150,8 @@
                         text: 'Share <i class="fa fa-share"></i>',
                         className: 'email-btn',
                         action: function (e, dt, button, config) {
-                            $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
+                            var entityName = $("#changeEntity option:selected").text().trim();
+                            $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
                             $("#shareModal").modal("show");
                         }
                     },
