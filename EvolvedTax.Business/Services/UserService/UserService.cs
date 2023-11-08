@@ -73,15 +73,16 @@ namespace EvolvedTax.Business.Services.UserService
             }
             return false;
         }
-        public bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate)
+        public bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate, int EntityID)
         {
-            var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId);
+            var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId && p.EntityId== EntityID);
             if (response != null)
             {
-                response.OtpexpiryDate = expiryDate;
-                response.Otp = otp;
-                _evolvedtaxContext.InstitutesClients.Update(response);
-                _evolvedtaxContext.SaveChanges();
+               
+                    response.OtpexpiryDate = expiryDate;
+                    response.Otp = otp;
+                    _evolvedtaxContext.InstitutesClients.Update(response);
+                    _evolvedtaxContext.SaveChanges();
                 return true;
             }
             return false;

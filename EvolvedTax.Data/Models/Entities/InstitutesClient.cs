@@ -66,5 +66,5 @@ public partial class InstitutesClient
     public int? LastUpdatedBy { get; set; }
 
     public bool IsDuplicated { get; set; }
-    public DateTime? UploadTimeStamp { get; set; }
+    public DateTime? FileUploadTime { get; set; }
 }

@@ -273,7 +273,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         LastUpdatedBy = InstId,
                         LastUpdatedOn = DateTime.Now.Date
                     };
-                    client.UploadTimeStamp = DateTime.Now;
+                    client.FileUploadTime = DateTime.Now;
                     string clientEmailId = client.ClientEmailId;
                     string entityNameExcel = client.EntityName;
                     //if (entityNameExcel != entityName)
@@ -610,7 +610,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 cutoffTimestamp.Hour, cutoffTimestamp.Minute, 0);
 
             var recordsToDelete = _evolvedtaxContext.InstitutesClients
-             .Where(r => r.InstituteId == instId && r.UploadTimeStamp > cutoffTimestamp)
+             .Where(r => r.InstituteId == instId && r.FileUploadTime > cutoffTimestamp)
              .ToList();
 
             if (recordsToDelete.Count > 0)
