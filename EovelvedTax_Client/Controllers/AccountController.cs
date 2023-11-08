@@ -634,7 +634,7 @@ namespace EvolvedTax_Client.Controllers
                 var otp = totp.ComputeTotp();
                 var userName = _instituteService.GetClientDataByClientEmailId(s);
                 await _mailService.SendOTPAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", string.Concat(userName?.PartnerName1, " ", userName?.PartnerName2), "");
-                _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60));
+                _userService.UpdateInstituteClientOTP(s, otp, DateTime.Now.AddMinutes(60),Convert.ToInt32(e));
                 ViewBag.ClientEmail = s;
                 HttpContext.Session.SetString("OTPClientEmail", s);
             }

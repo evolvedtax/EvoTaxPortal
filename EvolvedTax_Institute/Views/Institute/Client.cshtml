@@ -139,6 +139,34 @@
             <div class="ibox ">
                 <div class="ibox-title">
                 </div>
+                </div>
+                <div class="mb-2"></div>
+                <div class="ibox-content">
+                    <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <form id="formDeleteRecentRecord"
+                              method="post"
+                              data-ajax="true"
+                              data-ajax-method="post"
+                              data-ajax-mode="replace"
+                              data-ajax-failure="COMMON.ajaxfailure"
+                              data-ajax-loading="#ajax-loader"
+                              data-ajax-success="ajaxsuccessRecentDelete"
+                              data-ajax-url="@Url.Action("DeleteRecentRecordClient","Institute")">
+                            <div class="d-flex align-items-center">
+                                <label for="timeInterval" class="mr-2">Delete Records Uploaded Within</label>
+                                <select name="timeInterval" class="mr-2" style="width:fit-content">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                </select>
+                                <button type="submit"  style="margin-left: 10px" class="btn btn-danger">Delete Records</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+               <div class="mb-2"></div>
                 <div class="ibox-content">
                     @* <div class="col-md-12 row">
                     <div><input id="importData" type="button" class="btn btn-dark" value="Import Client Data" /></div>
@@ -282,7 +310,7 @@
                         @if (userRole != "Viewer")
                         {
 
-                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:2.7% ;border: 3px solid #ccc; border-radius:10px;">
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc; border-radius:10px;">
 
                                 <div style="margin-top: 6px;">
                                     <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
@@ -753,7 +781,9 @@
 
 
             $("#openModalButton").click(function () {
-                $('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text() + '\'');
+                //$('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text().trim() + '\'');
+                var entityName = $("#changeEntity option:selected").text().trim();
+                $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
                 $("#shareModal").modal("show");
             });
 
@@ -962,6 +992,25 @@
                                     // Send the selectedValues to the controller using AJAX or a form submission
                                     COMMON.confirmAlertActiveAll('Lock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'true' })
                                 }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Delete Selected',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Delete', 'DeleteMultipleClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
                             }
                         ],
                     },
@@ -1148,7 +1197,8 @@
                         text: 'Share <i class="fa fa-share"></i>',
                         className: 'email-btn',
                         action: function (e, dt, button, config) {
-                            $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
+                            var entityName = $("#changeEntity option:selected").text().trim();
+                            $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
                             $("#shareModal").modal("show");
                         }
                     },
@@ -1406,6 +1456,19 @@
             if (response.Status == true) {
                 COMMON.notification(1, "Data is updated");
             } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        function ajaxsuccessRecentDelete(response) {
+            if (response.Status == true && response.ErrorStatus==false) {
+                COMMON.notification(1, response.Message);
+                window.location.reload();
+            }
+            else if (response.Status == true && response.ErrorStatus == true)
+            {
+                COMMON.notification(1, response.Message);
+            }
+            else {
                 COMMON.notification(2, "Something went wrong");
             }
         }

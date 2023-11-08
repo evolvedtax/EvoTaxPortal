@@ -15,7 +15,7 @@ namespace EvolvedTax.Business.Services.UserService
         Task<IdentityResult> SaveInvitedUser(UserRequest request);
         public Task<UserRequest> Login(LoginRequest model);
         bool UpdateInstituteMasterOTP(string emailId, string otp, DateTime expiryDate);
-        bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate);
+        bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate,int EntityID=0);
         UserRequest GetUserbyEmailId(string emailId);
         bool ValidateSecurityQuestions(ForgetPasswordRequest request);
         bool UpdateResetToeknInfo(string emailAddress, string passwordResetToken, DateTime passwordResetTokenExpiration);

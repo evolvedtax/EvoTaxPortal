@@ -273,7 +273,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         LastUpdatedBy = InstId,
                         LastUpdatedOn = DateTime.Now.Date
                     };
-
+                    client.FileUploadTime = DateTime.Now;
                     string clientEmailId = client.ClientEmailId;
                     string entityNameExcel = client.EntityName;
                     //if (entityNameExcel != entityName)
@@ -573,6 +573,60 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return new MessageResponseModel { Status = true };
             }
             return new MessageResponseModel { Status = false };
+        }
+
+        public async Task<MessageResponseModel> DeleteMultipleClient(int[] id, RecordStatusEnum RecordStatus)
+        {
+            bool allUpdated = true;
+
+            foreach (var clientId in id)
+            {
+                var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteClient {clientId},{RecordStatus},{DateTime.Now.Date}");
+                if (result <= 0)
+                {
+                    allUpdated = false;
+                }
+            }
+
+            if (allUpdated)
+            {
+                return new MessageResponseModel { Status = true, Message = "The record has been deleted" };
+            }
+            else
+            {
+                return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
+            }
+        }
+
+        public async Task<MessageResponseModel> DeleteRecentRecordClient(int timeInterval, int instId)
+        {
+
+            // Calculate the retention cutoff time based on the selected time interval
+            var currentTime = DateTime.Now;
+
+            var cutoffTimestamp = currentTime.AddMinutes(-timeInterval);
+            cutoffTimestamp = new DateTime(
+                cutoffTimestamp.Year, cutoffTimestamp.Month, cutoffTimestamp.Day,
+                cutoffTimestamp.Hour, cutoffTimestamp.Minute, 0);
+
+            var recordsToDelete = _evolvedtaxContext.InstitutesClients
+             .Where(r => r.InstituteId == instId && r.FileUploadTime > cutoffTimestamp)
+             .ToList();
+
+            if (recordsToDelete.Count > 0)
+            {
+                 _evolvedtaxContext.InstitutesClients.RemoveRange(recordsToDelete);
+                 _evolvedtaxContext.SaveChanges();
+                return new MessageResponseModel { Status = true, Message= "The record has been successfully deleted" };
+            }
+            else
+            {
+                return new MessageResponseModel { Status = true, Message = "No records were found within the specified time interval",ErrorStatus=true };
+            }
+            
+            return new MessageResponseModel { Status = false };
+
+         
         }
 
         public async Task<MessageResponseModel> DeleteClientPermeant(int id)

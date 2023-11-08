@@ -484,6 +484,7 @@ namespace EvolvedTax_Institute.Controllers
             var response = await _instituteService.UpdateEmailFrequncy(EntityIdFreq, EmailFrequency);
             return Json(response);
         }
+   
         [Route("institute/DeleteClient")]
         [HttpPost]
         public async Task<IActionResult> DeleteClient(int id)
@@ -493,6 +494,27 @@ namespace EvolvedTax_Institute.Controllers
                 return Json(false);
             }
             var response = await _instituteService.DeleteClient(id, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+
+        [Route("institute/DeleteMultipleClient")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultipleClient(int[] selectedValues)
+        {
+            var response = await _instituteService.DeleteMultipleClient(selectedValues, RecordStatusEnum.Trash);
+            return Json(response);
+        }
+
+        [Route("institute/DeleteRecentRecordClient")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteRecentRecordClient(int timeInterval)
+        {
+            if (timeInterval == 0)
+            {
+                return Json(false);
+            }
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var response = await _instituteService.DeleteRecentRecordClient(timeInterval, instId);
             return Json(response);
         }
 
