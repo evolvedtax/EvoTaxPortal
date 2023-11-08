@@ -101,7 +101,7 @@ namespace EvolvedTax_Institute.Controllers
             //------------ EMAIL REMINDER -------------//
 
             var emailSettingModel = _evolvedtaxContext.EmailSetting
-        .Where(es => es.InstID == instId) 
+        .Where(es => es.InstID == instId)
         .Select(p => new EmailSettingRequest
         {
             EmailDoamin = p.EmailDoamin,
@@ -159,7 +159,7 @@ namespace EvolvedTax_Institute.Controllers
                     ReminderDays = ReminderDays_Response.ReminderDays
                 };
             }
-
+            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p=> p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
             return View(model);
         }
         [HttpPost]
@@ -236,8 +236,29 @@ namespace EvolvedTax_Institute.Controllers
             return Json(new { Status = true });
 
         }
-      
 
+        [HttpPost]
+        public IActionResult AddUpdateClientEmailTemplate(SettingRequest request)
+        {
+            if (request.InstituteEmailTemplate.Id > 0)
+            {
+                var response = _evolvedtaxContext.InstituteEmailTemplate.First(p => p.Id == request.InstituteEmailTemplate.Id);
+                response.Template = request.InstituteEmailTemplate.Template;
+                request.InstituteEmailTemplate.UpdatedDatetime = DateTime.Now;
+                request.InstituteEmailTemplate.UpdateBy = SessionUser.UserId;
+                _evolvedtaxContext.InstituteEmailTemplate.Update(response);
+                _evolvedtaxContext.SaveChanges();
+            }
+            else
+            {
+                request.InstituteEmailTemplate.TemplateName = AppConstants.ClientEmailTemplate;
+                request.InstituteEmailTemplate.EntryDatetime = DateTime.Now;
+                request.InstituteEmailTemplate.InstituteID = SessionUser.InstituteId;
+                _evolvedtaxContext.InstituteEmailTemplate.Add(request.InstituteEmailTemplate);
+                _evolvedtaxContext.SaveChanges();
+            }
+            return Json(new { Status = true });
+        }
 
     }
 }

@@ -252,7 +252,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
                     var client = new InstitutesClient
                     {
-                        EntityName = excelRow.GetCell(0)?.ToString()?.Trim() ?? string.Empty,
+                        //EntityName = excelRow.GetCell(0)?.ToString()?.Trim() ?? string.Empty,
                         PartnerName1 = excelRow.GetCell(1)?.ToString() ?? string.Empty,
                         PartnerName2 = excelRow.GetCell(2)?.ToString() ?? string.Empty,
                         Address1 = excelRow.GetCell(3)?.ToString() ?? string.Empty,
@@ -292,7 +292,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                     {
                         // Add the values to the HashSet to track duplicates
                         uniqueClientEmailIds.Add(clientEmailId);
-                        uniqueEntityNames.Add(entityNameExcel);
+                        //uniqueEntityNames.Add(entityNameExcel);
                         //clientList.Add(client);
                     }
                     // Check for duplicate records based on ClientEmailId in the database
@@ -300,7 +300,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         p.ClientEmailId == client.ClientEmailId &&
                         p.InstituteId == client.InstituteId &&
                         p.EntityId == client.EntityId
-                        && p.EntityName == client.EntityName
+                       // && p.EntityName == client.EntityName
                         ))
                     {
                         //response.Add(client);

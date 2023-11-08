@@ -528,8 +528,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: confirmTitle, //"Are you sure to delete this record?",
-            text: confirmMessage, // "Please check before deleting the record!",
+            title: '',//confirmTitle, //"Are you sure to delete this record?",
+            text: confirmTitle, // "Please check before deleting the record!",
             type: confirmType, //"warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
@@ -556,8 +556,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to delete this record?",
-            text: "",
+            title: "",
+            text: "Are you sure you want to delete this record?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
@@ -592,8 +592,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to " + message + " this record?",
-            text: "",
+            title: "",
+            text: "Are you sure you want to " + message + " this record?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
@@ -625,8 +625,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to " + message + " these records?",
-            text: "",
+            title: "",
+            text: "Are you sure you want to " + message + " these records?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",

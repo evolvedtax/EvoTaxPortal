@@ -46,7 +46,13 @@
                         top: 0;
                         left: 15%;*/
         padding: 0;
-        padding-right: 70%
+        text-align: left !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 200%;
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -646,7 +652,8 @@
             }
             var table = $('.dataTables-example').DataTable({
                 pageLength: 10,
-                dom: '<"html5buttons"B>lTfgitp',
+                //dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
                     {
                         extend: 'collection',

@@ -33,22 +33,22 @@
         border-right: 0.3em solid transparent;
         border-bottom: 0;
         border-left: 0.3em solid transparent;
-
     }
 
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                        top: 0;
-                                                                                        left: 15%;*/
+                                                                                                                top: 0;
+                                                                                                                left: 15%;*/
         padding: 0;
-        padding-right: 60%
+        /*padding-right: 60%*/
+        text-align: left !important;
     }
 
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: 0.5em;
         display: inline-block;
-        width: 150%;
+        width: 200%;
     }
 
     .actions {
@@ -61,20 +61,22 @@
         border: 2px solid #929292;
     }
 </style>
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom:0">
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox ">
+            <div class="ibox" style="margin-bottom: 0px">
                 <div class="ibox-title">
+                </div>
+                <div class="ibox-content">
                     <div class="row">
                         <div class="col-md-4">
-                            <div style="display:flex">
-                                <label class="ml-2 mr-2" style="margin:auto">Select Entity for Further Details</label>
-                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:fit-content">
+                            <div>
+                                <label class="mr-2" style="margin:auto">Select Entity for Further Details</label>
+                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:107%">
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-2">
+                        <div class="col-md-3 ml-5" style="padding-left: 100px">
                             <form id="formUpdateEmailFrequency"
                                   method="post"
                                   data-ajax="true"
@@ -84,27 +86,31 @@
                                   data-ajax-loading="#ajax-loader"
                                   data-ajax-success="ajaxsuccessUpdateEmailFrequency"
                                   data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
-                                <div style="display:flex">
-                                    <label class="ml-2 mr-2" style="margin:auto">Send E-mail Reminder After Every</label>
-                                    <input id="EntityIdFreq" name="EntityIdFreq" hidden />
-                                    <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
+                                <div>
+                                    <label class="mr-2" style="margin:auto">Send E-mail Reminder After Every</label>
+                                    <div style="display:flex">
+                                        <input id="EntityIdFreq" name="EntityIdFreq" hidden />
+                                        <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
 
-                                    <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set e-mail reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
-                                    <span class="ml-2 mr-2" style="margin:auto">Days</span>
-                                    <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top">Save</button>
-                                    @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
+                                        <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set e-mail reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                        <span class="ml-2 mr-2" style="margin:auto">Days</span>
+                                        <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top">Save</button>
+                                        @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
 
+                                    </div>
                                 </div>
                             </form>
                         </div>
 
-                        <div id="uploadDataDiv" class="col-md-3 mb-2 mr-5 pull-right" hidden>
-                            <div style="display:flex">
-                                <label class="ml-2 mr-2" style="margin:auto;width:30%">Upload Data</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
-                                        <label class="custom-file-label" for="uploadClients">Choose file</label>
+                        <div class="col-md-3 mb-2 mr-5 pull-right">
+                            <div id="uploadDataDiv" hidden>
+                                <div >
+                                    <label class="mr-2" style="margin:auto;width:30%">Upload Data</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
+                                            <label class="custom-file-label" for="uploadClients">Choose file</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -114,12 +120,24 @@
                         }
                         @if (userRole != "Viewer")
                         {
-                            <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
-                                <i class="fa fa-bars"></i>
-                            </button>
+                            <div class="">
+                                <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                            </div>
                         }
 
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-title">
                 </div>
                 <div class="ibox-content">
                     @* <div class="col-md-12 row">
@@ -260,12 +278,12 @@
                                 </table>
                             </div>
                         </div>
-                     
+
                         @if (userRole != "Viewer")
                         {
-                            
-                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc; border-radius:10px;">
-                               
+
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:2.7% ;border: 3px solid #ccc; border-radius:10px;">
+
                                 <div style="margin-top: 6px;">
                                     <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
                                     <h3>Shared with:</h3>
@@ -671,15 +689,15 @@
         }
 
         //function HideAndShowShareOption() {
-           
+
         //    var toggleButton = document.getElementById("toggleButton");
         //    var sharedUsersContainer = document.getElementById("sharedUsersContainer");
         //    var maintableWrapper = $("#maintable");
 
         //    if (toggleButton != null) {
-           
+
         //        toggleButton.addEventListener("click", function () {
-            
+
         //            if (sharedUsersContainer.style.display === "none") {
         //                toggleButton.title = "Hide Users";
         //                maintableWrapper.animate({ width: '97%' }, 300, function () {
@@ -704,7 +722,7 @@
             $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
                 event.preventDefault(); // Prevent the default anchor behavior
                 var buttonText = $(this).find('span').text().trim();
-                
+
                 var searchParams = new URLSearchParams(window.location.search);
                 var entityId = searchParams.get('EntityId');
                 var InstituteId = searchParams.get('InstituteId');
@@ -721,7 +739,7 @@
                     }
                 });
             });
-         
+
 
             var userRole = "@ViewBag.UserRole";
 
@@ -731,7 +749,7 @@
                 $("#maintable").unwrap();
             }
 
-          
+
 
 
             $("#openModalButton").click(function () {
@@ -837,7 +855,8 @@
                 },
                 fixedHeader: true,
                 scrollX: true,
-                dom: '<"html5buttons"B>lTfgitp',
+                //dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
                     {
                         extend: 'collection',
@@ -1404,4 +1423,4 @@
             }
         }
     </script>
-        }
+    }

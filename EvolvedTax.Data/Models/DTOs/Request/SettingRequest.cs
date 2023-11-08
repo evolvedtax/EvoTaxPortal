@@ -17,6 +17,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public AnnouncementRequest AnnouncementRequest { get; set; } = new AnnouncementRequest();
         public FormAccessRequest FormAccessRequest { get; set; } = new FormAccessRequest();
         public InstituteRequestNameChange InstituteRequestNameChange { get; set; } = new InstituteRequestNameChange();
+        public InstituteEmailTemplate InstituteEmailTemplate { get; set; } = new InstituteEmailTemplate();
         public IQueryable<InstituteRequestNameChangeResponse> InstituteRequestNameChangeResponses { get; set; } = new List<InstituteRequestNameChangeResponse>().AsQueryable();
     }
 }

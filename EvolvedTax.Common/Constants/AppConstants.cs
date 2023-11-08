@@ -28,6 +28,9 @@ namespace EvolvedTax.Common.Constants
         public const string IndividualStatus = "IndividualStatus";
         public const string EntityStatus = "EntityStatus";
 
+        //Email Template Names
+        public const string ClientEmailTemplate = "ClientEmailTemplate";
+
         public const short ClientStatusActive = 1;
         public const short ClientStatusEmailSent = 2;
         public const short ClientStatusFormSubmitted = 3;

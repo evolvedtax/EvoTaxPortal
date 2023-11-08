@@ -528,19 +528,18 @@ namespace EvolvedTax_Admin.Controllers
             //{
             //    return RedirectToAction(nameof(Login));
             //}
-            var user = await _userManager.FindByEmailAsync(emailId);
+            var user = await _userManager.FindByNameAsync(emailId);
             if (user == null)
             {
                 return View(nameof(Error));
             }
-            var providers = await _userManager.GetValidTwoFactorProvidersAsync(user);
-            if (!providers.Contains("Email"))
-            {
-                return View(nameof(Error));
-            }
-            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-            // for local email otp 
-            //user.Email = "niqbal@mailinator.com";
+            //var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+            var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
+            var totp = new Totp(bytes);
+            var token = totp.ComputeTotp();
+            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
+
+            var result = await _userManager.FindByNameAsync("admin@evolvedtax.com");
 
             await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoTax Portal", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
@@ -564,15 +563,14 @@ namespace EvolvedTax_Admin.Controllers
             //    TempData["Message"] = "OTP has expired";
             //    return View(nameof(Auth));
             //}
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            var user = await _userManager.FindByNameAsync(emailId);
+            if (user?.OTP.Trim() == string.Empty || user.OTPExpiryDate < DateTime.Now)
             {
                 TempData["Type"] = ResponseMessageConstants.ErrorStatus;
                 TempData["Message"] = "OTP has expired";
                 return View(nameof(Auth));
             }
-            var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
-            if (result.Succeeded)
+            if (Otp.Trim() == user?.OTP.Trim())
             {
                 var institute = _instituteService.GetInstituteDataById(user.InstituteId);
                 HttpContext.Session.SetInt32("InstId", user.InstituteId);
@@ -583,14 +581,34 @@ namespace EvolvedTax_Admin.Controllers
                 HttpContext.Session.SetString("UserId", user.Id);
                 return RedirectToAction("Index", "Dashboard");
             }
-            else if (result.IsLockedOut)
-            {
-                //Same logic as in the Login action
-                ModelState.AddModelError("", "The account is locked out");
-                TempData["Type"] = ResponseMessageConstants.ErrorStatus;
-                TempData["Message"] = "The account is locked out";
-                return View();
-            }
+            //var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            //if (user == null)
+            //{
+            //    TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            //    TempData["Message"] = "OTP has expired";
+            //    return View(nameof(Auth));
+            //}
+            
+            //    var result = await _signInManager.TwoFactorSignInAsync("Email", Otp, false, rememberClient: false);
+            //if (result.Succeeded)
+            //{
+            //    var institute = _instituteService.GetInstituteDataById(user.InstituteId);
+            //    HttpContext.Session.SetInt32("InstId", user.InstituteId);
+            //    HttpContext.Session.SetString("UserName", user.UserName);
+            //    HttpContext.Session.SetString("EmailId", user.Email);
+            //    HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
+            //    HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
+            //    HttpContext.Session.SetString("UserId", user.Id);
+            //    return RedirectToAction("Index", "Dashboard");
+            //}
+            //else if (result.IsLockedOut)
+            //{
+            //    //Same logic as in the Login action
+            //    ModelState.AddModelError("", "The account is locked out");
+            //    TempData["Type"] = ResponseMessageConstants.ErrorStatus;
+            //    TempData["Message"] = "The account is locked out";
+            //    return View();
+            //}
             //if (Otp == response.OTP)
             //{
             //var institute = _instituteService.GetInstituteDataById(user.InstituteId);

@@ -166,6 +166,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public DbSet<AuditTrail1099> AuditTrail1099 { get; set; }
     public DbSet<RcpElecAcptnceStatus> RcpElecAcptnceStatus { get; set; }
     public DbSet<Tbl1099_ReminderDays> Tbl1099_ReminderDays { get; set; }
+    public DbSet<InstituteEmailTemplate> InstituteEmailTemplate { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

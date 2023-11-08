@@ -33,8 +33,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                top: 0;
-                                                                                                                                                                left: 15%;*/
+                                                                                                                                                                        top: 0;
+                                                                                                                                                                        left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -80,7 +80,8 @@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-9">Subscription</a></li>
                             <li><a class="nav-link" data-toggle="tab" href="#tab-10">Electornic Confirmation</a></li>
-                            
+                            <li><a class="nav-link" data-toggle="tab" href="#tab-11">Email Templates</a></li>
+
                         </ul>
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
@@ -448,38 +449,38 @@
                                           data-ajax-loading="#ajax-loader"
                                           data-ajax-success="ajaxsuccessPostSubscription"
                                           data-ajax-url="@Url.Action("PostSubscription","Announcement")">
-                                        
-                                         
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                    <label>Select Application(s)</label>
-                                                            <br />
-                                                            @foreach (var item in ViewBag.CheckBoxFormNameList)
-                                                            {
-                                                                var isChecked = ViewBag.SelectedFormNames.Contains(item.Form_Name) ? "checked" : "";
 
-                                                              <label>
-                                                                    <input type="checkbox" name="FormAccessRequest.SelectedFormNames" value="@item.Form_Name" @isChecked />
-                                                                    @item.Form_Name
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Select Application(s)</label>
+                                                    <br />
+                                                    @foreach (var item in ViewBag.CheckBoxFormNameList)
+                                                    {
+                                                        var isChecked = ViewBag.SelectedFormNames.Contains(item.Form_Name) ? "checked" : "";
+
+                                                        <label>
+                                                            <input type="checkbox" name="FormAccessRequest.SelectedFormNames" value="@item.Form_Name" @isChecked />
+                                                            @item.Form_Name
                                                         </label>
                                                         <br />
-                                                                
-                                                            }
-                                                            <input type="hidden" asp-for="FormAccessRequest.SelectedFormNames" />
-                                                        </div>
-                                                    </div>
+
+                                                    }
+                                                    <input type="hidden" asp-for="FormAccessRequest.SelectedFormNames" />
                                                 </div>
+                                            </div>
+                                        </div>
 
 
-                                   
+
                                         <div class="pull-left mt-2">
                                             <button type="button" id="submitPostSubscription" class="btn btn-primary">Submit</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                               <div id="tab-10" class="tab-pane">
+                            <div id="tab-10" class="tab-pane">
                                 <div class="panel-body">
                                     <form id="form1099ReminderDays" style="width:100%"
                                           method="post"
@@ -506,7 +507,32 @@
                                     </form>
                                 </div>
                             </div>
-                          
+                            <div id="tab-11" class="tab-pane">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <form id="ClientEmailTemplateForm" style="width:100%"
+                                              method="post"
+                                              data-ajax="true"
+                                              data-ajax-method="post"
+                                              data-ajax-mode="replace"
+                                              data-ajax-failure="COMMON.ajaxfailure"
+                                              data-ajax-loading="#ajax-loader"
+                                              data-ajax-success="ajaxsuccessClientEmailTemplate"
+                                              data-ajax-url="@Url.Action("AddUpdateClientEmailTemplate","Setting")">
+                                            <div class="col-md-12">
+                                                <label>Client E-Mail Template</label>
+                                                <input asp-for="InstituteEmailTemplate.Id" hidden/>
+                                                <textarea class="form-control" asp-for="InstituteEmailTemplate.Template">
+                                                    @Model.InstituteEmailTemplate.Template
+                                                </textarea>
+                                                <div class="mt-2">
+                                                    <button type="button" id="submitClientEMailTemp" class="btn btn-primary">Save</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -573,6 +599,7 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+            $('#InstituteEmailTemplate_Template').summernote();
             $('#oldInstituteName').val($('#instituteName').val());
             $('.select2-container').css('width', '100%');
 
@@ -593,7 +620,7 @@
                 }
             });
 
-            
+
             // Function to toggle EmailFrequency textbox and its parent div based on checkbox status
             function toggleEmailFrequencyTextbox() {
                 var checkbox = $("#IsEmailFrequency");
@@ -651,9 +678,23 @@
             }
             return false;
         });
+        $('#submitClientEMailTemp').click(function () {
+            let form = $('#ClientEmailTemplateForm');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
         function ajaxsuccessInviteEmail(response) {
             if (response.Status == true) {
                 COMMON.notification(1, "Invitation has been sent.");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        function ajaxsuccessClientEmailTemplate(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Template saved successfully");
             } else {
                 COMMON.notification(2, "Something went wrong");
             }
@@ -854,6 +895,6 @@
                     }
                 });
         }
-                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
     </script>
 }

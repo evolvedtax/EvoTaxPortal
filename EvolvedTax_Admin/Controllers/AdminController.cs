@@ -64,12 +64,12 @@ namespace EvolvedTax_Admin.Controllers
                 var result = await _signInManager.PasswordSignInAsync(userDTO.UserName, userDTO.Password, false, true);
                 if (result.Succeeded)
                 {
-                    //return RedirectToLocal(returnUrl);
+                    HttpContext.Session.SetString("EmailId", userDTO.UserName);
+                    return RedirectToAction("Auth", "Account", new { returnUrl = returnUrl });
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    HttpContext.Session.SetString("EmailId", userDTO.UserName);
-                    return RedirectToAction("Auth", "Account", new { returnUrl = returnUrl });
+                   
                 }
             }
             TempData["Type"] = ResponseMessageConstants.ErrorStatus; // Error
