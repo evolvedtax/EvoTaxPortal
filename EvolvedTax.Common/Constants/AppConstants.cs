@@ -134,7 +134,7 @@ namespace EvolvedTax.Common.Constants
         public const string F_Family_SegoeScript = "Segoe Script";
         public const string F_Family_Sugar_Garden = "Sugar Garden";
         //-----------EMAIL TEMPLATE---------------------//
-        public static string EmailToClient = @"Dear {{Name}},
+        public static string EmailToClientDefaultTemp = @"Dear {{Name}},
 <br/><br/>
 We hope this e-mail finds you well. As you are aware, {{InstituteName}} is required to comply with tax laws and regulations of the United States.
 <br/><br/>
@@ -142,7 +142,7 @@ To ensure compliance with these regulations, we kindly request that you provide 
 <br/>
 EvoTax is an online portal which makes it easy for you to securely provide us with your tax information online.
 <br/><br/>
-To access the EvoTax Portal, please follow the instructions below:
+To access the EvoForms, please follow the instructions below:
 <br/><br/>
 <!--[if mso]>
   <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
@@ -186,11 +186,59 @@ We appreciate your prompt attention to this important task.
 Regards,
 <br/><br/>
 {{NameForInstitute}}";
+        public static string EmailToClientDynamicTemp = @"Dear {{Name}},
+<br/><br/>
+{{dynamicBody}}
+<br/><br/>
+To access the EvoForms, please follow the instructions below:
+<br/><br/>
+<!--[if mso]>
+  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""left"" style=""margin: 0 auto;"">
+    <tr>
+      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+        <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
+          <w:anchorlock/>
+          <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
+            Verify
+          </center>
+        </v:roundrect>
+      </td>
+    </tr>
+  </table>
+<![endif]-->
+<!--[if !mso]><!-->
+  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""left"" style=""margin: 0 auto;"">
+    <tr>
+      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+        <a href=""{{link}}"" target=""_blank"" style=""font-size: 16px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
+          Verify
+        </a>
+      </td>
+    </tr>
+  </table>
+<!--<![endif]-->
+
+<br/><br/><br/>
+Follow the prompts to complete your tax information.
+<br/><br/>
+Please note that you will need to have your tax documents ready to input the required information.
+<br/><br/>
+The deadline to complete this process is 7 Days, and we highly encourage you to do so as soon as possible to avoid any delays in processing of your information.
+<br/><br/>
+Should you have any questions or concerns, please do not hesitate to reach out to our support team at {{SupportEmailForInstitute}}.
+<br/><br/>
+Thank you for your cooperation in this matter.
+<br/><br/>
+We appreciate your prompt attention to this important task.
+<br/><br/>
+Regards,
+<br/><br/>
+{{NameForInstitute}}";
         public static string InvitationEmailForSignUp = @"Dear {{Name}},
                                                         <br /><br />
-                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> invited you to register with EvoTax Portal.
+                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> invited you to register with EvoForms.
                                                         <br /><br />
-                                                        To access the EvoTax Portal, please follow the instructions below:
+                                                        To access the EvoForms, please follow the instructions below:
                                                         <br /><br />
                                                         <!--[if mso]>
                                                           <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
@@ -232,9 +280,9 @@ Regards,
                                                         {{NameForInstitute}}";
         public static string InvitationEmailForShareSignUp = @"Dear {{Name}},
                                                         <br /><br />
-                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to register with EvoTax Portal and access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
+                                                        We hope this e-mail finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to register with EvoForms and access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
                                                         <br /><br />
-                                                        To access the EvoTax Portal, please follow the instructions below:
+                                                        To access the EvoForms, please follow the instructions below:
                                                         <br /><br />
                                                         <!--[if mso]>
                                                           <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
@@ -278,7 +326,7 @@ Regards,
                                                         <br /><br />
                                                         We hope this e-mail finds you well. <strong>{{administrator}}</strong> from <strong>{{business}}</strong> invited you to access <strong>{{entity}}</strong> as <strong>{{role}}</strong>.
                                                         <br /><br />
-                                                        To access the EvoTax Portal, please follow the instructions below:
+                                                        To access the EvoForms, please follow the instructions below:
                                                         <br /><br />
                                                         <!--[if mso]>
                                                           <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
@@ -339,7 +387,7 @@ Regards,
       </td>
     </tr>
   </table>
-<!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoTax Portal, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoTax Portal.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
+<!--<![endif]--> <br/><br/>User Name: {{email}}<br/><br/> Once your registration has been verified, you will be able to access the full features of the EvoForms, including the ability to upload, manage and track your data.<br/> If you have any questions or concerns about the verification process or our platform, please do not hesitate to contact us.<br/><br/><br/>Thank you for choosing EvoForms.<br/><br/> Best regards,<br/><br/> Technology Team at Evolved LLC";
         public static string EmailForEmailVerification = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoForms. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their account. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your account, kindly click on the verification link provided below.<br/><br/> <!--[if mso]>
   <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""left"" style=""margin: 0 auto;"">
     <tr>
@@ -458,7 +506,7 @@ Regards,
         <br><br>
         Please send them new invites for accessing the Evo Tax Portal.
         <br><br>
-        <a href='{{LoginUrl}}' style='padding: 10px 20px; background-color: #1ab394; color: white; text-decoration: none; border-radius: 5px;'>Login to EvoTax Portal</a>
+        <a href='{{LoginUrl}}' style='padding: 10px 20px; background-color: #1ab394; color: white; text-decoration: none; border-radius: 5px;'>Login to EvoForms</a>
         <br><br>
         Should you have any questions or concerns, please do not hesitate to reach out to our support team at technology@evolvedtax.com.
         <br><br>

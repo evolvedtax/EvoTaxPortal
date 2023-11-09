@@ -60,16 +60,16 @@ namespace EvolvedTax.Business.MailService
 
             }
         }
-        public void SetClientName(int instituteId, String Email )
+        public void SetClientName(int instituteId, String Email)
         {
-            var response = _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == Email && p.InstituteId== instituteId).FirstOrDefault();
-     
+            var response = _evolvedtaxContext.InstitutesClients.Where(p => p.ClientEmailId == Email && p.InstituteId == instituteId).FirstOrDefault();
+
             if (response != null)
             {
-              ClientName= string.Concat(response.PartnerName1," ", response.PartnerName2);
+                ClientName = string.Concat(response.PartnerName1, " ", response.PartnerName2);
 
             }
-      
+
         }
         public async Task SendEmailAsync(List<InstituteClientResponse> instituteClientResponses, string subject, string content, string URL, string ActionText, string userName, int InstituteId = -1)
         {
@@ -78,12 +78,20 @@ namespace EvolvedTax.Business.MailService
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
+
+            string template = AppConstants.EmailToClientDefaultTemp;
+
+            var instEmailTemp = _evolvedtaxContext.InstituteEmailTemplate.Where(p => p.InstituteID == InstituteId);
+            if (instEmailTemp.Any(p => p.TemplateName == AppConstants.ClientEmailTemplate))
+            {
+                template = AppConstants.EmailToClientDynamicTemp.Replace("{{dynamicBody}}", instEmailTemp.First(p => p.TemplateName == AppConstants.ClientEmailTemplate).Template);
+            }
+
             foreach (var email in instituteClientResponses)
             {
-                content = AppConstants.EmailToClient
-                    .Replace("{{Name}}", email.InstituteUserName)
+                template = template.Replace("{{Name}}", email.InstituteUserName)
                     .Replace("{{InstituteName}}", email.InstituteName)
-                      .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                    .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
                     .Replace("{{NameForInstitute}}", NameForInstitute)
                     .Replace("{{link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
                 try
@@ -94,7 +102,7 @@ namespace EvolvedTax.Business.MailService
                     message.To.Add(new MailAddress(email.ClientEmailId));
                     message.Subject = subject;
                     message.IsBodyHtml = true; //to make message body as html
-                    message.Body = content;
+                    message.Body = template;
                     smtp.Port = Port;
                     smtp.Host = Host;
                     smtp.EnableSsl = true;
@@ -491,13 +499,13 @@ namespace EvolvedTax.Business.MailService
         public async Task SendElectronicAcceptanceEmail(string email, int EntityId, string body, string subject, string url, string form, int instituteId = -1)
         {
             EmailSetting(instituteId);
-            SetClientName(instituteId,email);
-            DateTime currentDate = DateTime.Now.Date; 
+            SetClientName(instituteId, email);
+            DateTime currentDate = DateTime.Now.Date;
             DateTime DeadLinedDate = currentDate.AddDays(7);
             var Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instituteId).FirstOrDefault();
-            if (Response != null && Response.ReminderDays > 0 )
+            if (Response != null && Response.ReminderDays > 0)
             {
-                DeadLinedDate= currentDate.AddDays(Convert.ToDouble( Response.ReminderDays));
+                DeadLinedDate = currentDate.AddDays(Convert.ToDouble(Response.ReminderDays));
             }
             subject = "Request for Your Form 1099 Delivery Preference";
             var FromEmail = emailSetting.EmailDoamin;

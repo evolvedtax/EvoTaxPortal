@@ -285,12 +285,15 @@ var COMMON = (function () {
                 console.log('File uploaded successfully');
                 // Check the response from the server
                 var response = JSON.parse(xhr.responseText);
+                if (response.ErrorStatus == true) {
+                    COMMON.notification(2, 'There is some issue in excel file. Kindly recheck data and upload it again.');
+                    console.log(response);
+                    return;
+                }
                 if (response.Status) {
-                    
                     // Show the progress bar
                     var progressDiv = document.getElementById('progress');
                     progressDiv.style.display = 'block';
-
                     if (response.Param == "Client" && response.Message.length > 0) {
                         $('#dupplication-ibox').prop('hidden', false);
                         //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
@@ -332,9 +335,10 @@ var COMMON = (function () {
 
                         // Draw the updated DataTable
                         dataTable.draw();
-                        alert('here');
+                        //alert('here');
                     }
-                    if (response.Param == "Entity" && response.Message.length > 0) {
+                   if (response.Param == "Entity" && response.Message.length > 0) {
+            
                         $('#dupplication-ibox').prop('hidden', false);
                         //COMMON.AlertSuccessMessage('Duplication of Data', 'The record in row (' + response.Message + ') already exist', 'info')
                         // Clear the existing table rows
@@ -362,20 +366,27 @@ var COMMON = (function () {
                         dataTable.draw();
                     }
                     console.log('Upload completed successfully');
-                } else {
+                
+                }
+                else {
+                 
+                 // COMMON.notification(2, 'There is some issue in excel file. Kindly recheck data and upload it again.');
+ 
+                    console.log(response);
                     // Continue showing the progress bar until completion record is received
-                    COMMON.AlertSuccessMessage(response.Message.Title, response.Message.TagLine, 'error')
+                    location.reload();
                 }
             } else {
                 // File upload failed
                 console.log('File upload failed');
+             
             }
         };
 
         // Send the AJAX request
         xhr.send(formData);
 
-        
+
     }
     COMMON.doAjaxToDownloadFile = function (url, params, fileName) {
         $.ajax({
@@ -513,17 +524,18 @@ var COMMON = (function () {
         var today = now.getFullYear() + "-" + (month) + "-" + (day);
         $('#datePicker').val(today);
     };
-    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText, url, params, gridId) {
+    COMMON.confirmAlertWitMessages = function (confirmTitle, confirmMessage, confirmType, confirmBtnText, canceBtnTxt, url, params, gridId) {
         var confirmed = false;
 
         swal({
-            title: confirmTitle, //"Are you sure to delete this record?",
-            text: confirmMessage, // "Please check before deleting the record!",
+            title: '',//confirmTitle, //"Are you sure to delete this record?",
+            text: confirmTitle, // "Please check before deleting the record!",
             type: confirmType, //"warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
             confirmButtonText: confirmBtnText,
-            cancelButtonText: "Cancel"
+            cancelButtonColor: "red",
+            cancelButtonText: canceBtnTxt
         },
             function (isConfirm) {
                 if (isConfirm) {
@@ -544,8 +556,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to delete this record?",
-            text: "Please check before deleting the record!",
+            title: "",
+            text: "Are you sure you want to delete this record?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
@@ -580,8 +592,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to " + message + " this record?",
-            text: "",
+            title: "",
+            text: "Are you sure you want to " + message + " this record?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",
@@ -613,8 +625,8 @@ var COMMON = (function () {
         var confirmed = false;
 
         swal({
-            title: "Are you sure you want to " + message + " these records?",
-            text: "",
+            title: "",
+            text: "Are you sure you want to " + message + " these records?",
             type: "warning",
             showCancelButton: true,
             confirmButtonColor: "#1ab394",

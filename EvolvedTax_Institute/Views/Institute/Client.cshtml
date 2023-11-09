@@ -38,8 +38,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                top: 0;
-                                                                                                                left: 15%;*/
+                                                                                                                    top: 0;
+                                                                                                                    left: 15%;*/
         padding: 0;
         /*padding-right: 60%*/
         text-align: left !important;
@@ -104,7 +104,7 @@
 
                         <div class="col-md-3 mb-2 mr-5 pull-right">
                             <div id="uploadDataDiv" hidden>
-                                <div >
+                                <div>
                                     <label class="mr-2" style="margin:auto;width:30%">Upload Data</label>
                                     <div class="input-group">
                                         <div class="custom-file">
@@ -137,36 +137,31 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox ">
-                <div class="ibox-title">
-                </div>
-                </div>
-                <div class="mb-2"></div>
-                <div class="ibox-content">
+                <div class="ibox-content mb-2">
                     <div class="row">
-                    <div class="col-md-4 mb-2">
-                        <form id="formDeleteRecentRecord"
-                              method="post"
-                              data-ajax="true"
-                              data-ajax-method="post"
-                              data-ajax-mode="replace"
-                              data-ajax-failure="COMMON.ajaxfailure"
-                              data-ajax-loading="#ajax-loader"
-                              data-ajax-success="ajaxsuccessRecentDelete"
-                              data-ajax-url="@Url.Action("DeleteRecentRecordClient","Institute")">
-                            <div class="d-flex align-items-center">
-                                <label for="timeInterval" class="mr-2">Delete Records Uploaded Within</label>
-                                <select name="timeInterval" class="mr-2" style="width:fit-content">
-                                    <option value="15">15 minutes</option>
-                                    <option value="30">30 minutes</option>
-                                    <option value="60">1 hour</option>
-                                </select>
-                                <button type="submit"  style="margin-left: 10px" class="btn btn-danger">Delete Records</button>
-                            </div>
-                        </form>
+                        <div class="col-md-4 mb-2">
+                            <form id="formDeleteRecentRecord"
+                                  method="post"
+                                  data-ajax="true"
+                                  data-ajax-method="post"
+                                  data-ajax-mode="replace"
+                                  data-ajax-failure="COMMON.ajaxfailure"
+                                  data-ajax-loading="#ajax-loader"
+                                  data-ajax-success="ajaxsuccessRecentDelete"
+                                  data-ajax-url="@Url.Action("DeleteRecentRecordClient","Institute")">
+                                <div class="d-flex align-items-center">
+                                    <label for="timeInterval" class="mr-2">Delete Records Uploaded Within</label>
+                                    <select name="timeInterval" class="mr-2" style="width:fit-content">
+                                        <option value="15">15 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                    </select>
+                                    <button type="submit" style="margin-left: 10px" class="btn btn-danger">Delete Records</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                </div>
-               <div class="mb-2"></div>
                 <div class="ibox-content">
                     @* <div class="col-md-12 row">
                     <div><input id="importData" type="button" class="btn btn-dark" value="Import Client Data" /></div>
@@ -310,7 +305,7 @@
                         @if (userRole != "Viewer")
                         {
 
-                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc; border-radius:10px;">
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:2.7% ;border: 3px solid #ccc; border-radius:10px;">
 
                                 <div style="margin-top: 6px;">
                                     <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
@@ -1460,12 +1455,11 @@
             }
         }
         function ajaxsuccessRecentDelete(response) {
-            if (response.Status == true && response.ErrorStatus==false) {
+            if (response.Status == true && response.ErrorStatus == false) {
                 COMMON.notification(1, response.Message);
                 window.location.reload();
             }
-            else if (response.Status == true && response.ErrorStatus == true)
-            {
+            else if (response.Status == true && response.ErrorStatus == true) {
                 COMMON.notification(1, response.Message);
             }
             else {

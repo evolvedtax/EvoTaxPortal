@@ -159,7 +159,7 @@ namespace EvolvedTax_Institute.Controllers
                     ReminderDays = ReminderDays_Response.ReminderDays
                 };
             }
-            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p=> p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
+            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p => p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
             return View(model);
         }
         [HttpPost]
@@ -259,6 +259,15 @@ namespace EvolvedTax_Institute.Controllers
             }
             return Json(new { Status = true });
         }
-
+        [HttpGet]
+        public IActionResult SettingW8W9()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult Setting1099()
+        {
+            return View();
+        }
     }
 }
