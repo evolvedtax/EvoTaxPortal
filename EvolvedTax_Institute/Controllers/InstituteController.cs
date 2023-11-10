@@ -172,6 +172,12 @@ namespace EvolvedTax_Institute.Controllers
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("SelectedInstitute", InstId);
             model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId);
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+            ViewBag.FormNameList = FormNameItems.Select(p => new SelectListItem
+            {
+                Text = p.Form_Name,
+                Value = p.Id.ToString(),
+            });
             return View(model);
         }
         public IActionResult EntitiesRecyleBin()
