@@ -46,17 +46,19 @@ namespace EvolvedTax_Institute.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
-            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
-            {
-                Text = p.EntityName,
-                Value = p.EntityId.ToString()
-            });
+
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId =Convert.ToInt32( firstEntity.EntityId.ToString());
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
             }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
 
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8IMYForm, EntityId) };
             HttpContext.Session.SetInt32("EntityId", 0);
@@ -66,17 +68,19 @@ namespace EvolvedTax_Institute.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
-            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
-            {
-                Text = p.EntityName,
-                Value = p.EntityId.ToString()
-            });
+
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
                 EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
             }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
 
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8EXPForm, EntityId) };
             HttpContext.Session.SetInt32("EntityId", 0);
@@ -86,17 +90,19 @@ namespace EvolvedTax_Institute.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
-            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
-            {
-                Text = p.EntityName,
-                Value = p.EntityId.ToString()
-            });
+
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
                 EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
             }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm, EntityId) };
             HttpContext.Session.SetInt32("EntityId", 0);
             return View(model);
@@ -105,17 +111,19 @@ namespace EvolvedTax_Institute.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
-            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
-            {
-                Text = p.EntityName,
-                Value = p.EntityId.ToString()
-            });
+
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
                 EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
             }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                    Selected = p.EntityId == EntityId
+            });
 
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W9Form, EntityId) };
             HttpContext.Session.SetInt32("EntityId", 0);
