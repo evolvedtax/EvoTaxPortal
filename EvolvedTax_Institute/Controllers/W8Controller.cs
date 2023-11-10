@@ -87,6 +87,32 @@ namespace EvolvedTax_Institute.Controllers
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm) };
             return View(model);
         }
+        public IActionResult W8BEN()
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var entities = _instituteService.GetEntitiesByInstId(InstId);
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENForm) };
+            return View(model);
+        }
+        public IActionResult W8BEN_E()
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var entities = _instituteService.GetEntitiesByInstId(InstId);
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString()
+            });
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENEForm) };
+            return View(model);
+        }
         public IActionResult DownloadExcel(string fileType)
         {
             string fileName;

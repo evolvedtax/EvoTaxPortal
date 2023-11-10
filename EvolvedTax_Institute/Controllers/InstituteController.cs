@@ -186,7 +186,7 @@ namespace EvolvedTax_Institute.Controllers
         public IActionResult ChangeEntity(int entityId)
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            var response = _instituteService.GetClientByEntityId(InstId, entityId);
+            var response = _instituteService.GetClientByEntityId(InstId, entityId).ToList();
             var EmailFrequency = _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityId == entityId)?.EmailFrequency;
             return Json(new { Data = response, EmailFrequency = EmailFrequency });
         }
