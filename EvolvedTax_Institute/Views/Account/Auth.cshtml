@@ -114,7 +114,7 @@
         <img src="~/images/evolved_tax_mark_logo.png" width="50" height="50" />
         <h3>Welcome to EvoForms</h3>
         <p class="text-danger">@TempData["Message"]</p>
-        <p>To verify your identity, please enter the OTP (One-Time Password) that was sent to your e-mail.</p>
+        <p>To verify your identity, please enter the verification code that was sent to your e-mail.</p>
         <form id="form" class="m-t" role="form" method="post" asp-action="Auth" asp-controller="Account" asp-route-returnUrl="@ViewData["ReturnUrl"]">
             <div class="inputfield" id="otpContainer">
                 <input type="number" id="otpInput" name="Otp1" maxlength="1" class="input" />
@@ -126,7 +126,7 @@
             </div>
             <button type="submit" class="btn btn-primary full-width hide" id="submit">Proceed</button>
         </form>
-        <button type="submit" class="btn btn-primary full-width" style="margin-top: 10px;" id="resetOTP">Request Another OTP</button>
+        <button type="submit" class="btn btn-primary full-width" style="margin-top: 10px;" id="resetOTP">Request Another Verification Code</button>
     </div>
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -158,7 +158,7 @@
             $.get("/Account/Auth", function (data) {
                 $('.loading').hide();
                // alert('New OTP has been sent to your email')
-                COMMON.notification('@ResponseMessageConstants.SuccessStatus', 'New OTP has been sent to your e-mail inbox.');
+                COMMON.notification('@ResponseMessageConstants.SuccessStatus', 'New verification code has been sent to your e-mail inbox.');
             });
         }
         document.getElementById("resetOTP").addEventListener("click", function () {

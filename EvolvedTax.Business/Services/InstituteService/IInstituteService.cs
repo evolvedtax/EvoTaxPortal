@@ -63,6 +63,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
         Task<MessageResponseModel> LogClientButtonClicked(string CreatedBy,string buttonText, int EntityId,string Category);
         DashboardRequest DashboardDataByInstituteId(int instituteId);
+        IQueryable<InstituteClientResponse> GetClientByEntityIdAndStatus(int instId, int value, int entityId);
 
     }
 }

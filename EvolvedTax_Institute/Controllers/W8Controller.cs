@@ -122,7 +122,7 @@ namespace EvolvedTax_Institute.Controllers
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
-                    Selected = p.EntityId == EntityId
+                Selected = p.EntityId == EntityId
             });
 
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W9Form, EntityId) };
@@ -133,26 +133,84 @@ namespace EvolvedTax_Institute.Controllers
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
             });
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENForm, EntityId) };
             return View(model);
         }
         public IActionResult W8BEN_E()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
             });
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENEForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8BENEForm, EntityId) };
+            return View(model);
+        }
+        public IActionResult EmailSent()
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndStatus(InstId, 2, EntityId) }; // 2 is the status for email sent
+            return View(model);
+        }
+        public IActionResult Others()
+        {
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
+            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            {
+                Text = p.EntityName,
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
+            });
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndStatus(InstId, 1, EntityId) }; // 1 is the status for active clients
             return View(model);
         }
         public IActionResult DownloadExcel(string fileType)

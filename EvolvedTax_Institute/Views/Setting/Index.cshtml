@@ -33,8 +33,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                        top: 0;
-                                                                                                                                                                        left: 15%;*/
+                                                                                                                                                                                top: 0;
+                                                                                                                                                                                left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -98,6 +98,11 @@
                                                   data-ajax-loading="#ajax-loader"
                                                   data-ajax-success="ajaxsuccessInviteEmail"
                                                   data-ajax-url="@Url.Action("SendInvitaionLink","UserManagement")">
+                                                <div class="col-md-6">
+                                                    <label>Select Subscription</label>
+                                                    <select class="form-control select2" name="" asp-items="ViewBag.Subscription" multiple>
+                                                    </select>
+                                                </div>
                                                 <div class="col-md-6">
                                                     <label>Invite co-admins for the account</label>
                                                     <table id="email" style="width:100%">
@@ -521,7 +526,7 @@
                                               data-ajax-url="@Url.Action("AddUpdateClientEmailTemplate","Setting")">
                                             <div class="col-md-12">
                                                 <label>Client E-Mail Template</label>
-                                                <input asp-for="InstituteEmailTemplate.Id" hidden/>
+                                                <input asp-for="InstituteEmailTemplate.Id" hidden />
                                                 <textarea class="form-control" asp-for="InstituteEmailTemplate.Template">
                                                     @Model.InstituteEmailTemplate.Template
                                                 </textarea>
@@ -895,6 +900,6 @@
                     }
                 });
         }
-                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+                                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
     </script>
 }

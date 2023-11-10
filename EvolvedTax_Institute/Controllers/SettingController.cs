@@ -147,7 +147,12 @@ namespace EvolvedTax_Institute.Controllers
 
             ViewBag.CheckBoxFormNameList = FormNameItems;
             ViewBag.SelectedFormNames = selectedFormNames;
-
+            ViewBag.Subscription = _evolvedtaxContext.FormName.Select(
+                p => new SelectListItem
+                {
+                    Text = p.Form_Name,
+                    Value = p.Id.ToString(),
+                });
             //1099 Reminder Email days
             var ReminderDays_Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instId).FirstOrDefault();
 
