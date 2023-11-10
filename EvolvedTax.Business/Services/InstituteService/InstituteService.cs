@@ -124,6 +124,44 @@ namespace EvolvedTax.Business.Services.InstituteService
                 });
             return response;
         }
+        public IQueryable<InstituteClientResponse> GetClientByEntityIdAndFormName(int InstId, string FormName)
+        {
+            // Fetch all MasterClientStatus records
+            var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
+
+            var response = _evolvedtaxContext.InstitutesClients
+                .Where(p => p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId && p.FormName == FormName)
+                .OrderByDescending(p => p.IsDuplicated)
+                .Select(p => new InstituteClientResponse
+                {
+                    Address1 = p.Address1,
+                    Address2 = p.Address2,
+                    City = p.City,
+                    ClientId = p.ClientId,
+                    ClientEmailId = p.ClientEmailId,
+                    ClientStatusDate = p.ClientStatusDate,
+                    ClientStatus = p.ClientStatus,
+                    Country = p.Country,
+                    EntityId = p.EntityId,
+                    EntityName = p.EntityName,
+                    FileName = p.FileName,
+                    InstituteId = p.InstituteId,
+                    PartnerName1 = p.PartnerName1,
+                    PartnerName2 = p.PartnerName2,
+                    PhoneNumber = p.PhoneNumber,
+                    Province = p.Province,
+                    State = p.State,
+                    FormName = p.FormName,
+                    Zip = p.Zip,
+                    IsActive = p.IsActive,
+                    IsLocked = p.IsLocked,
+                    IsDuplicated = p.IsDuplicated,
+                    StatusName = clientStatuses[(short)p.ClientStatus].StatusName ?? "",
+                    LastUpdatedOn = p.LastUpdatedOn,
+                    LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
+                });
+            return response;
+        }
 
         public List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId)
         {
