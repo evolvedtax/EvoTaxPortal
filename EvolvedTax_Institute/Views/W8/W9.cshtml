@@ -38,8 +38,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                            top: 0;
-                                                                                                                                            left: 15%;*/
+                                                                                                                                                top: 0;
+                                                                                                                                                left: 15%;*/
         padding: 0;
         /*padding-right: 60%*/
         text-align: left !important;
@@ -242,6 +242,15 @@
 
 
         $(document).ready(function () {
+
+            // On change the entity
+            $('#changeEntity').change(function () {
+                let entityId = $('#changeEntity').val();
+                let params = { entityId: entityId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/W8/ChangeEntity', params);
+                window.location.href = '/W8/W9';
+
+            });
 
             $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
                 event.preventDefault(); // Prevent the default anchor behavior

@@ -7,6 +7,7 @@ using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NPOI.SS.Formula.Functions;
 
 namespace EvolvedTax_Institute.Controllers
 {
@@ -35,56 +36,97 @@ namespace EvolvedTax_Institute.Controllers
             return RedirectToAction("Entities", "Institute", new { area = "" });
         }
 
+        public IActionResult ChangeEntity(int entityId)
+        {
+            HttpContext.Session.SetInt32("EntityId", entityId);
+            return Json(new { Data = "true" }); ;
+        }
+
         public IActionResult W8IMY()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
             });
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8IMYForm, EntityId) };
+            HttpContext.Session.SetInt32("EntityId", 0);
             return View(model);
         }
         public IActionResult W8EXP()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
             });
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8EXPForm, EntityId) };
+            HttpContext.Session.SetInt32("EntityId", 0);
             return View(model);
         }
         public IActionResult W8ECI()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                Selected = p.EntityId == EntityId
             });
-         
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm, EntityId) };
+            HttpContext.Session.SetInt32("EntityId", 0);
             return View(model);
         }
         public IActionResult W9()
         {
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var entities = _instituteService.GetEntitiesByInstId(InstId);
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            if (EntityId == 0)
+            {
+                var firstEntity = entities.FirstOrDefault();
+                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+            }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
-                Value = p.EntityId.ToString()
+                Value = p.EntityId.ToString(),
+                    Selected = p.EntityId == EntityId
             });
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W8ECIForm) };
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityIdAndFormName(InstId, AppConstants.W9Form, EntityId) };
+            HttpContext.Session.SetInt32("EntityId", 0);
             return View(model);
         }
         public IActionResult W8BEN()
