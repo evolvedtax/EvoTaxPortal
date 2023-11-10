@@ -243,6 +243,15 @@
 
         $(document).ready(function () {
 
+            // On change the entity
+            $('#changeEntity').change(function () {
+                let entityId = $('#changeEntity').val();
+                let params = { entityId: entityId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/W8/ChangeEntity', params);
+                window.location.href = '/W8/W8IMY';
+
+            });
+
             $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
                 event.preventDefault(); // Prevent the default anchor behavior
                 var buttonText = $(this).find('span').text().trim();

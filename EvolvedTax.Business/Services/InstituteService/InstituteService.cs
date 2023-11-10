@@ -124,13 +124,13 @@ namespace EvolvedTax.Business.Services.InstituteService
                 });
             return response;
         }
-        public IQueryable<InstituteClientResponse> GetClientByEntityIdAndFormName(int InstId, string FormName)
+        public IQueryable<InstituteClientResponse> GetClientByEntityIdAndFormName(int InstId, string FormName, int EntityId)
         {
             // Fetch all MasterClientStatus records
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
 
             var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId && p.FormName == FormName)
+                .Where(p => p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId && p.FormName == FormName && p.EntityId == EntityId)
                 .OrderByDescending(p => p.IsDuplicated)
                 .Select(p => new InstituteClientResponse
                 {
