@@ -1,7 +1,7 @@
 ﻿@using EvolvedTax.Data.Enums;
 @model SettingRequest
 @{
-    ViewData["Title"] = "UserManagement";
+    ViewData["Title"] = "General Setting";
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
     bool SuperAdminOrAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
     bool SuperAdminOrAdminOrCoAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Co-Admin");
@@ -73,14 +73,14 @@
                                 <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
                             }
                             <li><a class="nav-link" data-toggle="tab" href="#tab-2">Update Profile</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>*@
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-6">E-mail Settings</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-6">E-mail Settings</a></li>*@
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-8">Transation History</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-9">Subscription</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-10">Electornic Confirmation</a></li>
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-11">Email Templates</a></li>
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-10">Electornic Confirmation</a></li>*@
+                            @*<li><a class="nav-link" data-toggle="tab" href="#tab-11">Email Templates</a></li>*@
 
                         </ul>
                         <div class="tab-content">

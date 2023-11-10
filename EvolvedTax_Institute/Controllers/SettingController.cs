@@ -262,12 +262,240 @@ namespace EvolvedTax_Institute.Controllers
         [HttpGet]
         public IActionResult SettingW8W9()
         {
-            return View();
+            var model = new SettingRequest();
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            //------------ UPDATE PROFILE -------------//
+            var response = _instituteService.GetInstituteDataById(instId);
+            var items = _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId.ToString()
+            });
+
+
+            var timezones = _evolvedtaxContext.MasterTimezones
+                 .OrderBy(p => p.Id)
+        .Select(p => new
+        {
+            Text = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone),
+            Value = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone)
+        })
+        .ToList();
+
+            ViewBag.TimezonList = new SelectList(timezones, "Text", "Value");
+
+            List<string> dateFormats = new List<string>
+    {
+                             "MM/DD/YYYY",
+                            "MM-DD-YYYY",
+                            "MM DD YYYY",
+                            "MM.DD.YYYY",
+                            "DD/MM/YYYY",
+                            "DD-MM-YYYY",
+                            "DD MM YYYY",
+                            "DD.MM.YYYY",
+                            "YYYY-MM-DD",
+                            "YYYY/MM/DD",
+                            "YYYY MM DD",
+                            "YYYY.MM.DD",
+                            "YYYY-DD-MM",
+                            "YYYY/DD/MM",
+                            "YYYY DD MM",
+                            "YYYY.DD.MM"
+    };
+
+            ViewBag.DateFormats = new SelectList(dateFormats);
+            model.InstituteMasterRequest = _mapper.Map<InstituteMasterRequest>(response ?? new InstituteMasterResponse());
+            //------------ EMAIL REMINDER -------------//
+
+            var emailSettingModel = _evolvedtaxContext.EmailSetting
+        .Where(es => es.InstID == instId)
+        .Select(p => new EmailSettingRequest
+        {
+            EmailDoamin = p.EmailDoamin,
+            Password = p.Password,
+            SMTPPort = p.SMTPPort,
+            SMTPServer = p.SMTPServer,
+            POPServer = p.POPServer,
+            POPPort = p.POPPort,
+        })
+        .FirstOrDefault();
+
+            model.EmailSettingRequest = emailSettingModel;
+            //----------- REQUEST NAME CHANGE ----------//
+            var requestChangeName = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n.RequestedOn).LastOrDefault(p => p.RequesterUserId == SessionUser.UserId);
+            model.InstituteRequestNameChange.IsApproved = requestChangeName != null ? requestChangeName.IsApproved : RequestChangeNameStatusEnum.Approved;
+            var users = _userManager.Users;
+            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p => p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
+            {
+                Id = p.Id,
+                InstituteId = p.InstituteId,
+                IsApproved = p.IsApproved,
+                NewName = p.NewName,
+                OldName = p.OldName,
+                ApprovedOn = p.ApprovedOn,
+                RequestedOn = p.RequestedOn,
+                RequesterUserId = p.RequesterUserId,
+                UserName = users.First(x => x.Id == p.RequesterUserId).UserName ?? ""
+            }).AsQueryable();
+            model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
+            //----------- RENDERING IFRAME -------------//
+            //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            //----------- subscription -------------//
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+            var instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var selectedFormNames = _evolvedtaxContext.FormAccess
+                              .Where(f => f.InstituteID == instituteId)
+                              .Select(f => f.Form_Name)
+                              .ToList();
+
+            ViewBag.CheckBoxFormNameList = FormNameItems;
+            ViewBag.SelectedFormNames = selectedFormNames;
+
+            //1099 Reminder Email days
+            var ReminderDays_Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instId).FirstOrDefault();
+
+            if (ReminderDays_Response != null)
+            {
+                model.Tbl1099_ReminderDaysRequest = new Tbl1099_ReminderDaysRequest
+                {
+                    InstId = ReminderDays_Response.InstId,
+                    ReminderDays = ReminderDays_Response.ReminderDays
+                };
+            }
+            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p => p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
+            return View(model);
         }
         [HttpGet]
         public IActionResult Setting1099()
         {
-            return View();
+            var model = new SettingRequest();
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            //------------ UPDATE PROFILE -------------//
+            var response = _instituteService.GetInstituteDataById(instId);
+            var items = _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
+
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId.ToString()
+            });
+
+
+            var timezones = _evolvedtaxContext.MasterTimezones
+                 .OrderBy(p => p.Id)
+        .Select(p => new
+        {
+            Text = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone),
+            Value = string.Format("({0}) {1}", p.GmtOffset, p.TimeZone)
+        })
+        .ToList();
+
+            ViewBag.TimezonList = new SelectList(timezones, "Text", "Value");
+
+            List<string> dateFormats = new List<string>
+    {
+                             "MM/DD/YYYY",
+                            "MM-DD-YYYY",
+                            "MM DD YYYY",
+                            "MM.DD.YYYY",
+                            "DD/MM/YYYY",
+                            "DD-MM-YYYY",
+                            "DD MM YYYY",
+                            "DD.MM.YYYY",
+                            "YYYY-MM-DD",
+                            "YYYY/MM/DD",
+                            "YYYY MM DD",
+                            "YYYY.MM.DD",
+                            "YYYY-DD-MM",
+                            "YYYY/DD/MM",
+                            "YYYY DD MM",
+                            "YYYY.DD.MM"
+    };
+
+            ViewBag.DateFormats = new SelectList(dateFormats);
+            model.InstituteMasterRequest = _mapper.Map<InstituteMasterRequest>(response ?? new InstituteMasterResponse());
+            //------------ EMAIL REMINDER -------------//
+
+            var emailSettingModel = _evolvedtaxContext.EmailSetting
+        .Where(es => es.InstID == instId)
+        .Select(p => new EmailSettingRequest
+        {
+            EmailDoamin = p.EmailDoamin,
+            Password = p.Password,
+            SMTPPort = p.SMTPPort,
+            SMTPServer = p.SMTPServer,
+            POPServer = p.POPServer,
+            POPPort = p.POPPort,
+        })
+        .FirstOrDefault();
+
+            model.EmailSettingRequest = emailSettingModel;
+            //----------- REQUEST NAME CHANGE ----------//
+            var requestChangeName = _evolvedtaxContext.InstituteRequestNameChange.OrderBy(n => n.RequestedOn).LastOrDefault(p => p.RequesterUserId == SessionUser.UserId);
+            model.InstituteRequestNameChange.IsApproved = requestChangeName != null ? requestChangeName.IsApproved : RequestChangeNameStatusEnum.Approved;
+            var users = _userManager.Users;
+            var requestNameChangeResponse = _evolvedtaxContext.InstituteRequestNameChange.Where(p => p.IsApproved == RequestChangeNameStatusEnum.Pending).Select(p => new InstituteRequestNameChangeResponse
+            {
+                Id = p.Id,
+                InstituteId = p.InstituteId,
+                IsApproved = p.IsApproved,
+                NewName = p.NewName,
+                OldName = p.OldName,
+                ApprovedOn = p.ApprovedOn,
+                RequestedOn = p.RequestedOn,
+                RequesterUserId = p.RequesterUserId,
+                UserName = users.First(x => x.Id == p.RequesterUserId).UserName ?? ""
+            }).AsQueryable();
+            model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
+            //----------- RENDERING IFRAME -------------//
+            //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+
+            //----------- subscription -------------//
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+            var instituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var selectedFormNames = _evolvedtaxContext.FormAccess
+                              .Where(f => f.InstituteID == instituteId)
+                              .Select(f => f.Form_Name)
+                              .ToList();
+
+            ViewBag.CheckBoxFormNameList = FormNameItems;
+            ViewBag.SelectedFormNames = selectedFormNames;
+
+            //1099 Reminder Email days
+            var ReminderDays_Response = _evolvedtaxContext.Tbl1099_ReminderDays.Where(p => p.InstId == instId).FirstOrDefault();
+
+            if (ReminderDays_Response != null)
+            {
+                model.Tbl1099_ReminderDaysRequest = new Tbl1099_ReminderDaysRequest
+                {
+                    InstId = ReminderDays_Response.InstId,
+                    ReminderDays = ReminderDays_Response.ReminderDays
+                };
+            }
+            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p => p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
+            return View(model);
         }
     }
 }
