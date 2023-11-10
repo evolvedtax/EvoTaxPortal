@@ -228,6 +228,15 @@
                                               data-ajax-loading="#ajax-loader"
                                               data-ajax-success="ajaxsuccessEmailSetting"
                                               data-ajax-url="@Url.Action("EmailSetting","Setting")">
+                                                   <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                    <label class="ml-2 mr-2" style="margin:auto">Select Entity</label>
+                                                        <select asp-items="ViewBag.InstitutesList" class="select2 form-control" id="changeInstitute" asp-for="EmailSettingRequest.InstID" style="width:fit-content">
+                                                    </select>
+                                                </div>
+                                                </div>
+                                                       </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -656,6 +665,38 @@
                     }
                 });
         }
+
                                                                                                                 //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+        $('#changeInstitute').change(function () {
+            var instituteId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetEmailSetting", "Setting")', // Update the URL as needed
+                data: { instituteId: instituteId },
+                method: 'GET',
+                success: function (data) {
+                    if (data !== null) {
+                    $('#EmailSettingRequest_EmailDoamin').val(data.EmailDoamin);
+                    $('#EmailSettingRequest_Password').val(data.Password);
+                    $('#EmailSettingRequest_SMTPServer').val(data.SMTPServer);
+                    $('#EmailSettingRequest_SMTPPort').val(data.SMTPPort);
+                    $('#EmailSettingRequest_POPServer').val(data.POPServer);
+                    $('#EmailSettingRequest_POPPort').val(data.POPPort);
+                    }
+                    else
+                    {
+                        $('#EmailSettingRequest_EmailDoamin').val('');
+                        $('#EmailSettingRequest_Password').val('');
+                        $('#EmailSettingRequest_SMTPServer').val('');
+                        $('#EmailSettingRequest_SMTPPort').val('');
+                        $('#EmailSettingRequest_POPServer').val('');
+                        $('#EmailSettingRequest_POPPort').val('');
+                    }
+                },
+                error: function () {
+                    COMMON.notification(3, "Something went wrong");
+                }
+            });
+        });
+
     </script>
 }

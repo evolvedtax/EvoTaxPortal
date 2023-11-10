@@ -130,6 +130,15 @@ namespace EvolvedTax_Admin.Controllers
                 UserName = users.First(x => x.Id == p.RequesterUserId).UserName ?? ""
             }).AsQueryable();
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
+
+         
+
+            ViewBag.InstitutesList = _evolvedtaxContext.InstituteMasters.Select(p => new SelectListItem
+            {
+                Text = p.InstitutionName,
+                Value = p.InstId.ToString()
+            });
+
             //----------- RENDERING IFRAME -------------//
             ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
             ViewData["TransactionHistory"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
@@ -138,17 +147,65 @@ namespace EvolvedTax_Admin.Controllers
         [HttpPost]
         public IActionResult EmailSetting(SettingRequest request)
         {
-            var model = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
-            model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
-            model.Password = request.EmailSettingRequest.Password;
-            model.SMTPPort = request.EmailSettingRequest.SMTPPort;
-            model.SMTPServer = request.EmailSettingRequest.SMTPServer;
-            model.POPServer = request.EmailSettingRequest.POPServer;
-            model.POPPort = request.EmailSettingRequest.POPPort;
-            _evolvedtaxContext.EmailSetting.Update(model);
+
+            var instituteId = request.EmailSettingRequest.InstID;
+            var model = _evolvedtaxContext.EmailSetting.FirstOrDefault(e => e.InstID == instituteId);
+
+            if (model != null)
+            {
+
+                model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
+                model.Password = request.EmailSettingRequest.Password;
+                model.SMTPPort = request.EmailSettingRequest.SMTPPort;
+                model.SMTPServer = request.EmailSettingRequest.SMTPServer;
+                model.POPServer = request.EmailSettingRequest.POPServer;
+                model.POPPort = request.EmailSettingRequest.POPPort;
+                if (instituteId != 0)
+                {
+                    model.InstID = instituteId;
+                }
+                _evolvedtaxContext.EmailSetting.Update(model);
+            }
+            else
+            {
+
+                model = new EmailSetting
+                {
+                    EmailDoamin = request.EmailSettingRequest.EmailDoamin,
+                    Password = request.EmailSettingRequest.Password,
+                    SMTPPort = request.EmailSettingRequest.SMTPPort,
+                    SMTPServer = request.EmailSettingRequest.SMTPServer,
+                    POPServer = request.EmailSettingRequest.POPServer,
+                    POPPort = request.EmailSettingRequest.POPPort
+                };
+                if (instituteId != 0)
+                {
+                    model.InstID = instituteId;
+                }
+                _evolvedtaxContext.EmailSetting.Add(model);
+            }
+
             _evolvedtaxContext.SaveChanges();
             return Json(new { Status = true });
+
+            //var model = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == -1);
+            //model.EmailDoamin = request.EmailSettingRequest.EmailDoamin;
+            //model.Password = request.EmailSettingRequest.Password;
+            //model.SMTPPort = request.EmailSettingRequest.SMTPPort;
+            //model.SMTPServer = request.EmailSettingRequest.SMTPServer;
+            //model.POPServer = request.EmailSettingRequest.POPServer;
+            //model.POPPort = request.EmailSettingRequest.POPPort;
+            //_evolvedtaxContext.EmailSetting.Update(model);
+            //_evolvedtaxContext.SaveChanges();
+            //return Json(new { Status = true });
         }
+        [HttpGet]
+        public IActionResult GetEmailSetting(int instituteId)
+        {
+            var emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(e => e.InstID == instituteId);
+            return Json(emailSetting); 
+        }
+
         #endregion
     }
 }

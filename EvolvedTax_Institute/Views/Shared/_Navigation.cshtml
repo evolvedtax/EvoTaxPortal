@@ -53,9 +53,23 @@
                 <a class="left-nav-links" href="@Url.Action("Entities", "Institute")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Organization Setup</span></a>
 
             </li>
-            <li class="@Html.IsSelected(controller: "W8")">
+         @*   <li class="@Html.IsSelected(controller: "W8")">
                 <a class="left-nav-links" href="@Url.Action("Index", "W8")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s)</span></a>
 
+            </li>*@
+            <li class="@Html.IsSelected(controller: "W8")">
+                <a href="#">
+                    <i class="fa fa-wpforms fa-lg"></i>
+                    <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s)</span>
+                    <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
+                </a>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "W8", cssClass: "in")">
+                    <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W9", "W8")">W-9</a></li>
+                    <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8EXP", "W8")">W-8 EXP </a></li>
+                    <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8IMY", "W8")">W-8 IMY</a></li>
+                    <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8ECI", "W8")">W-8 ECI</a></li>
+
+                </ul>
             </li>
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1099" asp-action="Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">1099(s)</span></a>
