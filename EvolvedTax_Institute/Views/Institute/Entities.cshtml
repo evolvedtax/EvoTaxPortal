@@ -43,8 +43,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                        top: 0;
-                        left: 15%;*/
+                                top: 0;
+                                left: 15%;*/
         padding: 0;
         text-align: left !important;
     }
@@ -328,19 +328,20 @@
                             <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
                         </div>
 
-                        <div class="mt-2">
-                            <label>Role</label>
-                            <select name="role" class="selec2" >
-                                <option value="Viewer">Viewer</option>
-                            </select>
+                        <div class="row">
+                            <div class="mt-2 col-md-4">
+                                <label>Role</label>
+                                <select name="role" class="selec2">
+                                    <option value="Viewer">Viewer</option>
+                                </select>
+                            </div>
+                            <div class="mt-2 col-md-8">
+                                <label>Subscription</label>
+                                <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
+                                </select>
+                            </div>
                         </div>
-                     
-                        <div class="mt-2">
-                            <label>Subscription</label>
-                            <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
-                            </select>
-                        </div>
-                 
+
                         <div class="mt-4">
                             <label>Message (optional)</label>
                             <textarea class="form-control" placeholder="Add a message"></textarea>
@@ -490,10 +491,54 @@
         </div>
     </div>
 </div>
+<!--Upload Entity Modal-->
+<div class="modal inmodal" id="uploadEntityModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Upload New Entities</h4>
+            </div>
+            <div class="modal-body">
+                <form id="uploadExcelForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessUploadEntity"
+                      enctype="multipart/form-data"
+                      data-ajax-url="@Url.Action("uploadEntities","Institute")">
+                    <input id="InstituteId" name="InstituteId" value="@ViewBag.InstituteId" hidden />
+                    <div class="row col-md-12 mb-2">
+                        <div class="col-md-6">
+                            <label>Select Subscription</label>
+                            <select id="multiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Upload New Entities</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" accept=".xlsx, .xls">
+                                    <label class="custom-file-label" for="uploadEntities">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="uploadEntity">Upload Entities</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 
     <script type="text/javascript">
-
 
         function updateModalHeader(selectedRows) {
             var headerText = "";
@@ -573,7 +618,11 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
-
+            $('#multiple-checkboxes').select2('destroy');
+            $('#multiple-checkboxes').multiselect({
+                includeSelectAllOption: true,
+            });
+            $('.btn-group').css('width', '100%');
             $('#saveShareBtn').click(function () {
                 let form = $('#shareForm');
                 if (form.valid()) {
@@ -688,8 +737,9 @@
                                 text: '<i class="fa fa-upload"></i> Import New Entity Template',
                                 className: 'btn-imp-data',
                                 action: function (e, dt, button, config) {
-                                    $('#uploadDataDiv').prop('hidden', false);
-                                    document.getElementById("uploadEntities").click();
+                                    //$('#uploadDataDiv').prop('hidden', false);
+                                    //document.getElementById("uploadEntities").click();
+                                    $("#uploadEntityModal").modal("show");
                                 }
                             },
                             {
@@ -873,6 +923,27 @@
             }
             return false;
         });
+        $('#uploadEntity').click(function () {
+            let form = $('#uploadExcelForm');
+            if (form.valid()) {
+                var selectedOptions = $('#multiple-checkboxes option:selected');
+                if (selectedOptions.length > 0) {
+                    form.submit();
+                } else {
+                    COMMON.notification(2, "Please select at least one subscription option.");
+                }
+            }
+            return false;
+        });
+        function ajaxsuccessUploadEntity(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "New entities uploaded");
+            } else {
+                COMMON.notification(2, "");
+            }
+            $("#uploadEntityModal").modal("hide");
+            window.location.reload();
+        }
         function ajaxsuccess(response) {
             if (response.Status == true) {
                 COMMON.notification(1, "Data is updated");
@@ -922,5 +993,6 @@
         $('#importData').click(function () {
             $('#uploadDataDiv').prop('hidden', false);
         });
+       
     </script>
 }

@@ -6,6 +6,7 @@
     bool SuperAdminOrAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
     bool SuperAdminOrAdminOrCoAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Co-Admin");
 }
+
 <style>
     .center-dropdown {
         left: -312% !important;
@@ -100,8 +101,16 @@
                                                   data-ajax-url="@Url.Action("SendInvitaionLink","UserManagement")">
                                                 <div class="col-md-6">
                                                     <label>Select Subscription</label>
-                                                    <select class="form-control select2" name="" asp-items="ViewBag.Subscription" multiple>
+                                                    <select id="multiple-checkboxes" class="form-control select2" name="" asp-items="ViewBag.Subscription" multiple>
                                                     </select>
+                                                  @*  <select id="multiple-checkboxes" class="form-control" multiple>
+                                                        <option value="php">PHP</option>
+                                                        <option value="javascript">JavaScript</option>
+                                                        <option value="java">Java</option>
+                                                        <option value="sql">SQL</option>
+                                                        <option value="jquery">Jquery</option>
+                                                        <option value=".net">.Net</option>
+                                                    </select>*@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label>Invite co-admins for the account</label>
@@ -599,11 +608,15 @@
         // Upgrade button class name
         $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
         $(document).ready(function () {
-            $("select").select2({
-                theme: 'bootstrap4',
-                placeholder: "Select One",
-                //allowClear: true
+            //$("select").select2({
+            //    theme: 'bootstrap4',
+            //    placeholder: "Select One",
+            //    //allowClear: true
+            //});
+            $('#multiple-checkboxes').multiselect({
+                includeSelectAllOption: true,
             });
+            $('.btn-group').css('width','100%');
             $('#InstituteEmailTemplate_Template').summernote();
             $('#oldInstituteName').val($('#instituteName').val());
             $('.select2-container').css('width', '100%');

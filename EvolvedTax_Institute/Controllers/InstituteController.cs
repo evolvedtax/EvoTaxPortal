@@ -198,7 +198,7 @@ namespace EvolvedTax_Institute.Controllers
         }
         [Route("institute/uploadEntities")]
         [HttpPost]
-        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId)
+        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId, int[] subscriptionId)
         {
             string InstituteName = string.Empty;
 
@@ -344,7 +344,12 @@ namespace EvolvedTax_Institute.Controllers
                 userRole = SessionUser.UserRole;
             }
             ViewBag.UserRole = userRole;
-
+            ViewBag.FormNameList = _evolvedtaxContext.FormName.Select(
+                p => new SelectListItem
+                {
+                    Text = p.Form_Name,
+                    Value = p.Id.ToString(),
+                });
 
             var roleHierarchyData = _evolvedtaxContext.RoleHierarchy.ToList();
             var roleHierarchy = roleHierarchyData.ToDictionary(

@@ -38,8 +38,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                    top: 0;
-                                                                                                                    left: 15%;*/
+                                                                                                                        top: 0;
+                                                                                                                        left: 15%;*/
         padding: 0;
         /*padding-right: 60%*/
         text-align: left !important;
@@ -647,10 +647,18 @@
                             <label>Invite People</label>
                             <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
                         </div>
-                        <div class="mt-2">
-                            <select asp-items="ViewBag.Roles" name="role" class="selec2" style="width:25%">
-                                <option value=""></option>
-                            </select>
+                        <div class="row">
+                            <div class="mt-2 col-md-4">
+                                <label>Role</label>
+                                <select asp-items="ViewBag.Roles" name="role" class="selec2">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="mt-2 col-md-8">
+                                <label>Subscription</label>
+                                <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
+                                </select>
+                            </div>
                         </div>
                         <div class="mt-4">
                             <label>Message (optional)</label>
