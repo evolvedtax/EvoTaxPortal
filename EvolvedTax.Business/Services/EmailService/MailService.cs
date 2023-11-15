@@ -79,12 +79,13 @@ namespace EvolvedTax.Business.MailService
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
 
-            string template = AppConstants.EmailToClientDefaultTemp;
+            string template = "";// AppConstants.EmailToClientDefaultTemp;
 
             var instEmailTemp = _evolvedtaxContext.InstituteEmailTemplate.Where(p => p.InstituteID == InstituteId);
             if (instEmailTemp.Any(p => p.TemplateName == AppConstants.ClientEmailTemplate))
             {
-                template = AppConstants.EmailToClientDynamicTemp.Replace("{{dynamicBody}}", instEmailTemp.First(p => p.TemplateName == AppConstants.ClientEmailTemplate).Template);
+                var tempRequest = instEmailTemp.First(p => p.TemplateName == AppConstants.ClientEmailTemplate);
+                template = tempRequest.IsDefault ? tempRequest.DefaultTemplate : tempRequest.CustomTemplate;
             }
 
             foreach (var email in instituteClientResponses)

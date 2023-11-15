@@ -138,9 +138,9 @@ namespace EvolvedTax.Common.Constants
 <br/><br/>
 We hope this e-mail finds you well. As you are aware, {{InstituteName}} is required to comply with tax laws and regulations of the United States.
 <br/><br/>
-To ensure compliance with these regulations, we kindly request that you provide us with your tax information as soon as possible using our online portal, EvoTax.
+To ensure compliance with these regulations, we kindly request that you provide us with your tax information as soon as possible using our online portal, EvoForms.
 <br/>
-EvoTax is an online portal which makes it easy for you to securely provide us with your tax information online.
+EvoForms is an online portal which makes it easy for you to securely provide us with your tax information online.
 <br/><br/>
 To access the EvoForms, please follow the instructions below:
 <br/><br/>
@@ -363,7 +363,7 @@ Regards,
                                                         <br /><br />
                                                         {{NameForInstitute}}";
 
-        public static string EmailToInstitute = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoTax Platform. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their registration before they can access the full features of the platform. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your identity, kindly click on the verification link provided below. You will be directed to a secure login page where you will need to enter your login credentials.<br/><br/> <!--[if mso]>
+        public static string EmailToInstitute = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoForms Platform. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their registration before they can access the full features of the platform. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your identity, kindly click on the verification link provided below. You will be directed to a secure login page where you will need to enter your login credentials.<br/><br/> <!--[if mso]>
   <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
     <tr>
       <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
