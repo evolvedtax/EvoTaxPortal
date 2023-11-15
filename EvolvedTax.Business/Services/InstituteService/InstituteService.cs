@@ -39,14 +39,14 @@ namespace EvolvedTax.Business.Services.InstituteService
             return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters).AsQueryable();
         }
 
-        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId)
+        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId,int SubscriptionId)
         {
             string userId = "";
             HttpContext httpContext = _httpContextAccessor.HttpContext;
             if (httpContext != null)
             {
                 userId = httpContext.Session.GetString("UserId");
-
+               
             }
 
 
@@ -55,11 +55,34 @@ namespace EvolvedTax.Business.Services.InstituteService
                                 .Select(ue => ue.EntityId)
                                 .ToList();
 
+            var filteredEntityFormAccess = new List<int?>();
+            if (SubscriptionId == -1 || SubscriptionId == 0)
+            {
+
+                filteredEntityFormAccess = _evolvedtaxContext.EntityFormAccess
+                                   .Where(efa => efa.InstituteID == InstId)
+                                   .Select(efa => efa.EntityId)
+                                   .ToList();
+            }
+            else
+            {
+                filteredEntityFormAccess = _evolvedtaxContext.EntityFormAccess
+                                  .Where(efa => efa.InstituteID == InstId && efa.FormNameId == SubscriptionId)
+                                  .Select(efa => efa.EntityId)
+                                  .ToList();
+            }
+
+
+
+
             var query = from p in _evolvedtaxContext.InstituteEntities
                             //where userEntityIds.Contains(p.EntityId) && p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
-                        where (userEntityIds.Count == 0 || userEntityIds.Contains(p.EntityId))
+                        where (SubscriptionId == -1 || SubscriptionId == -0 || filteredEntityFormAccess.Contains( p.EntityId))
+
+                         && (userEntityIds.Count == 0 || userEntityIds.Contains(p.EntityId))
                 && p.InstituteId == InstId
                 && p.IsActive == RecordStatusEnum.Active
+                 
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -180,7 +203,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             return result.ToList();
         }
 
-        public async Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName)
+        public async Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName, int[] subscriptionId)
         {
             bool Status = false;
             var response = new List<InstituteEntity>();
@@ -260,6 +283,40 @@ namespace EvolvedTax.Business.Services.InstituteService
                     }
                     await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
                     await _evolvedtaxContext.SaveChangesAsync();
+
+
+                    // Retrieve the newly added entities 
+                    var entityNames = entityList.Select(newEntity => newEntity.EntityName).ToList();
+
+                    var newlyAddedEntities = await _evolvedtaxContext.InstituteEntities
+                        .Where(e => entityNames.Contains(e.EntityName))
+                        .ToListAsync();
+
+
+                    foreach (var entity in newlyAddedEntities)
+                    {
+                        
+                        foreach (var formNameId in subscriptionId)
+                        {
+                     
+                            var entityFormAccess = new EntityFormAccess
+                            {
+                                InstituteID = InstId,
+                                EntityId = entity.EntityId,
+                                FormNameId = formNameId
+                            };
+                            _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+                        }
+                    }
+                 
+                    int changesSaved = await _evolvedtaxContext.SaveChangesAsync();
+
+                    if (changesSaved > 0)
+                    {
+                        // Data saved successfully
+                        Status = true;
+                    }
+               
 
                 }
             }
@@ -861,7 +918,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             await _evolvedtaxContext.SaveChangesAsync();
             return new MessageResponseModel { Status = true, Message = "Record inserted" };
         }
-        public async Task<MessageResponseModel> AddEntity(InstituteEntityRequest request)
+        public async Task<MessageResponseModel> AddEntity(InstituteEntityRequest request, int[] subscriptionId)
         {
             if (_evolvedtaxContext.InstituteEntities.Any(p => p.Ein.Trim() == request.Ein.Trim()))
             {
@@ -887,6 +944,20 @@ namespace EvolvedTax.Business.Services.InstituteService
             };
             await _evolvedtaxContext.AddAsync(model);
             await _evolvedtaxContext.SaveChangesAsync();
+
+            var responseInstitute= _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityName == request.EntityName);
+            foreach (var formNameId in subscriptionId)
+            {
+                var entityFormAccess = new EntityFormAccess
+                {
+                    InstituteID = request.InstituteId,
+                    EntityId = responseInstitute.EntityId,
+                    FormNameId = formNameId
+                };
+                _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+            }
+            await _evolvedtaxContext.SaveChangesAsync();
+
             return new MessageResponseModel { Status = true, Message = "Record inserted" };
         }
         public bool IsEntityNameExist(string entityName, int entityId, int institueId)

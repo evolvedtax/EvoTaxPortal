@@ -55,6 +55,31 @@
         width: 200%;
     }
 </style>
+@*test*@
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox" style="margin-bottom: 0px">
+                <div class="ibox-title">
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label class="mr-2" style="margin:auto">Select Subscription</label>
+                                <select asp-items="ViewBag.FormNameListMain" class="select2 form-control" id="changeSubscription" style="width:107%">
+                                    <option value="-1">Select All</option>
+                                </select>
+                            </div>
+                        </div>
+  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*test*@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -290,6 +315,11 @@
                                 <input type="text" class="form-control" asp-for="InstituteEntityRequest.Zip" required>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label>Select Subscription</label>
+                            <select id="multiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>
+                        </div>
                     </div>
                 </form>
                 <div class="modal-footer">
@@ -514,7 +544,7 @@
                     <div class="row col-md-12 mb-2">
                         <div class="col-md-6">
                             <label>Select Subscription</label>
-                            <select id="multiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            <select id="Uploadmultiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -619,10 +649,22 @@
                 //allowClear: true
             });
             $('#multiple-checkboxes').select2('destroy');
+            $('#Uploadmultiple-checkboxes').select2('destroy');
+            $('#Uploadmultiple-checkboxes').multiselect({
+                includeSelectAllOption: true,
+            });
             $('#multiple-checkboxes').multiselect({
                 includeSelectAllOption: true,
             });
             $('.btn-group').css('width', '100%');
+            // On change the Subscription
+            $('#changeSubscription').change(function () {
+                let SubscriptionId = $('#changeSubscription').val();
+                let params = { SubscriptionId: SubscriptionId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/Institute/changeSubscription', params);
+                window.location.href = '/Institute/Entities';
+
+            });
             $('#saveShareBtn').click(function () {
                 let form = $('#shareForm');
                 if (form.valid()) {
@@ -926,8 +968,11 @@
         $('#uploadEntity').click(function () {
             let form = $('#uploadExcelForm');
             if (form.valid()) {
-                var selectedOptions = $('#multiple-checkboxes option:selected');
+                var selectedOptions = $('#Uploadmultiple-checkboxes option:selected');
                 if (selectedOptions.length > 0) {
+                    $('#uploadExcelForm input[name="subscriptionId"]').remove();
+                    var selectedSubscriptions = $('#Uploadmultiple-checkboxes').val();
+                    $('#uploadExcelForm').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions.join(',') + '" />');
                     form.submit();
                 } else {
                     COMMON.notification(2, "Please select at least one subscription option.");
@@ -956,6 +1001,8 @@
         $('#saveAddBtn').click(function () {
             let form = $('#addForm');
             if (form.valid()) {
+                var selectedSubscriptions = $('#multiple-checkboxes').val();
+                $('#saveAddBtn').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions.join(',') + '" />');
                 form.submit();
             }
             return false;

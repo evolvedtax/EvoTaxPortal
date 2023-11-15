@@ -138,6 +138,12 @@ namespace EvolvedTax_Institute.Controllers
         }
 
         #region Entities
+
+        public IActionResult changeSubscription(int SubscriptionId)
+        {
+            HttpContext.Session.SetInt32("SubscriptionId", SubscriptionId);
+            return Json(new { Data = "true" }); ;
+        }
         public IActionResult Entities(int? instituteId)
         {
             var model = new InstituteEntityViewModel();
@@ -171,13 +177,28 @@ namespace EvolvedTax_Institute.Controllers
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("SelectedInstitute", InstId);
-            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId);
+
             var FormNameItems = _evolvedtaxContext.FormName.ToList();
+
+            var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
+
+            ViewBag.FormNameListMain = FormNameItems.Select(p => new SelectListItem
+            {
+                Text = p.Form_Name,
+                Value = p.Id.ToString(),
+                Selected = p.Id == SubscriptionId
+            });
+
+
             ViewBag.FormNameList = FormNameItems.Select(p => new SelectListItem
             {
                 Text = p.Form_Name,
                 Value = p.Id.ToString(),
             });
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, SubscriptionId);
+
+          
+            HttpContext.Session.SetInt32("SubscriptionId", -1);
             return View(model);
         }
         public IActionResult EntitiesRecyleBin()
@@ -201,6 +222,7 @@ namespace EvolvedTax_Institute.Controllers
         public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId, int[] subscriptionId)
         {
             string InstituteName = string.Empty;
+            int[] subscriptionIds = subscriptionId.Distinct().ToArray();
 
             if (InstituteId == 0)
             {
@@ -212,15 +234,16 @@ namespace EvolvedTax_Institute.Controllers
             {
                 InstituteName = _instituteService.GetInstituteDataById(InstituteId).InstitutionName ?? string.Empty;
             }
-            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName);
+            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName, subscriptionIds);
             return Json(response);
         }
         [Route("institute/AddEntity")]
         [HttpPost]
-        public async Task<IActionResult> AddEntity(InstituteEntityViewModel request)
+        public async Task<IActionResult> AddEntity(InstituteEntityViewModel request, int[] subscriptionId)
         {
 
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            int[] subscriptionIds = subscriptionId.Distinct().ToArray();
             if (request.InstituteEntityRequest.InstituteId == 0)
             {
                 request.InstituteEntityRequest.InstituteId = (short)instId;
@@ -231,7 +254,7 @@ namespace EvolvedTax_Institute.Controllers
                 request.InstituteEntityRequest.InstituteName = _instituteService.GetInstituteDataById(request.InstituteEntityRequest.InstituteId).InstitutionName;
             }
             request.InstituteEntityRequest.LastUpdatedBy = (short)instId;
-            var response = await _instituteService.AddEntity(request.InstituteEntityRequest);
+            var response = await _instituteService.AddEntity(request.InstituteEntityRequest, subscriptionIds);
             return Json(response);
         }
         [Route("institute/UpdateEntity")]

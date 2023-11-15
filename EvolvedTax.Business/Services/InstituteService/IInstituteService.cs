@@ -15,12 +15,12 @@ namespace EvolvedTax.Business.Services.InstituteService
     public interface IInstituteService
     {
         IQueryable<InstituteMasterResponse> GetMaster();
-        IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId);
+        IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId,int SubscriptionId=-1);
         IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId);
         public IQueryable<InstituteClientResponse> GetClientByEntityIdAndFormName(int InstId, string FormName, int EntityId);
         List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId);
         InstituteClientResponse? GetClientDataByClientEmailId(string ClientEmailId);
-        Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName);
+        Task<MessageResponseModel> UploadEntityData(IFormFile file, int InstId, string InstituteName, int[] subscriptionId = null);
         Task<MessageResponseModel> UploadClientData(IFormFile file, int InstId, int EntityId, string entityName);
         Task<bool> UpdateClientByClientEmailId(string ClientEmail, PdfFormDetailsRequest request);
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
@@ -48,7 +48,7 @@ namespace EvolvedTax.Business.Services.InstituteService
         (string Idnumber, string PayeeData) GetPayeeData(int instId);
         bool UpdateInstituteMaster(InstituteMasterRequest request);
         Task<MessageResponseModel> AddClient(InstituteClientRequest request);
-        Task<MessageResponseModel> AddEntity(InstituteEntityRequest request);
+        Task<MessageResponseModel> AddEntity(InstituteEntityRequest request, int[] subscriptionId=null);
         bool IsEntityNameExist(string entityName, int institueId, int institueId1);
         bool IsEINExist(string ein, int institueId, int institueId1);
 

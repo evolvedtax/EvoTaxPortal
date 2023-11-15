@@ -17,6 +17,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
         : base(options)
     {
     }
+    public virtual DbSet<EntityFormAccess> EntityFormAccess { get; set; }
     public virtual DbSet<FormName> FormName { get; set; }
     public virtual DbSet<FormAccess> FormAccess { get; set; }
     public virtual DbSet<AuditLog> AuditLog { get; set; }

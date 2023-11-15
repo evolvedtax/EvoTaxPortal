@@ -38,5 +38,6 @@ namespace EvolvedTax.Data.Models.DTOs.Request
         public int? EmailFrequency { get; set; }
         public short? LastUpdatedBy { get; set; }
 
+
     }
 }
