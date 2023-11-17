@@ -62,7 +62,7 @@ namespace EvolvedTax1099_Recipient.Controllers
                     FormName = f
                 };
                 await _trailAudit1099Service.AddUpdateRecipientAuditDetails(request);
-                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoTax Portal", "User");
+                await _mailService.SendOTPToRecipientAsync(otp, s, "Action Required: Your One Time Password (OTP) with EvoForms", "User");
                 ViewBag.RecipientEmail = s;
                 ViewBag.FormName = f;
                 HttpContext.Session.SetString("OTPRecipientEmail", s);

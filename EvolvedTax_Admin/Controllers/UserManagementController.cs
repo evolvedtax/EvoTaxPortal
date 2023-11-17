@@ -68,7 +68,7 @@ namespace EvolvedTax_Admin.Controllers
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             var instituteName = HttpContext.Session.GetString("InstituteName");
             var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email" }, Request.Scheme) ?? "";
-            _mailService.SendInvitaionEmail(request.InvitationEmailDetails, URL, instId, "Action Required: You have been invited to signup with EvoTax Portal", instituteName);
+            _mailService.SendInvitaionEmail(request.InvitationEmailDetails, URL, instId, "Action Required: You have been invited to signup with EvoForms", instituteName);
             return Json(new { Status = true });
         }
         #endregion

@@ -95,7 +95,7 @@ namespace EvolvedTax_Institute.Controllers
                 //    var totp = new Totp(bytes);
                 //    var otp = totp.ComputeTotp();
 
-                //    await _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoTax Portal", response.UserName, "");
+                //    await _mailService.SendOTPAsync(otp, response.EmailId, "Action Required: Your One Time Password (OTP) with EvoForms", response.UserName, "");
                 //    _userService.UpdateInstituteMasterOTP(response.EmailId, otp, DateTime.Now.AddMinutes(60));
 
                 //    return RedirectToAction(nameof(Auth));
@@ -286,7 +286,7 @@ namespace EvolvedTax_Institute.Controllers
                     var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
                     var user = await _userManager.GetUserAsync(User);
                     var invitee = await _userManager.GetUserAsync(User);
-                    await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role, InstituteId);
+                    await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role, InstituteId);
                 }
                 else
                 {
@@ -296,7 +296,7 @@ namespace EvolvedTax_Institute.Controllers
                     var URL = string.Concat(fullUrl, "Account/", "Login");
                     var user = await _userManager.GetUserAsync(User);
                     var invitee = await _userManager.GetUserAsync(User);
-                    await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role, InstituteId);
+                    await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, EntityName, role, InstituteId);
                 }
             }
             return Json(new { Status = true, Message = "Invited link has been sent." });
@@ -331,7 +331,7 @@ namespace EvolvedTax_Institute.Controllers
                                 var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
                                 var user = await _userManager.GetUserAsync(User);
                                 var invitee = await _userManager.GetUserAsync(User);
-                                await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
+                                await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
                             }
                             else
                             {
@@ -341,7 +341,7 @@ namespace EvolvedTax_Institute.Controllers
                                 var URL = string.Concat(fullUrl, "/Account/", "Login");
                                 var user = await _userManager.GetUserAsync(User);
                                 var invitee = await _userManager.GetUserAsync(User);
-                                await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoTax Portal", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
+                                await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
                             }
                         }
                     }
@@ -758,7 +758,7 @@ namespace EvolvedTax_Institute.Controllers
                 if (response)
                 {
                     string resetUrl = string.Concat(fullUrl, "/Account", "/ResetPassword?token=" + PasswordResetToken);
-                    _mailService.SendResetPassword(request.EmailAddress, "Action Required:Your Password Reset Request with EvoTax Portal", resetUrl);
+                    _mailService.SendResetPassword(request.EmailAddress, "Action Required:Your Password Reset Request with EvoForms", resetUrl);
                     return Json(response);
                 }
                 return Json(response);

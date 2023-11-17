@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
     bool SuperAdminOrAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
     bool SuperAdminOrAdminOrCoAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Co-Admin");
+    string emailTemplate = "";
 }
 <style>
     .center-dropdown {
@@ -33,8 +34,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                            top: 0;
-                                                                                                                                                                            left: 15%;*/
+                                                                                                                                                                                top: 0;
+                                                                                                                                                                                left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -509,6 +510,8 @@
                             </div>
                             <div id="tab-11" class="tab-pane">
                                 <div class="panel-body">
+                                    <b>Please keep the format which are in {{ }} as it is.</b>
+                                    <br /><br />
                                     <div class="row">
                                         <form id="ClientEmailTemplateForm" style="width:100%"
                                               method="post"
@@ -520,10 +523,24 @@
                                               data-ajax-success="ajaxsuccessClientEmailTemplate"
                                               data-ajax-url="@Url.Action("AddUpdateClientEmailTemplate","Setting")">
                                             <div class="col-md-12">
+                                                <label>Do you want to use default template?</label>
+                                                <input type="checkbox" asp-for="InstituteEmailTemplate.IsDefault" />
+                                            </div>
+                                            <div class="col-md-12">
                                                 <label>Client E-Mail Template</label>
                                                 <input asp-for="InstituteEmailTemplate.Id" hidden />
-                                                <textarea class="form-control" asp-for="InstituteEmailTemplate.Template">
-                                                    @Model.InstituteEmailTemplate.Template
+                                                <input asp-for="InstituteEmailTemplate.FormNameId" hidden />
+                                                <input asp-for="InstituteEmailTemplate.FormNameId" hidden />
+                                                @if (Model.InstituteEmailTemplate.IsDefault)
+                                                {
+                                                    emailTemplate = Model.InstituteEmailTemplate.DefaultTemplate;
+                                                }
+                                                else
+                                                {
+                                                    emailTemplate = Model.InstituteEmailTemplate.CustomTemplate;
+                                                }
+                                                <textarea class="form-control" id="InstituteEmailTemplate_Template" name="InstituteEmailTemplate.CustomTemplate">
+                                                    @emailTemplate
                                                 </textarea>
                                                 <div class="mt-2">
                                                     <button type="button" id="submitClientEMailTemp" class="btn btn-primary">Save</button>
@@ -895,6 +912,6 @@
                     }
                 });
         }
-                                                                                                                        //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+                                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
     </script>
 }

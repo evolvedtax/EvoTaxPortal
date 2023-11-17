@@ -133,7 +133,7 @@ namespace EvolvedTax_Institute.Controllers
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
             //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
-            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserM.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
             ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
@@ -248,9 +248,11 @@ namespace EvolvedTax_Institute.Controllers
             if (request.InstituteEmailTemplate.Id > 0)
             {
                 var response = _evolvedtaxContext.InstituteEmailTemplate.First(p => p.Id == request.InstituteEmailTemplate.Id);
-                response.Template = request.InstituteEmailTemplate.Template;
-                request.InstituteEmailTemplate.UpdatedDatetime = DateTime.Now;
-                request.InstituteEmailTemplate.UpdateBy = SessionUser.UserId;
+                response.CustomTemplate = request.InstituteEmailTemplate.CustomTemplate;
+                response.UpdateBy = SessionUser.UserId;
+                response.UpdatedDatetime = DateTime.Now;
+                response.IsDefault = request.InstituteEmailTemplate.IsDefault;
+                response.CustomTemplate = request.InstituteEmailTemplate.CustomTemplate;
                 _evolvedtaxContext.InstituteEmailTemplate.Update(response);
                 _evolvedtaxContext.SaveChanges();
             }
@@ -354,7 +356,7 @@ namespace EvolvedTax_Institute.Controllers
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
             //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
-            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserM.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
             ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
@@ -473,7 +475,7 @@ namespace EvolvedTax_Institute.Controllers
             model.InstituteRequestNameChangeResponses = requestNameChangeResponse;
             //----------- RENDERING IFRAME -------------//
             //ViewData["UserManagement"] = @"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID="" frameborder=""0"" width=""100%"" height=""800""></iframe>";
-            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserManagement.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
+            ViewData["UserManagement"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/UserM.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
             ViewData["TransactionHistory"] = $@"<iframe src=""https://portal.evolvedforms.com/EvoSystem/TransactionHistory.aspx?InstID={instId}"" frameborder=""0"" width=""100%"" height=""800""></iframe>";
 
