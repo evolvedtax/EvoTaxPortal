@@ -26,8 +26,8 @@ namespace EvolvedTax.Business.Services.InstituteService
         Task<bool> UpdateClientStatusByClientEmailId(string ClientEmail, short status);
         InstituteMaster GetInstituteDataByClientEmailId(string clientEmailId);
         InstituteEntity GetEntityDataByClientEmailId(string clientEmail);
-        Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request);
-        Task<MessageResponseModel> DeleteEntity(int id, RecordStatusEnum RecordStatus);
+        Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request, int[] subscriptionId = null);
+        Task<MessageResponseModel> DeleteEntity(int id, RecordStatusEnum RecordStatus,int SubscriptionId=0);
         Task<MessageResponseModel> LockUnlockEntity(int[] selectedValues, bool isLocked);
         IQueryable<InstituteEntitiesResponse> GetRecyleBinEntitiesByInstId(int instId);
         MessageResponseModel RestoreEntities(int[] selectedValues);

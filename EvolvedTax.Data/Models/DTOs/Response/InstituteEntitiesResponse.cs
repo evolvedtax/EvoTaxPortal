@@ -12,5 +12,6 @@ namespace EvolvedTax.Data.Models.DTOs.Response
     {
         public string LastUpdatedByName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public string Subscription { get; set; } = string.Empty;
     }
 }

@@ -211,17 +211,20 @@ body.stop-scrolling {
     box-shadow: none !important; }
   .sweet-alert[data-has-confirm-button=false][data-has-cancel-button=false] {
     padding-bottom: 40px; }
-  .sweet-alert .sa-icon {
-    width: 80px;
-    height: 80px;
-    border: 4px solid gray;
-    -webkit-border-radius: 40px;
-    border-radius: 40px;
-    border-radius: 50%;
-    margin: 20px auto;
-    padding: 0;
-    position: relative;
-    box-sizing: content-box; }
+.sweet-alert .sa-icon {
+/*  width: 80px;
+  height: 80px;*/
+  width: 64px;
+  height: 66px;
+  border: 4px solid gray;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  border-radius: 50%;
+  margin: 20px auto;
+  padding: 0;
+  position: relative;
+  box-sizing: content-box;
+}
     .sweet-alert .sa-icon.sa-error {
       border-color: #F27474; }
       .sweet-alert .sa-icon.sa-error .sa-x-mark {

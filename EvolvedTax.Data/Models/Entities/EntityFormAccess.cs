@@ -10,4 +10,5 @@ public partial class EntityFormAccess
     public int? EntityId { get; set; }
     public int? FormNameId { get; set; }
     public DateTime? EntryDateTime { get; set; }
+    public int IsActive { get; set; } = 1;
 }

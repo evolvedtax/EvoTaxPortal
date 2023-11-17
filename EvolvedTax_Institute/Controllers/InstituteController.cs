@@ -181,6 +181,10 @@ namespace EvolvedTax_Institute.Controllers
             var FormNameItems = _evolvedtaxContext.FormName.ToList();
 
             var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
+            if (SubscriptionId==-1)
+            {
+                 HttpContext.Session.SetInt32("SubscriptionId", -1);
+            }
 
             ViewBag.FormNameListMain = FormNameItems.Select(p => new SelectListItem
             {
@@ -198,7 +202,7 @@ namespace EvolvedTax_Institute.Controllers
             model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, SubscriptionId);
 
           
-            HttpContext.Session.SetInt32("SubscriptionId", -1);
+           // HttpContext.Session.SetInt32("SubscriptionId", -1);
             return View(model);
         }
         public IActionResult EntitiesRecyleBin()
@@ -259,7 +263,7 @@ namespace EvolvedTax_Institute.Controllers
         }
         [Route("institute/UpdateEntity")]
         [HttpPost]
-        public async Task<IActionResult> UpdateEntity(InstituteEntityViewModel request)
+        public async Task<IActionResult> UpdateEntity(InstituteEntityViewModel request, int[] subscriptionId)
         {
             if (request.InstituteEntityRequest.EntityId == 0)
             {
@@ -267,7 +271,7 @@ namespace EvolvedTax_Institute.Controllers
             }
             var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
             request.InstituteEntityRequest.InstituteId = (short)instId;
-            var response = await _instituteService.UpdateEntity(request.InstituteEntityRequest);
+            var response = await _instituteService.UpdateEntity(request.InstituteEntityRequest, subscriptionId);
             return Json(response);
         }
         [Route("institute/DeleteEntity")]
@@ -278,7 +282,8 @@ namespace EvolvedTax_Institute.Controllers
             {
                 return Json(false);
             }
-            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash);
+            var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
+            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash, SubscriptionId);
             return Json(response);
         }
         [Route("institute/EmptyRecycleBinEntity")]

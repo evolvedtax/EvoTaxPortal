@@ -60,14 +60,14 @@ namespace EvolvedTax.Business.Services.InstituteService
             {
 
                 filteredEntityFormAccess = _evolvedtaxContext.EntityFormAccess
-                                   .Where(efa => efa.InstituteID == InstId)
+                                   .Where(efa => efa.InstituteID == InstId && efa.IsActive == 1)
                                    .Select(efa => efa.EntityId)
                                    .ToList();
             }
             else
             {
                 filteredEntityFormAccess = _evolvedtaxContext.EntityFormAccess
-                                  .Where(efa => efa.InstituteID == InstId && efa.FormNameId == SubscriptionId)
+                                  .Where(efa => efa.InstituteID == InstId && efa.FormNameId == SubscriptionId && efa.IsActive == 1)
                                   .Select(efa => efa.EntityId)
                                   .ToList();
             }
@@ -75,14 +75,17 @@ namespace EvolvedTax.Business.Services.InstituteService
 
 
 
+
+
             var query = from p in _evolvedtaxContext.InstituteEntities
                             //where userEntityIds.Contains(p.EntityId) && p.InstituteId == InstId && p.IsActive == RecordStatusEnum.Active
-                        where (SubscriptionId == -1 || SubscriptionId == -0 || filteredEntityFormAccess.Contains( p.EntityId))
+                        where (SubscriptionId == -1 || SubscriptionId == -0 || filteredEntityFormAccess.Contains(p.EntityId))
 
                          && (userEntityIds.Count == 0 || userEntityIds.Contains(p.EntityId))
                 && p.InstituteId == InstId
                 && p.IsActive == RecordStatusEnum.Active
-                 
+
+
                         select new InstituteEntitiesResponse
                         {
                             Address1 = p.Address1,
@@ -104,6 +107,13 @@ namespace EvolvedTax.Business.Services.InstituteService
                             EmailFrequency = p.EmailFrequency,
                             LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
                             Role = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.EntityId == p.EntityId && ue.UserId == userId).Role.Trim() ?? string.Empty,
+                            
+                            Subscription = string.Join(", ", _evolvedtaxContext.EntityFormAccess
+    .Where(efa => efa.InstituteID == InstId && efa.EntityId == p.EntityId && efa.IsActive == 1)
+    .Select(efa => _evolvedtaxContext.FormName.FirstOrDefault(fn => fn.Id == efa.FormNameId).Form_Name)
+    .ToList())
+
+
                         };
 
             return query;
@@ -303,7 +313,8 @@ namespace EvolvedTax.Business.Services.InstituteService
                             {
                                 InstituteID = InstId,
                                 EntityId = entity.EntityId,
-                                FormNameId = formNameId
+                                FormNameId = formNameId,
+                                IsActive=1
                             };
                             _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
                         }
@@ -509,7 +520,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 return null;
             }
         }
-        public async Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request)
+        public async Task<MessageResponseModel> UpdateEntity(InstituteEntityRequest request, int[] subscriptionId)
         {
             var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"
                 EXEC UpdateInstituteEntity
@@ -527,19 +538,46 @@ namespace EvolvedTax.Business.Services.InstituteService
             {DateTime.Now.Date},
             {request.InstituteId}
             ");
+
+            var existingRecords = _evolvedtaxContext.EntityFormAccess
+                .Where(efa => efa.InstituteID == request.InstituteId && efa.EntityId == request.EntityId)
+                .ToList();
+
+            if (existingRecords.Any())
+            {
+                _evolvedtaxContext.EntityFormAccess.RemoveRange(existingRecords);
+                _evolvedtaxContext.SaveChanges();
+            }
+
+            foreach (var formNameId in subscriptionId)
+            {
+                var entityFormAccess = new EntityFormAccess
+                {
+                    InstituteID = request.InstituteId,
+                    EntityId = request.EntityId,
+                    FormNameId = formNameId,
+                    IsActive = 1
+                };
+                _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+            }
+
+            _evolvedtaxContext.SaveChanges();
+
+
+
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
             }
             return new MessageResponseModel { Status = false };
         }
-        public async Task<MessageResponseModel> DeleteEntity(int EntityId, RecordStatusEnum RecordStatus)
+        public async Task<MessageResponseModel> DeleteEntity(int EntityId, RecordStatusEnum RecordStatus, int SubscriptionId)
         {
             //if (_evolvedtaxContext.InstitutesClients.Any(p => p.EntityId == EntityId))
             //{
             //    return new MessageResponseModel { Status = false, Message = "Please delete child records first associated with this record." };
             //}
-            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{RecordStatus},{DateTime.Now.Date}");
+            var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{RecordStatus},{DateTime.Now.Date},{SubscriptionId}");
             if (result > 0)
             {
                 return new MessageResponseModel { Status = true };
@@ -952,7 +990,9 @@ namespace EvolvedTax.Business.Services.InstituteService
                 {
                     InstituteID = request.InstituteId,
                     EntityId = responseInstitute.EntityId,
-                    FormNameId = formNameId
+                    FormNameId = formNameId,
+                    IsActive=1
+
                 };
                 _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
             }

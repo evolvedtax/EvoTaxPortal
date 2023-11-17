@@ -552,6 +552,42 @@ var COMMON = (function () {
         return confirmed;
     };
 
+    COMMON.confirmAlertCustomMessage = function (message, url, params, gridId) {
+        var confirmed = false;
+
+        swal({
+            title: "",
+            text: message,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1ab394",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel"
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    debugger
+                    $('.loading').show();
+                    var jsonResponse = COMMON.doAjaxPostWithJSONResponse(url, params);
+                    if (jsonResponse.Status === true) {
+                        COMMON.notification(1, "Record deleted")
+                        //COMMON.dataTableInitialized();
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 5000);
+                    } else if (jsonResponse.Status === false) {
+                        //COMMON.notification(2, "Something went wrong")
+                        //COMMON.AlertSuccessMessage(jsonResponse.Message,'Warning','warning');
+                        COMMON.notification(3, jsonResponse.Message);
+                    }
+                    confirmed = true;
+                } else {
+                    swal("Cancelled", "You have cancelled delete operation!", "error");
+                    return false;
+                }
+            });
+        return confirmed;
+    };
     COMMON.confirmAlert = function (message, url, params, gridId) {
         var confirmed = false;
 

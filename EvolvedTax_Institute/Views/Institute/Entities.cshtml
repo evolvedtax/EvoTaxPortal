@@ -56,7 +56,7 @@
     }
 </style>
 @*test*@
-<div class="wrapper wrapper-content animated fadeInRight">
+@*<div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox" style="margin-bottom: 0px">
@@ -78,7 +78,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 @*test*@
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -100,9 +100,21 @@
                     </div>
                 </div>
                 <div class="ibox-content">
+
                     @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
 
                     <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="form-group">
+                                    <label class="mr-2" for="changeSubscription">Select Subscription</label>
+                                    <select id="changeSubscription" asp-items="ViewBag.FormNameListMain" class="select2 form-control" style="width:121%">
+                                        <option value="-1">Select All</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
                         @* <div class="form-group" style="margin-bottom:-2rem">
                         <label for="pageLengthInput">Show</label>
                         <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
@@ -126,6 +138,7 @@
                                     <th>Last Updated By</th>
                                     <th>Last Updated On</th>
                                     <th>Role</th>
+                                    <th>Subscription</th>
                                     <th>Lock/Unlock</th>
                                     <th>Action</th>
                                 </tr>
@@ -151,6 +164,7 @@
                                             <td>@item.LastUpdatedByName</td>
                                             <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
                                             <td>@item.Role</td>
+                                            <td>@item.Subscription</td>
                                             <td class="text-center">
                                                 @if (item?.IsLocked ?? false)
                                                 {
@@ -175,7 +189,9 @@
                                                             else
                                                             {
                                                                 <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
-                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
+                                                                //<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
+                                                                <a class="dropdown-item" href="javascript:void()" onclick="getSubscriptionAndDelete('@item?.EntityId')">Delete</a>
+
                                                                 <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'true'})">Lock</a>
                                                             }
                                                         </div>
@@ -511,6 +527,11 @@
                                 <input type="text" class="form-control zip" id="zip" asp-for="InstituteEntityRequest.Zip" required>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label>Select Subscription</label>
+                            <select id="Editmultiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>
+                        </div>
                     </div>
                 </form>
                 <div class="modal-footer">
@@ -569,6 +590,21 @@
 @section Scripts {
 
     <script type="text/javascript">
+
+        function getSubscriptionAndDelete(entityId) {
+            var subscriptionValue = $(event.target).closest('tr').find('td:nth-child(16)').text().trim();
+            var confirmationMessage='';
+            if ($('#changeSubscription option:selected').text() == 'Select All')
+            {
+                confirmationMessage = 'Are you sure you want to delete the record with subscription ' + subscriptionValue + '?';
+            }
+            else
+            {
+                confirmationMessage = 'Are you sure you want to delete the record with subscription ' + $('#changeSubscription option:selected').text() + '?';
+            }
+             
+            COMMON.confirmAlertCustomMessage(confirmationMessage, 'DeleteEntity', 'id=' + entityId, '');
+        }
 
         function updateModalHeader(selectedRows) {
             var headerText = "";
@@ -650,12 +686,22 @@
             });
             $('#multiple-checkboxes').select2('destroy');
             $('#Uploadmultiple-checkboxes').select2('destroy');
+            $('#Editmultiple-checkboxes').select2('destroy');
             $('#Uploadmultiple-checkboxes').multiselect({
                 includeSelectAllOption: true,
             });
             $('#multiple-checkboxes').multiselect({
                 includeSelectAllOption: true,
             });
+            $('#Editmultiple-checkboxes').multiselect({
+                includeSelectAllOption: true,
+            });
+
+     
+
+
+
+
             $('.btn-group').css('width', '100%');
             // On change the Subscription
             $('#changeSubscription').change(function () {
@@ -716,6 +762,7 @@
                 populateModalFields(rowData);
             });
 
+        
             function getRowData(rowId) {
                 var row = $("#" + rowId); // Select the row by its ID
                 var rowData = {
@@ -730,13 +777,12 @@
                     Province: row.find("td:nth-child(10)").text(),
                     Zip: row.find("td:nth-child(11)").text(),
                     Country: row.find("td:nth-child(12)").text(),
+                    subscription: row.find("td:nth-child(16)").text(),
                 };
-
                 return rowData;
             }
             // Function to populate modal input fields with row data
             function populateModalFields(rowData) {
-                debugger
                 var parts = rowData.EntityRegistrationDate.split('-');
                 $('#entityId').val(rowData.EntityId);
                 $('#enitytName').val(rowData.EntityName);
@@ -749,6 +795,23 @@
                 $('#state').val(rowData.State).change();
                 $('#province').val(rowData.Province);
                 $('#zip').val(rowData.Zip);
+
+                //Reselect the dropdown values start
+                $('#Editmultiple-checkboxes option:selected').prop('selected', false)
+             //var selectedSubscriptions = rowData.subscription.includes(',') ? rowData.subscription.split(', '): [rowData.subscription];
+
+                var selectedSubscriptions = rowData.subscription.split(/\s*,\s*/);
+                var preselectedTexts = selectedSubscriptions.map(function (subscription) {
+                    return subscription.trim();
+                });
+
+                $.each(preselectedTexts, function (index, text) {
+                    $('#Editmultiple-checkboxes option:contains("' + text + '")').prop('selected', true);
+                });
+
+                $('#Editmultiple-checkboxes').multiselect('refresh');
+
+                     //Reselect the dropdown values end
             }
             var table = $('.dataTables-example').DataTable({
                 pageLength: 10,
@@ -959,6 +1022,8 @@
         $('#saveBtn').click(function () {
             let form = $('#regForm');
             if (form.valid()) {
+                var selectedSubscriptions = $('#Editmultiple-checkboxes').val();
+                $('#saveBtn').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions.join(',') + '" />');
                 $('#enitytName').prop('disabled', false);
                 $('#ein').prop('disabled', false);
                 form.submit();
