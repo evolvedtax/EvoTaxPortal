@@ -362,7 +362,32 @@ Regards,
                                                         Regards,
                                                         <br /><br />
                                                         {{NameForInstitute}}";
-
+        public static string SalutationTemplate = @"Dear {{Name}},";
+        public static string LinkTemplate = @"<!--[if mso]>
+                                                  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
+                                                    <tr>
+                                                      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
+                                                        <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
+                                                          <w:anchorlock/>
+                                                          <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
+                                                            GET STARTED
+                                                          </center>
+                                                        </v:roundrect>
+                                                      </td>
+                                                    </tr>
+                                                  </table>
+                                                <![endif]-->
+                                                <!--[if !mso]><!-->
+                                                  <table cellspacing="" 0""="" cellpadding="" border="" align="" center""="" style="" margin:="" 0="" auto;""="">
+                                                    <tbody><tr>
+                                                      <td align="" center""="" bgcolor="" #1ab394""="" style="" border-radius:="" 4px;""="">
+                                                        <a href="" {{link}}""="" target="" _blank""="" style="" font-size:="" 16px;="" font-family:="" arial,="" sans-serif;="" color:="" #ffffff;="" text-decoration:="" none;="" display:="" inline-block;="" padding:="" 10px="" 20px;""="">
+                                                          GET STARTED
+                                                        </a>
+                                                      </td>
+                                                    </tr>
+                                                  </tbody></table>
+                                                <!--<![endif]-->";
         public static string EmailToInstitute = @"Dear {{Name}},<br/><br/> Thank you for registering for the EvoForms Platform. We are excited to have you on board and we appreciate your interest in our platform. <br/> As a security measure, we require all users to verify their registration before they can access the full features of the platform. This helps us ensure that only authorized individuals are able to access our services.<br/><br/><br/> To verify your identity, kindly click on the verification link provided below. You will be directed to a secure login page where you will need to enter your login credentials.<br/><br/> <!--[if mso]>
   <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
     <tr>

@@ -34,8 +34,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                                top: 0;
-                                                                                                                                                                                left: 15%;*/
+                                                                                                                                                                                    top: 0;
+                                                                                                                                                                                    left: 15%;*/
         padding: 0;
         padding-right: 70%
     }
@@ -510,7 +510,7 @@
                             </div>
                             <div id="tab-11" class="tab-pane">
                                 <div class="panel-body">
-                                    <b>Please keep the format which are in {{ }} as it is.</b>
+                                    <b>Please keep the format which are in {{linkButton}} as it is. But you can change the position.</b>
                                     <br /><br />
                                     <div class="row">
                                         <form id="ClientEmailTemplateForm" style="width:100%"
@@ -522,15 +522,16 @@
                                               data-ajax-loading="#ajax-loader"
                                               data-ajax-success="ajaxsuccessClientEmailTemplate"
                                               data-ajax-url="@Url.Action("AddUpdateClientEmailTemplate","Setting")">
-                                            <div class="col-md-12">
+                                           @* <div class="col-md-12">
                                                 <label>Do you want to use default template?</label>
                                                 <input type="checkbox" asp-for="InstituteEmailTemplate.IsDefault" />
-                                            </div>
+                                            </div>*@
                                             <div class="col-md-12">
                                                 <label>Client E-Mail Template</label>
                                                 <input asp-for="InstituteEmailTemplate.Id" hidden />
                                                 <input asp-for="InstituteEmailTemplate.FormNameId" hidden />
-                                                <input asp-for="InstituteEmailTemplate.FormNameId" hidden />
+                                                <input id="defaultTemplate" asp-for="InstituteEmailTemplate.DefaultTemplate" hidden />
+                                                <input id="customTemplate" value="@Model.InstituteEmailTemplate.CustomTemplate" hidden />
                                                 @if (Model.InstituteEmailTemplate.IsDefault)
                                                 {
                                                     emailTemplate = Model.InstituteEmailTemplate.DefaultTemplate;
@@ -539,11 +540,14 @@
                                                 {
                                                     emailTemplate = Model.InstituteEmailTemplate.CustomTemplate;
                                                 }
+
                                                 <textarea class="form-control" id="InstituteEmailTemplate_Template" name="InstituteEmailTemplate.CustomTemplate">
-                                                    @emailTemplate
+                                                    @Model.InstituteEmailTemplate.CustomTemplate
                                                 </textarea>
                                                 <div class="mt-2">
                                                     <button type="button" id="submitClientEMailTemp" class="btn btn-primary">Save</button>
+                                                    <button type="button" id="defaultClientEMailTemp" class="btn btn-primary ml-2" style="background-color:darkblue">Default Template</button>
+                                                    <button type="button" id="discardChanges" class="btn btn-danger ml-2">Discard Changes</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -617,6 +621,19 @@
                 //allowClear: true
             });
             $('#InstituteEmailTemplate_Template').summernote();
+            $('#defaultClientEMailTemp').click(function () {
+                var defaultTemplateContent = $('#defaultTemplate').val();
+                $('#InstituteEmailTemplate_Template').summernote('code', defaultTemplateContent);
+                $("#defaultClientEMailTemp").prop("disabled",true);
+            });
+            $('#discardChanges').click(function () {
+                var discardTemplateContent = $('#customTemplate').val();
+                $('#InstituteEmailTemplate_Template').summernote('code', discardTemplateContent);
+                $("#discardChanges").prop("disabled", true);
+            });
+            $('#InstituteEmailTemplate_Template').on('change', function () {
+                $('#submitClientEMailTemp').prop('disabled', false);
+            });
             $('#oldInstituteName').val($('#instituteName').val());
             $('.select2-container').css('width', '100%');
 
@@ -698,6 +715,8 @@
         $('#submitClientEMailTemp').click(function () {
             let form = $('#ClientEmailTemplateForm');
             if (form.valid()) {
+                $("#discardChanges").prop("disabled", false);
+                $("#defaultClientEMailTemp").prop("disabled", false);
                 form.submit();
             }
             return false;
@@ -912,6 +931,6 @@
                     }
                 });
         }
-                                                                                                                                //-------------- END INSTITUTE NAME CHANGE ---------------------------//
+                                                                                                                                        //-------------- END INSTITUTE NAME CHANGE ---------------------------//
     </script>
 }

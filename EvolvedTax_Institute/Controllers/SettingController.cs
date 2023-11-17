@@ -382,7 +382,25 @@ namespace EvolvedTax_Institute.Controllers
                     ReminderDays = ReminderDays_Response.ReminderDays
                 };
             }
-            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.FirstOrDefault(p => p.InstituteID == SessionUser.InstituteId) ?? new InstituteEmailTemplate();
+            var instituteMaster = _evolvedtaxContext.InstituteMasters.FirstOrDefault(es => es.InstId == instituteId);
+            model.InstituteEmailTemplate = _evolvedtaxContext.InstituteEmailTemplate.Where(p => p.InstituteID == SessionUser.InstituteId).Select(p => new InstituteEmailTemplate
+            {
+                CustomTemplate = p.CustomTemplate.Replace("{{InstituteName}}", instituteMaster.InstitutionName)
+                    .Replace("{{SupportEmailForInstitute}}", instituteMaster.SupportEmail != null ? instituteMaster.SupportEmail : instituteMaster.EmailAddress)
+                    .Replace("{{NameForInstitute}}", instituteMaster.InstitutionName),
+                DefaultTemplate = p.DefaultTemplate.Replace("{{InstituteName}}", instituteMaster.InstitutionName)
+                    .Replace("{{SupportEmailForInstitute}}", instituteMaster.SupportEmail != null ? instituteMaster.SupportEmail : instituteMaster.EmailAddress)
+                    .Replace("{{NameForInstitute}}", instituteMaster.InstitutionName),
+                EntryDatetime = p.EntryDatetime,
+                FormNameId = p.FormNameId,
+                Id = p.Id,
+                InstituteID = p.InstituteID,
+                IsDefault = p.IsDefault,
+                TemplateName = p.TemplateName,
+                UpdateBy = p.UpdateBy,
+                UpdatedDatetime = p.UpdatedDatetime,
+
+            }).FirstOrDefault() ?? new InstituteEmailTemplate();
             return View(model);
         }
         [HttpGet]
