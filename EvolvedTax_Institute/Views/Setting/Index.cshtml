@@ -69,11 +69,11 @@
                 <div class="col-lg-12">
                     <div class="tabs-container">
                         <ul class="nav nav-tabs">
-                            @if (SuperAdminOrAdmin)
+                            @*@if (SuperAdminOrAdmin)
                             {
                                 <li><a class="nav-link active" data-toggle="tab" href="#tab-1">Invite Co-Admins</a></li>
-                            }
-                            <li><a class="nav-link" data-toggle="tab" href="#tab-2">Update Profile</a></li>
+                            }*@
+                            <li><a class="nav-link active" data-toggle="tab" href="#tab-2">Update Profile</a></li>
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-3">E-mail Reminder</a></li>*@
                             @*<li><a class="nav-link" data-toggle="tab" href="#tab-4">Announcements</a></li>*@
                             <li><a class="nav-link" data-toggle="tab" href="#tab-5">User Management</a></li>
@@ -87,7 +87,7 @@
                         <div class="tab-content">
                             @if (SuperAdminOrAdmin)
                             {
-                                <div id="tab-1" class="tab-pane active">
+                                <div id="tab-1" class="tab-pane ">
                                     <div class="panel-body">
                                         <div class="row">
                                             <form id="formInviteEmail" style="width:100%"
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                             }
-                            <div id="tab-2" class="tab-pane">
+                            <div id="tab-2" class="tab-pane active">
                                 <div class="panel-body">
                                     <form id="formUpdateProfile" style="width:100%"
                                           method="post"
