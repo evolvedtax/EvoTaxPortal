@@ -25,7 +25,7 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         {
             var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
-            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId).Select(p => new SelectListItem
+            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId, Convert.ToInt32(AppConstants.FormSubscription_1099)).Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
