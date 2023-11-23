@@ -555,7 +555,7 @@ namespace EvolvedTax_Institute.Controllers
             var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
             var totp = new Totp(bytes);
             var token = totp.ComputeTotp();
-            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
+            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60));
             // for local email otp 
             //user.Email = "niqbal@mailinator.com";
             //if(response)

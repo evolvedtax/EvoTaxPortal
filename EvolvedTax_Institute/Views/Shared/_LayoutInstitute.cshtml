@@ -171,6 +171,37 @@
             border-radius: 0.75rem;
         }
 
+        /* Action dropdown buttons */
+        .dropdown-menu-horizontal {
+            /* display: flex;*/
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+        .dropdown-menu-horizontal .dropdown-item {
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .center-dropdown {
+            left: -650% !important;
+            transform: translateX(-50%) !important;
+        }
+
+        .dropdown-toggle::after {
+            display: inline-block;
+            margin-left: 0.255em;
+            vertical-align: 0.255em;
+            content: none;
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+        }
     </style>
 
 </head>
