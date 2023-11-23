@@ -73,7 +73,7 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("SelectedInstitute", InstId);
-            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId);
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId,Convert.ToInt32( AppConstants.FormSubscription_1099));
             return View(model);
         }
         #endregion

@@ -122,6 +122,8 @@ namespace EvolvedTax.Common.Constants
         public const string SB1099Form = @"Form_1099SB";
         public const string FormPartiallySave = @"Form partially saved";
 
+        public const string FormSubscription_1099 = @"2";
+
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
         //public const string F_Family_VladimirScript = "Vladimir Script";
