@@ -138,6 +138,11 @@ namespace EvolvedTax_Admin.Controllers
         }
 
         #region Entities
+        public IActionResult changeSubscription(int SubscriptionId)
+        {
+            HttpContext.Session.SetInt32("SubscriptionId", SubscriptionId);
+            return Json(new { Data = "true" }); ;
+        }
         public IActionResult Entities(int? instituteId)
         {
             var model = new InstituteEntityViewModel();
@@ -154,24 +159,38 @@ namespace EvolvedTax_Admin.Controllers
                 Text = p.StateId,
                 Value = p.StateId
             });
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+
+            var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
+            if (SubscriptionId == -1)
+            {
+                HttpContext.Session.SetInt32("SubscriptionId", -1);
+            }
+            ViewBag.FormNameListMain = FormNameItems.Select(p => new SelectListItem
+            {
+                Text = p.Form_Name,
+                Value = p.Id.ToString(),
+                Selected = p.Id == SubscriptionId
+            });
             if (instituteId != null)
             {
                 ViewBag.InstituteId = instituteId;
                 HttpContext.Session.SetInt32("SelectedInstitute", instituteId ?? 0);
                 if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
                 {
-                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0, SubscriptionId);
                 }
                 else
                 {
-                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0, SubscriptionId);
                     //model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstIdRole(instituteId ?? 0);
                 }
                 return View(model);
             }
             int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
             HttpContext.Session.SetInt32("SelectedInstitute", InstId);
-            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId);
+         
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, SubscriptionId);
             return View(model);
         }
         public IActionResult EntitiesRecyleBin()
@@ -333,6 +352,10 @@ namespace EvolvedTax_Admin.Controllers
             });
             string UserId = HttpContext.Session.GetString("UserId");
             string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == UserId && p.EntityId == EntityId)?.Role.Trim();
+            if (userRole == null)
+            {
+                userRole = "Admin";// SessionUser.UserRole;
+            }
             ViewBag.UserRole = userRole;
 
 
