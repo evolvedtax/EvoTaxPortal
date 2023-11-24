@@ -42,18 +42,20 @@
 
     .dataTables_filter {
         /*position: absolute;
-                        top: 0;
-                        left: 15%;*/
+                                                                                                                            top: 0;
+                                                                                                                            left: 15%;*/
         padding: 0;
-        padding-right: 70%;
-  
+        /*padding-right: 60%*/
+        text-align: left !important;
     }
 
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: 0.5em;
         display: inline-block;
-        width: 100%;
+        width: 360px;
     }
+
+  
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
@@ -667,8 +669,13 @@
                 $('#zip').val(rowData.Zip);
             }
             var table = $('.dataTables-example').DataTable({
-                pageLength: 10,
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
+                "order": [[0, "desc"]],
+                fixedColumns: {
+                    left: 2,
+                    right: 1
+                },
+                fixedHeader: true,
                 buttons: [
                     {
                         extend: 'collection',
