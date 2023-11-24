@@ -588,7 +588,7 @@ namespace EvolvedTax_Institute.Controllers
             }
             if (Otp.Trim() == user?.OTP.Trim())
             {
-
+                await _userService.UpdateUsertOTP(emailId, string.Empty, DateTime.Now);
                 var institute = _instituteService.GetInstituteDataById(user.InstituteId);
                 HttpContext.Session.SetInt32("InstId", user.InstituteId);
                 HttpContext.Session.SetString("UserName", user.UserName);
