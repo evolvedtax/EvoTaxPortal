@@ -85,7 +85,8 @@ namespace EvolvedTax.Business.MailService
             if (instEmailTemp.Any(p => p.TemplateName == AppConstants.ClientEmailTemplate))
             {
                 var tempRequest = instEmailTemp.First(p => p.TemplateName == AppConstants.ClientEmailTemplate);
-                template = string.Concat(AppConstants.SalutationTemplate, "<br><br>", tempRequest.CustomTemplate).Replace("{{linkButton}}", AppConstants.LinkTemplate);
+                //template = string.Concat(AppConstants.SalutationTemplate, "<br><br>", tempRequest.CustomTemplate).Replace("{{linkButton}}", AppConstants.LinkTemplate);
+                template = tempRequest.CustomTemplate.Replace("{{linkButton}}", AppConstants.LinkTemplate);
             }
 
             foreach (var email in instituteClientResponses)
