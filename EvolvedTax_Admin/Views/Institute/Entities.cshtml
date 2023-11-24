@@ -6,6 +6,7 @@
 <style>
     .bootstrap-tagsinput {
         width: 100%;
+
     }
 
     .dropdown-menu-horizontal {
@@ -44,7 +45,14 @@
                         top: 0;
                         left: 15%;*/
         padding: 0;
-        padding-right: 70%
+        padding-right: 70%;
+  
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 100%;
     }
 </style>
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -70,6 +78,18 @@
                     @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
 
                     <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="form-group">
+                                    <label class="mr-2" for="changeSubscription">Select Subscription</label>
+                                    <select id="changeSubscription" asp-items="ViewBag.FormNameListMain" class="select2 form-control" style="width:420px">
+                                        <option value="-1">Select All</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    
                         @* <div class="form-group" style="margin-bottom:-2rem">
                         <label for="pageLengthInput">Show</label>
                         <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
@@ -90,6 +110,7 @@
                                     <th>Last Updated By</th>
                                     <th>Last Updated On</th>
                                     <th>Role</th>
+                                    <th>Subscription</th>
                                     <th>Lock/Unlock</th>
                                     <th>Action</th>
                                 </tr>
@@ -112,6 +133,7 @@
                                             <td>*****</td>
                                             <td>*****</td>
                                             <td>@item.Role</td>
+                                            <td>@item.Subscription</td>
                                             <td class="text-center">
                                                 @if (item?.IsLocked ?? false)
                                                 {
@@ -550,6 +572,14 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+
+                $('#changeSubscription').change(function () {
+                    let SubscriptionId = $('#changeSubscription').val();
+                    let params = { SubscriptionId: SubscriptionId };
+                    let response = COMMON.doAjaxGetWithJSONResponse('/Institute/changeSubscription', params);
+                    window.location.href = '/Institute/Entities';
+
+                });
 
             $('#saveShareBtn').click(function () {
                 let form = $('#shareForm');
