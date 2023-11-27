@@ -137,57 +137,33 @@ namespace EvolvedTax.Common.Constants
         public const string F_Family_Sugar_Garden = "Sugar Garden";
         //-----------EMAIL TEMPLATE---------------------//
         public static string EmailToClientDefaultTemp = @"Dear {{Name}},
-<br/><br/>
-We hope this e-mail finds you well. As you are aware, {{InstituteName}} is required to comply with tax laws and regulations of the United States.
-<br/><br/>
-To ensure compliance with these regulations, we kindly request that you provide us with your tax information as soon as possible using our online portal, EvoForms.
-<br/>
-EvoForms is an online portal which makes it easy for you to securely provide us with your tax information online.
-<br/><br/>
-To access the EvoForms, please follow the instructions below:
-<br/><br/>
-<!--[if mso]>
-  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
-    <tr>
-      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
-        <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
-          <w:anchorlock/>
-          <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
-            GET STARTED
-          </center>
-        </v:roundrect>
-      </td>
-    </tr>
-  </table>
-<![endif]-->
-<!--[if !mso]><!-->
-  <table cellspacing=""0"" cellpadding=""0"" border=""0"" align=""center"" style=""margin: 0 auto;"">
-    <tr>
-      <td align=""center"" bgcolor=""#1ab394"" style=""border-radius: 4px;"">
-        <a href=""{{link}}"" target=""_blank"" style=""font-size: 16px; font-family: Arial, sans-serif; color: #FFFFFF; text-decoration: none; display: inline-block; padding: 10px 20px;"">
-          GET STARTED
-        </a>
-      </td>
-    </tr>
-  </table>
-<!--<![endif]-->
-
-<br/><br/>
-Follow the prompts to complete your tax information.
-<br/><br/>
-Please note that you will need to have your tax documents ready to input the required information.
-<br/><br/>
-The deadline to complete this process is 7 Days, and we highly encourage you to do so as soon as possible to avoid any delays in processing of your information.
-<br/><br/>
-Should you have any questions or concerns, please do not hesitate to reach out to our support team at {{SupportEmailForInstitute}}.
-<br/><br/>
-Thank you for your cooperation in this matter.
-<br/><br/>
-We appreciate your prompt attention to this important task.
-<br/><br/>
-Regards,
-<br/><br/>
-{{NameForInstitute}}";
+                        <br><br>
+                        We hope this e-mail finds you well. As you are aware, <b>{{InstituteName}}</b> is required to comply with tax laws and regulations of the United States.
+                        <br><br>
+                        To ensure compliance with these regulations, we kindly request that you provide us with your tax information as soon as possible using our online portal, EvoForms.
+                        <br>
+                        EvoForms is an online portal which makes it easy for you to securely provide us with your tax information online.
+                        <br><br>
+                        To access the EvoForms, please follow the instructions below:
+                        <br><br>
+                        {{linkButton}}
+                        <br><br>
+                        Follow the prompts to complete your tax information.
+                        <br><br>
+                        Please note that you will need to have your tax documents ready to input the required information.
+                        <br><br>
+                        The deadline to complete this process is 7 Days, and we highly encourage you to do so as soon as possible to avoid any delays in processing of your information.
+                        <br><br>
+                        Should you have any questions or concerns, please do not hesitate to reach out to our support team at <b>{{SupportEmailForInstitute}}</b>.
+                        <br><br>
+                        Thank you for your cooperation in this matter.
+                        <br><br>
+                        We appreciate your prompt attention to this important task.
+                        <br><br>
+                        Regards,
+                        <br><br><b>
+                            {{NameForInstitute}}
+                        </b>";
         public static string EmailToClientDynamicTemp = @"Dear {{Name}},
 <br/><br/>
 {{dynamicBody}}

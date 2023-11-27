@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using EvolvedTax.Data.Enums;
 using System.Security.Policy;
 using System;
+using EvolvedTax.Common.Constants;
 
 namespace EvolvedTax.Business.Services.UserService
 {
@@ -29,7 +30,7 @@ namespace EvolvedTax.Business.Services.UserService
             _roleManager = roleManager;
         }
 
-        public async Task <bool> UpdateUsertOTP(string Id, string otp, DateTime expiryDate)
+        public async Task<bool> UpdateUsertOTP(string Id, string otp, DateTime expiryDate)
         {
             //var response = _evolvedtaxContext.Users.FirstOrDefault(p => p.Id == Id);
             var response = await _userManager.FindByIdAsync(Id);
@@ -75,14 +76,14 @@ namespace EvolvedTax.Business.Services.UserService
         }
         public bool UpdateInstituteClientOTP(string emailId, string otp, DateTime expiryDate, int EntityID)
         {
-            var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId && p.EntityId== EntityID);
+            var response = _evolvedtaxContext.InstitutesClients.FirstOrDefault(p => p.ClientEmailId == emailId && p.EntityId == EntityID);
             if (response != null)
             {
-               
-                    response.OtpexpiryDate = expiryDate;
-                    response.Otp = otp;
-                    _evolvedtaxContext.InstitutesClients.Update(response);
-                    _evolvedtaxContext.SaveChanges();
+
+                response.OtpexpiryDate = expiryDate;
+                response.Otp = otp;
+                _evolvedtaxContext.InstitutesClients.Update(response);
+                _evolvedtaxContext.SaveChanges();
                 return true;
             }
             return false;
@@ -127,6 +128,10 @@ namespace EvolvedTax.Business.Services.UserService
                 Phone = request.Phone
             };
             await _evolvedtaxContext.InstituteMasters.AddAsync(model);
+            var userEmailTemplate = new List<InstituteEmailTemplate> {
+               new InstituteEmailTemplate{ DefaultTemplate = AppConstants.EmailToClientDefaultTemp,CustomTemplate = AppConstants.EmailToClientDefaultTemp, EntryDatetime = DateTime.Now, FormNameId = 2, InstituteID = model.InstId, TemplateName = AppConstants.ClientEmailTemplate },
+            };
+            await _evolvedtaxContext.InstituteEmailTemplate.AddRangeAsync(userEmailTemplate);
             await _evolvedtaxContext.SaveChangesAsync();
             var userModel = new User
             {
@@ -153,8 +158,6 @@ namespace EvolvedTax.Business.Services.UserService
                 EmailConfirmed = true,
                 //TwoFactorEnabled = true,
             };
-
-            
             var user = await _userManager.FindByEmailAsync(userModel.Email);
             var response = new IdentityResult();
             if (user == null)
@@ -162,7 +165,6 @@ namespace EvolvedTax.Business.Services.UserService
                 response = await _userManager.CreateAsync(userModel, request.SUPassword);
                 await _userManager.AddToRoleAsync(userModel, Roles.Admin.ToString());
             }
-
             return response;
         }
         public async Task<IdentityResult> SaveInvitedUser(UserRequest request)
@@ -284,13 +286,13 @@ namespace EvolvedTax.Business.Services.UserService
             {
                 return false;
             }
-           
+
             return true;
         }
         public async Task<bool> SaveInvitedUserForShare(string role, int entityId, string email, int instituteId, string AssignedBy)
         {
             var result = false;
-            DateTime CurrentDate= DateTime.Now;
+            DateTime CurrentDate = DateTime.Now;
             var userModel = new User
             {
                 UserName = email,
@@ -307,8 +309,8 @@ namespace EvolvedTax.Business.Services.UserService
                 result = response.Succeeded;
                 await _userManager.AddToRoleAsync(userModel, role);
             }
-            
-            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId =_userManager.FindByEmailAsync(email).Result.Id, Role = role,AssignedBy= AssignedBy, EntryDatetime = CurrentDate, ExpirySignupDatetime = CurrentDate.AddDays(5)});
+
+            await _evolvedtaxContext.EntitiesUsers.AddAsync(new EntitiesUsers { EntityId = entityId, UserId = _userManager.FindByEmailAsync(email).Result.Id, Role = role, AssignedBy = AssignedBy, EntryDatetime = CurrentDate, ExpirySignupDatetime = CurrentDate.AddDays(5) });
             await _evolvedtaxContext.SaveChangesAsync();
             return result;
         }
