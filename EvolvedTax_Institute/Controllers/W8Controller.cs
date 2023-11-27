@@ -51,7 +51,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -73,7 +74,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -95,7 +97,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -116,7 +119,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -138,7 +142,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -159,7 +164,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -180,7 +186,8 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
+
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {
@@ -201,7 +208,7 @@ namespace EvolvedTax_Institute.Controllers
             if (EntityId == 0)
             {
                 var firstEntity = entities.FirstOrDefault();
-                EntityId = Convert.ToInt32(firstEntity.EntityId.ToString());
+                EntityId = firstEntity?.EntityId != null ? Convert.ToInt32(firstEntity.EntityId.ToString()) : 0;
             }
             ViewBag.EntitiesList = entities.Select(p => new SelectListItem
             {

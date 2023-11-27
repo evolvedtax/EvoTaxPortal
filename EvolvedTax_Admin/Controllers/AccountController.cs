@@ -576,8 +576,8 @@ namespace EvolvedTax_Admin.Controllers
                 HttpContext.Session.SetInt32("InstId", user.InstituteId);
                 HttpContext.Session.SetString("UserName", user.UserName);
                 HttpContext.Session.SetString("EmailId", user.Email);
-                HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
-                HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
+                //HttpContext.Session.SetString("InstituteName", institute.InstitutionName);
+                //HttpContext.Session.SetString("ProfileImage", institute.InstituteLogo ?? "");
                 HttpContext.Session.SetString("UserId", user.Id);
                 return RedirectToAction("Index", "Dashboard");
             }
