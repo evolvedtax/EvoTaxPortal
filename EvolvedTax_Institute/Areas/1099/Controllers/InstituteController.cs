@@ -76,6 +76,14 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId,Convert.ToInt32( AppConstants.FormSubscription_1099));
             return View(model);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultipleEntity(int[] selectedValues)
+        {
+            var response = await _instituteService.DeleteMultipleEntity(selectedValues, RecordStatusEnum.Trash, Convert.ToInt32(AppConstants.FormSubscription_1099));
+            return Json(response);
+        }
         #endregion
     }
 }
