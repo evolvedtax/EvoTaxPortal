@@ -64,12 +64,13 @@
                     <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
                 </a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "W8", cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W9", "W8")">W-9</a></li>
+                    <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "W8")">Entities</a></li>
+                    @*<li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W9", "W8")">W-9</a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8EXP", "W8")">W-8 EXP </a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8IMY", "W8")">W-8 IMY</a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8ECI", "W8")">W-8 ECI</a></li>
                     <li class="@Html.IsSelected(action: "W8BEN")"><a href="@Url.Action("W8BEN", "W8")">W-8 BEN</a></li>
-                    <li class="@Html.IsSelected(action: "W8BEN_E")"><a href="@Url.Action("W8BEN_E", "W8")">W-8 BEN-E</a></li>
+                    <li class="@Html.IsSelected(action: "W8BEN_E")"><a href="@Url.Action("W8BEN_E", "W8")">W-8 BEN-E</a></li>*@
                     <li class="@Html.IsSelected(action: "EmailSent")"><a href="@Url.Action("EmailSent", "W8")">E-Mail Sent</a></li>
                     <li class="@Html.IsSelected(action: "Others")"><a href="@Url.Action("Others", "W8")">Others</a></li>
 

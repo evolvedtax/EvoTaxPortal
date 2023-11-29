@@ -203,7 +203,7 @@ namespace EvolvedTax.Business.MailService
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
-            var Port = emailSetting.SMTPPort; ;
+            var Port = emailSetting.SMTPPort;
             var content = AppConstants.LoginOTP
                 .Replace("{{UserName}}", Username)
                  .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
