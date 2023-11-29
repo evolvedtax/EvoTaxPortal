@@ -2,6 +2,7 @@
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
@@ -90,11 +91,24 @@ namespace EvolvedTax_Institute.Controllers
                 Text = p.Form_Name,
                 Value = p.Id.ToString(),
             });
-            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, SubscriptionId);
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, Convert.ToInt32(AppConstants.FormSubscription_w8_w9));
 
 
             // HttpContext.Session.SetInt32("SubscriptionId", -1);
             return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultipleEntity(int[] selectedValues)
+        {
+            var response = await _instituteService.DeleteMultipleEntity(selectedValues, RecordStatusEnum.Trash, Convert.ToInt32(AppConstants.FormSubscription_w8_w9));
+            return Json(response);
+        }
+        [Route("w8/LockUnlockEntity")]
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
+            return Json(response);
         }
         public IActionResult ChangeEntity(int entityId)
         {
