@@ -69,7 +69,7 @@
                                     <th>Last Updated On</th>
                                     <th>Role</th>
                                     <th>Lock/Unlock</th>
-                                    @*<th>Action</th>*@
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,7 +103,7 @@
                                                     <span class="fa fa-unlock"></span>
                                                 }
                                             </td>
-                                            @*<td class="actions">
+                                            <td class="actions">
                                                 <div class="dropdown">
                                                     <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <span class="fa fa-bars"></span>
@@ -112,16 +112,20 @@
                                                         <div class="dropdown-menu-horizontal">
                                                             @if (item?.IsLocked ?? false)
                                                             {
+                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','/1099/Institute/LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'false'})">Unlock</a>
                                                             }
                                                             else
                                                             {
-                                                                <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
-                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteEntity','id=@item?.EntityId','')">Delete</a>
+                                                              @*  <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>*@
+                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Institute/DeleteEntity','id=@item?.EntityId','')">Delete</a>
+                         @*                                      <a class="dropdown-item" href="javascript:void()" onclick="getSubscriptionAndDelete('@item?.EntityId')">Delete</a>*@
+
+                                                                <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','/1099/Institute/LockUnlockEntity',{selectedValues:'@item?.EntityId',isLocked:'true'})">Lock</a>
                                                             }
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </td>*@
+                                            </td>
                                         </tr>
                                     }
                                 }
@@ -134,81 +138,67 @@
     </div>
 </div>
 
+<div class="modal inmodal" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="shareModelHeader" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="shareForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessShare"
+                      data-ajax-url="@Url.Action("InviteUserForEntities","Institute")">
+
+                    <input id="emailAddresses" name="emailAddresses" hidden />
+                    <input id="entityNamesHidden" name="EntityNamesHidden" type="hidden" />
+                    <div class="col-md-12">
+
+                        <div>
+                            <label>Invite People</label>
+                            <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
+                        </div>
+
+                        <div class="row">
+                            <div class="mt-2 col-md-4">
+                                <label>Role</label>
+                                <select name="role" class="selec2">
+                                    <option value="Viewer">Viewer</option>
+                                </select>
+                            </div>
+                            @*<div class="mt-2 col-md-8">
+                            <label>Subscription</label>
+                            <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
+                            </select>
+                            </div>*@
+                        </div>
+
+                        <div class="mt-4">
+                            <label>Message (optional)</label>
+                            <textarea class="form-control" placeholder="Add a message"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveShareBtn">Share</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 
     <script type="text/javascript">
 
 
-        function updateModalHeader(selectedRows) {
-            var headerText = "";
-            var entityNames = [];
-            var entityNamesWithId = [];
 
-            var rolePromises = []; // Array to store the promises
-
-            for (var i = 0; i < selectedRows.length; i++) {
-                var entity = selectedRows[i];
-                var entityId = entity[1].match(/EntityId=(\d+)/)[1];
-
-                // Use an IIFE (Immediately Invoked Function Expression) to capture entityName correctly
-                (function (entityId) {
-                    var entityName = $(entity[1]).text();
-
-                    var rolePromise = fetchEntityRole(entityId)
-                        .then(function (role) {
-                            if (role !== "Viewer") {
-                                var Entitynames = entityName + "$" + entityId;
-                                entityNames.push(entityName);
-                                entityNamesWithId.push(Entitynames);
-                            }
-                        });
-
-                    rolePromises.push(rolePromise); // Store the promise in the array
-                })(entityId);
-            }
-
-            Promise.all(rolePromises)
-                .then(function () {
-                    if (entityNames.length > 0) {
-                        var entityNamesFormatted = entityNames.join(", ");
-                        var headerText = "Share access to <br/>" + entityNamesFormatted;
-                        $("#shareModelHeader").html(headerText);
-                        $("#entityNamesHidden").val(entityNamesWithId.join(","));
-                    }
-                });
-        }
-
-
-
-        function fetchEntityRole(entityId) {
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: '/Institute/GetEntityRole', // Update the URL to your controller action
-                    method: 'GET',
-                    data: { entityId: entityId },
-                    success: function (data) {
-                        resolve(data.role);
-                    },
-                    error: function () {
-                        reject();
-                    }
-                });
-            });
-        }
-
-
-
-
-        function ajaxsuccessShare(response) {
-            if (response.Status == true) {
-                COMMON.notification(1, response.Message);
-                $("#shareModal").modal("hide");
-                //window.location.reload();
-            } else {
-                COMMON.notification(2, response.Message);
-            }
-
-        }
         // Upgrade button class name
         $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
         $(document).ready(function () {
@@ -217,6 +207,75 @@
                 placeholder: "Select One",
                 //allowClear: true
             });
+
+            function updateModalHeader(selectedRows) {
+                var headerText = "";
+                var entityNames = [];
+                var entityNamesWithId = [];
+
+                var rolePromises = []; // Array to store the promises
+
+                for (var i = 0; i < selectedRows.length; i++) {
+
+                    var entity = selectedRows[i];
+                    var entityId = entity.DT_RowId;//entity[1].match(/EntityId=(\d+)/)[1];
+
+                    // Use an IIFE (Immediately Invoked Function Expression) to capture entityName correctly
+                    (function (entityId) {
+                        var entityName = $(entity[1]).text();
+
+                        var rolePromise = fetchEntityRole(entityId)
+                            .then(function (role) {
+                                if (role !== "Viewer") {
+                                    var Entitynames = entityName + "$" + entityId;
+                                    entityNames.push(entityName);
+                                    entityNamesWithId.push(Entitynames);
+                                }
+                            });
+
+                        rolePromises.push(rolePromise); // Store the promise in the array
+                    })(entityId);
+                }
+
+                Promise.all(rolePromises)
+                    .then(function () {
+                        if (entityNames.length > 0) {
+                            var entityNamesFormatted = entityNames.join(", ");
+                            var headerText = "Share access to <br/>" + entityNamesFormatted;
+                            $("#shareModelHeader").html(headerText);
+                            $("#entityNamesHidden").val(entityNamesWithId.join(","));
+                        }
+                    });
+            }
+
+
+
+            function fetchEntityRole(entityId) {
+                return new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: '/1099/Institute/GetEntityRole', // Update the URL to your controller action
+                        method: 'GET',
+                        data: { entityId: entityId },
+                        success: function (data) {
+                            resolve(data.role);
+                        },
+                        error: function () {
+                            reject();
+                        }
+                    });
+                });
+            }
+
+            function ajaxsuccessShare(response) {
+                if (response.Status == true) {
+                    COMMON.notification(1, response.Message);
+                    $("#shareModal").modal("hide");
+                    //window.location.reload();
+                } else {
+                    COMMON.notification(2, response.Message);
+                }
+
+            }
 
             $('#saveShareBtn').click(function () {
                 let form = $('#shareForm');
@@ -313,26 +372,10 @@
                         className: 'btn-menu-toggle',
                         buttons: [
                             {
-                                text: '<i class="fa fa-download"></i> Download New Entity Template',
-                                className: 'btn-template',
-                                action: function (e, dt, button, config) {
-                                    let url = 'DownloadExcel';
-                                    let params = { fileType: '@AppConstants.Entity' }
-                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
-                                }
-                            },
-                            {
                                 extend: 'excel',
                                 title: 'EvolvedTax',
                                 text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
                                 className: 'btn-excel'
-                            },
-                            {
-                                text: '<i class="fa fa-upload"></i> Import Entity Data',
-                                className: 'btn-imp-data',
-                                action: function (e, dt, button, config) {
-                                    $('#uploadDataDiv').prop('hidden', false);
-                                }
                             },
                             {
                                 text: '<i class="fa fa-trash"></i> Trash',
@@ -357,7 +400,7 @@
 
                                     //$('.loading').show();
                                     // Send the selectedValues to the controller using AJAX or a form submission
-                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'false' })
+                                    COMMON.confirmAlertActiveAll('Unlock', '/1099/Institute/LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'false' })
                                 }
                             },
                             {
@@ -376,7 +419,7 @@
 
                                     //$('.loading').show();
                                     // Send the selectedValues to the controller using AJAX or a form submission
-                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
+                                    COMMON.confirmAlertActiveAll('Lock', '/1099/Institute/LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
                                 }
                             },
                             {
@@ -400,13 +443,6 @@
                             }
 
                         ],
-                    },
-                    {
-                        text: 'New <i class="fa fa-plus"></i>',
-                        className: 'new-btn',
-                        action: function (e, dt, button, config) {
-                            $("#addModal").modal("show");
-                        }
                     },
                     {
                         text: 'Share <i class="fa fa-share"></i>',
