@@ -378,7 +378,27 @@
                                     // Send the selectedValues to the controller using AJAX or a form submission
                                     COMMON.confirmAlertActiveAll('Lock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
                                 }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Delete Selected',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Delete', '/1099/Institute/DeleteMultipleEntity', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
                             }
+
                         ],
                     },
                     {

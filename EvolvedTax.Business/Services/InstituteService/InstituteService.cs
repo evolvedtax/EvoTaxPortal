@@ -571,6 +571,30 @@ namespace EvolvedTax.Business.Services.InstituteService
             }
             return new MessageResponseModel { Status = false };
         }
+
+
+        public async Task<MessageResponseModel> DeleteMultipleEntity(int[] id, RecordStatusEnum RecordStatus, int SubscriptionId)
+        {
+            bool allUpdated = true;
+
+            foreach (var EntityId in id)
+            {
+                var result = await _evolvedtaxContext.Database.ExecuteSqlInterpolatedAsync($@"EXEC DeleteInstituteEntity {EntityId},{RecordStatus},{DateTime.Now.Date},{SubscriptionId}");
+                if (result <= 0)
+                {
+                    allUpdated = false;
+                }
+            }
+
+            if (allUpdated)
+            {
+                return new MessageResponseModel { Status = true, Message = "The record has been deleted" };
+            }
+            else
+            {
+                return new MessageResponseModel { Status = false, Message = "Oops! something wrong" };
+            }
+        }
         public async Task<MessageResponseModel> DeleteEntity(int EntityId, RecordStatusEnum RecordStatus, int SubscriptionId)
         {
             //if (_evolvedtaxContext.InstitutesClients.Any(p => p.EntityId == EntityId))
