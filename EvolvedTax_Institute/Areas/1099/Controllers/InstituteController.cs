@@ -2,6 +2,7 @@
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.InstituteService;
+using EvolvedTax.Business.Services.UserService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Request;
@@ -13,6 +14,7 @@ using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace EvolvedTax_Institute.Areas._1099.Controllers
@@ -27,7 +29,11 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         readonly RoleManager<IdentityRole> _identityRoles;
         readonly UserManager<User> _userManager;
         readonly EvolvedtaxContext _evolvedtaxContext;
-        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment, ICommonService commonService, EvolvedtaxContext evolvedtaxContext, RoleManager<IdentityRole> identityRoles, UserManager<User> userManager)
+        readonly IMailService _mailService;
+        readonly IUserService _userService;
+        public InstituteController(IInstituteService instituteService, IMailService emailService, IWebHostEnvironment webHostEnvironment,
+            ICommonService commonService, EvolvedtaxContext evolvedtaxContext, RoleManager<IdentityRole> identityRoles,
+            UserManager<User> userManager, IUserService userService, IMailService mailService)
         {
             _evolvedtaxContext = evolvedtaxContext;
             _commonService = commonService;
@@ -36,6 +42,8 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             _webHostEnvironment = webHostEnvironment;
             _identityRoles = identityRoles;
             _userManager = userManager;
+            _userService = userService;
+            _mailService = mailService;
         }
 
         #region Entities
@@ -83,6 +91,85 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         {
             var response = await _instituteService.DeleteMultipleEntity(selectedValues, RecordStatusEnum.Trash, Convert.ToInt32(AppConstants.FormSubscription_1099));
             return Json(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteEntity(int id)
+        {
+            
+            var response = await _instituteService.DeleteEntity(id, RecordStatusEnum.Trash, Convert.ToInt32(AppConstants.FormSubscription_1099));
+            return Json(response);
+        }
+
+        [HttpGet]
+        public IActionResult GetEntityRole(int entityId)
+        {
+            try
+            {
+                string userId = HttpContext.Session.GetString("UserId");
+                string userRole = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(p => p.UserId == userId && p.EntityId == entityId)?.Role.Trim();
+
+                return Json(new { role = userRole });
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+                return StatusCode(500, "An error occurred while fetching entity role.");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> InviteUserForEntities(string role, string emailAddresses, string EntityNamesHidden)
+        {
+            List<string> emails = JsonConvert.DeserializeObject<List<string>>(emailAddresses);
+            string[] entityNamePairs = EntityNamesHidden.Split(',');
+
+            foreach (var entityNamePair in entityNamePairs)
+            {
+                string[] parts = entityNamePair.Split('$');
+                if (parts.Length == 2)
+                {
+                    string entityName = parts[0].Trim();
+                    string entityIdStr = parts[1].Trim();
+                    if (int.TryParse(entityIdStr, out int entityId))
+                    {
+                        int InstituteId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                        var instituteName = HttpContext.Session.GetString("InstituteName");
+                        string AssignedBy = HttpContext.Session.GetString("UserId");
+
+                        foreach (var email in emails)
+                        {
+                            var responseForm = await _userService.SaveInvitedUserForShare(role, entityId, email, InstituteId, AssignedBy);
+                            if (responseForm)
+                            {
+                                var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
+                                var user = await _userManager.GetUserAsync(User);
+                                var invitee = await _userManager.GetUserAsync(User);
+                                await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
+                            }
+                            else
+                            {
+                                var scheme = HttpContext.Request.Scheme; // "http" or "https"
+                                var host = HttpContext.Request.Host.Value; // Hostname (e.g., example.com)
+                                var fullUrl = $"{scheme}://{host}";
+                                var URL = string.Concat(fullUrl, "/Account/", "Login");
+                                var user = await _userManager.GetUserAsync(User);
+                                var invitee = await _userManager.GetUserAsync(User);
+                                await _mailService.SendShareInvitaionEmail(email, URL, string.Concat(invitee.FirstName, " ", invitee.LastName), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Json(new { Status = true, Message = "Invited link has been sent." });
         }
         #endregion
     }
