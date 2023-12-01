@@ -294,32 +294,45 @@ namespace EvolvedTax.Business.Services.InstituteService
                     await _evolvedtaxContext.InstituteEntities.AddRangeAsync(entityList);
                     await _evolvedtaxContext.SaveChangesAsync();
 
+                    #region Add in entityformaccess table for subscription
 
                     // Retrieve the newly added entities 
                     var entityNames = entityList.Select(newEntity => newEntity.EntityName).ToList();
+
+                    // Entity already exists in the database, then combine the lists only if the condition is true
+                    if (response.Count > 0)
+                    {
+                        var entityNamesFromEntityList = entityList.Select(newEntity => newEntity.EntityName).ToList();
+                        var entityNamesFromResponse = response.Select(response => response.EntityName).ToList();
+                        // Combine the lists and remove duplicates
+                        var combinedEntityNames = entityNamesFromEntityList.Union(entityNamesFromResponse).ToList();
+                        entityNames = combinedEntityNames;
+                    }
 
                     var newlyAddedEntities = await _evolvedtaxContext.InstituteEntities
                         .Where(e => entityNames.Contains(e.EntityName))
                         .ToListAsync();
 
-
                     foreach (var entity in newlyAddedEntities)
                     {
-                        
                         foreach (var formNameId in subscriptionId)
                         {
-                     
-                            var entityFormAccess = new EntityFormAccess
+                            // Check if the combination of EntityId and FormNameId already exists in EntityFormAccess
+                            if (!await _evolvedtaxContext.EntityFormAccess.AnyAsync(efa =>
+                                efa.EntityId == entity.EntityId && efa.FormNameId == formNameId))
                             {
-                                InstituteID = InstId,
-                                EntityId = entity.EntityId,
-                                FormNameId = formNameId,
-                                IsActive=1
-                            };
-                            _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+                                var entityFormAccess = new EntityFormAccess
+                                {
+                                    InstituteID = InstId,
+                                    EntityId = entity.EntityId,
+                                    FormNameId = formNameId,
+                                    IsActive = 1
+                                };
+                                _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+                            }
                         }
                     }
-                 
+
                     int changesSaved = await _evolvedtaxContext.SaveChangesAsync();
 
                     if (changesSaved > 0)
@@ -327,8 +340,13 @@ namespace EvolvedTax.Business.Services.InstituteService
                         // Data saved successfully
                         Status = true;
                     }
-               
+                    else
+                    {
+                        Status = false;
+                        return new MessageResponseModel { Status = Status, ErrorStatus = true, Message = new { Title = " Record Exist In System", TagLine = "Entity name  already exist in system" }, Param = "Entity" };
+                    }
 
+                    #endregion
                 }
             }
             catch (Exception ex)
@@ -538,7 +556,7 @@ namespace EvolvedTax.Business.Services.InstituteService
             {DateTime.Now.Date},
             {request.InstituteId}
             ");
-
+            /*
             var existingRecords = _evolvedtaxContext.EntityFormAccess
                 .Where(efa => efa.InstituteID == request.InstituteId && efa.EntityId == request.EntityId)
                 .ToList();
@@ -563,7 +581,7 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             _evolvedtaxContext.SaveChanges();
 
-
+            */
 
             if (result > 0)
             {
@@ -980,50 +998,146 @@ namespace EvolvedTax.Business.Services.InstituteService
             await _evolvedtaxContext.SaveChangesAsync();
             return new MessageResponseModel { Status = true, Message = "Record inserted" };
         }
+        //public async Task<MessageResponseModel> AddEntity(InstituteEntityRequest request, int[] subscriptionId)
+        //{
+        //    if (_evolvedtaxContext.InstituteEntities.Any(p => p.Ein.Trim() == request.Ein.Trim()))
+        //    {
+        //        return new MessageResponseModel { Status = false, Message = "Data already exist against given EIN." };
+        //    }
+        //    var model = new InstituteEntity
+        //    {
+        //        EntityName = request.EntityName,
+        //        Ein = request.Ein,
+        //        EntityRegistrationDate = request.EntityRegistrationDate,
+        //        Address1 = request.Address1,
+        //        Address2 = request.Address2,
+        //        City = request.City,
+        //        State = request.State,
+        //        Province = request.Province,
+        //        Zip = request.Zip,
+        //        Country = request.Country,
+        //        InstituteId = request.InstituteId,
+        //        InstituteName = request.InstituteName,
+        //        IsActive = RecordStatusEnum.Active,
+        //        LastUpdatedBy = request.LastUpdatedBy,
+        //        LastUpdatedDate = DateTime.Now.Date,
+        //    };
+        //    await _evolvedtaxContext.AddAsync(model);
+        //    await _evolvedtaxContext.SaveChangesAsync();
+
+        //    var responseInstitute= _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityName == request.EntityName);
+        //    foreach (var formNameId in subscriptionId)
+        //    {
+        //        var entityFormAccess = new EntityFormAccess
+        //        {
+        //            InstituteID = request.InstituteId,
+        //            EntityId = responseInstitute.EntityId,
+        //            FormNameId = formNameId,
+        //            IsActive=1
+
+        //        };
+        //        _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+        //    }
+        //    await _evolvedtaxContext.SaveChangesAsync();
+
+        //    return new MessageResponseModel { Status = true, Message = "Record inserted" };
+        //}
+
         public async Task<MessageResponseModel> AddEntity(InstituteEntityRequest request, int[] subscriptionId)
         {
-            if (_evolvedtaxContext.InstituteEntities.Any(p => p.Ein.Trim() == request.Ein.Trim()))
-            {
-                return new MessageResponseModel { Status = false, Message = "Data already exist against given EIN." };
-            }
-            var model = new InstituteEntity
-            {
-                EntityName = request.EntityName,
-                Ein = request.Ein,
-                EntityRegistrationDate = request.EntityRegistrationDate,
-                Address1 = request.Address1,
-                Address2 = request.Address2,
-                City = request.City,
-                State = request.State,
-                Province = request.Province,
-                Zip = request.Zip,
-                Country = request.Country,
-                InstituteId = request.InstituteId,
-                InstituteName = request.InstituteName,
-                IsActive = RecordStatusEnum.Active,
-                LastUpdatedBy = request.LastUpdatedBy,
-                LastUpdatedDate = DateTime.Now.Date,
-            };
-            await _evolvedtaxContext.AddAsync(model);
-            await _evolvedtaxContext.SaveChangesAsync();
+            var entityName = request.EntityName;
 
-            var responseInstitute= _evolvedtaxContext.InstituteEntities.FirstOrDefault(p => p.EntityName == request.EntityName);
-            foreach (var formNameId in subscriptionId)
+            // Check if the record already exists in InstituteEntities and EntityFormAccess with the given subscriptionId
+            var existingRecord = _evolvedtaxContext.InstituteEntities
+                .Join(
+                    _evolvedtaxContext.EntityFormAccess,
+                    ie => ie.EntityId,
+                    efa => efa.EntityId,
+                    (ie, efa) => new { InstituteEntity = ie, EntityFormAccess = efa }
+                )
+                .FirstOrDefault(joined =>
+                    joined.InstituteEntity.Ein.Trim() == request.Ein.Trim() &&
+                    joined.EntityFormAccess.FormNameId == subscriptionId[0]
+                );
+
+            if (existingRecord != null)
             {
-                var entityFormAccess = new EntityFormAccess
+                // Record already exists against the given EIN and subscriptionId
+                return new MessageResponseModel { Status = false, Message = "Data already exists against given EIN and Subscription." };
+            }
+
+            // Data doesn't exist against the given EIN and subscriptionId
+            // Check if the record exists in InstituteEntities
+            var instituteEntity = _evolvedtaxContext.InstituteEntities
+                .FirstOrDefault(ie => ie.Ein.Trim() == request.Ein.Trim());
+
+            if (instituteEntity == null)
+            {
+                // Insert a new record in InstituteEntities
+                var model = new InstituteEntity
                 {
-                    InstituteID = request.InstituteId,
-                    EntityId = responseInstitute.EntityId,
-                    FormNameId = formNameId,
-                    IsActive=1
-
+                    EntityName = entityName,
+                    Ein = request.Ein,
+                    EntityRegistrationDate = request.EntityRegistrationDate,
+                    Address1 = request.Address1,
+                    Address2 = request.Address2,
+                    City = request.City,
+                    State = request.State,
+                    Province = request.Province,
+                    Zip = request.Zip,
+                    Country = request.Country,
+                    InstituteId = request.InstituteId,
+                    InstituteName = request.InstituteName,
+                    IsActive = RecordStatusEnum.Active,
+                    LastUpdatedBy = request.LastUpdatedBy,
+                    LastUpdatedDate = DateTime.Now.Date,
                 };
-                _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+
+                await _evolvedtaxContext.AddAsync(model);
+                await _evolvedtaxContext.SaveChangesAsync();
+
+                // Insert records into EntityFormAccess for the corresponding EntityId
+                foreach (var formNameId in subscriptionId)
+                {
+                    var entityFormAccess = new EntityFormAccess
+                    {
+                        InstituteID = request.InstituteId,
+                        EntityId = model.EntityId,
+                        FormNameId = formNameId,
+                        IsActive = 1
+                    };
+                    _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+                }
+
+                await _evolvedtaxContext.SaveChangesAsync();
             }
-            await _evolvedtaxContext.SaveChangesAsync();
+            else
+            {
+                // Record exists in InstituteEntities but not in EntityFormAccess for the given subscriptionId
+                // Insert records into EntityFormAccess for the corresponding EntityId
+                foreach (var formNameId in subscriptionId)
+                {
+                    if (!_evolvedtaxContext.EntityFormAccess.Any(efa => efa.EntityId == instituteEntity.EntityId && efa.FormNameId == formNameId))
+                    {
+                        var entityFormAccess = new EntityFormAccess
+                        {
+                            InstituteID = request.InstituteId,
+                            EntityId = instituteEntity.EntityId,
+                            FormNameId = formNameId,
+                            IsActive = 1
+                        };
+                        _evolvedtaxContext.EntityFormAccess.Add(entityFormAccess);
+                    }
+                }
+
+                await _evolvedtaxContext.SaveChangesAsync();
+            }
 
             return new MessageResponseModel { Status = true, Message = "Record inserted" };
         }
+
+
+
         public bool IsEntityNameExist(string entityName, int entityId, int institueId)
         {
             if (entityId == 0 || !_evolvedtaxContext.InstituteEntities.Any(p => p.InstituteId == institueId && p.EntityId == entityId && p.EntityName == entityName.Trim()))
