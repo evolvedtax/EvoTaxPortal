@@ -116,7 +116,7 @@
                                                             }
                                                             else
                                                             {
-                                                              @*  <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>*@
+                                                                <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.EntityId">Edit</a>
                                                                 <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','/1099/Institute/DeleteEntity','id=@item?.EntityId','')">Delete</a>
                          @*                                      <a class="dropdown-item" href="javascript:void()" onclick="getSubscriptionAndDelete('@item?.EntityId')">Delete</a>*@
 
@@ -138,6 +138,219 @@
     </div>
 </div>
 
+
+<!--Edit Modal -->
+<div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Edit Entity</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Form for editing row data -->
+                <form id="regForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccess"
+                      data-ajax-url="@Url.Action("UpdateEntity","Institute")">
+                    <!-- Add input fields here for each column you want to edit -->
+                    <input id="entityId" asp-for="InstituteEntityRequest.EntityId" hidden />
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="enitytName">Entity Name<span class="text-danger">*</span></label>
+                                <div style="display:flex">
+                                    <input type="text" class="form-control" id="enitytName" asp-for="InstituteEntityRequest.EntityName" readonly required>
+                                    <button type="button" id="editEntityName" class="btn btn-white"><span class="fa fa-edit"></span></button>
+                                </div>
+                                <span asp-validation-for="InstituteEntityRequest.EntityName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ein">EIN<span class="text-danger">*</span></label>
+                                <div style="display:flex">
+                                    <input type="text" class="form-control ein" id="ein" asp-for="InstituteEntityRequest.Ein" readonly required>
+                                    <button type="button" id="editEIN" class="btn btn-white"><span class="fa fa-edit"></span></button>
+                                </div>
+                                <span asp-validation-for="InstituteEntityRequest.Ein" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="entityRegistrationDate" asp-for="InstituteEntityRequest.EntityRegistrationDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="country">Country<span class="text-danger">*</span></label>
+                                <select id="country" asp-items="ViewBag.CountriesList" asp-for="InstituteEntityRequest.Country" onChange="ShowHideProvince(this)" required>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address1">Address 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="address1" asp-for="InstituteEntityRequest.Address1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address2">Address 2</label>
+                                <input type="text" class="form-control" id="address2" asp-for="InstituteEntityRequest.Address2">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="city">City<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="city" asp-for="InstituteEntityRequest.City" required>
+                            </div>
+                        </div>
+                        <div id="stateDiv" class="col-md-6 stateDiv">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select id="state" class="state" asp-items="ViewBag.StatesList" asp-for="InstituteEntityRequest.State">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
+                            <div class="form-group">
+                                <label for="province">Province</label>
+                                <input type="text" class="form-control province" id="province" asp-for="InstituteEntityRequest.Province" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control zip" id="zip" asp-for="InstituteEntityRequest.Zip" required>
+                            </div>
+                        </div>
+                      @*  <div class="col-md-6">
+                            <label>Subscription</label>
+                            <select id="Editmultiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>
+                        </div>*@
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Add Modal -->
+<div class="modal inmodal" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add New Entity</h4>
+            </div>
+            <div class="modal-body">
+                <form id="addForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessAdd"
+                      data-ajax-url="@Url.Action("AddEntity","Institute")">
+                    <input id="InstituteId" asp-for="InstituteEntityRequest.InstituteId" value="@ViewBag.InstituteId" hidden />
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="enitytName">Entity Name<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.EntityName" required>
+                       @*         <span asp-validation-for="InstituteEntityRequest.EntityName" class="text-danger"></span>*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ein">EIN<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control ein" asp-for="InstituteEntityRequest.Ein" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entityRegistrationDate">Entity Registration Date<span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" asp-for="InstituteEntityRequest.EntityRegistrationDate" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="country">Country<span class="text-danger">*</span></label>
+                                <select asp-items="ViewBag.CountriesList" asp-for="InstituteEntityRequest.Country" onChange="ShowHideProvince(this)" required>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address1">Address 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Address1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address2">Address 2</label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Address2">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="city">City<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.City" required>
+                            </div>
+                        </div>
+                        <div id="stateDiv" class="col-md-6 stateDiv">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select class="state" asp-items="ViewBag.StatesList" asp-for="InstituteEntityRequest.State">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
+                            <div class="form-group">
+                                <label for="province">Province</label>
+                                <input type="text" class="form-control province" asp-for="InstituteEntityRequest.Province" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" asp-for="InstituteEntityRequest.Zip" required>
+                            </div>
+                        </div>
+                 @*       <div class="col-md-6">
+                            <label>Subscription</label>
+                            <select id="multiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>
+                        </div>*@
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAddBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Share Modal-->
 <div class="modal inmodal" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated fadeIn">
@@ -193,11 +406,74 @@
         </div>
     </div>
 </div>
+<!--Upload Entity Modal-->
+<div class="modal inmodal" id="uploadEntityModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Upload New Entities</h4>
+            </div>
+            <div class="modal-body">
+                <form id="uploadExcelForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessUploadEntity"
+                      enctype="multipart/form-data"
+                      data-ajax-url="@Url.Action("uploadEntities","Institute")">
+                    <input id="InstituteId" name="InstituteId" value="@ViewBag.InstituteId" hidden />
+                    <div class="row col-md-12 mb-2">
+                      @*  <div class="col-md-6">
+                            <label>Select Subscription</label>
+                            <select id="Uploadmultiple-checkboxes" class="form-control select2" name="subscriptionId" asp-items="ViewBag.FormNameList" required multiple>
+                            </select>/>
+                        </div>*@
+                        <div class="col-md-6">
+                            <label>Upload New Entities</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" name="file" class="custom-file-input" accept=".xlsx, .xls">
+                                    <label class="custom-file-label" for="uploadEntities">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="uploadEntity">Upload Entities</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
 
     <script type="text/javascript">
 
+        function ajaxsuccessUploadEntity(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "New entities uploaded");
+            } else {
+                COMMON.notification(2, "");
+            }
+            $("#uploadEntityModal").modal("hide");
+            window.location.reload();
+        }
+        function ajaxsuccessShare(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, response.Message);
+                $("#shareModal").modal("hide");
+                //window.location.reload();
+            } else {
+                COMMON.notification(2, response.Message);
+            }
 
+        }
 
         // Upgrade button class name
         $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
@@ -248,8 +524,6 @@
                     });
             }
 
-
-
             function fetchEntityRole(entityId) {
                 return new Promise(function (resolve, reject) {
                     $.ajax({
@@ -266,16 +540,7 @@
                 });
             }
 
-            function ajaxsuccessShare(response) {
-                if (response.Status == true) {
-                    COMMON.notification(1, response.Message);
-                    $("#shareModal").modal("hide");
-                    //window.location.reload();
-                } else {
-                    COMMON.notification(2, response.Message);
-                }
-
-            }
+       
 
             $('#saveShareBtn').click(function () {
                 let form = $('#shareForm');
@@ -288,6 +553,30 @@
                     $('#emailAddresses').val(JSON.stringify(emails));
                     form.submit();
                     $("#shareModal").modal("hide");
+                }
+                return false;
+            });
+
+       
+            function ajaxsuccess(response) {
+                if (response.Status == true) {
+                    COMMON.notification(1, "Data is updated");
+                } else {
+                    COMMON.notification(2, "");
+                }
+                $("#editModal").modal("hide");
+                window.location.reload();
+            }
+            $('#saveAddBtn').click(function () {
+                let form = $('#addForm');
+                if (form.valid()) {
+                    debugger;
+                    var selectedSubscriptions = '@AppConstants.FormSubscription_1099';// $('#multiple-checkboxes').val();
+                    console.log(selectedSubscriptions);
+                    debugger;
+                    //$('#saveAddBtn').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions.join(',') + '" />');
+                    $('#saveAddBtn').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions + '" />');
+                    form.submit();
                 }
                 return false;
             });
@@ -378,6 +667,15 @@
                                 className: 'btn-excel'
                             },
                             {
+                                text: '<i class="fa fa-upload"></i> Import New Entity Template',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    //$('#uploadDataDiv').prop('hidden', false);
+                                    //document.getElementById("uploadEntities").click();
+                                    $("#uploadEntityModal").modal("show");
+                                }
+                            },
+                            {
                                 text: '<i class="fa fa-trash"></i> Trash',
                                 className: 'btn-recycle-bin',
                                 action: function (e, dt, button, config) {
@@ -443,6 +741,13 @@
                             }
 
                         ],
+                    },
+                    {
+                        text: 'New <i class="fa fa-plus"></i>',
+                        className: 'new-btn',
+                        action: function (e, dt, button, config) {
+                            $("#addModal").modal("show");
+                        }
                     },
                     {
                         text: 'Share <i class="fa fa-share"></i>',
@@ -571,6 +876,25 @@
             }
             return false;
         });
+        $('#uploadEntity').click(function () {
+            debugger;
+            let form = $('#uploadExcelForm');
+            if (form.valid()) {
+                debugger;
+                //var selectedOptions = $('#Uploadmultiple-checkboxes option:selected');
+                //if (selectedOptions.length > 0) {
+                    //$('#uploadExcelForm input[name="subscriptionId"]').remove();
+                    var selectedSubscriptions ='@AppConstants.FormSubscription_1099'// $('#Uploadmultiple-checkboxes').val();
+                console.log(selectedSubscriptions);
+                   // $('#uploadExcelForm').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions.join(',') + '" />');
+                $('#uploadExcelForm').append('<input type="hidden" name="subscriptionId" value="' + selectedSubscriptions + '" />');
+                    form.submit();
+                //} else {
+                //    COMMON.notification(2, "Please select at least one subscription option.");
+                //}
+            }
+            return false;
+        });
         function ajaxsuccess(response) {
             if (response.Status == true) {
                 COMMON.notification(1, "Data is updated");
@@ -580,13 +904,7 @@
             $("#editModal").modal("hide");
             window.location.reload();
         }
-        $('#saveAddBtn').click(function () {
-            let form = $('#addForm');
-            if (form.valid()) {
-                form.submit();
-            }
-            return false;
-        });
+       
         $('#editEntityName').click(function () {
             $('#enitytName').prop('readonly', false);
         });

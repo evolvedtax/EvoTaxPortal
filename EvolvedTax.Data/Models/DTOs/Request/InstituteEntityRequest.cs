@@ -11,7 +11,7 @@ namespace EvolvedTax.Data.Models.DTOs.Request
     {
         public int EntityId { get; set; }
         public short InstituteId { get; set; }
-        [Remote("IsEntityNameExist", "Institute", AdditionalFields = "EntityId", ErrorMessage = "Entity name is already exist.")]
+        //[Remote("IsEntityNameExist", "Institute", AdditionalFields = "EntityId", ErrorMessage = "Entity name is already exist.")]
         public string EntityName { get; set; } = string.Empty;
         public string? InstituteName { get; set; }
 

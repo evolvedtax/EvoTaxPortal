@@ -125,6 +125,71 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         }
 
 
+ 
+        [HttpPost]
+        public async Task<IActionResult> UploadEntities(IFormFile file, short InstituteId, int[] subscriptionId)
+        {
+            string InstituteName = string.Empty;
+            int[] subscriptionIds = subscriptionId.Distinct().ToArray();
+
+            if (InstituteId == 0)
+            {
+                var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+                InstituteId = (short)instId;
+                InstituteName = HttpContext.Session.GetString("InstituteName") ?? string.Empty;
+            }
+            else
+            {
+                InstituteName = _instituteService.GetInstituteDataById(InstituteId).InstitutionName ?? string.Empty;
+            }
+            var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName, subscriptionIds);
+            return Json(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEntity(InstituteEntityViewModel request, int[] subscriptionId)
+        {
+            if (subscriptionId == null || subscriptionId.Length == 0)
+            {
+                subscriptionId = new int[] { Convert.ToInt32(AppConstants.FormSubscription_1099) };
+            }
+
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            int[] subscriptionIds = subscriptionId.Distinct().ToArray();
+            if (request.InstituteEntityRequest.InstituteId == 0)
+            {
+                request.InstituteEntityRequest.InstituteId = (short)instId;
+                request.InstituteEntityRequest.InstituteName = HttpContext.Session.GetString("InstituteName");
+            }
+            else
+            {
+                request.InstituteEntityRequest.InstituteName = _instituteService.GetInstituteDataById(request.InstituteEntityRequest.InstituteId).InstitutionName;
+            }
+            request.InstituteEntityRequest.LastUpdatedBy = (short)instId;
+            var response = await _instituteService.AddEntity(request.InstituteEntityRequest, subscriptionIds);
+            return Json(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateEntity(InstituteEntityViewModel request, int[] subscriptionId)
+        {
+
+
+            if (subscriptionId == null || subscriptionId.Length == 0)
+            {
+                subscriptionId = new int[] { Convert.ToInt32(AppConstants.FormSubscription_1099) };
+            }
+
+            if (request.InstituteEntityRequest.EntityId == 0)
+            {
+                return Json(false);
+            }
+            var instId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            request.InstituteEntityRequest.InstituteId = (short)instId;
+            var response = await _instituteService.UpdateEntity(request.InstituteEntityRequest, subscriptionId);
+            return Json(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> InviteUserForEntities(string role, string emailAddresses, string EntityNamesHidden)
         {

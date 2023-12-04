@@ -241,7 +241,7 @@ namespace EvolvedTax_Institute.Controllers
             var response = await _instituteService.UploadEntityData(file, InstituteId, InstituteName, subscriptionIds);
             return Json(response);
         }
-        [Route("institute/AddEntity")]
+        //[Route("institute/AddEntity")]
         [HttpPost]
         public async Task<IActionResult> AddEntity(InstituteEntityViewModel request, int[] subscriptionId)
         {
@@ -261,7 +261,7 @@ namespace EvolvedTax_Institute.Controllers
             var response = await _instituteService.AddEntity(request.InstituteEntityRequest, subscriptionIds);
             return Json(response);
         }
-        [Route("institute/UpdateEntity")]
+        //[Route("institute/UpdateEntity")]
         [HttpPost]
         public async Task<IActionResult> UpdateEntity(InstituteEntityViewModel request, int[] subscriptionId)
         {
