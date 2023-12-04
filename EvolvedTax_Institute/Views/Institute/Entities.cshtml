@@ -112,8 +112,8 @@
                                     <th>Last Updated On</th>
                                     <th>Role</th>
                                     <th>Subscription</th>
-                                    <th>Lock/Unlock</th>
-                                    <th>Action</th>
+                                    @*<th>Lock/Unlock</th>*@
+                                    @*<th>Action</th>*@
                                 </tr>
                             </thead>
                             <tbody>
@@ -139,7 +139,7 @@
                                             <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
                                             <td>@item.Role</td>
                                             <td>@item.Subscription</td>
-                                            <td class="text-center">
+                                            @*<td class="text-center">
                                                 @if (item?.IsLocked ?? false)
                                                 {
                                                     <span class="fa fa-lock"></span>
@@ -148,8 +148,8 @@
                                                 {
                                                     <span class="fa fa-unlock"></span>
                                                 }
-                                            </td>
-                                            <td class="actions">
+                                            </td>*@
+                                           @* <td class="actions">
                                                 <div class="dropdown">
                                                     <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <span class="fa fa-bars"></span>
@@ -169,7 +169,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </td>
+                                            </td>*@
                                         </tr>
                                     }
                                 }
@@ -790,120 +790,120 @@
                 //dom: '<"html5buttons"B>lTfgitp',
                 dom: '<"html5buttons"B>frtip',
                 buttons: [
-                    {
-                        extend: 'collection',
-                        text: '<i class="fa fa-ellipsis-h"></i>',
-                        className: 'btn-menu-toggle',
-                        buttons: [
-                            {
-                                text: '<i class="fa fa-download"></i> Download New Entity Template',
-                                className: 'btn-template',
-                                action: function (e, dt, button, config) {
-                                    let url = 'DownloadExcel';
-                                    let params = { fileType: '@AppConstants.Entity' }
-                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
-                                }
-                            },
-                            {
-                                extend: 'excel',
-                                title: '',
-                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
-                                className: 'btn-excel'
-                            },
-                            {
-                                text: '<i class="fa fa-upload"></i> Import New Entity Template',
-                                className: 'btn-imp-data',
-                                action: function (e, dt, button, config) {
-                                    //$('#uploadDataDiv').prop('hidden', false);
-                                    //document.getElementById("uploadEntities").click();
-                                    $("#uploadEntityModal").modal("show");
-                                }
-                            },
-                            {
-                                text: '<i class="fa fa-trash"></i> Trash',
-                                className: 'btn-recycle-bin',
-                                action: function (e, dt, button, config) {
-                                    window.location.href = '/Institute/EntitiesRecyleBin';
-                                }
-                            },
-                            {
-                                text: '<i class= "fa fa-unlock" ></i> Unlock All Entities',
-                                className: 'btn-unlock-all',
-                                action: function (e, dt, button, config) {
-                                    var selectedValues = [];
-                                    $('.rowCheckbox:checked').each(function () {
-                                        selectedValues.push($(this).val());
-                                    });
+                //    {
+                //        extend: 'collection',
+                //        text: '<i class="fa fa-ellipsis-h"></i>',
+                //        className: 'btn-menu-toggle',
+                //        buttons: [
+                //            {
+                //                text: '<i class="fa fa-download"></i> Download New Entity Template',
+                //                className: 'btn-template',
+                //                action: function (e, dt, button, config) {
+                //                    let url = 'DownloadExcel';
+                //                    let params = { fileType: '@AppConstants.Entity' }
+                //                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
+                //                }
+                //            },
+                //            {
+                //                extend: 'excel',
+                //                title: '',
+                //                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                //                className: 'btn-excel'
+                //            },
+                //            {
+                //                text: '<i class="fa fa-upload"></i> Import New Entity Template',
+                //                className: 'btn-imp-data',
+                //                action: function (e, dt, button, config) {
+                //                    //$('#uploadDataDiv').prop('hidden', false);
+                //                    //document.getElementById("uploadEntities").click();
+                //                    $("#uploadEntityModal").modal("show");
+                //                }
+                //            },
+                //            {
+                //                text: '<i class="fa fa-trash"></i> Trash',
+                //                className: 'btn-recycle-bin',
+                //                action: function (e, dt, button, config) {
+                //                    window.location.href = '/Institute/EntitiesRecyleBin';
+                //                }
+                //            },
+                //            {
+                //                text: '<i class= "fa fa-unlock" ></i> Unlock All Entities',
+                //                className: 'btn-unlock-all',
+                //                action: function (e, dt, button, config) {
+                //                    var selectedValues = [];
+                //                    $('.rowCheckbox:checked').each(function () {
+                //                        selectedValues.push($(this).val());
+                //                    });
 
-                                    if (selectedValues.length === 0) {
-                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                        return;
-                                    }
+                //                    if (selectedValues.length === 0) {
+                //                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                //                        return;
+                //                    }
 
-                                    //$('.loading').show();
-                                    // Send the selectedValues to the controller using AJAX or a form submission
-                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'false' })
-                                }
-                            },
-                            {
-                                text: '<i class= "fa fa-lock" ></i> Lock All Entities',
-                                className: 'btn-lock-all',
-                                action: function (e, dt, button, config) {
-                                    var selectedValues = [];
-                                    $('.rowCheckbox:checked').each(function () {
-                                        selectedValues.push($(this).val());
-                                    });
+                //                    //$('.loading').show();
+                //                    // Send the selectedValues to the controller using AJAX or a form submission
+                //                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'false' })
+                //                }
+                //            },
+                //            {
+                //                text: '<i class= "fa fa-lock" ></i> Lock All Entities',
+                //                className: 'btn-lock-all',
+                //                action: function (e, dt, button, config) {
+                //                    var selectedValues = [];
+                //                    $('.rowCheckbox:checked').each(function () {
+                //                        selectedValues.push($(this).val());
+                //                    });
 
-                                    if (selectedValues.length === 0) {
-                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
-                                        return;
-                                    }
+                //                    if (selectedValues.length === 0) {
+                //                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                //                        return;
+                //                    }
 
-                                    //$('.loading').show();
-                                    // Send the selectedValues to the controller using AJAX or a form submission
-                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
-                                }
-                            }
-                        ],
-                    },
-                    {
-                        text: 'New <i class="fa fa-plus"></i>',
-                        className: 'new-btn',
-                        action: function (e, dt, button, config) {
-                            $("#addModal").modal("show");
-                        }
-                    },
-                    //{
-                    //    text: 'Share <i class="fa fa-share"></i>',
-                    //    className: 'email-btn',
-                    //    action: function (e, dt, button, config) {
+                //                    //$('.loading').show();
+                //                    // Send the selectedValues to the controller using AJAX or a form submission
+                //                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockEntity', { selectedValues: selectedValues, isLocked: 'true' })
+                //                }
+                //            }
+                //        ],
+                //    },
+                //    {
+                //        text: 'New <i class="fa fa-plus"></i>',
+                //        className: 'new-btn',
+                //        action: function (e, dt, button, config) {
+                //            $("#addModal").modal("show");
+                //        }
+                //    },
+                //    //{
+                //    //    text: 'Share <i class="fa fa-share"></i>',
+                //    //    className: 'email-btn',
+                //    //    action: function (e, dt, button, config) {
 
-                    //        // Get selected rows
-                    //        //var selectedRows = dt.rows({ selected: true }).data().toArray();
-                    //        var selectedRows = [];
+                //    //        // Get selected rows
+                //    //        //var selectedRows = dt.rows({ selected: true }).data().toArray();
+                //    //        var selectedRows = [];
 
-                    //        $('.rowCheckbox:checked').each(function () {
-                    //            var checkboxValue = $(this).val();
-                    //            var rowData = dt.row('#' + checkboxValue).data();
+                //    //        $('.rowCheckbox:checked').each(function () {
+                //    //            var checkboxValue = $(this).val();
+                //    //            var rowData = dt.row('#' + checkboxValue).data();
 
-                    //            if (rowData) {
-                    //                selectedRows.push(rowData);
-                    //            }
-                    //        });
+                //    //            if (rowData) {
+                //    //                selectedRows.push(rowData);
+                //    //            }
+                //    //        });
 
-                    //        if (selectedRows.length === 0) {
-                    //            COMMON.notification(3, 'No row selected. Please select at least one row.');
-                    //            return;
-                    //        }
-
-
-                    //        $("#shareModal").modal("show");
-                    //        updateModalHeader(selectedRows);
+                //    //        if (selectedRows.length === 0) {
+                //    //            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                //    //            return;
+                //    //        }
 
 
+                //    //        $("#shareModal").modal("show");
+                //    //        updateModalHeader(selectedRows);
 
-                    //    }
-                    //},
+
+
+                //    //    }
+                //    //},
                 ],
                 //"drawCallback": function () {
                 //    var pageInfo = this.api().page.info();
