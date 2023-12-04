@@ -215,7 +215,10 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
                             if (responseForm)
                             {
                                 var URL = Url.Action("SignUpForInvite", "Account", new { i = "id", e = "email", s = "share" }, Request.Scheme) ?? "";
-                                URL = URL.Replace("/1099/", "/");
+                                if (URL.Contains("/1099/"))
+                                {
+                                    URL = URL.Replace("/1099/", "/");
+                                }
                                 var user = await _userManager.GetUserAsync(User);
                                 var invitee = await _userManager.GetUserAsync(User);
                                 await _mailService.SendShareInvitaionEmailSignUp(email, URL, InstituteId.ToString(), "Action Required: You have been invited to signup with EvoForms", string.Concat(user.FirstName, " ", user.LastName), instituteName, entityName, role, InstituteId);

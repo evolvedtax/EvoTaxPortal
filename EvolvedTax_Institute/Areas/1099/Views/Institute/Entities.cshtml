@@ -67,7 +67,7 @@
                                     <th>Country of Incorporation</th>
                                     <th>Last Updated By</th>
                                     <th>Last Updated On</th>
-                                    <th>Role</th>
+                                  @*  <th>Role</th>*@
                                     <th>Lock/Unlock</th>
                                     <th>Action</th>
                                 </tr>
@@ -92,7 +92,7 @@
                                             <td>@item.Country</td>
                                             <td>@item.LastUpdatedByName</td>
                                             <td>@item.LastUpdatedDate?.ToString("MM-dd-yyyy")</td>
-                                            <td>@item.Role</td>
+                                       @*     <td>@item.Role</td>*@
                                             <td class="text-center">
                                                 @if (item?.IsLocked ?? false)
                                                 {
