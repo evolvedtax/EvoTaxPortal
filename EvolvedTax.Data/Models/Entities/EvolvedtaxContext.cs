@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvolvedTax.Data.Models.Entities._1042;
 using EvolvedTax.Data.Models.Entities._1099;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -145,6 +146,7 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
 
     public virtual DbSet<W91> W91s { get; set; }
     public DbSet<RoleHierarchy> RoleHierarchy{ get; set; }
+    public DbSet<Tbl_1042s> Tbl_1042s { get; set; }
     public DbSet<Tbl1099_MISC> Tbl1099_MISC { get; set; }
     public DbSet<Tbl1099_NEC> Tbl1099_NEC { get; set; }
     public DbSet<Tbl1099_A> Tbl1099_A { get; set; }
