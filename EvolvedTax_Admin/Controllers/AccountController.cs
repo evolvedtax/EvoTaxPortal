@@ -537,11 +537,11 @@ namespace EvolvedTax_Admin.Controllers
             var bytes = Base32Encoding.ToBytes("JBSWY3DPEHPK3PXP");
             var totp = new Totp(bytes);
             var token = totp.ComputeTotp();
-            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60)); DateTime.Now.AddMinutes(60);
+            var response = await _userService.UpdateUsertOTP(user.Id, token, DateTime.Now.AddMinutes(60));
 
             var result = await _userManager.FindByNameAsync("admin@evolvedtax.com");
 
-            await _mailService.SendOTPAsync(token, user.Email, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
+            await _mailService.SendOTPAsync(token, user.UserName, "Action Required: Your One Time Password (OTP) with EvoForms", user.FirstName + " " + user.LastName, "");
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }

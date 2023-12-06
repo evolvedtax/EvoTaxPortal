@@ -11,8 +11,8 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                        top: 0;
-                                                                                                                        left: 15%;*/
+                                                                                                                            top: 0;
+                                                                                                                            left: 15%;*/
         padding: 0;
         /*padding-right: 60%*/
         text-align: left !important;
@@ -623,11 +623,11 @@
                                     <option value=""></option>
                                 </select>
                             </div>
-                            <div class="mt-2 col-md-8">
-                                <label>Subscription</label>
-                                <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
-                                </select>
-                            </div>
+                            @* <div class="mt-2 col-md-8">
+                            <label>Subscription</label>
+                            <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
+                            </select>
+                            </div>*@
                         </div>
                         <div class="mt-4">
                             <label>Message (optional)</label>
@@ -1277,6 +1277,14 @@
                 let params = { entityId: entityId };
                 let response = COMMON.doAjaxGetWithJSONResponse('/Institute/ChangeEntity', params);
                 $('#EmailFrequency').val(response.EmailFrequency);
+                var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+                var maintableWrapper = $("#maintable");
+                debugger
+                if (entityId === "0") {
+                    sharedUsersContainer.style.display = "none";
+                } else {
+                    sharedUsersContainer.style.display = "block";
+                }
                 // Clear the existing table rows
                 let dataTable = $('#entity-table').DataTable();
                 dataTable.clear().draw();

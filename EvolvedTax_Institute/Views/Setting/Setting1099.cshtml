@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
     bool SuperAdminOrAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin");
     bool SuperAdminOrAdminOrCoAdmin = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Co-Admin");
+    string emailTemplate = "";
 }
 <style>
     .center-dropdown {
@@ -55,6 +56,9 @@
         z-index: 1;
     }
 
+    .btn-size {
+        width: 130.66px
+    }
 </style>
 
 <div class="wrapper wrapper-content animated fadeInRight">
@@ -509,6 +513,8 @@
                             </div>
                             <div id="tab-11" class="tab-pane">
                                 <div class="panel-body">
+                                    <b>Please keep the format which are in {{linkButton}} as it is. But you can change the position.</b>
+                                    <br /><br />
                                     <div class="row">
                                         <form id="ClientEmailTemplateForm" style="width:100%"
                                               method="post"
@@ -519,14 +525,32 @@
                                               data-ajax-loading="#ajax-loader"
                                               data-ajax-success="ajaxsuccessClientEmailTemplate"
                                               data-ajax-url="@Url.Action("AddUpdateClientEmailTemplate","Setting")">
+                                            @* <div class="col-md-12">
+                                            <label>Do you want to use default template?</label>
+                                            <input type="checkbox" asp-for="InstituteEmailTemplate.IsDefault" />
+                                            </div>*@
                                             <div class="col-md-12">
                                                 <label>Client E-Mail Template</label>
                                                 <input asp-for="InstituteEmailTemplate.Id" hidden />
-                                                <textarea class="form-control" asp-for="InstituteEmailTemplate.CustomTemplate">
+                                                <input asp-for="InstituteEmailTemplate.FormNameId" hidden />
+                                                <input id="defaultTemplate" asp-for="InstituteEmailTemplate.DefaultTemplate" hidden />
+                                                <input id="customTemplate" value="@Model.InstituteEmailTemplate.CustomTemplate" hidden />
+                                                @if (Model.InstituteEmailTemplate.IsDefault)
+                                                {
+                                                    emailTemplate = Model.InstituteEmailTemplate.DefaultTemplate;
+                                                }
+                                                else
+                                                {
+                                                    emailTemplate = Model.InstituteEmailTemplate.CustomTemplate;
+                                                }
+
+                                                <textarea class="form-control" id="InstituteEmailTemplate_Template" name="InstituteEmailTemplate.CustomTemplate">
                                                     @Model.InstituteEmailTemplate.CustomTemplate
                                                 </textarea>
                                                 <div class="mt-2">
-                                                    <button type="button" id="submitClientEMailTemp" class="btn btn-primary">Save</button>
+                                                    <button type="button" id="submitClientEMailTemp" class="btn btn-primary btn-size">Save Changes</button>
+                                                    <button type="button" id="defaultClientEMailTemp" class="btn btn-primary btn-size ml-2" style="background-color:darkblue">Return to Default</button>
+                                                    @*<button type="button" id="discardChanges" class="btn btn-danger ml-2">Discard Changes</button>*@
                                                 </div>
                                             </div>
                                         </form>
@@ -600,6 +624,19 @@
                 //allowClear: true
             });
             $('#InstituteEmailTemplate_Template').summernote();
+            $('#defaultClientEMailTemp').click(function () {
+                var defaultTemplateContent = $('#defaultTemplate').val();
+                $('#InstituteEmailTemplate_Template').summernote('code', defaultTemplateContent);
+                $("#defaultClientEMailTemp").prop("disabled", true);
+            });
+            $('#discardChanges').click(function () {
+                var discardTemplateContent = $('#customTemplate').val();
+                $('#InstituteEmailTemplate_Template').summernote('code', discardTemplateContent);
+                $("#discardChanges").prop("disabled", true);
+            });
+            $('#InstituteEmailTemplate_Template').on('change', function () {
+                $('#submitClientEMailTemp').prop('disabled', false);
+            });
             $('#oldInstituteName').val($('#instituteName').val());
             $('.select2-container').css('width', '100%');
 

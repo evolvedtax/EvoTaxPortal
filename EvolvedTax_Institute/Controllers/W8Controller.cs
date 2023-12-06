@@ -2,6 +2,7 @@
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
+using EvolvedTax.Data.Enums;
 using EvolvedTax.Data.Models.DTOs.Response;
 using EvolvedTax.Data.Models.DTOs.ViewModels;
 using EvolvedTax.Data.Models.Entities;
@@ -35,7 +36,80 @@ namespace EvolvedTax_Institute.Controllers
         {
             return RedirectToAction("Entities", "Institute", new { area = "" });
         }
+        public IActionResult Entities(int? instituteId)
+        {
+            var model = new InstituteEntityViewModel();
+            var items = _evolvedtaxContext.MstrCountries.ToList();
+            ViewBag.CountriesList = items.OrderBy(item => item.Favorite != "0" ? int.Parse(item.Favorite) : int.MaxValue)
+                                  .ThenBy(item => item.Country).Select(p => new SelectListItem
+                                  {
+                                      Text = p.Country,
+                                      Value = p.Country,
+                                  });
 
+            ViewBag.StatesList = _evolvedtaxContext.MasterStates.Select(p => new SelectListItem
+            {
+                Text = p.StateId,
+                Value = p.StateId
+            });
+            if (instituteId != null)
+            {
+                ViewBag.InstituteId = instituteId;
+                HttpContext.Session.SetInt32("SelectedInstitute", instituteId ?? 0);
+                if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
+                {
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                }
+                else
+                {
+                    model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(instituteId ?? 0);
+                    //model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstIdRole(instituteId ?? 0);
+                }
+                return View(model);
+            }
+            int InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            HttpContext.Session.SetInt32("SelectedInstitute", InstId);
+
+            var FormNameItems = _evolvedtaxContext.FormName.ToList();
+
+            var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
+            if (SubscriptionId == -1)
+            {
+                HttpContext.Session.SetInt32("SubscriptionId", -1);
+            }
+
+            ViewBag.FormNameListMain = FormNameItems.Select(p => new SelectListItem
+            {
+                Text = p.Form_Name,
+                Value = p.Id.ToString(),
+                Selected = p.Id == SubscriptionId
+            });
+
+
+            ViewBag.FormNameList = FormNameItems.Select(p => new SelectListItem
+            {
+                Text = p.Form_Name,
+                Value = p.Id.ToString(),
+            });
+            model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, Convert.ToInt32(AppConstants.FormSubscription_w8_w9));
+
+
+            // HttpContext.Session.SetInt32("SubscriptionId", -1);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteMultipleEntity(int[] selectedValues)
+        {
+            var response = await _instituteService.DeleteMultipleEntity(selectedValues, RecordStatusEnum.Trash, Convert.ToInt32(AppConstants.FormSubscription_w8_w9));
+            return Json(response);
+        }
+        [Route("w8/LockUnlockEntity")]
+        [HttpPost]
+        public async Task<IActionResult> LockUnlockEntity(int[] selectedValues, bool isLocked)
+        {
+            var response = await _instituteService.LockUnlockEntity(selectedValues, isLocked);
+            return Json(response);
+        }
         public IActionResult ChangeEntity(int entityId)
         {
             HttpContext.Session.SetInt32("EntityId", entityId);
