@@ -79,7 +79,7 @@ namespace EvolvedTax_Institute.Controllers
 
             var userFullName = SessionUser.FirstName + " " + SessionUser.LastName;
             await _emailService.SendEmailForChangeInstituteNameRequest(instituteName, NewInstituteName, userFullName, acceptLink, rejectLink, Comments);
-            return Json(new { Status = true }); 
+            return Json(new { Status = true });
         }
         //[HttpGet]
         //public IActionResult ChangeInstituteName(string u, string s)
@@ -181,9 +181,9 @@ namespace EvolvedTax_Institute.Controllers
             var FormNameItems = _evolvedtaxContext.FormName.ToList();
 
             var SubscriptionId = HttpContext.Session.GetInt32("SubscriptionId") ?? -1;
-            if (SubscriptionId==-1)
+            if (SubscriptionId == -1)
             {
-                 HttpContext.Session.SetInt32("SubscriptionId", -1);
+                HttpContext.Session.SetInt32("SubscriptionId", -1);
             }
 
             ViewBag.FormNameListMain = FormNameItems.Select(p => new SelectListItem
@@ -201,8 +201,8 @@ namespace EvolvedTax_Institute.Controllers
             });
             model.InstituteEntitiesResponse = _instituteService.GetEntitiesByInstId(InstId, SubscriptionId);
 
-          
-           // HttpContext.Session.SetInt32("SubscriptionId", -1);
+
+            // HttpContext.Session.SetInt32("SubscriptionId", -1);
             return View(model);
         }
         public IActionResult EntitiesRecyleBin()
@@ -400,12 +400,20 @@ namespace EvolvedTax_Institute.Controllers
             var IntMaster = _instituteService.GetInstituteDataById(InstituteId ?? 0);
 
             ViewBag.IsEnableEmailFrequency = IntMaster.IsEmailFrequency ?? false;
-            ViewBag.EntitiesList = entities.Select(p => new SelectListItem
+            var entitiesDropList = entities.Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),
                 Selected = (p.EntityId == EntityId)
+            }).ToList();
+            entitiesDropList.Insert(0, new SelectListItem
+            {
+                Text = "Select All",
+                Value = "0",
+                Selected = (EntityId == 0) // Set Selected based on your condition
             });
+            ViewBag.EntitiesList = entitiesDropList;
+
             ViewBag.EmailFrequency = entities?.FirstOrDefault(p => p.EntityId == EntityId)?.EmailFrequency;
             ViewBag.EntityId = EntityId;
             var users = _userManager.Users.ToList();
@@ -452,7 +460,7 @@ namespace EvolvedTax_Institute.Controllers
             var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
             return View(model);
         }
-        public async Task<IActionResult> SendEmail(int[] selectedValues,int EntityId)
+        public async Task<IActionResult> SendEmail(int[] selectedValues, int EntityId)
         {
             var scheme = HttpContext.Request.Scheme; // "http" or "https"
             var host = string.Empty;
@@ -469,7 +477,7 @@ namespace EvolvedTax_Institute.Controllers
             string URL = string.Concat(fullUrl, "/Account", "/OTP");
 
             var user = await _userManager.GetUserAsync(User);
-            
+
             string userName = string.Concat(user.FirstName, " ", user.LastName);
             string ActionText = $"An email has been sent to {{Email}} for the client associated with the {{EntityName}}, sent by {user.FirstName} {user.LastName}";
 
@@ -523,7 +531,7 @@ namespace EvolvedTax_Institute.Controllers
             var response = await _instituteService.UpdateEmailFrequncy(EntityIdFreq, EmailFrequency);
             return Json(response);
         }
-   
+
         [Route("institute/DeleteClient")]
         [HttpPost]
         public async Task<IActionResult> DeleteClient(int id)

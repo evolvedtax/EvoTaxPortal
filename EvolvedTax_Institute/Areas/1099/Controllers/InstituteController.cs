@@ -47,7 +47,7 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         }
 
         #region Entities
-        public IActionResult Entities(int? instituteId)
+        public IActionResult W9Entities(int? instituteId)
         {
             HttpContext.Session.SetInt32("EntityId", 0);
             var model = new InstituteEntityViewModel();

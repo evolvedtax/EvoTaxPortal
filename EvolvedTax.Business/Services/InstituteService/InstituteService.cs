@@ -39,14 +39,14 @@ namespace EvolvedTax.Business.Services.InstituteService
             return _mapper.Map<List<InstituteMasterResponse>>(_evolvedtaxContext.InstituteMasters).AsQueryable();
         }
 
-        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId,int SubscriptionId)
+        public IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId, int SubscriptionId)
         {
             string userId = "";
             HttpContext httpContext = _httpContextAccessor.HttpContext;
             if (httpContext != null)
             {
                 userId = httpContext.Session.GetString("UserId");
-               
+
             }
 
 
@@ -107,7 +107,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             EmailFrequency = p.EmailFrequency,
                             LastUpdatedByName = _evolvedtaxContext.InstituteMasters.FirstOrDefault(x => x.InstId == p.LastUpdatedBy).InstitutionName ?? string.Empty,
                             Role = _evolvedtaxContext.EntitiesUsers.FirstOrDefault(ue => ue.EntityId == p.EntityId && ue.UserId == userId).Role.Trim() ?? string.Empty,
-                            
+
                             Subscription = string.Join(", ", _evolvedtaxContext.EntityFormAccess
     .Where(efa => efa.InstituteID == InstId && efa.EntityId == p.EntityId && efa.IsActive == 1)
     .Select(efa => _evolvedtaxContext.FormName.FirstOrDefault(fn => fn.Id == efa.FormNameId).Form_Name)
@@ -123,9 +123,17 @@ namespace EvolvedTax.Business.Services.InstituteService
         {
             // Fetch all MasterClientStatus records
             var clientStatuses = _evolvedtaxContext.MasterClientStatuses.ToDictionary(cs => cs.StatusId);
-
-            var response = _evolvedtaxContext.InstitutesClients
-                .Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId)
+            IQueryable<InstitutesClient> exprssion = new List<InstitutesClient>().AsQueryable();
+            if (EntityId == 0)
+            {
+                exprssion = _evolvedtaxContext.InstitutesClients
+                           .Where(p => p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId);
+            }
+            else
+            {
+                exprssion = _evolvedtaxContext.InstitutesClients.Where(p => p.EntityId == EntityId && p.IsActive == RecordStatusEnum.Active && p.InstituteId == InstId);
+            }
+            var response = exprssion
                 .OrderByDescending(p => p.IsDuplicated)
                 .Select(p => new InstituteClientResponse
                 {
@@ -137,7 +145,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                     ClientStatusDate = p.ClientStatusDate,
                     ClientStatus = p.ClientStatus,
                     Country = p.Country,
-                    EntityId = EntityId,
+                    EntityId = p.EntityId,
                     EntityName = p.EntityName,
                     FileName = p.FileName,
                     InstituteId = p.InstituteId,
@@ -424,7 +432,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                         p.ClientEmailId == client.ClientEmailId &&
                         p.InstituteId == client.InstituteId &&
                         p.EntityId == client.EntityId
-                       // && p.EntityName == client.EntityName
+                        // && p.EntityName == client.EntityName
                         ))
                     {
                         //response.Add(client);
@@ -503,7 +511,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                 IsLocked = p.IsLocked,
                 OtpexpiryDate = p.OtpexpiryDate,
                 //Otp = p.OtpexpiryDate >= DateTime.Now ? p.Otp : ""
-                Otp = p.Otp 
+                Otp = p.Otp
             }).FirstOrDefault();
         }
 
@@ -790,18 +798,18 @@ namespace EvolvedTax.Business.Services.InstituteService
 
             if (recordsToDelete.Count > 0)
             {
-                 _evolvedtaxContext.InstitutesClients.RemoveRange(recordsToDelete);
-                 _evolvedtaxContext.SaveChanges();
-                return new MessageResponseModel { Status = true, Message= "The record has been successfully deleted" };
+                _evolvedtaxContext.InstitutesClients.RemoveRange(recordsToDelete);
+                _evolvedtaxContext.SaveChanges();
+                return new MessageResponseModel { Status = true, Message = "The record has been successfully deleted" };
             }
             else
             {
-                return new MessageResponseModel { Status = true, Message = "No records were found within the specified time interval",ErrorStatus=true };
+                return new MessageResponseModel { Status = true, Message = "No records were found within the specified time interval", ErrorStatus = true };
             }
-            
+
             return new MessageResponseModel { Status = false };
 
-         
+
         }
 
         public async Task<MessageResponseModel> DeleteClientPermeant(int id)
