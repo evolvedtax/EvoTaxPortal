@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EvolvedTax.Data.Models.Entities._1042;
 using EvolvedTax.Data.Models.Entities._1098;
 using EvolvedTax.Data.Models.Entities._1099;
+using EvolvedTax.Data.Models.Entities._5498;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -158,6 +159,10 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public DbSet<Tbl_1098_F> Tbl_1098_F { get; set; }
     public DbSet<Tbl_1098_E> Tbl_1098_E { get; set; }
     public DbSet<Tbl_1098_C> Tbl_1098_C { get; set; }
+    public DbSet<Tbl_1098> Tbl_1098 { get; set; }
+
+    public DbSet<Tbl_5498> Tbl_5498 { get; set; }
+    public DbSet<Tbl_5498_SA> Tbl_5498_SA { get; set; }
 
 
 
