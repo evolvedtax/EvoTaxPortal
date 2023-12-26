@@ -128,8 +128,10 @@ namespace EvolvedTax.Business.Services.UserService
                 Phone = request.Phone
             };
             await _evolvedtaxContext.InstituteMasters.AddAsync(model);
+            await _evolvedtaxContext.SaveChangesAsync();
             var userEmailTemplate = new List<InstituteEmailTemplate> {
-               new InstituteEmailTemplate{ DefaultTemplate = AppConstants.EmailToClientDefaultTemp,CustomTemplate = AppConstants.EmailToClientDefaultTemp, EntryDatetime = DateTime.Now, FormNameId = 2, InstituteID = model.InstId, TemplateName = AppConstants.ClientEmailTemplate },
+               new InstituteEmailTemplate{ DefaultTemplate = AppConstants.EmailToClientDefaultTemp,CustomTemplate = AppConstants.EmailToClientDefaultTemp, EntryDatetime = DateTime.Now, FormNameId = 1, InstituteID = model.InstId, TemplateName = AppConstants.ClientEmailTemplate },
+               new InstituteEmailTemplate{ DefaultTemplate = AppConstants.ElectronicAcceptanceDefaultTemp,CustomTemplate = AppConstants.ElectronicAcceptanceDefaultTemp, EntryDatetime = DateTime.Now, FormNameId = 2, InstituteID = model.InstId, TemplateName = AppConstants.ElectronicAcceptanceEmailTemplate },
             };
             await _evolvedtaxContext.InstituteEmailTemplate.AddRangeAsync(userEmailTemplate);
             await _evolvedtaxContext.SaveChangesAsync();

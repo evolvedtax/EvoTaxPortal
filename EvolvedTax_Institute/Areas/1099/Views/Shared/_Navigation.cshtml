@@ -38,13 +38,13 @@
                     <img src="~/images/evolved_tax_mark_logo.png" width="50px" />
                 </div>
             </li>
-            <li class="@Html.IsSelected(controller: "W9Institute")">
-                <a class="left-nav-links" href="@Url.Action("Entities", "Institute", new {area = ""})"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Organization Summary</span></a>
+            <li class="@Html.IsSelected(controller: "OrganizationalSummary")">
+                <a class="left-nav-links" href="@Url.Action("Entities", "OrganizationalSummary", new {area = ""})"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Organization Summary</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "W8")">
                 <a href="#">
                     <i class="fa fa-wpforms fa-lg"></i>
-                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9(s)</span>
+                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9</span>
                     <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
                 </a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "W8", cssClass: "in")">
@@ -128,6 +128,25 @@
                 </li>
                 @*</ul>*@
             }
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="1042" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
+            </li>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
+            </li>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
+            </li>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
+            </li>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
+            </li>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
+            </li>
+            
             @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
             {
                 @*  <li class="@Html.IsSelected(controller: "Setting")">

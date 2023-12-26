@@ -16,6 +16,7 @@ namespace EvolvedTax.Business.Services.InstituteService
     {
         IQueryable<InstituteMasterResponse> GetMaster();
         IQueryable<InstituteEntitiesResponse> GetEntitiesByInstId(int InstId,int SubscriptionId=-1);
+        InstituteEntity GetEntityDataById(int entityId);
         IQueryable<InstituteClientResponse> GetClientByEntityId(int InstId, int EntityId);
         public IQueryable<InstituteClientResponse> GetClientByEntityIdAndFormName(int InstId, string FormName, int EntityId);
         List<InstituteClientResponse> GetClientInfoByClientId(int[] ClientId);
