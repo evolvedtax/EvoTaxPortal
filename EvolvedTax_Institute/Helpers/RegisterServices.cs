@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.CommonService;
+using EvolvedTax.Business.Services.Form1042Services;
 using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Business.Services.FormReport;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
@@ -122,6 +123,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IForm1099_SA_Service, Form1099_SA_Service>();
             services.AddScoped<IForm1099_SB_Service, Form1099_SB_Service>();
             services.AddScoped<ITrailAudit1099Service, TrailAudit1099Service>();
+            services.AddScoped<IForm1042_S_Service, Form1042_S_Service>();
             #endregion
 
             #region @@@[------Repository]

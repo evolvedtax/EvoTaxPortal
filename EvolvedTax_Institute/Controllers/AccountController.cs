@@ -596,7 +596,7 @@ namespace EvolvedTax_Institute.Controllers
                 HttpContext.Session.SetString("InstituteName", institute?.InstitutionName ?? "");
                 HttpContext.Session.SetString("ProfileImage", institute?.InstituteLogo ?? "");
                 HttpContext.Session.SetString("UserId", user.Id); 
-                return RedirectToAction("Entities", "Institute");
+                return RedirectToAction("Entities", "OrganizationalSummary");
            
             }
 

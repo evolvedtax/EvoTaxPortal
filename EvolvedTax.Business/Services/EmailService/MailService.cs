@@ -95,6 +95,7 @@ namespace EvolvedTax.Business.MailService
                     .Replace("{{InstituteName}}", email.InstituteName)
                     .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
                     .Replace("{{NameForInstitute}}", NameForInstitute)
+                    .Replace("{{ButtonLabel}}", "GET STARTED")
                     .Replace("{{link}}", string.Concat(URL, "?s=", EncryptionHelper.Encrypt(email.ClientEmailId), "&e=", EncryptionHelper.Encrypt(email.EntityId.ToString())));
                 try
                 {
@@ -509,18 +510,27 @@ namespace EvolvedTax.Business.MailService
             {
                 DeadLinedDate = currentDate.AddDays(Convert.ToDouble(Response.ReminderDays));
             }
+            var template = "";
+            var instEmailTemp = _evolvedtaxContext.InstituteEmailTemplate.Where(p => p.InstituteID == instituteId);
+            if (instEmailTemp.Any(p => p.TemplateName == AppConstants.ElectronicAcceptanceEmailTemplate))
+            {
+                var tempRequest = instEmailTemp.First(p => p.TemplateName == AppConstants.ClientEmailTemplate);
+                //template = string.Concat(AppConstants.SalutationTemplate, "<br><br>", tempRequest.CustomTemplate).Replace("{{linkButton}}", AppConstants.LinkTemplate);
+                template = tempRequest.CustomTemplate.Replace("{{linkButton}}", AppConstants.LinkTemplate);
+            }
             subject = "Request for Your Form 1099 Delivery Preference";
             var FromEmail = emailSetting.EmailDoamin;
             var FromPassword = emailSetting.Password;
             var Host = emailSetting.SMTPServer;
             var Port = emailSetting.SMTPPort;
-            body = AppConstants.SendLinkToRecipient
+            body = template
                .Replace("{{link}}",
                string.Concat(url, "?s=", EncryptionHelper.Encrypt(email), "&e=", EncryptionHelper.Encrypt(EntityId.ToString()), "&f=", EncryptionHelper.Encrypt(form), "&i=", EncryptionHelper.Encrypt(instituteId.ToString())))
                  .Replace("{{SupportEmailForInstitute}}", SupportEmailForInstitute)
+                 .Replace("{{ButtonLabel}}", "Click here")
                  .Replace("{{ClientName}}", ClientName)
                  .Replace("{{DeadLinedDate}}", DeadLinedDate.ToString("MM/dd/yyyy"))
-                    .Replace("{{NameForInstitute}}", NameForInstitute);
+                 .Replace("{{NameForInstitute}}", NameForInstitute);
             try
             {
                 MailMessage message = new MailMessage();

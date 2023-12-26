@@ -1,0 +1,1468 @@
+﻿@model InstituteClientViewModel
+@{
+    ViewData["Title"] = "Client";
+    Layout = "~/Views/Shared/_LayoutInstitute.cshtml";
+}
+<style>
+
+    .hide-counter::-webkit-inner-spin-button {
+        display: none;
+    }
+
+    .dataTables_filter {
+        /*position: absolute;
+                                                                                                                            top: 0;
+                                                                                                                            left: 15%;*/
+        padding: 0;
+        /*padding-right: 60%*/
+        text-align: left !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 200%;
+    }
+
+    .bootstrap-tagsinput {
+        width: 100%;
+        border-radius: 0.6rem;
+        border: 2px solid #929292;
+    }
+</style>
+<div class="wrapper wrapper-content animated fadeInRight" style="padding-bottom:0">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox" style="margin-bottom: 0px">
+                <div class="ibox-title">
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div>
+                                <label class="mr-2" style="margin:auto">Select Entity for Further Details</label>
+                                <select asp-items="ViewBag.EntitiesList" class="select2 form-control" id="changeEntity" style="width:107%">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 ml-5" style="padding-left: 100px">
+                            <form id="formUpdateEmailFrequency"
+                                  method="post"
+                                  data-ajax="true"
+                                  data-ajax-method="post"
+                                  data-ajax-mode="replace"
+                                  data-ajax-failure="COMMON.ajaxfailure"
+                                  data-ajax-loading="#ajax-loader"
+                                  data-ajax-success="ajaxsuccessUpdateEmailFrequency"
+                                  data-ajax-url="@Url.Action("UpdateEmailFrequency","Institute")">
+                                <div>
+                                    <label class="mr-2" style="margin:auto">Send E-mail Reminder After Every</label>
+                                    <div style="display:flex">
+                                        <input id="EntityIdFreq" name="EntityIdFreq" hidden />
+                                        <input id="hdnIsEnableEmailFrequency" value="@((bool)(ViewBag.IsEnableEmailFrequency ?? false) ? "true" : "false")" hidden />
+
+                                        <input min="0" type="number" id="EmailFrequency" data-toggle="tooltip" title="You need to uncheck 'Set e-mail reminder for all entities' from the Setting menu" name="EmailFrequency" value="@ViewBag.EmailFrequency" class="form-control hide-counter" style="width:15%; text-align:right" required />
+                                        <span class="ml-2 mr-2" style="margin:auto">Days</span>
+                                        <button type="button" id="submitEmFreq" class="btn btn-primary" data-placement="top">Save</button>
+                                        @*<span id="Infoicon"  class="ml-2 mr-2 fa fa-info-circle fa-lg" data-toggle="tooltip" data-original-title="You need to uncheck 'Set email reminder for all entity' from the Setting menu"></span>*@
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-md-3 mb-2 mr-5 pull-right">
+                            <div id="uploadDataDiv" hidden>
+                                <div>
+                                    <label class="mr-2" style="margin:auto;width:30%">Upload Data</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input id="uploadClients" type="file" class="custom-file-input" accept=".xlsx, .xls">
+                                            <label class="custom-file-label" for="uploadClients">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @{
+                            var userRole = ViewBag.UserRole as string;
+                        }
+                        @if (userRole != "Viewer")
+                        {
+                            <div class="">
+                                <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
+                                    <i class="fa fa-bars"></i>
+                                </button>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox ">
+                <div class="ibox-content mb-2">
+                    <div class="row">
+                        <div class="col-md-4 mb-2">
+                            <form id="formDeleteRecentRecord"
+                                  method="post"
+                                  data-ajax="true"
+                                  data-ajax-method="post"
+                                  data-ajax-mode="replace"
+                                  data-ajax-failure="COMMON.ajaxfailure"
+                                  data-ajax-loading="#ajax-loader"
+                                  data-ajax-success="ajaxsuccessRecentDelete"
+                                  data-ajax-url="@Url.Action("DeleteRecentRecordClient","Institute")">
+                                <div class="d-flex align-items-center">
+                                    <label for="timeInterval" class="mr-2">Delete Records Uploaded Within</label>
+                                    <select name="timeInterval" class="mr-2" style="width:fit-content">
+                                        <option value="15">15 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                    </select>
+                                    <button type="submit" style="margin-left: 10px" class="btn btn-danger">Delete Records</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    @* <div class="col-md-12 row">
+                    <div><input id="importData" type="button" class="btn btn-dark" value="Import Client Data" /></div>
+                    <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
+                    </div>*@
+                    <div class="row">
+                        <div class="table-container col-md-10">
+                            <div class="table-responsive show-container" id="maintable">
+                                @* <div class="form-group" style="margin-bottom:-2rem">
+                                <br/>
+                                <label for="pageLengthInput">Show</label>
+                                <input type="text" id="pageLengthInput" value="25" class="form-control" style="width: 50px; display: inline-block;">
+                                <label for="pageLengthInput">entries</label>
+                                </div>*@
+                                <table id="entity-table" class="table table-striped table-bordered table-hover dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
+                                            <th>Partner Name</th>
+                                            <th>Address</th>
+                                            <th hidden></th>
+                                            <th hidden></th>
+                                            <th hidden></th>
+                                            <th hidden></th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>Province (If Applicable)</th>
+                                            <th>Zip/Postal Code</th>
+                                            <th>Country</th>
+                                            <th>Phone Number</th>
+                                            <th>E-mail Address</th>
+                                            <th>Status</th>
+                                            <th>Form Completion Date</th>
+                                            <th>Form Name</th>
+                                            <th>Form Completed</th>
+                                            <th>Last Updated By</th>
+                                            <th>Last Updated On</th>
+                                            <th>Lock/Unlock</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.InstituteClientsResponse.Any())
+                                        {
+                                            foreach (var item in Model.InstituteClientsResponse)
+                                            {
+                                                string status = string.Empty;
+                                                string IsDuplicatedStyle = string.Empty;
+                                                @if (item.ClientStatus == AppConstants.ClientStatusFormSubmitted) { status = ""; }
+                                                //"disabled"; }
+                                                @if (item.IsDuplicated) { IsDuplicatedStyle = "style=color:red"; }
+                                                <tr id="@item.ClientId" @IsDuplicatedStyle>
+                                                    <td @IsDuplicatedStyle>
+                                                        <input type="checkbox" class="rowCheckbox" value="@item.ClientId" @status>
+                                                        @if (item.IsDuplicated)
+                                                        {
+                                                            <span class="fa fa-exclamation-triangle" data-toggle="tooltip" data-original-title="Duplicate Record"></span>
+                                                        }
+                                                    </td>
+                                                    <td @IsDuplicatedStyle>@string.Concat(item.PartnerName1," ", item.PartnerName2)</td>
+                                                    <td hidden>@item.PartnerName1</td>
+                                                    <td hidden>@item.PartnerName2</td>
+                                                    <td hidden>@item.Address1</td>
+                                                    <td hidden>@item.Address2</td>
+                                                    @*<td>@string.Concat(item.Address1," ", item.Address2,", ",item.City,", ",item?.State , item?.Province,", ",item?.Zip,", ",item?.Country)</td>*@
+                                                    <td>@string.Concat(item.Address1," ", item.Address2)</td>
+                                                    <td>@item.City</td>
+                                                    <td>@item.State</td>
+                                                    <td>@item.Province</td>
+                                                    <td>@item.Zip</td>
+                                                    <td>@item.Country</td>
+                                                    <td>@item.PhoneNumber</td>
+                                                    <td>@item.ClientEmailId</td>
+                                                    <td>@item.StatusName</td>
+                                                    <td>@item.ClientStatusDate?.ToString("MM-dd-yyyy")</td>
+                                                    <td>@string.Concat("Form"," ",item.FormName)</td>
+                                                    <td><a href="~/@item.FileName">@item.FileName</a></td>
+                                                    <td>@item.LastUpdatedByName</td>
+                                                    <td>@item.LastUpdatedOn?.ToString("MM-dd-yyyy")</td>
+                                                    <td class="text-center">
+                                                        @if (item?.IsLocked ?? false)
+                                                        {
+                                                            <span class="fa fa-lock"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="fa fa-unlock"></span>
+                                                        }
+                                                    </td>
+                                                    <td @IsDuplicatedStyle class="actions">
+                                                        @if (item.IsDuplicated)
+                                                        {
+                                                            <div class="dropdown">
+                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-bars"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <div class="dropdown-menu-horizontal">
+                                                                        <a class="dropdown-item save-row" href="javascript:void()" onclick="COMMON.confirmAlertActive('keep','KeepClienRecord','id=@item?.ClientId','')">Keep</a>
+                                                                        <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
+                                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClienRecord','id=@item?.ClientId','')">Delete</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="dropdown">
+                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-bars"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <div class="dropdown-menu-horizontal">
+                                                                        @if (item?.IsLocked ?? false)
+                                                                        {
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Unlock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'false'})">Unlock</a>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="@item?.ClientId">Edit</a>
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert('Are you sure, you want to delete this record?','DeleteClient','id=@item?.ClientId','')">Delete</a>
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlertActive('Lock','LockUnlockClient',{selectedValues:'@item?.ClientId',isLocked:'true'})">Lock</a>
+                                                                        }
+                                                                        @if (item?.ClientStatus != AppConstants.ClientStatusFormSubmitted)
+                                                                        {
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', {selectedValues:'@item?.ClientId'})">Send E-mail</a>
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        @if (userRole != "Viewer")
+                        {
+
+                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:2.7% ;border: 3px solid #ccc; border-radius:10px;">
+
+                                <div style="margin-top: 6px;">
+                                    <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
+                                    <h3>Shared with:</h3>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="" class="table">
+
+                                        @*<thead>
+                                    <tr>
+                                    <th></th>
+                                    <th></th>
+                                    </tr>
+                                    </thead>*@
+                                        <tbody>
+                                            @if (Model.SharedUsersResponse.Any())
+                                            {
+                                                foreach (var item in Model.SharedUsersResponse)
+                                                {
+                                                    <tr style="height:70px">
+                                                        <td>@item.UserName <br> @item.Role</td>
+                                                        <td class="actions">
+                                                            <div class="dropdown">
+                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <span class="fa fa-ellipsis-h"></span>
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <div class="dropdown-menu-horizontal">
+                                                                        @foreach (var role in ViewBag.AvailableRoles)
+                                                                        {
+                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', { Id: '@item?.Id', role: '@role' })">
+                                                                                @if (item.Role == role)
+                                                                                {
+                                                                                    <span class="fa fa-check"></span> @role
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    @role
+                                                                                }
+                                                                            </a>
+
+                                                                        }
+                                                                        <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', {Id:'@item?.Id', role: 'Remove'})">Remove</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div id="dupplication-ibox" class="ibox-content" hidden>
+                    <h3>Duplicate Records</h3>
+                    <div class="table-responsive">
+                        <table id="entity-table-dupplication" class="table table-striped table-bordered table-hover dataTables-example-1">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>Partner Name</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Province (If Applicable)</th>
+                                    <th>Zip/Postal Code</th>
+                                    <th>Country</th>
+                                    <th>Phone Number</th>
+                                    <th>E-mail Address</th>
+                                    <th>Status</th>
+                                    <th>Form Completion Date</th>
+                                    <th>Form Name</th>
+                                    <th>Form Completed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Add Modal -->
+<div class="modal inmodal" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add New Investor</h4>
+            </div>
+            <div class="modal-body">
+                <form id="addForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessAdd"
+                      data-ajax-url="@Url.Action("AddClient","Institute")">
+                    <input id="entityId" asp-for="InstituteClientsRequest.EntityId" hidden />
+                    <input id="entityName" asp-for="InstituteClientsRequest.EntityName" hidden />
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PartnerName1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PartnerName2" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">E-mail Address<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.ClientEmailId" required>
+                                <span asp-validation-for="InstituteClientsRequest.ClientEmailId"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="country">Country<span class="text-danger">*</span></label>
+                                <select asp-items="ViewBag.CountriesList" asp-for="InstituteClientsRequest.Country" onChange="ShowHideProvince(this)" required>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address1">Address Line 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Address1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address2">Address Line 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Address2" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="city">City<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.City" required>
+                            </div>
+                        </div>
+                        <div id="stateDiv" class="col-md-6 stateDiv">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select class="state" asp-items="ViewBag.StatesList" asp-for="InstituteClientsRequest.State">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
+                            <div class="form-group">
+                                <label for="province">Province</label>
+                                <input type="text" class="form-control province" asp-for="InstituteClientsRequest.Province" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.Zip" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber">PhoneNumber</label>
+                                <input type="text" class="form-control" asp-for="InstituteClientsRequest.PhoneNumber" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveAddBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Edit Modal -->
+<div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Edit Investor</h4>
+            </div>
+            <div class="modal-body">
+                <!-- Form for editing row data -->
+                <form id="regForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccess"
+                      data-ajax-url="@Url.Action("UpdateClient","Institute")">
+                    <!-- Add input fields here for each column you want to edit -->
+                    <input id="clientId" asp-for="InstituteClientsRequest.ClientId" hidden />
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="partnerName1" asp-for="InstituteClientsRequest.PartnerName1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="partnerName1">Partner Name 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="partnerName2" asp-for="InstituteClientsRequest.PartnerName2" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ClientEmailId">E-mail Address<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="ClientEmailId" asp-for="InstituteClientsRequest.ClientEmailId" required>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="country">Country<span class="text-danger">*</span></label>
+                                <select id="country" asp-items="ViewBag.CountriesList" asp-for="InstituteClientsRequest.Country" onChange="ShowHideProvince(this)" required>
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address1">Address Line 1<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="address1" asp-for="InstituteClientsRequest.Address1" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="address2">Address Line 2<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="address2" asp-for="InstituteClientsRequest.Address2" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="city">City<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="city" asp-for="InstituteClientsRequest.City" required>
+                            </div>
+                        </div>
+                        <div id="stateDiv" class="col-md-6 stateDiv">
+                            <div class="form-group">
+                                <label for="state">State</label>
+                                <select id="state" class="state" asp-items="ViewBag.StatesList" asp-for="InstituteClientsRequest.State">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="provinceDiv" class="col-md-6 provinceDiv" hidden>
+                            <div class="form-group">
+                                <label for="province">Province</label>
+                                <input type="text" class="form-control province" id="province" asp-for="InstituteClientsRequest.Province" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label id="lblZipCode" class="lblZipCode" for="zip">Zip</label>
+                                <input type="text" class="form-control" id="zip" asp-for="InstituteClientsRequest.Zip" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber">PhoneNumber</label>
+                                <input type="text" class="form-control" id="phoneNumber" asp-for="InstituteClientsRequest.PhoneNumber" required>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Share Modal -->
+<div class="modal inmodal" id="shareModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 id="shareModelHeader" class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="shareForm"
+                      method="post"
+                      data-ajax="true"
+                      data-ajax-method="post"
+                      data-ajax-mode="replace"
+                      data-ajax-failure="COMMON.ajaxfailure"
+                      data-ajax-loading="#ajax-loader"
+                      data-ajax-success="ajaxsuccessShare"
+                      data-ajax-url="@Url.Action("InviteUserForEntity","Account")">
+                    <input id="entityshareId" name="EntityId" hidden />
+                    <input id="entityshareName" name="EntityName" hidden />
+                    <input id="emailAddresses" name="emailAddresses" hidden />
+                    <div class="col-md-12">
+                        <div>
+                            <label>Invite People</label>
+                            <input class="tagsinput form-control" type="email" placeholder="Enter e-mail address" />
+                        </div>
+                        <div class="row">
+                            <div class="mt-2 col-md-4">
+                                <label>Role</label>
+                                <select asp-items="ViewBag.Roles" name="role" class="selec2">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            @* <div class="mt-2 col-md-8">
+                            <label>Subscription</label>
+                            <select asp-items="ViewBag.FormNameList" class="select2 form-control" id="FormNameList" multiple="multiple">
+                            </select>
+                            </div>*@
+                        </div>
+                        <div class="mt-4">
+                            <label>Message (optional)</label>
+                            <textarea class="form-control" placeholder="Add a message"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveShareBtn">Share</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        // Upgrade button class name
+        $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn btn-white btn-sm';
+
+        function CheckIsEmailFrequencyEditable() {
+            var $submitEmFreq;
+            var isEnableEmailFrequency = $('#hdnIsEnableEmailFrequency').val() === "false";
+            var $emailFrequency = $('#EmailFrequency');
+            $submitEmFreq = $('#submitEmFreq');
+
+
+            if (!isEnableEmailFrequency) {
+                $emailFrequency.prop('readonly', true);
+                $submitEmFreq.prop('disabled', true);
+
+            }
+            else {
+                //$('#Infoicon').hide();
+                $('input[name="EmailFrequency"]').removeAttr('data-original-title');
+            }
+        }
+        function HideAndShowShareOption() {
+            var toggleButton = document.getElementById("toggleButton");
+            var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+            var maintableWrapper = $("#maintable");
+
+            if (toggleButton != null) {
+                toggleButton.addEventListener("click", function () {
+                    if (sharedUsersContainer.style.display === "none") {
+                        toggleButton.title = "Hide Users";
+                        sharedUsersContainer.style.display = "block";
+                        maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+                        maintableWrapper.animate({ width: '97%' }, 300);
+                    } else {
+                        maintableWrapper.unwrap();
+                        sharedUsersContainer.style.display = "none";
+                        maintableWrapper.animate({ width: '100%' }, 300, function () {
+                            toggleButton.title = "Show Users";
+                        });
+                    }
+                });
+            }
+        }
+
+        //function HideAndShowShareOption() {
+
+        //    var toggleButton = document.getElementById("toggleButton");
+        //    var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+        //    var maintableWrapper = $("#maintable");
+
+        //    if (toggleButton != null) {
+
+        //        toggleButton.addEventListener("click", function () {
+
+        //            if (sharedUsersContainer.style.display === "none") {
+        //                toggleButton.title = "Hide Users";
+        //                maintableWrapper.animate({ width: '97%' }, 300, function () {
+        //                    sharedUsersContainer.style.display = "block";
+        //                    maintableWrapper.wrap("<div class='table-container col-md-10'></div>");
+        //                });
+        //            } else {
+        //                maintableWrapper.unwrap();
+        //                sharedUsersContainer.style.display = "none";
+        //                maintableWrapper.animate({ width: '100%' }, 300, function () {
+        //                    toggleButton.title = "Show Users";
+        //                });
+        //            }
+        //        });
+        //    }
+        //}
+
+
+        $(document).ready(function () {
+
+            HideAndShowShareOption();
+            $(document).on('click', 'a[class^="dt-button dropdown-item"]', function (event) {
+                event.preventDefault(); // Prevent the default anchor behavior
+                var buttonText = $(this).find('span').text().trim();
+
+                var searchParams = new URLSearchParams(window.location.search);
+                var entityId = searchParams.get('EntityId');
+                var InstituteId = searchParams.get('InstituteId');
+
+                $.ajax({
+                    url: '/Institute/LogButtonClicked',
+                    type: 'POST',
+                    data: { buttonText: buttonText, entityId: entityId, InstituteId: InstituteId },
+                    success: function () {
+                        console.log('Button text saved to audit log');
+                    },
+                    error: function () {
+                        console.error('Error saving button text to audit log');
+                    }
+                });
+            });
+
+
+            var userRole = "@ViewBag.UserRole";
+
+            // Check if the userRole is "Viewer"
+            if (userRole === "Viewer") {
+                // Remove the parent div with id "maintable"
+                $("#maintable").unwrap();
+            }
+
+
+
+
+            $("#openModalButton").click(function () {
+                //$('#shareModelHeader').html('Share access to <br/> \'' + $("#changeEntity option:selected").text().trim() + '\'');
+                var entityName = $("#changeEntity option:selected").text().trim();
+                $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
+                $("#shareModal").modal("show");
+            });
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+            $('.tagsinput').on('itemAdded', function (event) {
+                var email = event.item.trim();
+                if (!isValidEmail(email)) {
+                    $(this).tagsinput('remove', email);
+                    COMMON.AlertSuccessMessage("Entity already shared", "This entity is already shared with entered user.", "error")
+                }
+            });
+
+            function isValidEmail(email) {
+                var entityId = $('#changeEntity').val();
+                return COMMON.doAjaxGetWithJSONResponse('@Url.Action("ValidateEmailDomainAddressOnInvitation","Account")', { SUEmailAddress: email, EntityId: entityId })
+            }
+
+            $('[data-toggle="tooltip"]').tooltip({
+                placement: 'top'
+            });
+            CheckIsEmailFrequencyEditable();
+
+            $("select").select2({
+                theme: 'bootstrap4',
+                placeholder: "Select One",
+                //allowClear: true
+            });
+            $('.btn-menu-toggle').click(function () {
+                var obj = $('.dt-button-collection');
+            });
+            $('.edit-row').click(function () {
+                // Get the row ID from the data attribute
+                var rowId = $(this).data('row-id');
+
+                // Retrieve the row data based on the ID
+                var rowData = getRowData(rowId); // Implement your own function to retrieve the row data
+
+
+                // Populate the form fields with the row data
+                populateModalFields(rowData);
+            });
+
+            function getRowData(rowId) {
+                var row = $("#" + rowId); // Select the row by its ID
+                var rowData = {
+                    ClientId: rowId,
+                    PartnerName1: row.find("td:nth-child(3)").text(),
+                    PartnerName2: row.find("td:nth-child(4)").text(),
+                    Address1: row.find("td:nth-child(5)").text(),
+                    Address2: row.find("td:nth-child(6)").text(),
+                    City: row.find("td:nth-child(8)").text(),
+                    State: row.find("td:nth-child(9)").text(),
+                    Province: row.find("td:nth-child(10)").text(),
+                    Zip: row.find("td:nth-child(11)").text(),
+                    Country: row.find("td:nth-child(12)").text(),
+                    PhoneNumber: row.find("td:nth-child(13)").text(),
+                    ClientEmailId: row.find("td:nth-child(14)").text(),
+                    Status: row.find("td:nth-child(15)").text(),
+                };
+
+                return rowData;
+            }
+            // Function to populate modal input fields with row data
+            function populateModalFields(rowData) {
+                $('#clientId').val(rowData.ClientId);
+                $('#partnerName1').val(rowData.PartnerName1);
+                $('#partnerName2').val(rowData.PartnerName2);
+                $('#address1').val(rowData.Address1);
+                $('#address2').val(rowData.Address2);
+                $('#city').val(rowData.City);
+                $('#state').val(rowData.State).change();
+                $('#province').val(rowData.Province);
+                $('#zip').val(rowData.Zip);
+                $('#country').val(rowData.Country).change();
+                $('#phoneNumber').val(rowData.PhoneNumber);
+                $('#ClientEmailId').val(rowData.ClientEmailId);
+
+                if (rowData.Status != 'Active') {
+                    $('#ClientEmailId').prop('readonly', true);
+                }
+                else {
+                    $('#ClientEmailId').prop('readonly', false);
+                }
+
+            }
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            $('.dataTables-example').DataTable({
+                "order": [[0, "desc"]],
+                pageLength: 10,
+                fixedColumns: {
+                    left: 2,
+                    right: 1
+                },
+                fixedHeader: true,
+                scrollX: true,
+                //dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: '<i class="fa fa-ellipsis-h"></i>',
+                        className: 'btn-menu-toggle',
+                        buttons: [
+                            {
+                                text: '<i class="fa fa-download"></i> Download New Partner Template',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    let url = 'DownloadExcel';
+                                    let params = { fileType: '@AppConstants.Client' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteClientTemplate');
+                                }
+                            },
+                            {
+                                extend: 'excel',
+                                title: '',
+                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                className: 'btn-excel'
+                            },
+                            {
+                                text: '<i class="fa fa-upload"></i> Import New Partner Template',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    $('#uploadDataDiv').prop('hidden', false);
+                                    document.getElementById("uploadClients").click();
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Trash',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                                }
+                            },
+                            //{
+                            //    text: '<i class="fa fa-envelope"></i> Send Email',
+                            //    className: 'email-btn',
+                            //    action: function (e, dt, button, config) {
+                            //        var selectedValues = [];
+                            //        $('.rowCheckbox:checked').each(function () {
+                            //            selectedValues.push($(this).val());
+                            //        });
+
+                            //        if (selectedValues.length === 0) {
+                            //            COMMON.notification(3, 'No row selected. Please select at least one row.');
+                            //            return;
+                            //        }
+                            //        swal({
+                            //            title: "Sending Email...",
+                            //            text: "Email will send to the clients awaited for form submission",
+                            //            type: "info",
+                            //            showCancelButton: false,
+                            //            confirmButtonColor: "#1ab394",
+                            //            confirmButtonText: "Ok",
+                            //            //cancelButtonText: "Cancel"
+                            //        },
+                            //            function () {
+                            //                let params = { selectedValues: selectedValues }
+                            //                COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //            });
+                            //        //let params = { selectedValues: selectedValues }
+                            //        //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                            //        //$('.loading').show();
+
+                            //    }
+                            //},
+                            {
+                                text: '<i class="fa fa-unlock"></i> Unlock All Partners',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'false' })
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-lock"></i> Lock All Partners',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Delete Selected',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Delete', 'DeleteMultipleClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
+                            }
+                        ],
+                    },
+                    {
+                        text: 'New <i class="fa fa-plus"></i>',
+                        className: 'new-btn',
+                        action: function (e, dt, button, config) {
+                            $("#addModal").modal("show");
+                        }
+                    },
+                    //{
+                    //    text: 'Share <i class="fa fa-share"></i>',
+                    //    className: 'email-btn',
+                    //    action: function (e, dt, button, config) {
+                    //        $('#shareModelHeader').html('Share \'' + $("#changeEntity option:selected").text() + '\'');
+                    //        $("#shareModal").modal("show");
+                    //    }
+                    //},
+                ],
+                //"drawCallback": function () {
+                //    var pageInfo = this.api().page.info();
+                //    $('#pageLengthInput').val(pageInfo.length);
+                //},
+                initComplete: function () {
+
+                    //var api = this.api();
+                    //$('#pageLengthInput').on('keyup change', function () {
+                    //    var value = parseInt($(this).val(), 10);
+                    //    if (!isNaN(value)) {
+                    //        api.page.len(value).draw();
+                    //    }
+                    //});
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+                        dropdown.addClass('center-dropdown');
+                    });
+                    //this.api()
+                    //    .columns([1, 13, 16])
+                    //    .every(function () {
+                    //        let column = this;
+                    //        let title = column.header().textContent;
+
+                    //        // Create input element
+                    //        let input = document.createElement('input');
+                    //        input.placeholder = title;
+                    //        column.header().replaceChildren(input);
+
+                    //        // Event listener for user input
+                    //        input.addEventListener('keyup', () => {
+                    //            if (column.search() !== input.value) {
+                    //                column.search(input.value).draw();
+                    //            }
+                    //        });
+
+                    //        // Event listener for click on the input element
+                    //        input.addEventListener('click', (event) => {
+                    //            event.stopPropagation();
+                    //        });
+                    //    });
+                }
+            });
+            $('#share-table').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    {
+                        extend: 'collection',
+                        text: '<i class="fa fa-ellipsis-h"></i>',
+                        className: 'btn-menu-toggle',
+                        buttons: [
+                            {
+                                text: '<i class="fa fa-download"></i> Download New Partner Template',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    let url = 'DownloadExcel';
+                                    let params = { fileType: '@AppConstants.Client' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteClientTemplate');
+                                }
+                            },
+                            {
+                                extend: 'excel',
+                                title: 'EvolvedTax',
+                                text: '<i class="fa fa-file-excel-o"></i> Export to Excel',
+                                className: 'btn-excel'
+                            },
+                            {
+                                text: '<i class="fa fa-upload"></i> Import Partner Data',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    $('#uploadDataDiv').prop('hidden', false);
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-trash"></i> Trash',
+                                className: 'btn-recycle-bin',
+                                action: function (e, dt, button, config) {
+                                    window.location.href = '/Institute/ClientsRecyleBin?entityId=' + $('#changeEntity').val();
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-envelope"></i> Send Email',
+                                className: 'email-btn',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+                                    swal({
+                                        title: "Sending E-mail...",
+                                        text: "E-mail will send to the clients awaited for form submission",
+                                        type: "info",
+                                        showCancelButton: false,
+                                        confirmButtonColor: "#1ab394",
+                                        confirmButtonText: "Ok",
+                                        //cancelButtonText: "Cancel"
+                                    },
+                                        function () {
+                                            let urlParams = new URLSearchParams(window.location.search);
+                                            let params = { selectedValues: selectedValues }
+                                            COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                                        });
+                                    //let params = { selectedValues: selectedValues }
+                                    //COMMON.doSendEmailAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+                                    //$('.loading').show();
+
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-unlock"></i> Unlock All',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Unlock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'false' })
+                                }
+                            },
+                            {
+                                text: '<i class="fa fa-lock"></i> Lock All',
+                                className: 'btn-imp-data',
+                                action: function (e, dt, button, config) {
+                                    var selectedValues = [];
+                                    $('.rowCheckbox:checked').each(function () {
+                                        selectedValues.push($(this).val());
+                                    });
+
+                                    if (selectedValues.length === 0) {
+                                        COMMON.notification(3, 'No row selected. Please select at least one row.');
+                                        return;
+                                    }
+
+                                    //$('.loading').show();
+                                    // Send the selectedValues to the controller using AJAX or a form submission
+                                    COMMON.confirmAlertActiveAll('Lock', 'LockUnlockClient', { selectedValues: selectedValues, isLocked: 'true' })
+                                }
+                            }
+                        ],
+                    },
+                    {
+                        text: 'New <i class="fa fa-plus"></i>',
+                        className: 'new-btn',
+                        action: function (e, dt, button, config) {
+                            $("#addModal").modal("show");
+                        }
+                    },
+                    {
+                        text: 'Share <i class="fa fa-share"></i>',
+                        className: 'email-btn',
+                        action: function (e, dt, button, config) {
+                            var entityName = $("#changeEntity option:selected").text().trim();
+                            $('#shareModelHeader').html('Share access to<br/><span style="display: block; text-align: center; margin-left: -23px">\'' + entityName + '\'</span>');
+                            $("#shareModal").modal("show");
+                        }
+                    },
+                ],
+                //"drawCallback": function () {
+                //    var pageInfo = this.api().page.info();
+                //    $('#pageLengthInput').val(pageInfo.length);
+                //},
+                initComplete: function () {
+
+                    //var api = this.api();
+                    //$('#pageLengthInput').on('keyup change', function () {
+                    //    var value = parseInt($(this).val(), 10);
+                    //    if (!isNaN(value)) {
+                    //        api.page.len(value).draw();
+                    //    }
+                    //});
+                    //$('.dataTables_length').hide(); // Hide the original page length dropdown
+                    $('.btn-menu-toggle').attr('data-toggle', 'tooltip').attr('data-placement', 'top').attr('data-original-title', 'Menu').tooltip();
+                    // Add custom CSS class to the dropdown list container
+                    $('.btn-menu-toggle').on('click', function () {
+                        var dropdown = $(this).siblings('.dt-button-collection');
+
+                        dropdown.addClass('center-dropdown');
+                    });
+                    //this.api()
+                    //    .columns([1, 13, 16])
+                    //    .every(function () {
+                    //        let column = this;
+                    //        let title = column.header().textContent;
+
+                    //        // Create input element
+                    //        let input = document.createElement('input');
+                    //        input.placeholder = title;
+                    //        column.header().replaceChildren(input);
+
+                    //        // Event listener for user input
+                    //        input.addEventListener('keyup', () => {
+                    //            if (column.search() !== input.value) {
+                    //                column.search(input.value).draw();
+                    //            }
+                    //        });
+
+                    //        // Event listener for click on the input element
+                    //        input.addEventListener('click', (event) => {
+                    //            event.stopPropagation();
+                    //        });
+                    //    });
+                }
+            });
+            $('#importData').click(function () {
+                $('#uploadDataDiv').prop('hidden', false);
+            });
+
+            $('#sendEmail').click(function () {
+                var selectedValues = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+
+                if (selectedValues.length === 0) {
+                    COMMON.notification(3, 'No row selected. Please select at least one row.');
+                    return;
+                }
+
+                $('.loading').show();
+                // Send the selectedValues to the controller using AJAX or a form submission
+                let params = { selectedValues: selectedValues }
+                COMMON.doAjaxPostWithJSONResponse('/Institute/SendEmail', params);
+            });
+            // Select All checkbox
+            $('#selectAll').change(function () {
+                $('.rowCheckbox:not(:disabled)').prop('checked', $(this).prop('checked'));
+                $('.email-btn').text('Send E-mail to All');
+                var selectedValues = [];
+                $('.rowCheckbox:checked').each(function () {
+                    selectedValues.push($(this).val());
+                });
+                if (selectedValues.length === 0) {
+                    $('.email-btn').text('Send E-mail');
+                }
+            });
+
+            // Individual row checkbox
+            $('.rowCheckbox').change(function () {
+                if ($('.rowCheckbox:checked').length == $('.rowCheckbox').length) {
+                    $('#selectAll').prop('checked', true);
+                    $('.email-btn').text('Send E-mail to All');
+                } else {
+                    $('#selectAll').prop('checked', false);
+                    $('.email-btn').text('Send E-mail to Selected');
+                    var selectedValues = [];
+                    $('.rowCheckbox:checked').each(function () {
+                        selectedValues.push($(this).val());
+                    });
+                    if (selectedValues.length === 0) {
+                        $('.email-btn').text('Send E-mail');
+                    }
+                }
+            });
+
+            $('#changeEntity').change(function () {
+                let entityId = $('#changeEntity').val();
+                let params = { entityId: entityId };
+                let response = COMMON.doAjaxGetWithJSONResponse('/Institute/ChangeEntity', params);
+                $('#EmailFrequency').val(response.EmailFrequency);
+                var sharedUsersContainer = document.getElementById("sharedUsersContainer");
+                var maintableWrapper = $("#maintable");
+                debugger
+                if (entityId === "0") {
+                    sharedUsersContainer.style.display = "none";
+                } else {
+                    sharedUsersContainer.style.display = "block";
+                }
+                // Clear the existing table rows
+                let dataTable = $('#entity-table').DataTable();
+                dataTable.clear().draw();
+
+                // Iterate over the response data and populate the table
+                $.each(response.Data, function (index, item) {
+                    let ClientStatus = '';
+                    let IsDuplicatedStyle = '';
+                    if (item.IsDuplicated == true) {
+                        IsDuplicatedStyle = "style=color:red";
+                    }
+                    if (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') {
+                        //ClientStatus = 'disabled';
+                    }
+                    let status = '';
+                    if (item.ClientStatus == '@AppConstants.ClientStatusActive') {
+                        status = '<span class="fa fa-unlock"></span>';
+                    } else {
+                        status = '<span class="fa fa-lock"></span>';
+                    }
+                    let newRow = $('<tr id="' + item.ClientId + '"' + IsDuplicatedStyle + '>').append(
+                        $('<td ' + IsDuplicatedStyle + '>').html('<input type="checkbox" class="rowCheckbox" value="' + item.ClientId + '" ' + ClientStatus + '>'),
+                        $('<td ' + IsDuplicatedStyle + '>').text(item.PartnerName1 + ' ' + item.PartnerName2),
+                        $('<td hidden>').text(item.PartnerName1),
+                        $('<td hidden>').text(item.PartnerName2),
+                        $('<td hidden>').text(item.Address1),
+                        $('<td hidden>').text(item.Address2),
+                        $('<td>').text(item.Address1 + ' ' + item.Address2),
+                        $('<td>').text(item.City),
+                        $('<td>').text(item.State),
+                        $('<td>').text(item.Province),
+                        $('<td>').text(item.Zip),
+                        $('<td>').text(item.Country),
+                        $('<td>').text(item.PhoneNumber),
+                        $('<td>').text(item.ClientEmailId),
+                        $('<td>').text(item.StatusName),
+                        $('<td>').text(item.ClientStatusDate ? COMMON.GetDateMMddyyyFormat(item.ClientStatusDate) : ''),
+                        $('<td>').text('Form ' + item.FormName),
+                        $('<td>').html('<a href="~/' + item.FileName + '">' + item.FileName + '</a>'),
+                        $('<td>').text(item.LastUpdatedByName),
+                        $('<td>').text(item.LastUpdatedOn ? COMMON.GetDateMMddyyyFormat(item.LastUpdatedOn) : ''),
+                        $('<td class="text-center">').append(item.IsLocked ? '<span class="fa fa-lock"></span>' : '<span class="fa fa-unlock"></span>'),
+                        $('<td class="actions" ' + IsDuplicatedStyle + '>').append(
+                            $('<div class="dropdown">').append(
+                                $('<button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">').html('<span class="fa fa-bars"></span>'),
+                                $('<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">').append(
+                                    $('<div class="dropdown-menu-horizontal">').append(
+                                        (item?.IsLocked ?? false) ?
+                                            '' :
+                                            ($('<a class="dropdown-item edit-row" href="javascript:void()" data-toggle="modal" data-target="#editModal" data-row-id="' + item?.ClientId + '">').text('Edit'),
+                                                $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.confirmAlert(\'Are you sure, you want to delete this record?\',\'DeleteClient\',\'id=' + item?.ClientId + '\',\'\')">').text('Delete')),
+                                        (item.ClientStatus == '@AppConstants.ClientStatusFormSubmitted') ?
+                                            '' :
+                                            $('<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse(\'Institute /SendEmail\', {selectedValues:\'' + item?.ClientId + '\'})">').text('Send E-mail')
+                                    )
+                                )
+                            )
+                        )
+                    );
+                    dataTable.row.add(newRow);
+                });
+
+                // Draw the updated DataTable
+                dataTable.draw();
+            });
+
+            // Get the file input element
+            var fileInput = document.getElementById('uploadClients');
+            // Add an event listener to the file input
+            fileInput.addEventListener('change', uploadData);
+            function uploadData(event) {
+                debugger;
+                let entityId = $('#changeEntity').val();
+                let entityName = $('#changeEntity option:selected').text().trim();
+                COMMON.uploadFile(event, '/Institute/uploadClients', { entityId, entityName });
+                $('#changeEntity').change();
+            }
+            bsCustomFileInput.init();
+        });
+        $('#saveBtn').click(function () {
+            let form = $('#regForm');
+            if (form.valid()) {
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccess(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Data is updated");
+            } else {
+                COMMON.notification(2, "");
+            }
+            $("#editModal").modal("hide");
+            window.location.reload();
+        }
+        $('#saveAddBtn').click(function () {
+            let form = $('#addForm');
+            if (form.valid()) {
+                $('#entityId').val($('#changeEntity').val());
+                $('#entityName').val($('#changeEntity option:selected').text());
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessAdd(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, response.Message);
+                $("#addModal").modal("hide");
+                window.location.reload();
+            } else {
+                COMMON.notification(2, response.Message);
+            }
+
+        }
+        $('#saveShareBtn').click(function () {
+            let form = $('#shareForm');
+            if (form.valid()) {
+                $('#entityshareId').val($('#changeEntity').val());
+                $('#entityshareName').val($('#changeEntity option:selected').text());
+                var emails = [];
+                $(".tag.label-primary").each(function () {
+                    emails.push($(this).text());
+                });
+                $('#emailAddresses').val(JSON.stringify(emails));
+                form.submit();
+                $("#shareModal").modal("hide");
+            }
+            return false;
+        });
+        function ajaxsuccessShare(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, response.Message);
+                $("#shareModal").modal("hide");
+                //window.location.reload();
+            } else {
+                COMMON.notification(2, response.Message);
+            }
+
+        }
+        $('#submitEmFreq').click(function () {
+            let form = $('#formUpdateEmailFrequency');
+            if (form.valid()) {
+                $('#EntityIdFreq').val($('#changeEntity').val());
+                form.submit();
+            }
+            return false;
+        });
+        function ajaxsuccessUpdateEmailFrequency(response) {
+            if (response.Status == true) {
+                COMMON.notification(1, "Data is updated");
+            } else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        function ajaxsuccessRecentDelete(response) {
+            if (response.Status == true && response.ErrorStatus == false) {
+                COMMON.notification(1, response.Message);
+                window.location.reload();
+            }
+            else if (response.Status == true && response.ErrorStatus == true) {
+                COMMON.notification(1, response.Message);
+            }
+            else {
+                COMMON.notification(2, "Something went wrong");
+            }
+        }
+        function ShowHideProvince(obj) {
+            if (obj.value == 'United States') {
+                $('.provinceDiv').prop('hidden', true);
+                $('.province').val('');
+                $('.stateDiv').prop('hidden', false);
+                $('.lblZipCode').text('Zip Code').append(`<span class="text-danger"> *</span>`);
+            } else {
+                $('.provinceDiv').prop('hidden', false);
+                $('.stateDiv').prop('hidden', true);
+                $('.state').val(1);
+                $('.lblZipCode').text('Zip/Postal Code').append(`<span class="text-danger"> *</span>`);
+            }
+        }
+    </script>
+    }

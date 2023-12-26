@@ -248,7 +248,6 @@ var COMMON = (function () {
         return response;
     };
     COMMON.ajaxfailure = function (response) {
-        debugger
         COMMON.notification(2, 'Unable to process your request.');
     };
 

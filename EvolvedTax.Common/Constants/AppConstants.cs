@@ -30,6 +30,7 @@ namespace EvolvedTax.Common.Constants
 
         //Email Template Names
         public const string ClientEmailTemplate = "ClientEmailTemplate";
+        public const string ElectronicAcceptanceEmailTemplate = "ElectronicAcceptanceEmailTemplate";
 
         public const short ClientStatusActive = 1;
         public const short ClientStatusEmailSent = 2;
@@ -125,6 +126,14 @@ namespace EvolvedTax.Common.Constants
         public const string FormSubscription_w8_w9 = @"1";
 
         public const string FormSubscription_1099 = @"2";
+        //----------1042 TEMPLATES----------//
+        public const string Form1042STemplateFileName = @"f1042s.pdf";
+
+        public const string Form1042SExcelTemplate = "Form1042STemplate.xlsx";
+
+        public const string Form1042S = @"Form1042S";
+
+        public const string FormSubscription_1042 = @"1002";
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";
@@ -350,7 +359,7 @@ Regards,
                                                         <v:roundrect xmlns:v=""urn:schemas-microsoft-com:vml"" xmlns:w=""urn:schemas-microsoft-com:office:word"" href=""{{link}}"" style=""height: 40px; v-text-anchor: middle; width: 200px;"" arcsize=""10%"" stroke=""f"" fillcolor=""#1ab394"">
                                                           <w:anchorlock/>
                                                           <center style=""color: #ffffff; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold;"">
-                                                            GET STARTED
+                                                            {{ButtonLabel}}
                                                           </center>
                                                         </v:roundrect>
                                                       </td>
@@ -362,7 +371,7 @@ Regards,
                                                     <tbody><tr>
                                                       <td align="" center""="" bgcolor="" #1ab394""="" style="" border-radius:="" 4px;""="">
                                                         <a href="" {{link}}""="" target="" _blank""="" style="" font-size:="" 16px;="" font-family:="" arial,="" sans-serif;="" color:="" #ffffff;="" text-decoration:="" none;="" display:="" inline-block;="" padding:="" 10px="" 20px;""="">
-                                                          GET STARTED
+                                                          {{ButtonLabel}}
                                                         </a>
                                                       </td>
                                                     </tr>
@@ -432,7 +441,27 @@ Regards,
      "<p>Your cooperation in this matter is greatly appreciated, as it will help us streamline our processes and better serve your needs during this tax season.</p>\n" +
      "<p>Thank you for your continued collaboration, and we look forward to assisting you with your Form 1099 delivery.</p>\n" +
      "<p>Regards,<br/>{{NameForInstitute}}</p>";
-
+        public static string ElectronicAcceptanceDefaultTemp = @"<p>Dear {{ClientName}},</p>
+<br><br>
+<p>I hope this message finds you well. As the tax season approaches, we want to ensure a smooth and efficient process for our valued associates and contractors. To this end, we are reaching out to inquire about your preferred method of receiving your Form 1099.</p>
+<br><br>
+<p>You have the option to receive your Form 1099 electronically via email or in the traditional paper format through regular mail. To make your choice, please click on the link provided below, which will direct you to an EvoForms, secure platform where you can specify your delivery preference:</p>
+<br><br>
+{{linkButton}}
+<br><br>
+<p>We understand that privacy and security are paramount when dealing with sensitive tax-related documents. Please rest assured that we have taken every precaution to safeguard your information. Our electronic delivery method is secure and ensures timely access to your tax documents.</p>
+<br><br>
+<p>However, if you prefer to receive a hard copy via mail, we will promptly send it to the address on file, so please make sure your contact information is up to date. You can update your address information by contacting our HR or Finance team if needed.</p>
+<br><br>
+<p>To ensure that your Form 1099 is delivered according to your preference, please make your selection via the provided link by {{DeadLinedDate}}.</p>
+<br><br>
+<p>If you have any questions or concerns regarding this process or require assistance with your choice, please do not hesitate to contact our dedicated support team at {{SupportEmailForInstitute}}.</p>
+<br><br>
+<p>Your cooperation in this matter is greatly appreciated, as it will help us streamline our processes and better serve your needs during this tax season.</p>
+<br><br>
+<p>Thank you for your continued collaboration, and we look forward to assisting you with your Form 1099 delivery.</p>
+<br><br>
+<p>Regards,<br/>{{NameForInstitute}}</p>";
 
         public static string RequestForChangeInstituteName = @"Dear Administrator(s), 
                                                         <br /><br />

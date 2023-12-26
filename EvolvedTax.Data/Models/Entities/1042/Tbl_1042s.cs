@@ -9,6 +9,7 @@ namespace EvolvedTax.Data.Models.Entities._1042
         [Key]
         public int Id { get; set; }
 
+        public string? Ammended_No { get; set; }
         public string? ProRataBasisChkbx { get; set; }
 
         public int? UniqueFormID { get; set; }

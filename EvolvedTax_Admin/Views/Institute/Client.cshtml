@@ -37,16 +37,17 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                        top: 0;
-                                                                                        left: 15%;*/
+                                                                                                                                    top: 0;
+                                                                                                                                    left: 15%;*/
         padding: 0;
-        padding-right: 60%
+        /*padding-right: 60%*/
+        text-align: left !important;
     }
 
     div.dataTables_wrapper div.dataTables_filter input {
         margin-left: 0.5em;
         display: inline-block;
-        width: 150%;
+        width: 200%;
     }
 
     .actions {
@@ -92,15 +93,7 @@
                             </form>*@
                         </div>
              
-                        @{
-                            var userRole = ViewBag.UserRole as string;
-                        }
-                        @if (userRole != "Viewer")
-                        {
-                            <button class="pull-right minimalize-styl-2 btn btn-primary" id="toggleButton" data-toggle="tooltip" data-placement="top">
-                                <i class="fa fa-bars"></i>
-                            </button>
-                        }
+                       
 
                         @*<div id="uploadDataDiv" class="col-md-3 pull-right" hidden>
                             <div style="display:flex">
@@ -121,7 +114,7 @@
                     <div class="ml-1"><input id="sendEmail" type="button" class="btn btn-primary email-btn" value="Send Email" /></div>
                     </div>*@
                     <div class="row">
-                        <div class="table-container col-md-10">
+                        <div class="table-container col-md-12">
                             <div class="table-responsive" id="maintable">
                                 @* <div class="form-group" style="margin-bottom:-2rem">
                                 <br/>
@@ -245,68 +238,6 @@
                                 </table>
                             </div>
                         </div>
-                     
-                        @if (userRole != "Viewer")
-                        {
-                            
-                            <div id="sharedUsersContainer" class="table-container col-md-2" style="margin-top:5% ;border: 3px solid #ccc; border-radius:10px;">
-                               
-                                <div style="margin-top: 6px;">
-                                    <div class="pull-right"><button class="btn btn-primary" id="openModalButton">Share <i class="fa fa-share"></i></button></div>
-                                    <h3>Shared with:</h3>
-                                </div>
-
-                                <div class="table-responsive">
-                                    <table id="" class="table">
-
-                                        @*<thead>
-                                    <tr>
-                                    <th></th>
-                                    <th></th>
-                                    </tr>
-                                    </thead>*@
-                                        <tbody>
-                                            @if (Model.SharedUsersResponse.Any())
-                                            {
-                                                foreach (var item in Model.SharedUsersResponse)
-                                                {
-                                                    <tr style="height:70px">
-                                                        <td>@item.UserName <br> @item.Role</td>
-                                                        <td class="actions">
-                                                            <div class="dropdown">
-                                                                <button class="dropdown-toggle" type="button" id="dropdownMenuButton" style="border:0;background:none" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                    <span class="fa fa-ellipsis-h"></span>
-                                                                </button>
-                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <div class="dropdown-menu-horizontal">
-                                                                        @*@foreach (var role in ViewBag.AvailableRoles)
-                                                                        {
-                                                                            <a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', { Id: '@item?.Id', role: '@role' })">
-                                                                                @if (item.Role == role)
-                                                                                {
-                                                                                    <span class="fa fa-check"></span> @role
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    @role
-                                                                                }
-                                                                            </a>
-
-                                                                        }*@
-                                                                        @*<a class="dropdown-item" href="javascript:void()" onclick="COMMON.doSendEmailAjaxPostWithJSONResponse('/Account/ChangeAccess', {Id:'@item?.Id', role: 'Remove'})">Remove</a>*@
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        }
-
                     </div>
                 </div>
                 <div id="dupplication-ibox" class="ibox-content" hidden>
@@ -540,7 +471,7 @@
                 },
                 fixedHeader: true,
                 scrollX: true,
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
                     {
                         extend: 'collection',
@@ -711,7 +642,7 @@
                 }
             });
             $('#share-table').DataTable({
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
                     {
                         extend: 'collection',

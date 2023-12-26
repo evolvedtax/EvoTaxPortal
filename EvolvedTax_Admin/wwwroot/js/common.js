@@ -500,7 +500,7 @@ var COMMON = (function () {
     COMMON.dataTableInitialized = function () {
         $('.dataTables-example').DataTable({
             pageLength: 25,
-            dom: '<"html5buttons"B>lTfgitp',
+            dom: '<"html5buttons"B>frtip',
             buttons: [
                 { extend: 'excel', title: 'ExampleFile', text: 'Export to Excel', className: 'btn-excel' },
                 { extend: 'pdf', title: 'ExampleFile', text: 'Export to PDF', className: 'btn-pdf' },

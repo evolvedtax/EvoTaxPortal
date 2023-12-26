@@ -27,6 +27,7 @@
         display: inline-block;
         width: 200%;
     }
+
 </style>
 @*test*@
 @*<div class="wrapper wrapper-content animated fadeInRight">
@@ -75,7 +76,7 @@
                 <div class="ibox-content">
 
                     @*<div class="col-md-12"><input id="importData" type="button" class="btn btn-primary" value="Import Entity Data" /></div>*@
-
+                    
                     <div class="table-responsive">
                         @* <div class="row">
                         <div class="col-md-4 mb-4">
@@ -124,7 +125,7 @@
                                         <tr id="@item.EntityId">
                                             <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
                                             <td>@Html.ActionLink(item.EntityName,"Client","Institute",new{EntityId = item.EntityId, InstituteId = item.InstituteId}) </td>
-                                            <td>@item.Ein</td>
+                                            <td><span class="ein-span ein-hidden">@item.Ein</span></td>
                                             <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
                                             <td>@string.Concat(item.Address1," ",item.Address2)</td>
                                             <td hidden>@item.Address1</td>

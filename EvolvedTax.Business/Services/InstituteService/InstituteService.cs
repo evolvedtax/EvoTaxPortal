@@ -267,7 +267,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                             Status = false;
                             return new MessageResponseModel { Status = Status, Message = new { Title = "Invalid Date", TagLine = "There are invalid date(s) in the records. Please correct and upload again." }, Param = "Entity" };
                         }
-                        if (Regex.IsMatch(entity.Ein ?? "", AppConstants.EINPattern))
+                        if (!Regex.IsMatch(entity.Ein ?? "", AppConstants.EINPattern))
                         {
                             // This entity is a duplicate within the Excel sheet
                             Status = false;
@@ -332,7 +332,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                                 var entityFormAccess = new EntityFormAccess
                                 {
                                     InstituteID = InstId,
-                                    EntityId = entity.EntityId,
+                                    EntityId = 4150,//entity.EntityId,
                                     FormNameId = formNameId,
                                     IsActive = 1
                                 };
@@ -1346,6 +1346,10 @@ namespace EvolvedTax.Business.Services.InstituteService
              );
 
             return (requestInstitue.Idnumber ?? string.Empty, PayData);
+        }
+        public InstituteEntity GetEntityDataById(int entityId)
+        {
+            return _evolvedtaxContext.InstituteEntities.First(p => p.EntityId == entityId);
         }
         public DashboardRequest DashboardDataByInstituteId(int instituteId)
         {

@@ -33,10 +33,17 @@
 
     .dataTables_filter {
         /*position: absolute;
-                                                                                                                                                                        top: 0;
-                                                                                                                                                                        left: 15%;*/
+                                                                                                                                    top: 0;
+                                                                                                                                    left: 15%;*/
         padding: 0;
-        padding-right: 70%
+        /*padding-right: 60%*/
+        text-align: left !important;
+    }
+
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 200%;
     }
 
     .wrapper-sec {
@@ -416,7 +423,7 @@
             $('.select2-container').css('width', '100%');
 
             $('#requestNameChangetable').DataTable({
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
 
                 ],

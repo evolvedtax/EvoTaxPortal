@@ -30,12 +30,18 @@
 
     .dataTables_filter {
         /*position: absolute;
-            top: 0;
-            left: 15%;*/
+                                                                                                                                top: 0;
+                                                                                                                                left: 15%;*/
         padding: 0;
-        padding-right: 70%
+        /*padding-right: 60%*/
+        text-align: left !important;
     }
 
+    div.dataTables_wrapper div.dataTables_filter input {
+        margin-left: 0.5em;
+        display: inline-block;
+        width: 200%;
+    }
     /*    div.dataTables_wrapper div.dataTables_info {
             padding-top: 1.85em;
         }*/
@@ -73,12 +79,12 @@
                                             <tr>
                                                 <td>@item.FirstName @item.LastName</td>
                                                 <td>@Html.ActionLink(item.InstitutionName,"Entities","Institute",new{instituteId = item.InstId}) </td>
-                                                <td>*****</td>
-                                                <td>*****</td>
-                                                <td>*****</td>
-                                                <td>*****</td>
-                                                <td>*****</td>
-                                                <td>*****</td>
+                                                <td>@item.EmailAddress</td>
+                                                <td>@item.SupportEmail</td>
+                                                <td>@item.Phone</td>
+                                                <td>@string.Concat(item.Madd1," ",item.Madd2)</td>
+                                                <td>@string.Concat(item.Mcity,", ",item.Status,item.Mprovince," ",item.Mzip)</td>
+                                                <td>@item.Mcountry</td>
                                                 @{
                                                     var status = "";
                                                 }
@@ -122,7 +128,7 @@
         $(document).ready(function () {
             var table = $('.dataTables-example').DataTable({
                 pageLength: 25,
-                dom: '<"html5buttons"B>lTfgitp',
+                dom: '<"html5buttons"B>frtip',
                 buttons: [
                     {
                         extend: 'collection',
