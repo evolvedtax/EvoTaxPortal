@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using EvolvedTax.Data.Models.Entities._1042;
+using EvolvedTax.Data.Models.Entities._1098;
 using EvolvedTax.Data.Models.Entities._1099;
+using EvolvedTax.Data.Models.Entities._5498;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -147,6 +149,23 @@ public partial class EvolvedtaxContext : IdentityDbContext<User>
     public virtual DbSet<W91> W91s { get; set; }
     public DbSet<RoleHierarchy> RoleHierarchy{ get; set; }
     public DbSet<Tbl_1042s> Tbl_1042s { get; set; }
+
+    public DbSet<Tbl_3922> Tbl_3922 { get; set; }
+    public DbSet<Tbl_3921> Tbl_3921 { get; set; }
+
+
+    public DbSet<Tbl_1098_T> Tbl_1098_T { get; set; }
+    public DbSet<Tbl_1098_Q> Tbl_1098_Q { get; set; }
+    public DbSet<Tbl_1098_F> Tbl_1098_F { get; set; }
+    public DbSet<Tbl_1098_E> Tbl_1098_E { get; set; }
+    public DbSet<Tbl_1098_C> Tbl_1098_C { get; set; }
+    public DbSet<Tbl_1098> Tbl_1098 { get; set; }
+
+    public DbSet<Tbl_5498> Tbl_5498 { get; set; }
+    public DbSet<Tbl_5498_SA> Tbl_5498_SA { get; set; }
+
+
+
     public DbSet<Tbl1099_MISC> Tbl1099_MISC { get; set; }
     public DbSet<Tbl1099_NEC> Tbl1099_NEC { get; set; }
     public DbSet<Tbl1099_A> Tbl1099_A { get; set; }

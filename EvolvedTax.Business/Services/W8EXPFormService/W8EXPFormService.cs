@@ -186,6 +186,7 @@ namespace EvolvedTax.Business.Services.W8EXPFormService
                 response._21Text = request._21_Text;
                 response.EmailAddress = request.EmailId;
                 response.ActiveTabIndex = request.activeTabIndex;
+                response.IsActive = true;
                 _evolvedtaxContext.TblW8expforms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 return response.Id;

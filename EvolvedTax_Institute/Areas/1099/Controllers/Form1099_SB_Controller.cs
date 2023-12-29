@@ -6,6 +6,8 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Emit;
+using System.Xml.Linq;
 
 namespace EvolvedTax_Institute.Areas._1099.Controllers
 {
@@ -15,6 +17,7 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         private readonly IForm1099_SB_Service _Form1099_SB_Service;
         private readonly IInstituteService _instituteService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+   
         public Form1099_SB_Controller(IForm1099_SB_Service Form1099_SB_Service, IWebHostEnvironment webHostEnvironment, IInstituteService instituteService)
         {
             _Form1099_SB_Service = Form1099_SB_Service;
@@ -31,6 +34,8 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
                 Value = p.EntityId.ToString(),
                 Selected = p.EntityId == EntityId
             });
+            //testing
+            //XDocument xmlDocument = Generate1099Xml();
             return View(_Form1099_SB_Service.GetForm1099List().Where(p => p.EntityId == EntityId && p.InstID == InstId));
         }
         [Route("Form1099_SB_/uploadClients")]
@@ -132,6 +137,52 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             var response = await _Form1099_SB_Service.DeletePermeant(id);
             return Json(response);
         }
-   
+
+
+        public XDocument Generate1099Xml()
+        {
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+            var form1099Data = _Form1099_SB_Service.GetForm1099List().Where(p => p.EntityId == EntityId && p.InstID == InstId);
+
+            XDocument xmlDocument = new XDocument(
+                new XElement("IRS1099File",
+                    new XElement("FileHeader",
+                        new XElement("RecordType", "F"),
+                        new XElement("SubmissionType", "Original"),
+                        // Add other header information here
+                        new XElement("Timestamp", DateTime.Now.ToString("yyyyMMddHHmmss"))
+                    ),
+                    new XElement("Form1099",
+                        form1099Data.Select(data => new XElement("Recipient",
+                            new XElement("Name", string.Concat(data.First_Name," ",data.Last_Name_Company)),
+                            // Add other recipient information here
+                            new XElement("Income",
+                                new XElement("Type", data.Address_Type),
+                                new XElement("Amount", data.Box_1_Amount?.ToString("F2"))
+                            // Add other income information here
+                            ),
+                            // Add other form elements for each recipient here
+                            new XElement("Country", data.Country),
+                            new XElement("AddressLine1", data.Address_Deliv_Street),
+                            // ... add more elements as needed
+                            new XElement("AdditionalIncome",
+                                new XElement("Type", data.Rcp_Account),
+                                new XElement("Amount", data.Box_2_Amount?.ToString("F2"))
+                            // Add other additional income information here
+                            )
+                        ))
+                    ),
+                    new XElement("FileFooter",
+                        new XElement("RecordType", "F"),
+                        new XElement("TotalRecords", form1099Data.Count())
+                    // Add other footer information here
+                    )
+                )
+            );
+
+            return xmlDocument;
+        }
+
     }
 }
