@@ -81,18 +81,27 @@
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1042" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
             </li>
-            <li>
+          @*  <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
+            </li>*@
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="1098" asp-action="Entities" asp-controller="Institute1098"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
             </li>
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
             </li>
-            <li>
+      @*      <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
+            </li>*@
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="3922" asp-action="W9Entities" asp-controller="Institute3922"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
             </li>
-            <li>
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="5498" asp-action="W9Entities" asp-controller="Institute5498"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
+            </li>
+           @* <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
-            </li>
+            </li>*@
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
             </li>

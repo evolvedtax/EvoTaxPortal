@@ -332,7 +332,7 @@ namespace EvolvedTax.Business.Services.InstituteService
                                 var entityFormAccess = new EntityFormAccess
                                 {
                                     InstituteID = InstId,
-                                    EntityId = 4150,//entity.EntityId,
+                                    EntityId = entity.EntityId,
                                     FormNameId = formNameId,
                                     IsActive = 1
                                 };

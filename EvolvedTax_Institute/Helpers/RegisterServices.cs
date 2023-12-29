@@ -2,7 +2,11 @@
 using EvolvedTax.Business.Services.AnnouncementService;
 using EvolvedTax.Business.Services.CommonService;
 using EvolvedTax.Business.Services.Form1042Services;
+using EvolvedTax.Business.Services.Form1098Services;
 using EvolvedTax.Business.Services.Form1099Services;
+using EvolvedTax.Business.Services.Form3922Services;
+using EvolvedTax.Business.Services.Form5498ervices;
+using EvolvedTax.Business.Services.Form5498Services;
 using EvolvedTax.Business.Services.FormReport;
 using EvolvedTax.Business.Services.GeneralQuestionareEntityService;
 using EvolvedTax.Business.Services.GeneralQuestionareService;
@@ -124,6 +128,10 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IForm1099_SB_Service, Form1099_SB_Service>();
             services.AddScoped<ITrailAudit1099Service, TrailAudit1099Service>();
             services.AddScoped<IForm1042_S_Service, Form1042_S_Service>();
+            services.AddScoped<IForm3922_Service, Form3922_Service>();
+            services.AddScoped<IForm5498_SA_Service, Form5498_SA_Service>();
+            services.AddScoped<IForm5498_Service, Form5498_Service>();
+            services.AddScoped<IForm1098_T_Service, Form1098_T_Service>();
             #endregion
 
             #region @@@[------Repository]

@@ -2909,6 +2909,10 @@
       "PackagePath": "staticwebassets\\1099SB\\WALLACE G _Form_1099SB_4.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Form1042S\\Charlie John_Form1042S_5.pdf",
+      "PackagePath": "staticwebassets\\Form1042S\\Charlie John_Form1042S_5.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Form1099A\\Charlie _Form1099A_21.pdf",
       "PackagePath": "staticwebassets\\Form1099A\\Charlie _Form1099A_21.pdf"
     },
@@ -3289,6 +3293,10 @@
       "PackagePath": "staticwebassets\\Forms\\Form_W9.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Forms\\f1042s.pdf",
+      "PackagePath": "staticwebassets\\Forms\\f1042s.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Forms\\f1099a.pdf",
       "PackagePath": "staticwebassets\\Forms\\f1099a.pdf"
     },
@@ -3339,6 +3347,14 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
       "PackagePath": "staticwebassets\\Rotativa\\wkhtmltopdf.exe"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1042STemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1042STemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098TTemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098TTemplate.xlsx"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099ATemplate.xlsx",
@@ -3415,6 +3431,18 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099_SB_Template.xlsx",
       "PackagePath": "staticwebassets\\Templates\\Form1099_SB_Template.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form3922Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form3922Template.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form5498SATemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form5498SATemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form5498Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form5498Template.xlsx"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\New_Entity_Template.xlsx",
