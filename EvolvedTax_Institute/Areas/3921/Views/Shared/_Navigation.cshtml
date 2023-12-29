@@ -1,5 +1,10 @@
 ﻿@using EvolvedTax;
 @inject IHttpContextAccessor _httpContextAccessor
+<style>
+    .form-links {
+        margin-left: 30px;
+    }
+</style>
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
@@ -33,59 +38,51 @@
                     <img src="~/images/evolved_tax_mark_logo.png" width="50px" />
                 </div>
             </li>
-            @*<li class="@Html.IsSelected(controller: "Summary")">
-                <a class="left-nav-links" href="@Url.Action("Index", "Summary")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Summary</span></a>
-            </li>*@
-            @*  <li class="@Html.IsSelected(controller: "Institute")">
-            <a href="#">
-            <i class="fa fa-wpforms fa-lg"></i>
-            <span class="nav-label" data-i18n="nav.dashboard">Organization Setup</span>
-            <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
-            </a>
-            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
-            <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("Entities", "Institute")">W8(s)/W9(s) </a></li>
-            <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("Entities", "Institute")">1099(s) </a></li>
-
-            </ul>
-            </li>*@
-
             <li class="@Html.IsSelected(controller: "OrganizationalSummary")">
-                <a class="left-nav-links" href="@Url.Action("Entities", "OrganizationalSummary")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Organization Summary</span></a>
+                <a class="left-nav-links" href="@Url.Action("Entities", "OrganizationalSummary", new {area = ""})"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Organization Summary</span></a>
             </li>
-         @*   <li class="@Html.IsSelected(controller: "W8")">
-                <a class="left-nav-links" href="@Url.Action("Index", "W8")"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s)</span></a>
-
-            </li>*@
-            <li class="@Html.IsSelected(controller: "Institute")">
+            <li class="@Html.IsSelected(controller: "W8")">
                 <a href="#">
                     <i class="fa fa-wpforms fa-lg"></i>
-                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9(s)</span>
+                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9</span>
                     <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
                 </a>
-                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
-                    <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "W8")">Entities</a></li>
+                <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "W8", cssClass: "in")">
+                    <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "W8", new {area = ""})">Entities</a></li>
                     @*<li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W9", "W8")">W-9</a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8EXP", "W8")">W-8 EXP </a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8IMY", "W8")">W-8 IMY</a></li>
                     <li class="@Html.IsSelected(action: "Institute")"><a href="@Url.Action("W8ECI", "W8")">W-8 ECI</a></li>
                     <li class="@Html.IsSelected(action: "W8BEN")"><a href="@Url.Action("W8BEN", "W8")">W-8 BEN</a></li>
                     <li class="@Html.IsSelected(action: "W8BEN_E")"><a href="@Url.Action("W8BEN_E", "W8")">W-8 BEN-E</a></li>*@
-                   @* <li class="@Html.IsSelected(action: "EmailSent")"><a href="@Url.Action("EmailSent", "W8")">E-Mail Sent</a></li>
-                    <li class="@Html.IsSelected(action: "Others")"><a href="@Url.Action("Others", "W8")">Others</a></li>
+                   @* <li class="@Html.IsSelected(action: "EmailSent")"><a href="@Url.Action("EmailSent", "W8", new {area = ""})">E-Mail Sent</a></li>
+                    <li class="@Html.IsSelected(action: "Others")"><a href="@Url.Action("Others", "W8", new {area = ""})">Others</a></li>
 *@
                 </ul>
             </li>
+           @* <li class="@Html.IsSelected(controller: "Dashboard")">
+                <a class="left-nav-links" href="@Url.Action("Index", "Dashboard", new {area = ""})"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">W8(s)/W9(s)</span></a>
+            </li>*@
+           
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1099" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1099(s)</span></a>
             </li>
-            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
-                <a class="left-nav-links" asp-area="1042" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
+            <li class="@Html.IsSelected(controller: "Institute")">
+                <a class="left-nav-links" href="@Url.Action("W9Entities", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
             </li>
+            @if (_httpContextAccessor.HttpContext?.Session.GetInt32("EntityId") != 0)
+            {
+                @*<ul>*@
+                <li class="@Html.IsSelected(controller: "Form1042_S_")">
+                    <a class="left-nav-links" style="padding: 4px 1px 4px 25px" href="@Url.Action("Index", "Form1042_S_")"><i class="fa fa-files-o form-links"></i> <span class="nav-label" data-i18n="nav.dashboard">1042_S</span></a>
+                </li>
+                @*</ul>*@
+            }
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
             </li>
-            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
-                <a class="left-nav-links" asp-area="3921" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
+            <li>
+                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
             </li>
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
@@ -96,37 +93,21 @@
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
             </li>
+            
             @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
             {
-              @*  <li class="@Html.IsSelected(controller: "Setting")">
-                    <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
-                </li>*@
+                @*  <li class="@Html.IsSelected(controller: "Setting")">
+            <a class="left-nav-links" href="@Url.Action("Index", "Setting")"><i class="fa fa-cog fa-lg"></i> <span class="nav-label ">Settings</span></a>
+            </li>*@
                 <li class="@Html.IsSelected(controller: "Setting")">
-                    <a href="@Url.Action("Index", "Setting")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Settings</span> <span class="fa arrow"></span></a>
+                    <a href="@Url.Action("Index", "Setting", new {area = ""})"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Settings</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Setting", cssClass: "in")">
-                        <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "Setting")">General</a></li>
-                        <li class="@Html.IsSelected(action: "SettingW8W9")"><a href="@Url.Action("SettingW8W9", "Setting")">W8(s)/W9(s)</a></li>
-                        <li class="@Html.IsSelected(action: "Setting1099")"><a href="@Url.Action("Setting1099", "Setting")">1099(s)</a></li>
+                        <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "Setting", new {area = ""})">General</a></li>
+                        <li class="@Html.IsSelected(action: "SettingW8W9")"><a href="@Url.Action("SettingW8W9", "Setting", new {area = ""})">W8(s)/W9(s)</a></li>
+                        <li class="@Html.IsSelected(action: "Setting1099")"><a href="@Url.Action("Setting1099", "Setting", new {area = ""})">1099(s)</a></li>
                     </ul>
                 </li>
             }
-           
-
-            @*      <li class="@Html.IsSelected(controller: "Institute")">
-            <a href="@Url.Action("Master", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Institutions</span> <span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
-            @if (_httpContextAccessor.HttpContext?.Session.GetString("IsAdmin") == true.ToString())
-            {
-            <li class="@Html.IsSelected(action: "Master")"><a href="@Url.Action("Master", "Institute")">Master</a></li>
-            }
-            else
-            {
-            <li class="@Html.IsSelected(action: "Entities")"><a href="@Url.Action("Entities", "Institute")">Entities</a></li>
-            }
-
-            </ul>
-            </li>*@
-
         </ul>
     </div>
 </nav>
