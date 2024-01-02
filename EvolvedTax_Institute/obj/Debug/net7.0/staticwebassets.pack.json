@@ -3353,6 +3353,22 @@
       "PackagePath": "staticwebassets\\Templates\\Form1042STemplate.xlsx"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098CTemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098CTemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098ETemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098ETemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098FTemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098FTemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098QTemplate.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098QTemplate.xlsx"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098TTemplate.xlsx",
       "PackagePath": "staticwebassets\\Templates\\Form1098TTemplate.xlsx"
     },

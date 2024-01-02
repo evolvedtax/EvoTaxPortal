@@ -10,6 +10,7 @@ using EvolvedTax.Data.Models.DTOs.Response.Form1098;
 using EvolvedTax.Data.Models.DTOs.Response.Form5498;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1042;
+using EvolvedTax.Data.Models.Entities._1098;
 using EvolvedTax.Data.Models.Entities._1099;
 using EvolvedTax.Data.Models.Entities._5498;
 using iTextSharp.text;
@@ -89,9 +90,9 @@ namespace EvolvedTax.Business.Services.Form1098Services
 
         public async Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form, int instituteId = -1)
         {
-            var result = from ic in _evolvedtaxContext.Tbl_5498_SA
+            var result = from ic in _evolvedtaxContext.Tbl_1098_T
                          where selectValues.Contains(ic.Id) && !string.IsNullOrEmpty(ic.RcpEmail)
-                         select new Tbl_5498_SA
+                         select new Tbl_1098_T
                          {
                              RcpEmail = ic.RcpEmail,
                              EntityId = ic.EntityId,
@@ -107,8 +108,8 @@ namespace EvolvedTax.Business.Services.Form1098Services
         public async Task<MessageResponseModel> Upload1098_T_Data(IFormFile file, int InstId, int entityId, string UserId)
         {
             bool Status = false;
-            var response = new List<Tbl_5498_SA>();
-            var AList = new List<Tbl_5498_SA>();
+            var response = new List<Tbl_1098_T>();
+            var AList = new List<Tbl_1098_T>();
             using (var stream = file.OpenReadStream())
             {
                 IWorkbook workbook = new XSSFWorkbook(stream);
@@ -137,7 +138,7 @@ namespace EvolvedTax.Business.Services.Form1098Services
                 {
                     IRow excelRow = sheet.GetRow(row);
 
-                    var request = new Tbl_5498_SA
+                    var request = new Tbl_1098_T
                     {
                         // ProRataBasisChkbx = (excelRow.GetCell(columnMapping["Ammended"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Ammended"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
                         // Ammended_No = excelRow.GetCell(columnMapping["Ammended #"])?.ToString() ?? string.Empty,
@@ -157,14 +158,15 @@ namespace EvolvedTax.Business.Services.Form1098Services
                         Country = excelRow.GetCell(columnMapping["Country"])?.ToString() ?? string.Empty,
                         RcpAccount = excelRow.GetCell(columnMapping["RcpAccount"])?.ToString() ?? string.Empty,
                         RcpEmail = excelRow.GetCell(columnMapping["RcpEmail"])?.ToString() ?? string.Empty,
+                        RcpTinCertified = excelRow.GetCell(columnMapping["RcpTinCertified"])?.ToString() ?? string.Empty,
                         Box1Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box1Amount"])?.ToString() ?? "0.0"),
-                        Box2Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box2Amount"])?.ToString() ?? "0.0"),
-                        Box3Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box3Amount"])?.ToString() ?? "0.0"),
                         Box4Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box4Amount"])?.ToString() ?? "0.0"),
                         Box5Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box5Amount"])?.ToString() ?? "0.0"),
-                        Box6Checkbox1 = (excelRow.GetCell(columnMapping["Box6Checkbox1"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box6Checkbox1"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        Box6Checkbox2 = (excelRow.GetCell(columnMapping["Box6Checkbox2"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box6Checkbox2"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
-                        Box6Checkbox3 = (excelRow.GetCell(columnMapping["Box6Checkbox3"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box6Checkbox3"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box6Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box6Amount"])?.ToString() ?? "0.0"),
+                        Box7Checkbox = (excelRow.GetCell(columnMapping["Box7Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box7Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box8Checkbox = (excelRow.GetCell(columnMapping["Box8Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box8Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box9Checkbox = (excelRow.GetCell(columnMapping["Box9Checkbox"])?.ToString() != null && (bool)excelRow.GetCell(columnMapping["Box9Checkbox"])?.ToString().Equals("Yes", StringComparison.OrdinalIgnoreCase)) ? "1" : "0",
+                        Box10Amount = Convert.ToDecimal(excelRow.GetCell(columnMapping["Box10Amount"])?.ToString() ?? "0.0"),
                         FormCategory = excelRow.GetCell(columnMapping["FormCategory"])?.ToString() ?? string.Empty,
                         TaxState = excelRow.GetCell(columnMapping["TaxState"])?.ToString() ?? string.Empty,
                         Status=1,
@@ -202,7 +204,7 @@ namespace EvolvedTax.Business.Services.Form1098Services
                     AList.Add(request);
 
                 }
-                await _evolvedtaxContext.Tbl_5498_SA.AddRangeAsync(AList);
+                await _evolvedtaxContext.Tbl_1098_T.AddRangeAsync(AList);
                 await _evolvedtaxContext.SaveChangesAsync();
             }
             return new MessageResponseModel { Status = Status, Message = response, Param = "Database" };
@@ -956,10 +958,10 @@ namespace EvolvedTax.Business.Services.Form1098Services
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {
 
-            var recordToDelete = _evolvedtaxContext.Tbl_5498_SA.First(p => p.Id == id);
+            var recordToDelete = _evolvedtaxContext.Tbl_1098_T.First(p => p.Id == id);
             if (recordToDelete != null)
             {
-                _evolvedtaxContext.Tbl_5498_SA.Remove(recordToDelete);
+                _evolvedtaxContext.Tbl_1098_T.Remove(recordToDelete);
                 await _evolvedtaxContext.SaveChangesAsync();
                 return new MessageResponseModel { Status = true };
             }
@@ -970,7 +972,7 @@ namespace EvolvedTax.Business.Services.Form1098Services
         public async Task<MessageResponseModel> KeepRecord(int id)
         {
 
-            var recordToUpdate = _evolvedtaxContext.Tbl_5498_SA.First(p => p.Id == id);
+            var recordToUpdate = _evolvedtaxContext.Tbl_1098_T.First(p => p.Id == id);
             if (recordToUpdate != null)
             {
                 recordToUpdate.IsDuplicated = false;
