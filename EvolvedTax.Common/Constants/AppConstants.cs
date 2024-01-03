@@ -138,6 +138,7 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098FExcelTemplate = "Form1098FTemplate.xlsx";
         public const string Form1098EExcelTemplate = "Form1098ETemplate.xlsx";
         public const string Form1098CExcelTemplate = "Form1098CTemplate.xlsx";
+        public const string Form1098ExcelTemplate = "Form1098Template.xlsx";
 
         public const string Form1042S = @"Form1042S";
         public const string Form3922 = @"Form3922";
@@ -148,6 +149,7 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098F = @"Form1098F";
         public const string Form1098E = @"Form1098E";
         public const string Form1098C = @"Form1098C";
+        public const string Form1098 = @"Form1098";
 
         public const string FormSubscription_1042 = @"1002";
         public const string FormSubscription_3922 = @"1004";
