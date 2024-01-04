@@ -81,8 +81,8 @@
                 </li>
                 @*</ul>*@
             }
-            <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="1098" asp-action="Entities" asp-controller="Institute1098"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
             </li>
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>

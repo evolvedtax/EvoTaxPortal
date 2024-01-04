@@ -397,8 +397,14 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebasset
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\staticwebassets.development.json
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1042\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1042\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1098\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1098\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1099\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1099\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\3922\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\3922\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\5498\Views\Shared\_Layout.cshtml.rz.scp.css
+C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\5498\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\bundle\EvolvedTax_Institute.styles.css
@@ -409,9 +415,3 @@ C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\refint\Evolved
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.pdb
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\EvolvedTax_Institute.genruntimeconfig.cache
 C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\ref\EvolvedTax_Institute.dll
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\3922\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\3922\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\5498\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\5498\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1098\Views\Shared\_Layout.cshtml.rz.scp.css
-C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\obj\Debug\net7.0\scopedcss\Areas\1098\Views\Shared\_LayoutInstitute.cshtml.rz.scp.css
