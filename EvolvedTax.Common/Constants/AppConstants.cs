@@ -152,6 +152,16 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098 = @"Form1098";
 
         public const string FormSubscription_1042 = @"1002";
+        
+        //----------3921 TEMPLATES----------//
+        public const string Form3921TemplateFileName = @"f3921.pdf";
+
+        public const string Form3921ExcelTemplate = "Form3921Template.xlsx";
+
+        public const string Form3921 = @"Form3921";
+
+        public const string FormSubscription_3921 = @"1003";
+
         public const string FormSubscription_3922 = @"1004";
         public const string FormSubscription_5498 = @"1005";
         public const string FormSubscription_1098 = @"1006";
