@@ -138,6 +138,7 @@ namespace EvolvedTax.Helpers
             services.AddScoped<IForm1098_E_Service, Form1098_E_Service>();
             services.AddScoped<IForm1098_C_Service, Form1098_C_Service>();
             services.AddScoped<IForm1098_Service, Form1098_Service>();
+            services.AddScoped<IForm3921Service, Form3921Service>();
             #endregion
 
             #region @@@[------Repository]
