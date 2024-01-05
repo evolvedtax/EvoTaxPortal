@@ -67,6 +67,7 @@ public class Tbl_3921
     public int? EntityId { get; set; }
 
     public bool IsDuplicated { get; set; }
+    public int? IsCorrected { get; set; }
 
     public string? Province { get; set; }
 
