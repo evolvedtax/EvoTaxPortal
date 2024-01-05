@@ -4,20 +4,20 @@ using EvolvedTax.Business.Services.Form3921Services;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Web.Controllers;
 
-namespace EvolvedTax_Institute.Areas._1042.Controllers
+namespace EvolvedTax_Institute.Areas._3921.Controllers
 {
-    [Area("1042")]
+    [Area("3921")]
     public class CommonController : BaseController
     {
         private readonly ICommonService _commonService;
-        private readonly IForm1042_S_Service _form1042_S_Service;
+        private readonly IForm3921Service _form3921Service;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public CommonController(IWebHostEnvironment webHostEnvironment, ICommonService commonService,
-            IForm1042_S_Service form1042_S_Service)
+            IForm3921Service form3921Service)
         {
             _webHostEnvironment = webHostEnvironment;
             _commonService = commonService;
-            _form1042_S_Service = form1042_S_Service;
+            _form3921Service = form3921Service;
         }
         [HttpGet]
         public IActionResult DownloadExcel(string fileType)
@@ -69,7 +69,7 @@ namespace EvolvedTax_Institute.Areas._1042.Controllers
             switch (form)
             {
                 case AppConstants.Form1042S:
-                    await _form1042_S_Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1042S, instId);
+                    await _form3921Service.SendEmailToRecipients(selectedValues, URL, AppConstants.Form1042S, instId);
                     break;
             }
 
