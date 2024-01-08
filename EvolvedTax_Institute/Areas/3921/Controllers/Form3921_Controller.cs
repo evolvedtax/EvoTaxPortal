@@ -24,10 +24,12 @@ namespace EvolvedTax_Institute.Areas._3921.Controllers
             _commonService = commonService;
             _instituteService = instituteService;
         }
-        public IActionResult Index()
+        public IActionResult Index(int entityId)
         {
-            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
-            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId, Convert.ToInt32(AppConstants.FormSubscription_1042)).Select(p => new SelectListItem
+            var EntityId = entityId;
+            //var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            HttpContext.Session.SetInt32("EntityId", EntityId);
+            ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId, Convert.ToInt32(AppConstants.FormSubscription_3921)).Select(p => new SelectListItem
             {
                 Text = p.EntityName,
                 Value = p.EntityId.ToString(),

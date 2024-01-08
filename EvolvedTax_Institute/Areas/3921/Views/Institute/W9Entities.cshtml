@@ -79,7 +79,8 @@
                                     {
                                         <tr id="@item.EntityId">
                                             <td><input type="checkbox" class="rowCheckbox" value="@item.EntityId"></td>
-                                            <td>@Html.ActionLink(item.EntityName,"SelectForm","Form3921",new{entityId = item.EntityId}) </td>
+                                           @* <td>@Html.ActionLink(item.EntityName,"SelectForm","Form3921",new{entityId = item.EntityId}) </td>*@
+                                           <td>@Html.ActionLink(item.EntityName, "Index", "Form3921_", new { entityId = item.EntityId })</td>
                                             <td>@item.Ein</td>
                                             <td>@item.EntityRegistrationDate?.ToString("MM-dd-yyyy")</td>
                                             <td>@string.Concat(item.Address1," ",item.Address2)</td>
@@ -660,6 +661,15 @@
                         text: '<i class="fa fa-ellipsis-h"></i>',
                         className: 'btn-menu-toggle',
                         buttons: [
+                                     {
+                                text: '<i class="fa fa-download"></i> Download New Entity Template',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    let url = '/3921/Institute/DownloadExcel';
+                                    let params = { fileType: '@AppConstants.Entity' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
+                                }
+                            },
                             {
                                 extend: 'excel',
                                 title: 'EvolvedTax',

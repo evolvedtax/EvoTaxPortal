@@ -241,5 +241,33 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             return Json(new { Status = true, Message = "Invited link has been sent." });
         }
         #endregion
+
+        public IActionResult DownloadExcel(string fileType)
+        {
+            string fileName;
+            string filePath;
+
+            switch (fileType)
+            {
+                case AppConstants.Entity:
+                    fileName = AppConstants.InstituteEntityTemplate;
+                    break;
+                default:
+                    return NotFound();
+            }
+
+            filePath = Path.Combine(_webHostEnvironment.WebRootPath, "Templates", fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var memoryStream = _commonService.DownloadFile(filePath);
+                return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
     }
 }

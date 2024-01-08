@@ -292,6 +292,104 @@ button.accept-policy[b-rwl7evrbk5] {
   white-space: nowrap;
   line-height: 60px;
 }
+/* _content/EvolvedTax_Institute/Areas/3921/Views/Shared/_Layout.cshtml.rz.scp.css */
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand[b-c69n72u8i1] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a[b-c69n72u8i1] {
+  color: #0077cc;
+}
+
+.btn-primary[b-c69n72u8i1] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-c69n72u8i1], .nav-pills .show > .nav-link[b-c69n72u8i1] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top[b-c69n72u8i1] {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom[b-c69n72u8i1] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-c69n72u8i1] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-c69n72u8i1] {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer[b-c69n72u8i1] {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+/* _content/EvolvedTax_Institute/Areas/3921/Views/Shared/_LayoutInstitute.cshtml.rz.scp.css */
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand[b-rf7iwzijwe] {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+a[b-rf7iwzijwe] {
+  color: #0077cc;
+}
+
+.btn-primary[b-rf7iwzijwe] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-rf7iwzijwe], .nav-pills .show > .nav-link[b-rf7iwzijwe] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top[b-rf7iwzijwe] {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom[b-rf7iwzijwe] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-rf7iwzijwe] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-rf7iwzijwe] {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+.footer[b-rf7iwzijwe] {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
 /* _content/EvolvedTax_Institute/Areas/3922/Views/Shared/_Layout.cshtml.rz.scp.css */
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */

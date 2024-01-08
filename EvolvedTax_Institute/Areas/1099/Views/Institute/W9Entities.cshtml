@@ -660,6 +660,15 @@
                         text: '<i class="fa fa-ellipsis-h"></i>',
                         className: 'btn-menu-toggle',
                         buttons: [
+                                {
+                                text: '<i class="fa fa-download"></i> Download New Entity Template',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    let url = '/1099/Institute/DownloadExcel';
+                                    let params = { fileType: '@AppConstants.Entity' }
+                                    COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.InstituteEntityTemplate')
+                                }
+                            },
                             {
                                 extend: 'excel',
                                 title: 'EvolvedTax',

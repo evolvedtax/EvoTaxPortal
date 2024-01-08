@@ -2809,6 +2809,10 @@
       "PackagePath": "staticwebassets\\1099SA\\JOHN & ALDO _Form_1099SA_12.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SA\\JOHN & ALDO _Form_1099SA_24.pdf",
+      "PackagePath": "staticwebassets\\1099SA\\JOHN & ALDO _Form_1099SA_24.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SA\\Karen DBA Ace Computers_Form_1099SA_10.pdf",
       "PackagePath": "staticwebassets\\1099SA\\Karen DBA Ace Computers_Form_1099SA_10.pdf"
     },
@@ -2839,6 +2843,18 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SA\\THOMAS H _Form_1099SA_4.pdf",
       "PackagePath": "staticwebassets\\1099SA\\THOMAS H _Form_1099SA_4.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\ _Form_1099SB_36.pdf",
+      "PackagePath": "staticwebassets\\1099SB\\ _Form_1099SB_36.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\ _Form_1099SB_36_Page_1.pdf",
+      "PackagePath": "staticwebassets\\1099SB\\ _Form_1099SB_36_Page_1.pdf"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\ _Form_1099SB_36_Page_2.pdf",
+      "PackagePath": "staticwebassets\\1099SB\\ _Form_1099SB_36_Page_2.pdf"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\ANTHONY _Form_1099SB_2.pdf",
@@ -2883,6 +2899,14 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\GeneratedPDFs_20230922121249.zip",
       "PackagePath": "staticwebassets\\1099SB\\GeneratedPDFs_20230922121249.zip"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\GeneratedPDFs_20240104043627.zip",
+      "PackagePath": "staticwebassets\\1099SB\\GeneratedPDFs_20240104043627.zip"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\GeneratedPDFs_20240104043831.zip",
+      "PackagePath": "staticwebassets\\1099SB\\GeneratedPDFs_20240104043831.zip"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\1099SB\\Internal Revenue Service Center.pdf",
@@ -3221,6 +3245,10 @@
       "PackagePath": "staticwebassets\\Form1099S\\LILLIAN _Form1099S_1.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Form3921\\FIrts  Last _Form3921_1.pdf",
+      "PackagePath": "staticwebassets\\Form3921\\FIrts  Last _Form3921_1.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Forms\\83b.pdf",
       "PackagePath": "staticwebassets\\Forms\\83b.pdf"
     },
@@ -3329,6 +3357,10 @@
       "PackagePath": "staticwebassets\\Forms\\f1099s.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Forms\\f3921.pdf",
+      "PackagePath": "staticwebassets\\Forms\\f3921.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\ProfileImage\\5091e683-0a75-4df1-9277-06c6a8a25c2d.png",
       "PackagePath": "staticwebassets\\ProfileImage\\5091e683-0a75-4df1-9277-06c6a8a25c2d.png"
     },
@@ -3371,6 +3403,10 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098TTemplate.xlsx",
       "PackagePath": "staticwebassets\\Templates\\Form1098TTemplate.xlsx"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1098Template.xlsx",
+      "PackagePath": "staticwebassets\\Templates\\Form1098Template.xlsx"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Templates\\Form1099ATemplate.xlsx",

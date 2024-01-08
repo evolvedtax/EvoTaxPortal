@@ -67,19 +67,11 @@
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1099" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1099(s)</span></a>
             </li>
-            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
-                <a class="left-nav-links" asp-area="3921" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard"> Form 1042-S</span></a>
+               <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="1042" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
             </li>
-            @if (_httpContextAccessor.HttpContext?.Session.GetInt32("EntityId") != 0)
-            {
-                @*<ul>*@
-                <li class="@Html.IsSelected(controller: "Form1042_S_")">
-                    <a class="left-nav-links" style="padding: 4px 1px 4px 25px" href="@Url.Action("Index", "Form1042_S_")"><i class="fa fa-files-o form-links"></i> <span class="nav-label" data-i18n="nav.dashboard">1042_S</span></a>
-                </li>
-                @*</ul>*@
-            }
-            <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="1098" asp-action="Entities" asp-controller="Institute1098"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Institute")">
                 <a class="left-nav-links" href="@Url.Action("W9Entities", "Institute")"><i class="fa fa-th-large"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
@@ -92,11 +84,11 @@
                 </li>
                 @*</ul>*@
             }
-            <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
+            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="3922" asp-action="W9Entities" asp-controller="Institute3922"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
             </li>
-            <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
+             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+                <a class="left-nav-links" asp-area="5498" asp-action="W9Entities" asp-controller="Institute5498"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
             </li>
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
