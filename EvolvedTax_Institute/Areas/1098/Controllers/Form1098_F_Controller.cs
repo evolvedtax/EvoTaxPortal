@@ -61,8 +61,8 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
         [HttpGet]
         public IActionResult DownlodPdf(int Id)
         {
-            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.Form1098FExcelTemplate);
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098F);
+            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms", AppConstants.Form1098QTemplateFileName);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098Q);
             var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             string pdfUrl = _form1098_F_Service.GeneratePdf(Id, TemplatePathFile, SavePathFolder, entityId);
             return Json(pdfUrl);
@@ -77,8 +77,9 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098F);
-            var zipFilePath = _form1098_F_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098Q);
+            var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var zipFilePath = _form1098_F_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath, entityId);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
@@ -95,7 +96,7 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
             List<int> ids = model.ids;
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
-            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098F);
+            string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath, AppConstants.Form1098Q);
             //   bool containsAll = selectedPage.Contains("All");
 
             //    if (containsAll)
@@ -107,7 +108,8 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
             //    selectedPage.Add("6");
             //    selectedPage.Add("7");
             //}
-            var zipFilePath = _form1098_F_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath);
+            var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var zipFilePath = _form1098_F_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath, entityId);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);

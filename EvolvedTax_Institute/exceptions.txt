@@ -12551,3 +12551,105 @@ Stack Trace:    at System.Linq.ThrowHelper.ThrowNoElementsException()
    at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
    at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
    at EvolvedTax.Middleware.ExceptionHandler.InvokeAsync(HttpContext httpContext) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Middleware\ExceptionHandler.cs:line 23
+[1/9/2024 5:21:38 AM] Exception: Sequence contains no elements
+Stack Trace:    at System.Linq.ThrowHelper.ThrowNoElementsException()
+   at lambda_method1461(Closure, QueryContext)
+   at EvolvedTax.Business.Services.InstituteService.InstituteService.GetEntityDataById(Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\InstituteService\InstituteService.cs:line 1352
+   at EvolvedTax.Business.Services.Form1042Services.Form1042_S_Service.CreatePdf(Int32 Id, String TemplatefilePath, String SaveFolderPath, Int32 entityId, Boolean IsAll, String Page) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form1042Services\Form1042_S_Service\Form1042_S_Service.cs:line 305
+   at EvolvedTax.Business.Services.Form1042Services.Form1042_S_Service.GeneratePdfForSpecificPage(Int32 Id, String TemplatefilePath, String SaveFolderPath, List`1 selectedPages, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form1042Services\Form1042_S_Service\Form1042_S_Service.cs:line 760
+   at EvolvedTax.Business.Services.Form1042Services.Form1042_S_Service.GenerateAndZipPdfs(List`1 ids, String SaveFolderPath, List`1 selectedPages, String RootPath, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form1042Services\Form1042_S_Service\Form1042_S_Service.cs:line 1021
+   at EvolvedTax_Institute.Areas._1099.Controllers.Form1042_S_Controller.DownloadAll(DownloadRequestModel model) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Areas\1042\Controllers\Form1042_S_Controller.cs:line 81
+   at lambda_method1045(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at EvolvedTax.Middleware.ExceptionHandler.InvokeAsync(HttpContext httpContext) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Middleware\ExceptionHandler.cs:line 23
+[1/9/2024 6:09:26 AM] Exception: Sequence contains no elements
+Stack Trace:    at System.Linq.ThrowHelper.ThrowNoElementsException()
+   at lambda_method1217(Closure, QueryContext)
+   at EvolvedTax.Business.Services.InstituteService.InstituteService.GetEntityDataById(Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\InstituteService\InstituteService.cs:line 1352
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.CreatePdf(Int32 Id, String TemplatefilePath, String SaveFolderPath, Int32 entityId, Boolean IsAll, String Page) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 175
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.GeneratePdForSpecificType(Int32 Id, String TemplatefilePath, String SaveFolderPath, String selectedPage, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 403
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.DownloadOneFile(List`1 ids, String SaveFolderPath, List`1 selectedPages, String RootPath, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 504
+   at EvolvedTax_Institute.Areas._3921.Controllers.Form3921_Controller.DownloadOneFile(DownloadRequestModel model) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Areas\3921\Controllers\Form3921_Controller.cs:line 111
+   at lambda_method1321(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at EvolvedTax.Middleware.ExceptionHandler.InvokeAsync(HttpContext httpContext) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Middleware\ExceptionHandler.cs:line 23
+[1/9/2024 6:10:02 AM] Exception: Sequence contains no elements
+Stack Trace:    at System.Linq.ThrowHelper.ThrowNoElementsException()
+   at lambda_method1217(Closure, QueryContext)
+   at EvolvedTax.Business.Services.InstituteService.InstituteService.GetEntityDataById(Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\InstituteService\InstituteService.cs:line 1352
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.CreatePdf(Int32 Id, String TemplatefilePath, String SaveFolderPath, Int32 entityId, Boolean IsAll, String Page) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 175
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.GeneratePdForSpecificType(Int32 Id, String TemplatefilePath, String SaveFolderPath, String selectedPage, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 403
+   at EvolvedTax.Business.Services.Form3921Services.Form3921Service.DownloadOneFile(List`1 ids, String SaveFolderPath, List`1 selectedPages, String RootPath, Int32 entityId) in C:\Code\Code Repos\EvoTaxes\EvolvedTax.Business\Services\Form3921Services\Form3921Service.cs:line 504
+   at EvolvedTax_Institute.Areas._3921.Controllers.Form3921_Controller.DownloadOneFile(DownloadRequestModel model) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Areas\3921\Controllers\Form3921_Controller.cs:line 111
+   at lambda_method1321(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at EvolvedTax.Middleware.ExceptionHandler.InvokeAsync(HttpContext httpContext) in C:\Code\Code Repos\EvoTaxes\EvolvedTax_Institute\Middleware\ExceptionHandler.cs:line 23

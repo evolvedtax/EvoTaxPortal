@@ -126,10 +126,23 @@ namespace EvolvedTax.Common.Constants
         public const string FormSubscription_w8_w9 = @"1";
 
         public const string FormSubscription_1099 = @"2";
-        //----------1042 TEMPLATES----------//
-        public const string Form1042STemplateFileName = @"f1042s.pdf";
 
+        //----------Area Constants Start----------//
+
+        //Reading PDFs Name
+        public const string Form1042STemplateFileName = @"f1042s.pdf";
+        public const string Form3921TemplateFileName = @"f3921.pdf";
+        public const string Form3922TemplateFileName = @"f3922.pdf";
+        public const string Form5498TemplateFileName = @"f5498.pdf";
+        public const string Form5498SATemplateFileName = @"f5498SA.pdf";
+        public const string Form1098TTemplateFileName = @"f1098T.pdf";
+        public const string Form1098QTemplateFileName = @"f1098Q.pdf";
+        public const string Form1098FTemplateFileName = @"f1098F.pdf";
+
+
+        //Excel
         public const string Form1042SExcelTemplate = "Form1042STemplate.xlsx";
+        public const string Form3921ExcelTemplate = "Form3921Template.xlsx";
         public const string Form3922ExcelTemplate = "Form3922Template.xlsx";
         public const string Form5498SAExcelTemplate = "Form5498SATemplate.xlsx";
         public const string Form5498ExcelTemplate = "Form5498Template.xlsx";
@@ -140,9 +153,12 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098CExcelTemplate = "Form1098CTemplate.xlsx";
         public const string Form1098ExcelTemplate = "Form1098Template.xlsx";
 
+
+        //Folder Name For Save PDFs 
         public const string Form1042S = @"Form1042S";
+        public const string Form3921 = @"Form3921";
         public const string Form3922 = @"Form3922";
-        public const string Form5498S = @"Form5498S";
+        public const string Form5498SA = @"Form5498SA";
         public const string Form5498 = @"Form5498";
         public const string Form1098T = @"Form1098T";
         public const string Form1098Q = @"Form1098Q";
@@ -152,19 +168,19 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098 = @"Form1098";
 
         public const string FormSubscription_1042 = @"1002";
-        
-        //----------3921 TEMPLATES----------//
-        public const string Form3921TemplateFileName = @"f3921.pdf";
-
-        public const string Form3921ExcelTemplate = "Form3921Template.xlsx";
-
-        public const string Form3921 = @"Form3921";
-
         public const string FormSubscription_3921 = @"1003";
-
         public const string FormSubscription_3922 = @"1004";
         public const string FormSubscription_5498 = @"1005";
         public const string FormSubscription_1098 = @"1006";
+
+        //----------Area Constants End----------//
+
+
+
+
+
+
+
 
         //-----------BUTTON CONSTANTS--------------------//
         //public const string F_Family_PalaceScriptMT = "Palace Script MT";

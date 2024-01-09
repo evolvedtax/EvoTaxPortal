@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure;
 using EvolvedTax.Business.MailService;
 using EvolvedTax.Business.Services.Form1099Services;
 using EvolvedTax.Business.Services.InstituteService;
@@ -19,6 +20,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Org.BouncyCastle.Cms;
 using System.IO.Compression;
+using System.Numerics;
 
 namespace EvolvedTax.Business.Services.Form1042Services
 {
@@ -743,294 +745,302 @@ namespace EvolvedTax.Business.Services.Form1042Services
 
         }
 
-        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages)
+        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages, int entityId=0)
         {
-            //string newFile1 = string.Empty;
-            //var request = _evolvedtaxContext.Tbl_1042s.FirstOrDefault(p => p.Id == Id);
+            string newFile1 = string.Empty;
+            var request = _evolvedtaxContext.Tbl_1042s.FirstOrDefault(p => p.Id == Id);
+            String ClientName = request.RcpFirstAndMI + " " + request.RcpNameLine2?.Replace(": ", "");
             //String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
-            //newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", Id);
-            //string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
-            //string newFileName = newFile1 + ".pdf";
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", Id);
+            string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
+            string newFileName = newFile1 + ".pdf";
 
 
 
-            //var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true);
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true);
 
-            //// Create a copy of the generated PDF
-            //string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
-            //File.Copy(newFilePath, tempFilePath);
+            // Create a copy of the generated PDF
+            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            File.Copy(newFilePath, tempFilePath);
 
-            //// Open the copied PDF
-            //PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
-            //PdfReader.unethicalreading = true;
+            // Open the copied PDF
+            PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
+            PdfReader.unethicalreading = true;
 
-            //// Create a new PDF document to save the modified pages
-            //string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
-            //using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
-            //using (Document doc = new Document())
-            //using (PdfCopy copy = new PdfCopy(doc, fs))
-            //{
-            //    doc.Open();
-            //    List<int> pagesToInclude = selectedPages.Select(int.Parse).ToList();
-
-
-            //    for (int page = 1; page <= pdfReaderTemp.NumberOfPages; page++)
-            //    {
-            //        if (pagesToInclude.Contains(page))
-            //        {
-            //            PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, page);
-            //            copy.AddPage(importedPage);
-            //        }
-            //    }
+            // Create a new PDF document to save the modified pages
+            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
+            using (Document doc = new Document())
+            using (PdfCopy copy = new PdfCopy(doc, fs))
+            {
+                doc.Open();
+                List<int> pagesToInclude = selectedPages.Select(int.Parse).ToList();
 
 
-            //    doc.Close();
-            //}
+                for (int page = 1; page <= pdfReaderTemp.NumberOfPages; page++)
+                {
+                    if (pagesToInclude.Contains(page))
+                    {
+                        PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, page);
+                        copy.AddPage(importedPage);
+                    }
+                }
 
-            //// Close the copied PDF reader
-            //pdfReaderTemp.Close();
 
-            //// Delete the temporary copied PDF
-            //File.Delete(tempFilePath);
+                doc.Close();
+            }
 
-            //// Delete the original PDF
-            //File.Delete(newFilePath);
+            // Close the copied PDF reader
+            pdfReaderTemp.Close();
 
-            //// Rename the modified PDF by removing "_modified" from the filename
-            //string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            //string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
-            //File.Move(modifiedFilePath, finalFilePath);
+            // Delete the temporary copied PDF
+            File.Delete(tempFilePath);
 
-            //return finalFilePath;
+            // Delete the original PDF
+            File.Delete(newFilePath);
+
+            // Rename the modified PDF by removing "_modified" from the filename
+            string fileNameWithoutModified = newFile1.Replace("_modified", "");
+            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            File.Move(modifiedFilePath, finalFilePath);
+
+            return finalFilePath;
+         
+        }
+        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage, int entityId = 0)
+        {
+            string newFile1 = string.Empty;
+            var request = _evolvedtaxContext.Tbl_1042s.FirstOrDefault(p => p.Id == Id);
+           // String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
+            String ClientName = request.RcpFirstAndMI + " " + request.RcpNameLine2?.Replace(": ", "");
+
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", request.Id, "_Page_", selectedPage);
+            string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
+            string newFileName = newFile1 + ".pdf";
+
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true, selectedPage);
+
+            // Create a copy of the generated PDF
+            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            File.Copy(newFilePath, tempFilePath);
+
+            // Open the copied PDF
+            PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
+            PdfReader.unethicalreading = true;
+
+            // Create a new PDF document to save the modified pages
+            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
+            using (Document doc = new Document())
+            using (PdfCopy copy = new PdfCopy(doc, fs))
+            {
+                doc.Open();
+
+                PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
+                copy.AddPage(importedPage);
+                doc.Close();
+            }
+
+            // Close the copied PDF reader
+            pdfReaderTemp.Close();
+
+            // Delete the temporary copied PDF
+            File.Delete(tempFilePath);
+
+            // Delete the original PDF
+            File.Delete(newFilePath);
+
+            // Rename the modified PDF by removing "_modified" from the filename
+            string fileNameWithoutModified = newFile1.Replace("_modified", "");
+            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            File.Move(modifiedFilePath, finalFilePath);
+
+            return finalFilePath;
             return null;
         }
-        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0)
         {
-            //string newFile1 = string.Empty;
-            //var request = _evolvedtaxContext.Tbl_1042s.FirstOrDefault(p => p.Id == Id);
-            //String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
+            var pdfPaths = new List<string>();
+            var CompilepdfPaths = new List<string>();
+            string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
+            bool containsAll = selectedPages.Contains("All");
 
-            //newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", request.Id, "_Page_", selectedPage);
-            //string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
-            //string newFileName = newFile1 + ".pdf";
+            if (containsAll)
+            {
+                foreach (var id in ids)
+                {
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath,entityId, true);
+                    pdfPaths.Add(pdfPath);
+                }
 
-            //var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true, selectedPage);
+                #region CompilePDFs
 
-            //// Create a copy of the generated PDF
-            //string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
-            //File.Copy(newFilePath, tempFilePath);
+                string compileFileName = "All Form Single File.pdf";
+                string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                CompilepdfPaths.Add(outputFilePath);
 
-            //// Open the copied PDF
-            //PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
-            //PdfReader.unethicalreading = true;
+                // Create a Document object
+                Document document = new Document();
 
-            //// Create a new PDF document to save the modified pages
-            //string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
-            //using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
-            //using (Document doc = new Document())
-            //using (PdfCopy copy = new PdfCopy(doc, fs))
-            //{
-            //    doc.Open();
+                // Create a PdfCopy object to write the output PDF
+                PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
 
-            //    PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
-            //    copy.AddPage(importedPage);
-            //    doc.Close();
-            //}
+                // Open the document for writing
+                document.Open();
 
-            //// Close the copied PDF reader
-            //pdfReaderTemp.Close();
+                foreach (string pdfFilePath in pdfPaths)
+                {
+                    // Open each input PDF file
+                    PdfReader pdfReader = new PdfReader(pdfFilePath);
 
-            //// Delete the temporary copied PDF
-            //File.Delete(tempFilePath);
+                    // Iterate through the pages of the input PDF and add them to the output PDF
+                    for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                    {
+                        PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
+                        pdfCopy.AddPage(page);
+                    }
 
-            //// Delete the original PDF
-            //File.Delete(newFilePath);
+                    pdfReader.Close();
+                }
 
-            //// Rename the modified PDF by removing "_modified" from the filename
-            //string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            //string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
-            //File.Move(modifiedFilePath, finalFilePath);
 
-            //return finalFilePath;
-            return null;
+                document.Close();
+                pdfCopy.Close();
+                pdfPaths.Clear();
+
+                #endregion
+
+            }
+            else
+            {
+                foreach (var selectedPage in selectedPages)
+                {
+
+
+                    foreach (var id in ids)
+                    {
+                        var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage, entityId);
+                        pdfPaths.Add(pdfPath);
+                    }
+
+                    #region CompilePDFs
+                    string compileFileName;
+
+                    switch (selectedPage)
+                    {
+                        case "1":
+                            compileFileName = "Page1.pdf";
+                            break;
+                        case "2":
+                            compileFileName = "Page2.pdf";
+                            break;
+                        case "4":
+                            compileFileName = "Page4.pdf";
+                            break;
+                        case "6":
+                            compileFileName = "Page6.pdf";
+                            break;
+                        case "8":
+                            compileFileName = "Page8.pdf";
+                            break;
+                        default:
+                            compileFileName = "compiled_page.pdf";
+                            break;
+                    }
+
+                    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                    CompilepdfPaths.Add(outputFilePath);
+
+                    // Create a Document object
+                    Document document = new Document();
+
+                    // Create a PdfCopy object to write the output PDF
+                    PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
+
+                    // Open the document for writing
+                    document.Open();
+
+                    foreach (string pdfFilePath in pdfPaths)
+                    {
+                        // Open each input PDF file
+                        PdfReader pdfReader = new PdfReader(pdfFilePath);
+
+                        // Iterate through the pages of the input PDF and add them to the output PDF
+                        for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                        {
+                            PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
+                            pdfCopy.AddPage(page);
+                        }
+
+                        pdfReader.Close();
+                    }
+
+
+                    document.Close();
+                    pdfCopy.Close();
+                    pdfPaths.Clear();
+
+                    #endregion
+
+
+                }
+            }
+
+            //Create Zip
+            var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
+            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+
+            using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                foreach (var pdfPath in CompilepdfPaths)
+                {
+                    var pdfFileName = Path.GetFileName(pdfPath);
+                    zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
+                }
+            }
+
+            return zipFilePath; // Return the ZIP file path.
+            
         }
-        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0)
         {
-            //var pdfPaths = new List<string>();
-            //var CompilepdfPaths = new List<string>();
-            //string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
-            //bool containsAll = selectedPages.Contains("All");
+            var pdfPaths = new List<string>();
 
-            //if (containsAll)
-            //{
-            //    foreach (var id in ids)
-            //    {
-            //        var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, true);
-            //        pdfPaths.Add(pdfPath);
-            //    }
+            foreach (var id in ids)
+            {
 
-            //    #region CompilePDFs
+                string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
+                bool containsAll = selectedPages.Contains("All");
 
-            //    string compileFileName = "All Form Single File.pdf";
-            //    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
-            //    CompilepdfPaths.Add(outputFilePath);
+                if (containsAll)
+                {
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath,entityId, true);
+                    pdfPaths.Add(pdfPath);
+                }
+                else
+                {
+                    var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages, entityId);
+                    pdfPaths.Add(pdfPath);
 
-            //    // Create a Document object
-            //    Document document = new Document();
-
-            //    // Create a PdfCopy object to write the output PDF
-            //    PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
-
-            //    // Open the document for writing
-            //    document.Open();
-
-            //    foreach (string pdfFilePath in pdfPaths)
-            //    {
-            //        // Open each input PDF file
-            //        PdfReader pdfReader = new PdfReader(pdfFilePath);
-
-            //        // Iterate through the pages of the input PDF and add them to the output PDF
-            //        for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
-            //        {
-            //            PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
-            //            pdfCopy.AddPage(page);
-            //        }
-
-            //        pdfReader.Close();
-            //    }
+                }
 
 
-            //    document.Close();
-            //    pdfCopy.Close();
-            //    pdfPaths.Clear();
+            }
 
-            //    #endregion
+            var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
+            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
 
-            //}
-            //else
-            //{
-            //    foreach (var selectedPage in selectedPages)
-            //    {
+            using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                foreach (var pdfPath in pdfPaths)
+                {
+                    var pdfFileName = Path.GetFileName(pdfPath);
+                    zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
+                }
+            }
 
-
-            //        foreach (var id in ids)
-            //        {
-            //            var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage);
-            //            pdfPaths.Add(pdfPath);
-            //        }
-
-            //        #region CompilePDFs
-            //        string compileFileName;
-
-            //        switch (selectedPage)
-            //        {
-            //            case "2":
-            //                compileFileName = "Internal Revenue Service Center.pdf";
-            //                break;
-            //            case "3":
-            //                compileFileName = "For Borrower.pdf";
-            //                break;
-            //            case "5":
-            //                compileFileName = "For Lender.pdf";
-            //                break;
-            //            default:
-            //                compileFileName = "compiled_page.pdf";
-            //                break;
-            //        }
-
-            //        string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
-            //        CompilepdfPaths.Add(outputFilePath);
-
-            //        // Create a Document object
-            //        Document document = new Document();
-
-            //        // Create a PdfCopy object to write the output PDF
-            //        PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
-
-            //        // Open the document for writing
-            //        document.Open();
-
-            //        foreach (string pdfFilePath in pdfPaths)
-            //        {
-            //            // Open each input PDF file
-            //            PdfReader pdfReader = new PdfReader(pdfFilePath);
-
-            //            // Iterate through the pages of the input PDF and add them to the output PDF
-            //            for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
-            //            {
-            //                PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
-            //                pdfCopy.AddPage(page);
-            //            }
-
-            //            pdfReader.Close();
-            //        }
-
-
-            //        document.Close();
-            //        pdfCopy.Close();
-            //        pdfPaths.Clear();
-
-            //        #endregion
-
-
-            //    }
-            //}
-
-            ////Create Zip
-            //var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            //var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
-
-            //using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-            //{
-            //    foreach (var pdfPath in CompilepdfPaths)
-            //    {
-            //        var pdfFileName = Path.GetFileName(pdfPath);
-            //        zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
-            //    }
-            //}
-
-            //return zipFilePath; // Return the ZIP file path.
-            return null;
-        }
-        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
-        {
-            //var pdfPaths = new List<string>();
-
-            //foreach (var id in ids)
-            //{
-
-            //    string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
-            //    bool containsAll = selectedPages.Contains("All");
-
-            //    if (containsAll)
-            //    {
-            //        var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, true);
-            //        pdfPaths.Add(pdfPath);
-            //    }
-            //    else
-            //    {
-            //        var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages);
-            //        pdfPaths.Add(pdfPath);
-
-            //    }
-
-
-            //}
-
-            //var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            //var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
-
-            //using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-            //{
-            //    foreach (var pdfPath in pdfPaths)
-            //    {
-            //        var pdfFileName = Path.GetFileName(pdfPath);
-            //        zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
-            //    }
-            //}
-
-            //return zipFilePath; // Return the ZIP file path.
-            return null;
+            return zipFilePath; // Return the ZIP file path.
+            //return null;
         }
 
         public async Task<MessageResponseModel> DeletePermeant(int id)

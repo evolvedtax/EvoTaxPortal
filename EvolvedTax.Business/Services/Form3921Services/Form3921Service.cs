@@ -162,6 +162,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
         }
 
 
+        #region PDF Methods
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath, int entityId)
         {
             return CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, false);
@@ -233,7 +234,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             else
             {
                 pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.c1_1", "0");
-               // pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "1");
+                // pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "1");
             }
             pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
             pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_2", entityData.Ein);
@@ -329,7 +330,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
 
         }
 
-        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages)
+        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages, int entityId)
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
@@ -340,7 +341,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
 
 
 
-            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, 0, true);
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true);
 
             // Create a copy of the generated PDF
             string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
@@ -390,7 +391,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             return finalFilePath;
             //return null;
         }
-        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
+        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage, int entityId = 0)
         {
             string newFile1 = string.Empty;
             var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
@@ -400,7 +401,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             string FilenameNew = "/Form3921/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf";
 
-            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, 0, true, selectedPage);
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true, selectedPage);
 
             // Create a copy of the generated PDF
             string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
@@ -440,7 +441,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             return finalFilePath;
             //return null;
         }
-        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0)
         {
             var pdfPaths = new List<string>();
             var CompilepdfPaths = new List<string>();
@@ -451,7 +452,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             {
                 foreach (var id in ids)
                 {
-                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, 0, true);
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, entityId, true);
                     pdfPaths.Add(pdfPath);
                 }
 
@@ -501,7 +502,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
 
                     foreach (var id in ids)
                     {
-                        var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage);
+                        var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage, entityId);
                         pdfPaths.Add(pdfPath);
                     }
 
@@ -578,7 +579,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             return zipFilePath; // Return the ZIP file path.
             //return null;
         }
-        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId)
         {
             var pdfPaths = new List<string>();
 
@@ -590,12 +591,12 @@ namespace EvolvedTax.Business.Services.Form3921Services
 
                 if (containsAll)
                 {
-                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, 0, true);
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, entityId, true);
                     pdfPaths.Add(pdfPath);
                 }
                 else
                 {
-                    var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages);
+                    var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages, entityId);
                     pdfPaths.Add(pdfPath);
 
                 }
@@ -617,7 +618,8 @@ namespace EvolvedTax.Business.Services.Form3921Services
 
             return zipFilePath; // Return the ZIP file path.
             //return null;
-        }
+        } 
+        #endregion
 
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {

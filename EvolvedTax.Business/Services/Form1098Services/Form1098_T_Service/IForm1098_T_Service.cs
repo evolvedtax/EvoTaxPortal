@@ -10,10 +10,13 @@ namespace EvolvedTax.Business.Services.Form1098Services
     {
         IQueryable<Form1098TResponse> GetForm1098TList();
         Task<MessageResponseModel> Upload1098_T_Data(IFormFile file, int InstId,int entityId, string UserId);
-       // string GeneratePdf(int id, string BasePath);
+        // string GeneratePdf(int id, string BasePath);
+        #region PDF Methods
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath, int entityId);
-        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
-        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath);
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0);
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0);
+        #endregion
+
         Task<MessageResponseModel> KeepRecord(int id);
         Task<MessageResponseModel> DeletePermeant(int id);
         Task<bool> SendEmailToRecipients(int[] selectValues, string URL, string form1042S, int instituteId = -1);
