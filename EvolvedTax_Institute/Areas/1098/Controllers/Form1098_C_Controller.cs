@@ -61,7 +61,7 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
         [HttpGet]
         public IActionResult DownlodPdf(int Id)
         {
-            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms",AppConstants.Form1098CExcelTemplate);
+            string TemplatePathFile = Path.Combine(_webHostEnvironment.WebRootPath, "Forms",AppConstants.Form1098CTemplateFileName);
             string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath,AppConstants.Form1098C);
             var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             string pdfUrl = _form1098_C_Service.GeneratePdf(Id, TemplatePathFile, SavePathFolder, entityId);
@@ -78,7 +78,8 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
             List<string> selectedPage = model.selectedPage;
             string RootPath = _webHostEnvironment.WebRootPath;
             string SavePathFolder = Path.Combine(_webHostEnvironment.WebRootPath,AppConstants.Form1098C);
-            var zipFilePath = _form1098_C_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath);
+            var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var zipFilePath = _form1098_C_Service.GenerateAndZipPdfs(ids, SavePathFolder, selectedPage, RootPath, entityId);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);
@@ -107,7 +108,8 @@ namespace EvolvedTax_Institute.Areas._1098.Controllers
             //    selectedPage.Add("6");
             //    selectedPage.Add("7");
             //}
-            var zipFilePath = _form1098_C_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath);
+            var entityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var zipFilePath = _form1098_C_Service.DownloadOneFile(ids, SavePathFolder, selectedPage, RootPath, entityId);
             string contentType = "application/zip";
 
             var fileBytes = System.IO.File.ReadAllBytes(zipFilePath);

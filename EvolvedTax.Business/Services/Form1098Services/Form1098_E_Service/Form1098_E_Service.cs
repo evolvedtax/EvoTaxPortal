@@ -200,6 +200,8 @@ namespace EvolvedTax.Business.Services.Form1098Services
         }
 
 
+
+        #region PDF Methods
         public string GeneratePdf(int Id, string TemplatefilePath, string SaveFolderPath, int entityId)
         {
             return CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, false);
@@ -208,25 +210,25 @@ namespace EvolvedTax.Business.Services.Form1098Services
 
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, int entityId, bool IsAll, string Page = "")
         {
-            var response = _evolvedtaxContext.Tbl_1042s.FirstOrDefault(p => p.Id == Id);
+            var response = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
             //var requestInstitue = _instituteService.GetPayeeData((int)response.InstID);
             var entityData = _instituteService.GetEntityDataById(entityId);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            String ClientName = response.RcpFirstAndMI + " " + response.RcpNameLine2?.Replace(": ", "");
+            string ClientName = response.FirstName + " " + response.LastNameCompany?.Replace(": ", "");
 
-            if (!String.IsNullOrEmpty(Page))
+            if (!string.IsNullOrEmpty(Page))
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", response.Id, "_Page_", Page);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1098E, "_", response.Id, "_Page_", Page);
             }
             else
             {
-                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", response.Id);
+                newFile1 = string.Concat(ClientName, "_", AppConstants.Form1098E, "_", response.Id);
             }
 
 
-            string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
+            string FilenameNew = "/Form1098E/" + newFile1 + ".pdf";
             string newFileName = newFile1 + ".pdf"; // Add ".pdf" extension to the file name
 
             string newFilePath = Path.Combine(SaveFolderPath, newFileName);
@@ -263,381 +265,95 @@ namespace EvolvedTax.Business.Services.Form1098Services
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
 
             #region PDF Columns
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].f1_01[0]", response.UniqueFormID?.ToString());
-            if (response.ProRataBasisChkbx == "0")
+            if (response.IsCorrected == 0)
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].c1_1[0]", "0");
+                //pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.c1_1", "0");
+                pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "0");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].PgHeader[0].f1_02[0]", response.Ammended_No);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_03[0]", response.Box1Code?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_04[0]", response.Box2Amount?.ToString());
-            if (string.IsNullOrEmpty(response.Box4Chap4Chk))
+            else
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].Lines3_b[0].f1_05[0]", "3");
+                pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.c1_1", "0");
+                // pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "1");
             }
-            else if (string.IsNullOrEmpty(response.Box3Chap3Chk))
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_2", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_3", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_4", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_7", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_8", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_9", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_10", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_11", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_12", response.Box5Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_13", response.Box6AllLines);
+            if (response.IsCorrected == 0)
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].Lines3_b[0].f1_05[0]", "4");
+                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c2_1", "1");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].Lines3_b[0].f1_06[0]", response.Box3aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].Lines3_b[0].f1_07[0]", ((int)Math.Floor(response?.Box3bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].Lines3_b[0].f1_08[0]", response?.Box3bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_09[0]", response.Box4aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_10[0]", ((int)Math.Floor(response?.Box4bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_11[0]", response?.Box4bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_12[0]", response.Box5Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_13[0]", response.Box6Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_14[0]", response.Box7aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].c1_2[0]", response.Box7bCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].c1_3[0]", response.Box7cCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_15[0]", response.Box8Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_16[0]", response.Box9Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_17[0]", (response?.Box7aAmount + response?.Box8Amount + response?.Box9Amount)?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_18[0]", response?.Box11Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_19[0]", entityData.Ein);
-            //pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_20[0]", entityData.Entity Ch3 Status Code);
-            //pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_21[0]", entityData.Entity Ch4 Status Code);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_22[0]", entityData.EntityName);
-            //pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_23[0]", entityData.Entity GIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_24[0]", entityData.Country);
-            //pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_25[0]", entityData.Entity FTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_26[0]", entityData.Address1 + " " + entityData.Address2);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_27[0]", entityData.City);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_28[0]", response.RcpFirstAndMI);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_29[0]", response.RcpCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_30[0]", response.RcpAddressLine1 + " " + response.RcpAddressLine2);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].LeftCol[0].f1_31[0]", response.RcpCityForeign3 + " " + response.RcpStateUSCanada + " " + response.RcpZipUSCanada);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_32[0]", response.RecipientTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_33[0]", response.RcpCh3Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_34[0]", response.RcpCh4Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_35[0]", response.RcpGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_36[0]", response.RcpForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_37[0]", response.RcpLOBCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_38[0]", response.RcpAcctNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_39[0]", response.RcpDOB?.ToString("yyyyMMdd"));
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_40[0]", response.Box14aPrimaryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_41[0]", response.Box14bPrimaryEIN);
-            if (response.ProRataBasisChkbx == "0")
+            else
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].c1_4[0]", "0");
+                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c2_1", "0");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_42[0]", response.Box15aIFTEEIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_43[0]", response.Box15bIFTECh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_44[0]", response.Box15cIFTECh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_45[0]", response.Box15dIFTENAME1);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_46[0]", response.Box15eIFTEGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_47[0]", response.Box15fCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_48[0]", response.Box15gForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_49[0]", response.Box15hIFTEAddr1 + " " + response.Box15hIFTEAddr2);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_50[0]", response.Box15iIFTECity + " " + response.Box15iStateProv + " " + response.Box15iZipPostal);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_51[0]", response.Box16aPayersName);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_52[0]", response.Box16bPayersTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_53[0]", response.Box16cPayersGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_54[0]", response.Box16dPayersCh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_55[0]", response.Box16ePayersCh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_56[0]", response.Box17aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_57[0]", response.Box17bStateTaxNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyA[0].RightCol[0].f1_58[0]", response.Box17cState);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].PgHeader[0].f1_01[0]", response.UniqueFormID?.ToString());
-            if (response.ProRataBasisChkbx == "0")
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_2", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_3", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_4", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_7", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_10", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_11", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_12", response.Box5Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_13", response.Box6AllLines);
+            if (response.IsCorrected == 0)
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyB[0].PgHeader[0].c1_1[0]", "0");
+                pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c2_1", "1");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].PgHeader[0].f1_02[0]", response.Ammended_No);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_03[0]", response.Box1Code?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_04[0]", response.Box2Amount?.ToString());
-            if (string.IsNullOrEmpty(response.Box4Chap4Chk))
+            else
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].Lines3_b[0].f1_05[0]", "3");
+                pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c2_1", "0");
             }
-            else if (string.IsNullOrEmpty(response.Box3Chap3Chk))
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_2", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_3", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_4", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_7", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_10", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_11", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_12", response.Box5Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_13", response.Box6AllLines);
+            if (response.IsCorrected == 0)
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].Lines3_b[0].f1_05[0]", "4");
+                //pdfFormFields.SetField("topmostSubform.CopyD.CopyDHeader.c2_1", "Not(IsCorrected)");
+                pdfFormFields.SetField("efield44_topmostSubform.CopyD.CopyDHeader.c2_1", "0");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].Lines3_b[0].f1_06[0]", response.Box3aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].Lines3_b[0].f1_07[0]", ((int)Math.Floor(response?.Box3bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].Lines3_b[0].f1_08[0]", response?.Box3bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_09[0]", response.Box4aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_10[0]", response.Box4bTaxRate?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_11[0]", response?.Box4bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_12[0]", response.Box5Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_13[0]", response.Box6Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_14[0]", response.Box7aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].c1_2[0]", response.Box7bCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].c1_3[0]", response.Box7cCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_15[0]", response.Box8Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_16[0]", response.Box9Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_17[0]", (response.Box7aAmount + response.Box8Amount + response.Box9Amount)?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_18[0]", response.Box11Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_19[0]", entityData.Ein);
-            //pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_20[0]", entityData.Entity Ch3 Status Code);
-            //pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_21[0]", entityData.Entity Ch4 Status Code);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_22[0]", entityData.EntityName);
-            //pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_23[0]", entityData.Entity GIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_24[0]", entityData.Country);
-            //pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_25[0]", entityData.Entity FTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_26[0]", entityData.Address1 + " " + entityData.Address2);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_27[0]", entityData.City);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_28[0]", response.RcpFirstAndMI);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_29[0]", response.RcpCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_30[0]", response.RcpAddressLine1 + " " + response.RcpAddressLine2);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].LeftCol[0].f1_31[0]", response.RcpCityForeign3 + " " + response.RcpStateUSCanada + " " + response.RcpZipUSCanada);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_32[0]", response.RecipientTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_33[0]", response.RcpCh3Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_34[0]", response.RcpCh4Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_35[0]", response.RcpGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_36[0]", response.RcpForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_37[0]", response.RcpLOBCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_38[0]", response.RcpAcctNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_39[0]", response.RcpDOB?.ToString("yyyyMMdd"));
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_40[0]", response.Box14aPrimaryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_41[0]", response.Box14bPrimaryEIN);
-            if (response.ProRataBasisChkbx == "0")
+            else
             {
-                pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].c1_4[0]", "0");
+                pdfFormFields.SetField("topmostSubform.CopyD.CopyDHeader.c2_1", "0");
+                //pdfFormFields.SetField("efield44_topmostSubform.CopyD.CopyDHeader.c2_1", "IsCorrected");
             }
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_42[0]", response.Box15aIFTEEIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_43[0]", response.Box15bIFTECh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_44[0]", response.Box15cIFTECh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_45[0]", response.Box15dIFTENAME1);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_46[0]", response.Box15eIFTEGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_47[0]", response.Box15fCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_48[0]", response.Box15gForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_49[0]", response.Box15hIFTEAddr1 + " " + response.Box15hIFTEAddr2);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_50[0]", response.Box15iIFTECity + " " + response.Box15iStateProv + " " + response.Box15iZipPostal);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_51[0]", response.Box16aPayersName);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_52[0]", response.Box16bPayersTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_53[0]", response.Box16cPayersGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_54[0]", response.Box16dPayersCh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_55[0]", response.Box16ePayersCh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_56[0]", response.Box17aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_57[0]", response.Box17bStateTaxNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyB[0].RightCol[0].f1_58[0]", response.Box17cState);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].PgHeader[0].f1_01[0]", response.UniqueFormID?.ToString());
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyC[0].PgHeader[0].c1_1[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].PgHeader[0].f1_02[0]", response.Ammended_No);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_03[0]", response.Box1Code?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_04[0]", response.Box2Amount?.ToString());
-            if (string.IsNullOrEmpty(response.Box4Chap4Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].Lines3_b[0].f1_05[0]", "3");
-            }
-            else if (string.IsNullOrEmpty(response.Box3Chap3Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].Lines3_b[0].f1_05[0]", "4");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].Lines3_b[0].f1_06[0]", response.Box3aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].Lines3_b[0].f1_07[0]", ((int)Math.Floor(response?.Box3bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].Lines3_b[0].f1_08[0]", response?.Box3bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_09[0]", response.Box4aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_10[0]", response.Box4bTaxRate?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_11[0]", response?.Box4bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_12[0]", response.Box5Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_13[0]", response.Box6Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_14[0]", response.Box7aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].c1_2[0]", response.Box7bCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].c1_3[0]", response.Box7cCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_15[0]", response.Box8Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_16[0]", response.Box9Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_17[0]", (response.Box7aAmount + response.Box8Amount + response.Box9Amount)?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_18[0]", response.Box11Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_19[0]", entityData.Ein);
-            //pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_20[0], entityData.Entity Ch3 Status Code);
-            //pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_21[0], entityData.Entity Ch4 Status Code);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_22[0]", entityData.EntityName);
-            //pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_23[0], entityData.Entity GIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_24[0]", entityData.Country);
-            //pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_25[0], entityData.Entity FTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_26[0]", entityData.Address1 + " " + entityData.Address2);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_27[0]", entityData.City);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_28[0]", response.RcpFirstAndMI);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_29[0]", response.RcpCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_30[0]", response.RcpAddressLine1 + " " + response.RcpAddressLine2);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].LeftCol[0].f1_31[0]", response.RcpCityForeign3 + " " + response.RcpStateUSCanada + " " + response.RcpZipUSCanada);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_32[0]", response.RecipientTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_33[0]", response.RcpCh3Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_34[0]", response.RcpCh4Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_35[0]", response.RcpGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_36[0]", response.RcpForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_37[0]", response.RcpLOBCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_38[0]", response.RcpAcctNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_39[0]", response.RcpDOB?.ToString("yyyyMMdd"));
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_40[0]", response.Box14aPrimaryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_41[0]", response.Box14bPrimaryEIN);
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].c1_4[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_42[0]", response.Box15aIFTEEIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_43[0]", response.Box15bIFTECh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_44[0]", response.Box15cIFTECh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_45[0]", response.Box15dIFTENAME1);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_46[0]", response.Box15eIFTEGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_47[0]", response.Box15fCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_48[0]", response.Box15gForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_49[0]", response.Box15hIFTEAddr1 + " " + response.Box15hIFTEAddr2);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_50[0]", response.Box15iIFTECity + " " + response.Box15iStateProv + " " + response.Box15iZipPostal);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_51[0]", response.Box16aPayersName);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_52[0]", response.Box16bPayersTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_53[0]", response.Box16cPayersGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_54[0]", response.Box16dPayersCh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_55[0]", response.Box16ePayersCh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_56[0]", response.Box17aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_57[0]", response.Box17bStateTaxNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyC[0].RightCol[0].f1_58[0]", response.Box17cState);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].PgHeader[0].f1_01[0]", response.UniqueFormID?.ToString());
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyD[0].PgHeader[0].c1_1[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].PgHeader[0].f1_02[0]", response.Ammended_No);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_03[0]", response.Box1Code?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_04[0]", response.Box2Amount?.ToString());
-            if (string.IsNullOrEmpty(response.Box4Chap4Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].Lines3_b[0].f1_05[0]", "3");
-            }
-            else if (string.IsNullOrEmpty(response.Box3Chap3Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].Lines3_b[0].f1_05[0]", "4");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].Lines3_b[0].f1_06[0]", response.Box3aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].Lines3_b[0].f1_07[0]", ((int)Math.Floor(response?.Box3bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].Lines3_b[0].f1_08[0]", response?.Box3bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_09[0]", response.Box4aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_10[0]", response.Box4bTaxRate?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_11[0]", response?.Box4bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_12[0]", response.Box5Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_13[0]", response.Box6Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_14[0]", response.Box7aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].c1_2[0]", response.Box7bCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].c1_3[0]", response.Box7cCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_15[0]", response.Box8Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_16[0]", response.Box9Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_17[0]", (response.Box7aAmount + response.Box8Amount + response.Box9Amount)?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_18[0]", response.Box11Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_19[0]", entityData.Ein);
-            //pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_20[0]", entityData.Entity Ch3 Status Code);
-            //pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_21[0]", entityData.Entity Ch4 Status Code);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_22[0]", entityData.EntityName);
-            //pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_23[0]", entityData.Entity GIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_24[0]", entityData.Country);
-            //pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_25[0]", entityData.Entity FTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_26[0]", entityData.Address1 + " " + entityData.Address2);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_27[0]", entityData.City);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_28[0]", response.RcpFirstAndMI);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_29[0]", response.RcpCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_30[0]", response.RcpAddressLine1 + " " + response.RcpAddressLine2);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].LeftCol[0].f1_31[0]", response.RcpCityForeign3 + " " + response.RcpStateUSCanada + " " + response.RcpZipUSCanada);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_32[0]", response.RecipientTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_33[0]", response.RcpCh3Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_34[0]", response.RcpCh4Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_35[0]", response.RcpGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_36[0]", response.RcpForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_37[0]", response.RcpLOBCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_38[0]", response.RcpAcctNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_39[0]", response.RcpDOB?.ToString("yyyyMMdd"));
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_40[0]", response.Box14aPrimaryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_41[0]", response.Box14bPrimaryEIN);
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].c1_4[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_42[0]", response.Box15aIFTEEIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_43[0]", response.Box15bIFTECh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_44[0]", response.Box15cIFTECh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_45[0]", response.Box15dIFTENAME1);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_46[0]", response.Box15eIFTEGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_47[0]", response.Box15fCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_48[0]", response.Box15gForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_49[0]", response.Box15hIFTEAddr1 + " " + response.Box15hIFTEAddr2);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_50[0]", response.Box15iIFTECity + " " + response.Box15iStateProv + " " + response.Box15iZipPostal);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_51[0]", response.Box16aPayersName);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_52[0]", response.Box16bPayersTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_53[0]", response.Box16cPayersGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_54[0]", response.Box16dPayersCh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_55[0]", response.Box16ePayersCh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_56[0]", response.Box17aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_57[0]", response.Box17bStateTaxNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyD[0].RightCol[0].f1_58[0]", response.Box17cState);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].PgHeader[0].f1_01[0]", response.UniqueFormID?.ToString());
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyE[0].PgHeader[0].c1_1[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].PgHeader[0].f1_02[0]", response.Ammended_No);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_03[0]", response.Box1Code?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_04[0]", response.Box2Amount?.ToString());
-            if (string.IsNullOrEmpty(response.Box4Chap4Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].Lines3_b[0].f1_05[0]", "3");
-            }
-            else if (string.IsNullOrEmpty(response.Box3Chap3Chk))
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].Lines3_b[0].f1_05[0]", "4");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].Lines3_b[0].f1_06[0]", response.Box3aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].Lines3_b[0].f1_07[0]", ((int)Math.Floor(response?.Box3bTaxRate ?? 0)).ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].Lines3_b[0].f1_08[0]", response?.Box3bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_09[0]", response.Box4aExemptCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_10[0]", response.Box4bTaxRate?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_11[0]", response?.Box4bTaxRate?.ToString("F2").Split('.')[1]);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_12[0]", response.Box5Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_13[0]", response.Box6Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_14[0]", response.Box7aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].c1_2[0]", response.Box7bCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].c1_3[0]", response.Box7cCheck);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_15[0]", response.Box8Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_16[0]", response.Box9Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_17[0]", (response.Box7aAmount + response.Box8Amount + response.Box9Amount)?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_18[0]", response.Box11Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_19[0]", entityData.Ein);
-            //pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_20[0]", entityData.Entity Ch3 Status Code);
-            //pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_21[0]", entityData.Entity Ch4 Status Code);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_22[0]", entityData.EntityName);
-            //pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_23[0]", entityData.Entity GIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_24[0]", entityData.Country);
-            //pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_25[0]", entityData.Entity FTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_26[0]", entityData.Address1 + " " + entityData.Address2);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_27[0]", entityData.City);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_28[0]", response.RcpFirstAndMI);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_29[0]", response.RcpCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_30[0]", response.RcpAddressLine1 + " " + response.RcpAddressLine2);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].LeftCol[0].f1_31[0]", response.RcpCityForeign3 + " " + response.RcpStateUSCanada + " " + response.RcpZipUSCanada);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_32[0]", response.RecipientTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_33[0]", response.RcpCh3Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_34[0]", response.RcpCh4Status?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_35[0]", response.RcpGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_36[0]", response.RcpForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_37[0]", response.RcpLOBCode);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_38[0]", response.RcpAcctNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_39[0]", response.RcpDOB?.ToString("yyyyMMddy"));
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_40[0]", response.Box14aPrimaryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_41[0]", response.Box14bPrimaryEIN);
-            if (response.ProRataBasisChkbx == "0")
-            {
-                pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].c1_4[0]", "0");
-            }
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_42[0]", response.Box15aIFTEEIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_43[0]", response.Box15bIFTECh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_44[0]", response.Box15cIFTECh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_45[0]", response.Box15dIFTENAME1);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_46[0]", response.Box15eIFTEGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_47[0]", response.Box15fCountryName);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_48[0]", response.Box15gForeignTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_49[0]", response.Box15hIFTEAddr1 + " " + response.Box15hIFTEAddr2);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_50[0]", response.Box15iIFTECity + " " + response.Box15iStateProv + " " + response.Box15iZipPostal);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_51[0]", response.Box16aPayersName);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_52[0]", response.Box16bPayersTIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_53[0]", response.Box16cPayersGIIN);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_54[0]", response.Box16dPayersCh3);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_55[0]", response.Box16ePayersCh4);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_56[0]", response.Box17aAmount?.ToString());
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_57[0]", response.Box17bStateTaxNo);
-            pdfFormFields.SetField("topmostSubform[0].CopyE[0].RightCol[0].f1_58[0]", response.Box17cState);
+
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_2", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_3", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_4", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_7", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_10", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_11", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_12", response.Box5Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_13", response.Box6AllLines);
             #endregion
 
             pdfStamper.FormFlattening = true;
@@ -653,295 +369,296 @@ namespace EvolvedTax.Business.Services.Form1098Services
 
         }
 
-        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages)
+        public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages, int entityId)
         {
-            //string newFile1 = string.Empty;
-            //var request = _evolvedtaxContext.Tbl_5498_SA.FirstOrDefault(p => p.Id == Id);
-            //String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
-            //newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", Id);
-            //string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
-            //string newFileName = newFile1 + ".pdf";
+            string newFile1 = string.Empty;
+            var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
+            String ClientName = request.FirstName + " " + request.NameLine2?.Replace(": ", "");
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1098E, "_", Id);
+            string FilenameNew = "/Form1098E/" + newFile1 + ".pdf";
+            string newFileName = newFile1 + ".pdf";
 
 
 
-            //var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true);
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true);
 
-            //// Create a copy of the generated PDF
-            //string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
-            //File.Copy(newFilePath, tempFilePath);
+            // Create a copy of the generated PDF
+            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            File.Copy(newFilePath, tempFilePath);
 
-            //// Open the copied PDF
-            //PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
-            //PdfReader.unethicalreading = true;
+            // Open the copied PDF
+            PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
+            PdfReader.unethicalreading = true;
 
-            //// Create a new PDF document to save the modified pages
-            //string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
-            //using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
-            //using (Document doc = new Document())
-            //using (PdfCopy copy = new PdfCopy(doc, fs))
-            //{
-            //    doc.Open();
-            //    List<int> pagesToInclude = selectedPages.Select(int.Parse).ToList();
-
-
-            //    for (int page = 1; page <= pdfReaderTemp.NumberOfPages; page++)
-            //    {
-            //        if (pagesToInclude.Contains(page))
-            //        {
-            //            PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, page);
-            //            copy.AddPage(importedPage);
-            //        }
-            //    }
+            // Create a new PDF document to save the modified pages
+            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
+            using (Document doc = new Document())
+            using (PdfCopy copy = new PdfCopy(doc, fs))
+            {
+                doc.Open();
+                List<int> pagesToInclude = selectedPages.Select(int.Parse).ToList();
 
 
-            //    doc.Close();
-            //}
+                for (int page = 1; page <= pdfReaderTemp.NumberOfPages; page++)
+                {
+                    if (pagesToInclude.Contains(page))
+                    {
+                        PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, page);
+                        copy.AddPage(importedPage);
+                    }
+                }
 
-            //// Close the copied PDF reader
-            //pdfReaderTemp.Close();
 
-            //// Delete the temporary copied PDF
-            //File.Delete(tempFilePath);
+                doc.Close();
+            }
 
-            //// Delete the original PDF
-            //File.Delete(newFilePath);
+            // Close the copied PDF reader
+            pdfReaderTemp.Close();
 
-            //// Rename the modified PDF by removing "_modified" from the filename
-            //string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            //string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
-            //File.Move(modifiedFilePath, finalFilePath);
+            // Delete the temporary copied PDF
+            File.Delete(tempFilePath);
 
-            //return finalFilePath;
-            return null;
+            // Delete the original PDF
+            File.Delete(newFilePath);
+
+            // Rename the modified PDF by removing "_modified" from the filename
+            string fileNameWithoutModified = newFile1.Replace("_modified", "");
+            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            File.Move(modifiedFilePath, finalFilePath);
+
+            return finalFilePath;
+            //return null;
         }
-        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage)
+        public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage, int entityId = 0)
         {
-            //string newFile1 = string.Empty;
-            //var request = _evolvedtaxContext.Tbl_5498_SA.FirstOrDefault(p => p.Id == Id);
-            //String ClientName = request.First_Name + " " + request.Name_Line_2?.Replace(": ", "");
+            string newFile1 = string.Empty;
+            var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
+            String ClientName = request.FirstName + " " + request.NameLine2?.Replace(": ", "");
 
-            //newFile1 = string.Concat(ClientName, "_", AppConstants.Form1042S, "_", request.Id, "_Page_", selectedPage);
-            //string FilenameNew = "/Form1042S/" + newFile1 + ".pdf";
-            //string newFileName = newFile1 + ".pdf";
+            newFile1 = string.Concat(ClientName, "_", AppConstants.Form1098E, "_", request.Id, "_Page_", selectedPage);
+            string FilenameNew = "/Form1098E/" + newFile1 + ".pdf";
+            string newFileName = newFile1 + ".pdf";
 
-            //var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, true, selectedPage);
+            var newFilePath = CreatePdf(Id, TemplatefilePath, SaveFolderPath, entityId, true, selectedPage);
 
-            //// Create a copy of the generated PDF
-            //string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
-            //File.Copy(newFilePath, tempFilePath);
+            // Create a copy of the generated PDF
+            string tempFilePath = Path.Combine(SaveFolderPath, newFile1 + "_temp.pdf");
+            File.Copy(newFilePath, tempFilePath);
 
-            //// Open the copied PDF
-            //PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
-            //PdfReader.unethicalreading = true;
+            // Open the copied PDF
+            PdfReader pdfReaderTemp = new PdfReader(tempFilePath);
+            PdfReader.unethicalreading = true;
 
-            //// Create a new PDF document to save the modified pages
-            //string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
-            //using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
-            //using (Document doc = new Document())
-            //using (PdfCopy copy = new PdfCopy(doc, fs))
-            //{
-            //    doc.Open();
+            // Create a new PDF document to save the modified pages
+            string modifiedFilePath = Path.Combine(SaveFolderPath, newFile1 + "_modified.pdf");
+            using (FileStream fs = new FileStream(modifiedFilePath, FileMode.Create))
+            using (Document doc = new Document())
+            using (PdfCopy copy = new PdfCopy(doc, fs))
+            {
+                doc.Open();
 
-            //    PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
-            //    copy.AddPage(importedPage);
-            //    doc.Close();
-            //}
+                PdfImportedPage importedPage = copy.GetImportedPage(pdfReaderTemp, Convert.ToInt32(selectedPage));
+                copy.AddPage(importedPage);
+                doc.Close();
+            }
 
-            //// Close the copied PDF reader
-            //pdfReaderTemp.Close();
+            // Close the copied PDF reader
+            pdfReaderTemp.Close();
 
-            //// Delete the temporary copied PDF
-            //File.Delete(tempFilePath);
+            // Delete the temporary copied PDF
+            File.Delete(tempFilePath);
 
-            //// Delete the original PDF
-            //File.Delete(newFilePath);
+            // Delete the original PDF
+            File.Delete(newFilePath);
 
-            //// Rename the modified PDF by removing "_modified" from the filename
-            //string fileNameWithoutModified = newFile1.Replace("_modified", "");
-            //string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
-            //File.Move(modifiedFilePath, finalFilePath);
+            // Rename the modified PDF by removing "_modified" from the filename
+            string fileNameWithoutModified = newFile1.Replace("_modified", "");
+            string finalFilePath = Path.Combine(SaveFolderPath, fileNameWithoutModified + ".pdf");
+            File.Move(modifiedFilePath, finalFilePath);
 
-            //return finalFilePath;
-            return null;
+            return finalFilePath;
+            //return null;
         }
-        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string DownloadOneFile(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId = 0)
         {
-            //var pdfPaths = new List<string>();
-            //var CompilepdfPaths = new List<string>();
-            //string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
-            //bool containsAll = selectedPages.Contains("All");
+            var pdfPaths = new List<string>();
+            var CompilepdfPaths = new List<string>();
+            string TemplatePathFile = Path.Combine(RootPath, "Forms",AppConstants.Form1098ETemplateFileName);
+            bool containsAll = selectedPages.Contains("All");
 
-            //if (containsAll)
-            //{
-            //    foreach (var id in ids)
-            //    {
-            //        var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, true);
-            //        pdfPaths.Add(pdfPath);
-            //    }
+            if (containsAll)
+            {
+                foreach (var id in ids)
+                {
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, entityId, true);
+                    pdfPaths.Add(pdfPath);
+                }
 
-            //    #region CompilePDFs
+                #region CompilePDFs
 
-            //    string compileFileName = "All Form Single File.pdf";
-            //    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
-            //    CompilepdfPaths.Add(outputFilePath);
+                string compileFileName = "All Form Single File.pdf";
+                string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                CompilepdfPaths.Add(outputFilePath);
 
-            //    // Create a Document object
-            //    Document document = new Document();
+                // Create a Document object
+                Document document = new Document();
 
-            //    // Create a PdfCopy object to write the output PDF
-            //    PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
+                // Create a PdfCopy object to write the output PDF
+                PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
 
-            //    // Open the document for writing
-            //    document.Open();
+                // Open the document for writing
+                document.Open();
 
-            //    foreach (string pdfFilePath in pdfPaths)
-            //    {
-            //        // Open each input PDF file
-            //        PdfReader pdfReader = new PdfReader(pdfFilePath);
+                foreach (string pdfFilePath in pdfPaths)
+                {
+                    // Open each input PDF file
+                    PdfReader pdfReader = new PdfReader(pdfFilePath);
 
-            //        // Iterate through the pages of the input PDF and add them to the output PDF
-            //        for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
-            //        {
-            //            PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
-            //            pdfCopy.AddPage(page);
-            //        }
+                    // Iterate through the pages of the input PDF and add them to the output PDF
+                    for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                    {
+                        PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
+                        pdfCopy.AddPage(page);
+                    }
 
-            //        pdfReader.Close();
-            //    }
-
-
-            //    document.Close();
-            //    pdfCopy.Close();
-            //    pdfPaths.Clear();
-
-            //    #endregion
-
-            //}
-            //else
-            //{
-            //    foreach (var selectedPage in selectedPages)
-            //    {
+                    pdfReader.Close();
+                }
 
 
-            //        foreach (var id in ids)
-            //        {
-            //            var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage);
-            //            pdfPaths.Add(pdfPath);
-            //        }
+                document.Close();
+                pdfCopy.Close();
+                pdfPaths.Clear();
 
-            //        #region CompilePDFs
-            //        string compileFileName;
+                #endregion
 
-            //        switch (selectedPage)
-            //        {
-            //            case "2":
-            //                compileFileName = "Internal Revenue Service Center.pdf";
-            //                break;
-            //            case "3":
-            //                compileFileName = "For Borrower.pdf";
-            //                break;
-            //            case "5":
-            //                compileFileName = "For Lender.pdf";
-            //                break;
-            //            default:
-            //                compileFileName = "compiled_page.pdf";
-            //                break;
-            //        }
-
-            //        string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
-            //        CompilepdfPaths.Add(outputFilePath);
-
-            //        // Create a Document object
-            //        Document document = new Document();
-
-            //        // Create a PdfCopy object to write the output PDF
-            //        PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
-
-            //        // Open the document for writing
-            //        document.Open();
-
-            //        foreach (string pdfFilePath in pdfPaths)
-            //        {
-            //            // Open each input PDF file
-            //            PdfReader pdfReader = new PdfReader(pdfFilePath);
-
-            //            // Iterate through the pages of the input PDF and add them to the output PDF
-            //            for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
-            //            {
-            //                PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
-            //                pdfCopy.AddPage(page);
-            //            }
-
-            //            pdfReader.Close();
-            //        }
+            }
+            else
+            {
+                foreach (var selectedPage in selectedPages)
+                {
 
 
-            //        document.Close();
-            //        pdfCopy.Close();
-            //        pdfPaths.Clear();
+                    foreach (var id in ids)
+                    {
+                        var pdfPath = GeneratePdForSpecificType(id, TemplatePathFile, SaveFolderPath, selectedPage, entityId);
+                        pdfPaths.Add(pdfPath);
+                    }
 
-            //        #endregion
+                    #region CompilePDFs
+                    string compileFileName;
+
+                    switch (selectedPage)
+                    {
+                        case "2":
+                            compileFileName = "Internal Revenue Service Center.pdf";
+                            break;
+                        case "3":
+                            compileFileName = "For Borrower.pdf";
+                            break;
+                        case "5":
+                            compileFileName = "For Lender.pdf";
+                            break;
+                        default:
+                            compileFileName = "compiled_page.pdf";
+                            break;
+                    }
+
+                    string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                    CompilepdfPaths.Add(outputFilePath);
+
+                    // Create a Document object
+                    Document document = new Document();
+
+                    // Create a PdfCopy object to write the output PDF
+                    PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
+
+                    // Open the document for writing
+                    document.Open();
+
+                    foreach (string pdfFilePath in pdfPaths)
+                    {
+                        // Open each input PDF file
+                        PdfReader pdfReader = new PdfReader(pdfFilePath);
+
+                        // Iterate through the pages of the input PDF and add them to the output PDF
+                        for (int pageNum = 1; pageNum <= pdfReader.NumberOfPages; pageNum++)
+                        {
+                            PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader, pageNum);
+                            pdfCopy.AddPage(page);
+                        }
+
+                        pdfReader.Close();
+                    }
 
 
-            //    }
-            //}
+                    document.Close();
+                    pdfCopy.Close();
+                    pdfPaths.Clear();
 
-            ////Create Zip
-            //var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            //var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+                    #endregion
 
-            //using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-            //{
-            //    foreach (var pdfPath in CompilepdfPaths)
-            //    {
-            //        var pdfFileName = Path.GetFileName(pdfPath);
-            //        zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
-            //    }
-            //}
 
-            //return zipFilePath; // Return the ZIP file path.
-            return null;
+                }
+            }
+
+            //Create Zip
+            var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
+            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+
+            using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                foreach (var pdfPath in CompilepdfPaths)
+                {
+                    var pdfFileName = Path.GetFileName(pdfPath);
+                    zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
+                }
+            }
+
+            return zipFilePath; // Return the ZIP file path.
+            //return null;
         }
-        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath)
+        public string GenerateAndZipPdfs(List<int> ids, string SaveFolderPath, List<string> selectedPages, string RootPath, int entityId)
         {
-            //var pdfPaths = new List<string>();
+            var pdfPaths = new List<string>();
 
-            //foreach (var id in ids)
-            //{
+            foreach (var id in ids)
+            {
 
-            //    string TemplatePathFile = Path.Combine(RootPath, "Forms", AppConstants.Form1042STemplateFileName);
-            //    bool containsAll = selectedPages.Contains("All");
+                string TemplatePathFile = Path.Combine(RootPath, "Forms",AppConstants.Form1098ETemplateFileName);
+                bool containsAll = selectedPages.Contains("All");
 
-            //    if (containsAll)
-            //    {
-            //        var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, true);
-            //        pdfPaths.Add(pdfPath);
-            //    }
-            //    else
-            //    {
-            //        var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages);
-            //        pdfPaths.Add(pdfPath);
+                if (containsAll)
+                {
+                    var pdfPath = CreatePdf(id, TemplatePathFile, SaveFolderPath, entityId, true);
+                    pdfPaths.Add(pdfPath);
+                }
+                else
+                {
+                    var pdfPath = GeneratePdfForSpecificPage(id, TemplatePathFile, SaveFolderPath, selectedPages, entityId);
+                    pdfPaths.Add(pdfPath);
 
-            //    }
+                }
 
 
-            //}
+            }
 
-            //var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
-            //var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
+            var zipFileName = $"GeneratedPDFs_{DateTime.Now:yyyyMMddHHmmss}.zip";
+            var zipFilePath = Path.Combine(SaveFolderPath, zipFileName);
 
-            //using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-            //{
-            //    foreach (var pdfPath in pdfPaths)
-            //    {
-            //        var pdfFileName = Path.GetFileName(pdfPath);
-            //        zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
-            //    }
-            //}
+            using (var zipArchive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+            {
+                foreach (var pdfPath in pdfPaths)
+                {
+                    var pdfFileName = Path.GetFileName(pdfPath);
+                    zipArchive.CreateEntryFromFile(pdfPath, pdfFileName);
+                }
+            }
 
-            //return zipFilePath; // Return the ZIP file path.
-            return null;
+            return zipFilePath; // Return the ZIP file path.
+            //return null;
         }
+        #endregion
 
         public async Task<MessageResponseModel> DeletePermeant(int id)
         {

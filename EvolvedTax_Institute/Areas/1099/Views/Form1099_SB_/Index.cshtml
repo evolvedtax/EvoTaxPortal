@@ -233,6 +233,15 @@
                             className: 'btn-menu-toggle',
                             buttons: [
                                 {
+                                    text: '<i class="fa fa-download"></i> Download in CSV',
+                                    className: 'btn-template',
+                                    action: function (e, dt, button, config) {
+                                        let url = '@Url.Action("DownloadExcel","Common")';
+                                        let params = { fileType: '@AppConstants.Form1099SB' }
+                                        COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099_SB_ExcelTemplate');
+                                    }
+                                },
+                                {
                                     text: '<i class="fa fa-download"></i> Download New Template',
                                     className: 'btn-template',
                                     action: function (e, dt, button, config) {

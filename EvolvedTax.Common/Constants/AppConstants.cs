@@ -138,6 +138,9 @@ namespace EvolvedTax.Common.Constants
         public const string Form1098TTemplateFileName = @"f1098T.pdf";
         public const string Form1098QTemplateFileName = @"f1098Q.pdf";
         public const string Form1098FTemplateFileName = @"f1098F.pdf";
+        public const string Form1098ETemplateFileName = @"f1098E.pdf";
+        public const string Form1098CTemplateFileName = @"f1098C.pdf";
+        public const string Form1098TemplateFileName = @"f1098.pdf";
 
 
         //Excel
