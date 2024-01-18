@@ -177,7 +177,7 @@ namespace EvolvedTax.Business.Services.Form3921Services
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            string ClientName = response.FirstName + " " + response.LastNameCompany?.Replace(": ", "");
+            String ClientName = response.FirstName + " " + response.NameLine2?.Replace(": ", "");
 
             if (!string.IsNullOrEmpty(Page))
             {
@@ -515,10 +515,13 @@ namespace EvolvedTax.Business.Services.Form3921Services
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
                         case "3":
-                            compileFileName = "For Borrower.pdf";
+                            compileFileName = "For Employee.pdf";
                             break;
                         case "5":
-                            compileFileName = "For Lender.pdf";
+                            compileFileName = "For Corporation.pdf";
+                            break;
+                        case "6":
+                            compileFileName = ">For Transferor.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";

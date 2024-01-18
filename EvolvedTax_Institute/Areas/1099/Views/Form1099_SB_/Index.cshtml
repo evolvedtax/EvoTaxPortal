@@ -236,10 +236,16 @@
                                     text: '<i class="fa fa-download"></i> Download in CSV',
                                     className: 'btn-template',
                                     action: function (e, dt, button, config) {
-                                        let url = '@Url.Action("DownloadExcel","Common")';
+                                       // downloadCsv();
+                                        //let url = '@Url.Action("DownloadExcel","Common")';
+                                        COMMON.doAjaxToDownloadCsvFile('/1099/Form1099_SB_/DownloadCsv', 'Form1099_SB');
+                                        /*
+                                     
                                         let params = { fileType: '@AppConstants.Form1099SB' }
                                         COMMON.doAjaxToDownloadFile(url, params, '@AppConstants.Form1099_SB_ExcelTemplate');
+                                        */
                                     }
+                                             
                                 },
                                 {
                                     text: '<i class="fa fa-download"></i> Download New Template',
@@ -481,6 +487,27 @@
                         })
                     });
             }
+            function downloadCsv() {
+        
+                fetch('@Url.Action("DownloadCsv")')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Create a link element and trigger the download
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'Form1099.csv';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+
 
             // On change the entity
             $('#changeEntity').change(function () {

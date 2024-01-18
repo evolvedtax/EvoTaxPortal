@@ -387,6 +387,26 @@ var COMMON = (function () {
 
 
     }
+    COMMON.doAjaxToDownloadCsvFile = function (url, fileName) {
+        fetch(url)  // Use the provided URL directly
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create a link element and trigger the download
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName + ".csv";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
     COMMON.doAjaxToDownloadFile = function (url, params, fileName) {
         $.ajax({
             url: url,

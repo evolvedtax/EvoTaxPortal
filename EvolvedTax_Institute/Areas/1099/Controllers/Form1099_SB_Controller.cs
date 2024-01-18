@@ -6,7 +6,9 @@ using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Reflection.Emit;
+using System.Text;
 using System.Xml.Linq;
 
 namespace EvolvedTax_Institute.Areas._1099.Controllers
@@ -53,6 +55,29 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
         {
             HttpContext.Session.SetInt32("EntityId", entityId);
             return Json(new { Data = "true" }); ;
+        }
+
+        public IActionResult DownloadCsv()
+        {
+
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+
+            // Get data from the service
+            var data = _Form1099_SB_Service.GetCSVForm1099List(EntityId, InstId).ToList();
+
+           
+
+            // Generate CSV content in the service
+            string csvContent = _Form1099_SB_Service.GenerateCsvContent(data);
+
+            // Create a CSV file name
+            var fileName = $"Form1099_{DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture)}.csv";
+
+            // Return the CSV file for download
+            return File(Encoding.UTF8.GetBytes(csvContent), "text/csv", fileName);
+
+          
         }
 
         #region PDF Creation Methods

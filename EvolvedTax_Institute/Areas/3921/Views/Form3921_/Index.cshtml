@@ -39,20 +39,24 @@
                                     <tr>
                                         <th><input type="checkbox" id="selectAll"></th>
                                         <th>Recepient TIN</th>
+                                        <th>Last Name Company</th>
                                         <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Company</th>
+                                        <th>Name Line2 </th>
+                                        <th>Delivery Street Address</th>
+                                        <th>Address Apt Suite</th>
                                         <th>Address Type</th>
-                                        <th>Country</th>
-
                                         <th>City</th>
                                         <th>State</th>
-                                        <th>Province</th>
                                         <th>Zip</th>
-                                        <th>Postal Code</th>
+                                        <th>Country</th>
+                                        <th>Recepient Account</th>
                                         <th>Recepient E-mail</th>
-
-                                        <th>Corrected</th>
+                                        <th>Date option granted</th>
+                                        <th>Date option exercised</th>
+                                        <th>Exercise price per share</th>
+                                        <th>Fair market value per share</th>
+                                        <th>No. of shares transferred</th>
+                                        <th>Other Details</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -74,20 +78,24 @@
                                                 </td>
                                                 @*    <td><input type="checkbox" class="rowCheckbox" value="@item.Id"></td>*@
                                                 <td>@item.RcpTIN</td>
+                                                <td>@item.LastNameCompany</td>
                                                 <td>@item.FirstName</td>
                                                 <td>@item.NameLine2</td>
-                                                <td>@item.LastNameCompany</td>
-                                                <td>@item.AddressType</td>
-                                                <td>@item.Country</td>
-
+                                                <td>@item.AddressDelivStreet</td>
+                                                <td>@item.AddressAptSuite</td>
                                                 <td>@item.City</td>
                                                 <td>@item.State</td>
                                                 <td>@item.Province</td>
                                                 <td>@item.Zip</td>
-                                                <td>@item.PostalCode</td>
+                                                <td>@item.Country</td>
+                                                <td>@item.RcpAccount</td>
                                                 <td>@item.RcpEmail</td>
-                                                <td>@item.FormSource</td>
-
+                                                <td>@item.Box1Date?.ToString("MM/dd/yyyy")</td>
+                                                <td>@item.Box2Date?.ToString("MM/dd/yyyy")</td>
+                                                <td>@item.Box3Amount</td>
+                                                <td>@item.Box4Amount</td>
+                                                <td>@item.Box5Number</td>
+                                                <td>@item.Box6AllLines</td>
                                                 <td @IsDuplicatedStyle class="actions">
                                                     @if (item.IsDuplicated)
                                                     {
@@ -163,17 +171,23 @@
                                         <label for="All">All Pages</label>
                                     </div>
 
+                                   
+
                                     <div>
                                         <input type="checkbox" id="page2" class="download-checkbox" name="page2" value="2">
                                         <label for="page2">Internal Revenue Service Center</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page3" class="download-checkbox" name="page3" value="3">
-                                        <label for="page3">For Borrower</label>
+                                        <label for="page3">For Employee</label>
                                     </div>
                                     <div>
                                         <input type="checkbox" id="page5" class="download-checkbox" name="page5" value="5">
-                                        <label for="page5">For Lender</label>
+                                        <label for="page5">For Corporation</label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="page6" class="download-checkbox" name="page6" value="6">
+                                        <label for="page6">For Transferor</label>
                                     </div>
                                     @* </div>*@
                                 </div>

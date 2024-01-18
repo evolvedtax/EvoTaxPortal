@@ -29,7 +29,7 @@ namespace EvolvedTax_Institute.Areas._3922.Controllers
         public IActionResult Index(int entityId)
         {
             var EntityId = entityId;
-
+            HttpContext.Session.SetInt32("EntityId", EntityId);
             //var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
             ViewBag.EntitiesList = _instituteService.GetEntitiesByInstId(SessionUser.InstituteId, Convert.ToInt32(AppConstants.FormSubscription_3922)).Select(p => new SelectListItem
             {

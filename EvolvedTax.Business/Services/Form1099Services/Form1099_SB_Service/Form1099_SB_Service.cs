@@ -13,6 +13,8 @@ using EvolvedTax.Business.MailService;
 using EvolvedTax.Data.Models.DTOs.Response.Form1099;
 using SkiaSharp;
 using EvolvedTax.Business.Services.InstituteService;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -665,6 +667,113 @@ namespace EvolvedTax.Business.Services.Form1099Services
             }
             return null;
         }
+
+        #region CSV Code
+        public IEnumerable<Form1099SBResponse> GetCSVForm1099List(int entityId, int instId)
+        {
+            var data = _evolvedtaxContext.Tbl1099_SB
+             .Where(p => p.EntityId == entityId && p.InstID == instId)
+             .ToList();
+
+            return MapToForm1099SBResponse(data);
+        }
+      
+        private IEnumerable<Form1099SBResponse> MapToForm1099SBResponse(IEnumerable<Tbl1099_SB> data)
+        {
+            var result = new List<Form1099SBResponse>();
+
+            foreach (var form in data)
+            {
+                var country = _evolvedtaxContext.MstrCountries.FirstOrDefault(c => c.Country == form.Country);
+                var countryCode = country != null ? country.CountryId : string.Empty;
+
+                string RecipentCity = string.Join("; ",
+                       new[]
+                       {
+                                    form.City,
+                                    form.State,
+                                    string.IsNullOrWhiteSpace(form.Province) ? null : form.Province,
+                                     string.IsNullOrWhiteSpace(countryCode) ? null : countryCode,
+                                    form.Zip,
+                                    string.IsNullOrWhiteSpace(form.PostalCode) ? null : form.PostalCode
+
+                       }.Where(s => !string.IsNullOrWhiteSpace(s))
+   );
+
+
+                var form1099SBResponse = new Form1099SBResponse
+                {
+                    FormType = "SB",
+                    TaxYear = DateTime.Now.Year,
+                    Rcp_TIN = form.Rcp_TIN,
+                    CountryCode = countryCode,
+                    RecipentCity = RecipentCity,
+                    // Map other properties...
+                };
+
+                result.Add(form1099SBResponse);
+            }
+
+            return result;
+        }
+
+
+        public string GenerateCsvContent(IEnumerable<Form1099SBResponse> data)
+        {
+
+            return ReplacePlaceholders(data);
+        }
+
+        private string ReplacePlaceholders(IEnumerable<Form1099SBResponse> data)
+        {
+            var csvBuilder = new StringBuilder();
+
+            // Define the mapping between class property names and CSV headers
+            var propertyHeaderMapping = new Dictionary<string, string>
+    {
+                { nameof(Form1099SBResponse.FormType), "Form Type" },
+                { nameof(Form1099SBResponse.TaxYear), "Tax Year" },
+                { nameof(Form1099SBResponse.Rcp_TIN), "Issuer TIN Type" },
+                //testing
+                { nameof(Form1099SBResponse.CountryCode), "Country Code" },
+                { nameof(Form1099SBResponse.RecipentCity), "Recipent City" },
+
+        // Add more mappings as needed
+    };
+
+            // Append CSV headers to the CSV content
+            var headers = string.Join(",", propertyHeaderMapping.Values);
+            csvBuilder.AppendLine(headers);
+
+            foreach (var item in data)
+            {
+                // Map class property names to CSV headers for each data row
+                var dataRow = new StringBuilder();
+                foreach (var propertyName in propertyHeaderMapping.Keys)
+                {
+                    // Get the property value using reflection
+                    var propertyValue = typeof(Form1099SBResponse).GetProperty(propertyName)?.GetValue(item)?.ToString() ?? string.Empty;
+
+                    // Append the property value to the data row
+                    dataRow.Append($"{propertyValue},");
+                }
+
+                // Remove the trailing comma and append the data row to CSV content
+                csvBuilder.AppendLine(dataRow.ToString().TrimEnd(','));
+            }
+
+            return csvBuilder.ToString();
+        } 
+        #endregion
+
+
+
+
+
+
+
+
+
 
     }
 }

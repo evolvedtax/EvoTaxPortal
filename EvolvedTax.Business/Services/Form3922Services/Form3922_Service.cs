@@ -43,6 +43,7 @@ namespace EvolvedTax.Business.Services.Form3922Services
         {
             var response = _evolvedtaxContext.Tbl_3922.Select(p => new Form3922Response
             {
+                Id = p.Id,
                 RcpTIN = p.RcpTIN,
                 LastNameCompany = p.LastNameCompany,
                 FirstName = p.FirstName,
@@ -212,13 +213,13 @@ namespace EvolvedTax.Business.Services.Form3922Services
 
         public string CreatePdf(int Id, string TemplatefilePath, string SaveFolderPath, int entityId, bool IsAll, string Page = "")
         {
-            var response = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
+            var response = _evolvedtaxContext.Tbl_3922.FirstOrDefault(p => p.Id == Id);
             //var requestInstitue = _instituteService.GetPayeeData((int)response.InstID);
             var entityData = _instituteService.GetEntityDataById(entityId);
             string templatefile = TemplatefilePath;
             string newFile1 = string.Empty;
 
-            string ClientName = response.FirstName + " " + response.LastNameCompany?.Replace(": ", "");
+            string ClientName = response.FirstName + " " + response.NameLine2?.Replace(": ", "");
 
             if (!string.IsNullOrEmpty(Page))
             {
@@ -265,97 +266,88 @@ namespace EvolvedTax.Business.Services.Form3922Services
 
             //String RecipentAddress = string.Concat(response.Address_Deliv_Street, ", ", response.Address_Apt_Suite);
             string currentYear = Convert.ToString(DateTime.Now.Year % 100);
-
+            string EntityInfo = string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip);
             #region PDF Columns
-            if (response.IsCorrected == 0)
+            if (response.IsCorrected== 1)
             {
-                //pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.c1_1", "0");
-                pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "0");
-            }
-            else
-            {
-                pdfFormFields.SetField("topmostSubform.CopyA.CopyHeader.c1_1", "0");
-                // pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyHeader.c1_1", "1");
-            }
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_2", entityData.Ein);
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_3", response.RcpTIN);
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_4", response.FirstName + response.NameLine2);
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
-            pdfFormFields.SetField("topmostSubform.CopyA.LftCol.f1_7", response.RcpAccount);
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_8", response.Box1Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_9", response.Box2Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_10", response.Box3Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_11", response.Box4Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_12", response.Box5Number?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyA.RghtCol.f1_13", response.Box6AllLines);
-            if (response.IsCorrected == 0)
-            {
-                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c2_1", "1");
-            }
-            else
-            {
-                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c2_1", "0");
-            }
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_2", entityData.Ein);
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_3", response.RcpTIN);
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_4", response.FirstName + response.NameLine2);
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
-            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.f2_7", response.RcpAccount);
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_10", response.Box3Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_11", response.Box4Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_12", response.Box5Number?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyB.RghtCol.f2_13", response.Box6AllLines);
-            if (response.IsCorrected == 0)
-            {
-                pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c2_1", "1");
-            }
-            else
-            {
-                pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c2_1", "0");
-            }
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_2", entityData.Ein);
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_3", response.RcpTIN);
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_4", response.FirstName + response.NameLine2);
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
-            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.f2_7", response.RcpAccount);
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_10", response.Box3Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_11", response.Box4Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_12", response.Box5Number?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyC.RghtCol.f2_13", response.Box6AllLines);
-            if (response.IsCorrected == 0)
-            {
-                //pdfFormFields.SetField("topmostSubform.CopyD.CopyDHeader.c2_1", "Not(IsCorrected)");
-                pdfFormFields.SetField("efield44_topmostSubform.CopyD.CopyDHeader.c2_1", "0");
-            }
-            else
-            {
-                pdfFormFields.SetField("topmostSubform.CopyD.CopyDHeader.c2_1", "0");
-                //pdfFormFields.SetField("efield44_topmostSubform.CopyD.CopyDHeader.c2_1", "IsCorrected");
-            }
+                pdfFormFields.SetField("topmostSubform.CopyA.CopyAHeader.c1_01", "0"); //void
 
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_1", string.Concat(entityData.EntityName, " ", entityData.Address1, " ", entityData.Address2, " ", entityData.City, " ", entityData.State, entityData.Province, " ", entityData.Zip));
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_2", entityData.Ein);
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_3", response.RcpTIN);
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_4", response.FirstName + response.NameLine2);
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_5", response.AddressDelivStreet + " " + response.AddressAptSuite);
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_6", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
-            pdfFormFields.SetField("topmostSubform.CopyD.LeftColumn.f2_7", response.RcpAccount);
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_8", response.Box1Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_9", response.Box2Date?.ToString("MM/dd/yyyy"));
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_10", response.Box3Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_11", response.Box4Amount?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_12", response.Box5Number?.ToString());
-            pdfFormFields.SetField("topmostSubform.CopyD.RghtCol.f2_13", response.Box6AllLines);
+            }
+            if (response.IsCorrected == 0)
+            {
+                pdfFormFields.SetField("efield1_topmostSubform.CopyA.CopyAHeader.c1_01", "0"); //corrected
+            }
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_001", EntityInfo);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_002", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_003", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_004", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_005", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_006", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyA.LeftColumn.gf1_007", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_008", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_009", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_010", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_011", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_012", response.Box5Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_013", response.Box6Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_014", response.Box7Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyA.RightColumn.gf1_015", response.Box8Amount?.ToString());
+
+
+            if (response.IsCorrected == 0)
+            {
+                pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c1_01", "0");
+
+            }
+            //if (response.IsCorrected == 0)
+            //{
+            //    pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c1_01", "1");
+            //}
+            //else
+            //{
+            //    pdfFormFields.SetField("topmostSubform.CopyB.CopyBHeader.c1_01", "0");
+            //}
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_001", EntityInfo);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_002", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_003", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_004", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_005", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_006", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyB.LeftColumn.gf1_007", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_008", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_009", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_010", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_011", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_012", response.Box5Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_013", response.Box6Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_014", response.Box7Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyB.RightColumn.gf1_015", response.Box8Amount?.ToString());
+
+            if (response.IsCorrected == 1)
+            {
+                pdfFormFields.SetField("topmostSubform.CopyC.CopyCHeader.c1_01", "0"); //void
+
+            }
+            if (response.IsCorrected == 0)
+            {
+                pdfFormFields.SetField("efield34_topmostSubform.CopyC.CopyCHeader.c1_01", "0"); //corrected
+            }
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_001", EntityInfo);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_002", entityData.Ein);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_003", response.RcpTIN);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_004", response.FirstName + response.NameLine2);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_005", response.AddressDelivStreet + " " + response.AddressAptSuite);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_006", response.City + " " + response.State + " " + response.Zip + " " + response.Country);
+            pdfFormFields.SetField("topmostSubform.CopyC.LeftColumn.gf1_007", response.RcpAccount);
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_008", response.Box1Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_009", response.Box2Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_010", response.Box3Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_011", response.Box4Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_012", response.Box5Amount?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_013", response.Box6Number?.ToString());
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_014", response.Box7Date?.ToString("MM/dd/yyyy"));
+            pdfFormFields.SetField("topmostSubform.CopyC.RightColumn.gf1_015", response.Box8Amount?.ToString());
+         
             #endregion
 
             pdfStamper.FormFlattening = true;
@@ -374,7 +366,7 @@ namespace EvolvedTax.Business.Services.Form3922Services
         public string GeneratePdfForSpecificPage(int Id, string TemplatefilePath, string SaveFolderPath, List<string> selectedPages, int entityId)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
+            var request = _evolvedtaxContext.Tbl_3922.FirstOrDefault(p => p.Id == Id);
             String ClientName = request.FirstName + " " + request.NameLine2?.Replace(": ", "");
             newFile1 = string.Concat(ClientName, "_", AppConstants.Form3922, "_", Id);
             string FilenameNew = "/Form3922/" + newFile1 + ".pdf";
@@ -435,7 +427,7 @@ namespace EvolvedTax.Business.Services.Form3922Services
         public string GeneratePdForSpecificType(int Id, string TemplatefilePath, string SaveFolderPath, string selectedPage, int entityId = 0)
         {
             string newFile1 = string.Empty;
-            var request = _evolvedtaxContext.Tbl_3921.FirstOrDefault(p => p.Id == Id);
+            var request = _evolvedtaxContext.Tbl_3922.FirstOrDefault(p => p.Id == Id);
             String ClientName = request.FirstName + " " + request.NameLine2?.Replace(": ", "");
 
             newFile1 = string.Concat(ClientName, "_", AppConstants.Form3922, "_", request.Id, "_Page_", selectedPage);
@@ -552,14 +544,14 @@ namespace EvolvedTax.Business.Services.Form3922Services
 
                     switch (selectedPage)
                     {
-                        case "2":
+                        case "1":
                             compileFileName = "Internal Revenue Service Center.pdf";
                             break;
-                        case "3":
-                            compileFileName = "For Borrower.pdf";
+                        case "2":
+                            compileFileName = "For Employee.pdf";
                             break;
-                        case "5":
-                            compileFileName = "For Lender.pdf";
+                        case "4":
+                            compileFileName = "For Corporation.pdf";
                             break;
                         default:
                             compileFileName = "compiled_page.pdf";

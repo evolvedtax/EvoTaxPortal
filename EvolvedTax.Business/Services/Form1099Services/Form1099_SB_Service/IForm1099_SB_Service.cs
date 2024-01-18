@@ -1,6 +1,7 @@
 ﻿using EvolvedTax.Data.Models.DTOs;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.DTOs.Response;
+using EvolvedTax.Data.Models.DTOs.Response.Form1099;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Data.Models.Entities._1099;
 using Microsoft.AspNetCore.Http;
@@ -23,5 +24,8 @@ namespace EvolvedTax.Business.Services.Form1099Services
         Task<MessageResponseModel> DeletePermeant(int id);
         Task<bool> SendEmailToRecipients(int[] selectedValues, string uRL, string form1099NEC, int instituteId = -1);
         IEnumerable<Tbl1099_SB> GetForm1099List();
+        IEnumerable<Form1099SBResponse> GetCSVForm1099List(int entityId, int instId);
+        string GenerateCsvContent(IEnumerable<Form1099SBResponse> data);
     }
+        
 }

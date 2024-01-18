@@ -76,6 +76,7 @@ public class Tbl_3922
     public string? Province { get; set; }
 
     public string? PostalCode { get; set; }
+    public int? IsCorrected { get; set; }
 
 }
 
