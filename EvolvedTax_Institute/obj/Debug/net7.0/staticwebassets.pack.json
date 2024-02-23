@@ -2885,6 +2885,10 @@
       "PackagePath": "staticwebassets\\Form1042S\\Charlie John_Form1042S_5_Page_8.pdf"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Form1042S\\Charlie Name line2 _Form1042S_4.pdf",
+      "PackagePath": "staticwebassets\\Form1042S\\Charlie Name line2 _Form1042S_4.pdf"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\Form1042S\\GeneratedPDFs_20240109051846.zip",
       "PackagePath": "staticwebassets\\Form1042S\\GeneratedPDFs_20240109051846.zip"
     },
@@ -3919,6 +3923,22 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\arrow_down.webp",
       "PackagePath": "staticwebassets\\images\\arrow_down.webp"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\bg-login.png",
+      "PackagePath": "staticwebassets\\images\\bg-login.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\box-2.png",
+      "PackagePath": "staticwebassets\\images\\box-2.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\box.png",
+      "PackagePath": "staticwebassets\\images\\box.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\briefcase.png",
+      "PackagePath": "staticwebassets\\images\\briefcase.png"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\dashboard4_1.jpg",
@@ -7241,6 +7261,22 @@
       "PackagePath": "staticwebassets\\images\\landing\\word_map.png"
     },
     {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\lock.png",
+      "PackagePath": "staticwebassets\\images\\lock.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\man.png",
+      "PackagePath": "staticwebassets\\images\\man.png"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\men.png",
+      "PackagePath": "staticwebassets\\images\\men.png"
+    },
+    {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\off_canvas.jpg",
       "PackagePath": "staticwebassets\\images\\off_canvas.jpg"
     },
@@ -7311,6 +7347,10 @@
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\scroll_down.webp",
       "PackagePath": "staticwebassets\\images\\scroll_down.webp"
+    },
+    {
+      "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\women.png",
+      "PackagePath": "staticwebassets\\images\\women.png"
     },
     {
       "Id": "C:\\Code\\Code Repos\\EvoTaxes\\EvolvedTax_Institute\\wwwroot\\images\\zender_logo.png",

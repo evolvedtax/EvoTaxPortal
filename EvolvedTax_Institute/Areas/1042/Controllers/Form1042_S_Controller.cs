@@ -6,9 +6,11 @@ using EvolvedTax.Business.Services.Form3921Services;
 using EvolvedTax.Business.Services.InstituteService;
 using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
+using EvolvedTax.Data.Models.DTOs.Response.Form1042;
 using EvolvedTax.Helpers;
 using EvolvedTax.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
 
 namespace EvolvedTax_Institute.Areas._1099.Controllers
 {
@@ -35,6 +37,8 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
                 Value = p.EntityId.ToString(),
                 Selected = p.EntityId == EntityId
             });
+            //testing
+            XDocument xmlDocument = Generate1042SXml();
             return View(_form1042_Service.GetForm1042SList().Where(p => p.EntityId == EntityId));
         }
         [Route("Form1042_S_/uploadClients")]
@@ -140,5 +144,114 @@ namespace EvolvedTax_Institute.Areas._1099.Controllers
             var response = await _form1042_Service.DeletePermeant(id);
             return Json(response);
         }
+
+        [HttpGet]
+        public IActionResult DownloadXml()
+        {
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+
+            var form1099Data = _form1042_Service.GetForm1042SList().Where(p => p.EntityId == EntityId && p.InstID == InstId);
+
+            XDocument xmlDocument = Generate1042SXml1(form1099Data);
+
+            return File(System.Text.Encoding.UTF8.GetBytes(xmlDocument.ToString()), "application/xml", "form1042s.xml");
+        }
+
+        private XDocument Generate1042SXml1(IEnumerable<Form1042SResponse> form1099Data)
+        {
+            // Create IRS1099File element
+            XElement irs1099File = new XElement("IRS1042S",
+                new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance"),
+                 new XDeclaration("1.0", "UTF-8", "yes")
+            );
+
+            foreach (var data in form1099Data)
+            {
+                // Create Id element with attributes
+                XElement idElement = new XElement("raten-nn",
+                    new XAttribute("ID", data.Id) // Assuming "Id" is the property name
+                );
+
+                // Dynamically add child elements for each column in the form1099Data
+                foreach (var property in data.GetType().GetProperties())
+                {
+                    string columnName = property.Name;
+                    object columnValue = property.GetValue(data);
+
+                    // Exclude the Id property
+                    if (columnName != "Id")
+                    {
+                        // Add XML child element with the column name as the tag and its value
+                        idElement.Add(new XElement(columnName, columnValue));
+                    }
+                }
+
+                // Add Id element to IRS1099File
+                irs1099File.Add(idElement);
+            }
+
+            // Create XDocument with XML declaration
+            XDocument xmlDocument = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"), // Add XML declaration here
+                irs1099File
+            );
+            return xmlDocument;
+        }
+        public XDocument Generate1042SXml()
+        {
+            var EntityId = HttpContext.Session.GetInt32("EntityId") ?? 0;
+            var InstId = HttpContext.Session.GetInt32("InstId") ?? 0;
+
+            var form1099Data = _form1042_Service.GetForm1042SList().Where(p => p.EntityId == EntityId && p.InstID == InstId);
+
+            // Create IRS1099File element
+            XElement irs1099File = new XElement("IRS1042S",
+                new XAttribute(XNamespace.Xmlns + "xsi", "http://www.w3.org/2001/XMLSchema-instance")
+               
+            );
+
+            foreach (var data in form1099Data)
+            {
+                // Create Id element with attributes
+                XElement idElement = new XElement("raten-nn",
+                    new XAttribute("ID", data.Id) // Assuming "Id" is the property name
+                );
+
+                // Dynamically add child elements for each column in the form1099Data
+                foreach (var property in data.GetType().GetProperties())
+                {
+                    string columnName = property.Name;
+                    object columnValue = property.GetValue(data);
+
+                    // Exclude the Id property
+                    if (columnName != "Id")
+                    {
+                        if (columnValue != null)
+                        {
+                            // Add XML child element with the column name as the tag and its value
+                            idElement.Add(new XElement(columnName, columnValue));
+                        }
+
+                          
+                    }
+                }
+
+                // Add Id element to IRS1099File
+                irs1099File.Add(idElement);
+            }
+
+            // Create XDocument with XML declaration
+            XDocument xmlDocument = new XDocument(
+                new XDeclaration("1.0", "UTF-8", "yes"), // Add XML declaration here
+                irs1099File
+            );
+            return xmlDocument;
+        }
+
+
+
+
+
     }
 }

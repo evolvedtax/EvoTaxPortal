@@ -15,6 +15,8 @@ using SkiaSharp;
 using EvolvedTax.Business.Services.InstituteService;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Data.SqlClient;
+using EvolvedTax.Data.Models.DTOs.Response;
 
 namespace EvolvedTax.Business.Services.Form1099Services
 {
@@ -669,15 +671,36 @@ namespace EvolvedTax.Business.Services.Form1099Services
         }
 
         #region CSV Code
-        public IEnumerable<Form1099SBResponse> GetCSVForm1099List(int entityId, int instId)
+        public IEnumerable<Form1099SBResponse> GetCSVForm1099List(int entityId, int instId, List<string> selectedRows)
         {
-            var data = _evolvedtaxContext.Tbl1099_SB
-             .Where(p => p.EntityId == entityId && p.InstID == instId)
-             .ToList();
+            IList<Form1099SBResponse> XXXList =
+     _evolvedtaxContext.Database.SqlQueryRaw<Form1099SBResponse>("GetTbl1099SBData @EntityId, @InstId",
+     new SqlParameter("EntityId", entityId),
+     new SqlParameter("InstId", instId)).ToList();
+
+            IQueryable<Tbl1099_SB> query = _evolvedtaxContext.Tbl1099_SB
+                                                             .Where(p => p.EntityId == entityId && p.InstID == instId);
+
+                         //Apply filter if selectedRows is not null
+                        if (selectedRows != null && selectedRows.Any())
+                        {
+                            query = query.Where(p => selectedRows.Contains(p.Id.ToString()));
+                        }
+                        else
+                        {
+                            // No selected rows, return all data
+                            var dataall = query.ToList();
+                            return MapToForm1099SBResponse(dataall);
+                        }
+
+                        var data = query.ToList();
+            
 
             return MapToForm1099SBResponse(data);
         }
+
       
+
         private IEnumerable<Form1099SBResponse> MapToForm1099SBResponse(IEnumerable<Tbl1099_SB> data)
         {
             var result = new List<Form1099SBResponse>();

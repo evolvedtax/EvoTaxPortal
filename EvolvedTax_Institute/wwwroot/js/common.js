@@ -387,8 +387,21 @@ var COMMON = (function () {
 
 
     }
-    COMMON.doAjaxToDownloadCsvFile = function (url, fileName) {
-        fetch(url)  // Use the provided URL directly
+    
+
+    COMMON.doAjaxToDownloadCsvFile = function (url, fileName, data = null) {
+        var options = {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        if (data !== null) {
+            options.body = JSON.stringify(data);
+        }
+
+        fetch(url, options)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -406,6 +419,33 @@ var COMMON = (function () {
             })
             .catch(error => console.error('Error:', error));
     };
+
+
+    //COMMON.doAjaxToDownloadCsvFile = function (url, fileName, selectedRows) {
+    //    fetch(url, {
+    //        method: 'POST', // Use POST method to send data
+    //        body: JSON.stringify({ selectedRows: selectedRows }), // Send selected rows as JSON
+    //        headers: {
+    //            'Content-Type': 'application/json'
+    //        }
+    //    })
+    //        .then(response => {
+    //            if (!response.ok) {
+    //                throw new Error(`HTTP error! Status: ${response.status}`);
+    //            }
+    //            return response.blob();
+    //        })
+    //        .then(blob => {
+    //            // Create a link element and trigger the download
+    //            var link = document.createElement('a');
+    //            link.href = window.URL.createObjectURL(blob);
+    //            link.download = fileName + ".csv";
+    //            document.body.appendChild(link);
+    //            link.click();
+    //            document.body.removeChild(link);
+    //        })
+    //        .catch(error => console.error('Error:', error));
+    //};
 
     COMMON.doAjaxToDownloadFile = function (url, params, fileName) {
         $.ajax({

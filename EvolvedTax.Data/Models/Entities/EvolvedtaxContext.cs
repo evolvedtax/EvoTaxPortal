@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvolvedTax.Data.Models.DTOs.Response.Form1099;
 using EvolvedTax.Data.Models.Entities._1042;
 using EvolvedTax.Data.Models.Entities._1098;
 using EvolvedTax.Data.Models.Entities._1099;

@@ -120,6 +120,7 @@
                                                             </button>
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <div class="dropdown-menu-horizontal">
+                                                               @*     <a class="dropdown-item" href="javascript:void()" onclick="DownloadAllXMLFiles()">Download XML</a>*@
                                                                     <a class="dropdown-item" href="javascript:void()" onclick="DownloadFile('@item.Id')">Download Form</a>
                                                                     <a class="dropdown-item" href="javascript:void()">E-mail to the recipient and send to IRS</a>
                                                                     <a class="dropdown-item" href="javascript:void()">File with IRS</a>
@@ -235,6 +236,13 @@
                         text: '<i class="fa fa-ellipsis-h"></i>',
                         className: 'btn-menu-toggle',
                         buttons: [
+                            {
+                                text: '<i class="fa fa-download"></i> Download In XML',
+                                className: 'btn-template',
+                                action: function (e, dt, button, config) {
+                                    DownloadAllXMLFiles();
+                                }
+                            },
                             {
                                 text: '<i class="fa fa-download"></i> Download New Template',
                                 className: 'btn-template',
@@ -502,6 +510,32 @@
             var response = COMMON.doAjaxGetWithJSONResponse("Form1042_S_/downlodPdf", { Id: id })
             window.open(response);
         }
+
+        function DownloadAllXMLFiles() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'Form1042_S_/DownloadXml', true);
+            xhr.responseType = 'blob'; // Set responseType to 'blob' to get binary data
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var blob = xhr.response;
+                    var url = window.URL.createObjectURL(blob);
+
+                    // Create a link element
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'all_form1042s.xml'; // Specify the filename for the downloaded file
+
+                    // Trigger a click event on the link to start the download
+                    document.body.appendChild(a); // Append the link to the document body
+                    a.click(); // Trigger click event
+                    document.body.removeChild(a); // Remove the link from the document body after download
+                }
+            };
+
+            xhr.send();
+        }
+
         function sen() {
 
         }
