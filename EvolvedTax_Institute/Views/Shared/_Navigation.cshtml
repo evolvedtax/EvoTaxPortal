@@ -59,7 +59,7 @@
             <li class="@Html.IsSelected(controller: "Institute")">
                 <a href="#">
                     <i class="fa fa-wpforms fa-lg"></i>
-                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9(s)</span>
+                    <span class="nav-label" data-i18n="nav.dashboard">Form W8(s)/W9</span>
                     <!--<span class="fa arrow"></span>  Add an arrow icon to indicate sub-menu -->
                 </a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Institute", cssClass: "in")">
@@ -75,36 +75,30 @@
 *@
                 </ul>
             </li>
-            <li class="@Html.IsSelected(controller: "Form/Dashboard")">
+      @*       <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1099" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1099(s)</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1042" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1042-S</span></a>
             </li>
-          @*  <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
-            </li>*@
+     
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="1098" asp-action="Entities" asp-controller="Institute1098"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 1098(s)</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="3921" asp-action="W9Entities" asp-controller="Institute"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3921</span></a>
             </li>
-      @*      <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
-            </li>*@
+
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="3922" asp-action="W9Entities" asp-controller="Institute3922"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 3922</span></a>
             </li>
             <li class="@Html.IsSelected(controller: "Form/Dashboard")">
                 <a class="left-nav-links" asp-area="5498" asp-action="W9Entities" asp-controller="Institute5498"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
             </li>
-           @* <li>
-                <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 5498</span></a>
-            </li>*@
+      
             <li>
                 <a class="left-nav-links"><i class="fa fa-wpforms fa-lg"></i> <span class="nav-label" data-i18n="nav.dashboard">Form 83(b)</span></a>
-            </li>
+            </li> *@
             @if (User.IsInRole("Admin") || User.IsInRole("Co-Admin"))
             {
               @*  <li class="@Html.IsSelected(controller: "Setting")">
@@ -115,7 +109,7 @@
                     <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "Setting", cssClass: "in")">
                         <li class="@Html.IsSelected(action: "Index")"><a href="@Url.Action("Index", "Setting")">General</a></li>
                         <li class="@Html.IsSelected(action: "SettingW8W9")"><a href="@Url.Action("SettingW8W9", "Setting")">W8(s)/W9(s)</a></li>
-                        <li class="@Html.IsSelected(action: "Setting1099")"><a href="@Url.Action("Setting1099", "Setting")">1099(s)</a></li>
+@*                         <li class="@Html.IsSelected(action: "Setting1099")"><a href="@Url.Action("Setting1099", "Setting")">1099(s)</a></li> *@
                     </ul>
                 </li>
             }
