@@ -41,7 +41,7 @@
                 <h3>Welcome to EvoForms</h3>
             </div>
             <p class="text-danger">@TempData["Message"]</p>
-            <p>Login in. To see it in action.</p>
+        @*     <p>Login in. To see it in action.</p>
             <form class="m-t" role="form" method="post" asp-action="Login" asp-controller="Account">
                 <div class="form-group">
                     <input class="form-control" name="UserName" placeholder="Username">
@@ -54,7 +54,10 @@
 
                 <a href="~/Account/ForgetPassword"><small>Forgot password?</small></a>
                 @*<p class="text-muted text-center"><small>Do not have an account?</small></p>*@
+
+                <form>
             </form>
+           
             <p class="m-t"> <small><strong>Copyright</strong> &copy; EvoForms @DateTime.UtcNow.Year</small> </p>
         </div>
     </div>
