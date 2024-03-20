@@ -6,6 +6,8 @@ using SkiaSharp;
 using EvolvedTax.Common.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EvolvedTax.Business.Services.CommonService
 {
@@ -29,6 +31,15 @@ namespace EvolvedTax.Business.Services.CommonService
             string fontsFolderPath = Path.Combine(_env.WebRootPath, "fonts");
             string ext = ".ttf";
             string fontPath = string.Empty;
+
+            int tempIndex = filePath.IndexOf("_temp");
+            string result = filePath.Substring(0, tempIndex);
+            string newSignFileName = $"{result}.png"; // New file name with .png extension
+
+            string currentDate = DateTime.Now.ToString("yyyyMMdd");
+            string newSignDateFileName = $"{result}_{currentDate}.png";
+
+
             // Load the image file using SkiaSharp
             using (SKBitmap bitmap = SKBitmap.Decode(imageFilePath))
             {
@@ -89,10 +100,14 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                 }
 
+          
                 // Save the modified image as PNG
                 using (SKData encoded = bitmap.Encode(SKEncodedImageFormat.Png, 100))
                 {
-                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "picture1.png");
+                   
+
+                    // outputPath = Path.Combine(Directory.GetCurrentDirectory(), "picture1.png");
+                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), newSignFileName);
                     File.WriteAllBytes(outputPath, encoded.ToArray());
                 }
             }
@@ -126,12 +141,14 @@ namespace EvolvedTax.Business.Services.CommonService
                 // Save the modified image as PNG
                 using (SKData encoded = bitmap.Encode(SKEncodedImageFormat.Png, 100))
                 {
-                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "picture2.png");
+                   // string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "picture2.png");
+                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), newSignDateFileName);
                     File.WriteAllBytes(outputPath, encoded.ToArray());
                 }
             }
             string newFile = Path.Combine(request.BaseUrl, filePath);
             string fileName = filePath.Replace("_temp", "");
+            string SignImgFilePath = "";
 
             using (PdfReader pdfReader = new PdfReader(newFile))
             {
@@ -140,13 +157,15 @@ namespace EvolvedTax.Business.Services.CommonService
                 using (PdfStamper pdfStamper = new PdfStamper(pdfReader, new FileStream(Path.Combine(request.BaseUrl, fileName), FileMode.Create)))
                 {
                     AcroFields pdfFormFields = pdfStamper.AcroFields;
-                    string src1 = Path.Combine(Directory.GetCurrentDirectory(), "picture1.png");
+                   // string src1 = Path.Combine(Directory.GetCurrentDirectory(), "picture1.png");
+                    string src1 = SignImgFilePath= Path.Combine(Directory.GetCurrentDirectory(), newSignFileName);
                     Image image1 = Image.GetInstance(src1);
                     PdfImage stream1 = new PdfImage(image1, "", null);
                     stream1.Put(new PdfName("ITXT_SpecialId"), new PdfName("123456789"));
                     PdfIndirectObject ref1 = pdfStamper.Writer.AddToBody(stream1);
 
-                    string src2 = Path.Combine(Directory.GetCurrentDirectory(), "picture2.png");
+                  //  string src2 = Path.Combine(Directory.GetCurrentDirectory(), "picture2.png");
+                    string src2 = Path.Combine(Directory.GetCurrentDirectory(), newSignDateFileName);
                     Image image2 = Image.GetInstance(src2);
                     PdfImage stream2 = new PdfImage(image2, "", null);
                     stream2.Put(new PdfName("ITXT_SpecialId"), new PdfName("1234567"));
@@ -162,7 +181,8 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W8ECIForm == request.FormName)
                     {
-                        image1.SetAbsolutePosition(132, 51);
+                        //image1.SetAbsolutePosition(132, 51);
+                        image1.SetAbsolutePosition(122, 51);
                         if (request.EntryDate != null)
                         {
                             image2.SetAbsolutePosition(485, 51);
@@ -170,7 +190,8 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W9Form == request.FormName)
                     {
-                        image1.SetAbsolutePosition(147, 230);
+                        //image1.SetAbsolutePosition(147, 230);
+                        image1.SetAbsolutePosition(132, 231);
                         if (request.EntryDate != null)
                         {
                             image2.SetAbsolutePosition(430, 230);
@@ -178,7 +199,8 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W8EXPForm == request.FormName)
                         {
-                        image1.SetAbsolutePosition(72, 530);
+                       // image1.SetAbsolutePosition(72, 530);
+                        image1.SetAbsolutePosition(62, 530);
                         if (request.EntryDate != null)
                         {
                             image2.SetAbsolutePosition(450, 530);
@@ -186,7 +208,9 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W8BENEForm == request.FormName)
                         {
-                        image1.SetAbsolutePosition(120, 110);
+                        //image1.SetAbsolutePosition(120, 110);
+                        image1.SetAbsolutePosition(100, 110);
+                      
                         if (request.EntryDate != null)
                         {
                             image2.SetAbsolutePosition(470, 110);
@@ -194,7 +218,8 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W8IMYForm == request.FormName)
                     {
-                        image1.SetAbsolutePosition(107, 185);
+                        //image1.SetAbsolutePosition(107, 185);
+                        image1.SetAbsolutePosition(102, 185);
                         if (request.EntryDate != null)
                         {
                             image2.SetAbsolutePosition(495, 185);
@@ -216,8 +241,15 @@ namespace EvolvedTax.Business.Services.CommonService
 
                 pdfReader.Close();
             }
+            //Delete The SignImage from folder 
+            File.Delete(SignImgFilePath);
+            File.Delete(newSignDateFileName);
             return fileName;
         }
+
+
+
+        
 
 
         public string RemoveAnnotations(string filePath)
@@ -229,6 +261,8 @@ namespace EvolvedTax.Business.Services.CommonService
             // Load the PDF document
             using (PdfReader reader = new PdfReader(inputFilePath))
             {
+               
+             
                 // Iterate through each page of the document
                 for (int pageNum = 1; pageNum <= reader.NumberOfPages; pageNum++)
                 {
@@ -237,6 +271,14 @@ namespace EvolvedTax.Business.Services.CommonService
 
                     // Remove the annotations from the page
                     pageDict.Remove(PdfName.ANNOTS);
+                    //pageDict.Remove(PdfName.RECT);
+
+
+
+
+
+
+
                 }
 
                 // Save the modified PDF document without annotations
@@ -251,6 +293,8 @@ namespace EvolvedTax.Business.Services.CommonService
 
             return outputFileName;
         }
+
+
 
         //public string RemoveAnnotations (string filePath)
         //{

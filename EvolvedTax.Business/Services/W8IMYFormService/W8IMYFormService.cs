@@ -2029,7 +2029,7 @@ namespace EvolvedTax.Business.Services.W8IMYFormService
             PdfContentByte overContent = pdfStamper.GetOverContent(numberOfPages);
             // iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(70, 530, 190, 550, 0);
             iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(105, 185, 320, 205, 0);
-            rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
+            //rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
 
             //for date

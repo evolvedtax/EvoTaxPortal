@@ -530,7 +530,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             // close the pdf  
             PdfContentByte overContent = pdfStamper.GetOverContent(1);
             Rectangle rectangle = new Rectangle(110, 50, 350, 72, 0);
-            rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
+            //rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
 
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");
@@ -878,7 +878,7 @@ namespace EvolvedTax.Business.Services.W8ECIFormService
             // close the pdf  
             PdfContentByte overContent = pdfStamper.GetOverContent(1);
             Rectangle rectangle = new Rectangle(110, 50, 350, 72, 0);
-            rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
+            //rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
 
             var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");

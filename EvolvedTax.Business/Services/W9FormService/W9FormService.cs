@@ -256,12 +256,13 @@ namespace EvolvedTax.Business.Services.W9FormService
 
                 PdfContentByte overContent = pdfStamper.GetOverContent(1);
                 iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(130, 230, 350, 250, 0);
-                rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
+                //iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(130, 240, 350, 250, 270);
+               // rectangle.BackgroundColor = BaseColor.WHITE;
                 overContent.Rectangle(rectangle);
                 //for date
                 PdfContentByte overContent1 = pdfStamper.GetOverContent(1);
                 iTextSharp.text.Rectangle rectangle1 = new iTextSharp.text.Rectangle(440, 230, 510, 250, 0);
-                rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
+                //rectangle1.BackgroundColor = BaseColor.LIGHT_GRAY;
                 overContent1.Rectangle(rectangle1);
                 // For pasting image of signature
                 var src1 = Path.Combine(Directory.GetCurrentDirectory(), "signature-image.png");

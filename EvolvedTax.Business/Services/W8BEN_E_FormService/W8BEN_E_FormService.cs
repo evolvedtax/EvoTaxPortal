@@ -2054,7 +2054,7 @@ namespace EvolvedTax.Business.Services.W8BEN_E_FormService
 
             PdfContentByte overContent = pdfStamper.GetOverContent(numberOfPages);
             iTextSharp.text.Rectangle rectangle = new iTextSharp.text.Rectangle(100, 110, 250, 130, 0);
-            rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
+            //rectangle.BackgroundColor = BaseColor.LIGHT_GRAY;
             overContent.Rectangle(rectangle);
 
             //for date
