@@ -190,11 +190,19 @@ namespace EvolvedTax.Business.Services.CommonService
                     }
                     else if (AppConstants.W9Form == request.FormName)
                     {
-                        //image1.SetAbsolutePosition(147, 230);
-                        image1.SetAbsolutePosition(132, 231);
+                        image1.SetAbsolutePosition(145, 195);
+                        //image1.SetAbsolutePosition(132, 231);
                         if (request.EntryDate != null)
                         {
-                            image2.SetAbsolutePosition(430, 230);
+                            image2.SetAbsolutePosition(430, 195);
+                        }
+
+                        PdfContentByte over3= pdfStamper.GetOverContent(1);
+                        over3.AddImage(image1);
+                        if (request.EntryDate != null)
+                        {
+                            PdfContentByte over2 = pdfStamper.GetOverContent(1);
+                            over3.AddImage(image2);
                         }
                     }
                     else if (AppConstants.W8EXPForm == request.FormName)
@@ -225,13 +233,15 @@ namespace EvolvedTax.Business.Services.CommonService
                             image2.SetAbsolutePosition(495, 185);
                         }
                     }
-
-                    PdfContentByte over1 = pdfStamper.GetOverContent(numberOfPages);
-                    over1.AddImage(image1);
-                    if (request.EntryDate != null)
+                    if (AppConstants.W9Form != request.FormName)
                     {
-                        PdfContentByte over2 = pdfStamper.GetOverContent(numberOfPages);
-                        over1.AddImage(image2);
+                        PdfContentByte over1 = pdfStamper.GetOverContent(numberOfPages);
+                        over1.AddImage(image1);
+                        if (request.EntryDate != null)
+                        {
+                            PdfContentByte over2 = pdfStamper.GetOverContent(numberOfPages);
+                            over1.AddImage(image2);
+                        }
                     }
                     // Flatten the form fields to apply the changes
                     pdfStamper.FormFlattening = true;
