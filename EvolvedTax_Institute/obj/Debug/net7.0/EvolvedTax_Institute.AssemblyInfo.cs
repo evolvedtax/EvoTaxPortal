@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EvolvedTax_Institute")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+05f20e2001d184b2066939167cfd1b70d1a8a5e8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+972d4da82fd588117b96f589618b7ad9bc84b31a")]
 [assembly: System.Reflection.AssemblyProductAttribute("EvolvedTax_Institute")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EvolvedTax_Institute")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
