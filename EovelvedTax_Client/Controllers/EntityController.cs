@@ -47,10 +47,11 @@ namespace EvolvedTax_Client.Controllers
             _mapper = mapper;
             _W8IMYFormService = W8IMYFormService;
         }
+        #region W9
         public async Task<IActionResult> GQEntity()
         {
             string clientEmail = HttpContext.Session.GetString("ClientEmail") ?? "";
-          
+
 
             if (_instituteService.GetClientDataByClientEmailId(clientEmail)?.ClientStatus == AppConstants.ClientStatusFormSubmitted)
             {
@@ -96,7 +97,7 @@ namespace EvolvedTax_Client.Controllers
                 Value = p.FatcaValue
             });
 
-            if(GQEntitiesResponse != null)
+            if (GQEntitiesResponse != null)
             {
 
                 if (GQEntitiesResponse.W8FormType == AppConstants.W8EXPForm)
@@ -274,6 +275,7 @@ namespace EvolvedTax_Client.Controllers
             return Json(filePathResponse);
         }
 
+        #endregion
 
         #region W8EXP
         public async Task<IActionResult> W8EXP()

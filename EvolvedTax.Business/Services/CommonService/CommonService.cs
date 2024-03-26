@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.Text;
 using System.Text.RegularExpressions;
+using Org.BouncyCastle.Crypto;
 
 namespace EvolvedTax.Business.Services.CommonService
 {
@@ -204,7 +205,54 @@ namespace EvolvedTax.Business.Services.CommonService
                             PdfContentByte over2 = pdfStamper.GetOverContent(1);
                             over3.AddImage(image2);
                         }
-                    }
+
+                        #region Remove Pages 
+
+
+                         
+
+                      
+
+
+                            //string compileFileName;
+
+                          
+
+                            //string outputFilePath = Path.Combine(SaveFolderPath, compileFileName);
+                            //CompilepdfPaths.Add(outputFilePath);
+
+                            //// Create a Document object
+                            //Document document = new Document();
+
+                            //// Create a PdfCopy object to write the output PDF
+                            //PdfCopy pdfCopy = new PdfCopy(document, new FileStream(outputFilePath, FileMode.Create));
+
+                            //// Open the document for writing
+                            //document.Open();
+
+                            
+                            //    // Open each input PDF file
+                            //    PdfReader pdfReader_local = new PdfReader(pdfFilePath);
+
+                            //    // Iterate through the pages of the input PDF and add them to the output PDF
+                            //    for (int pageNum = 1; pageNum <= pdfReader_local.NumberOfPages; pageNum++)
+                            //    {
+                            //        PdfImportedPage page = pdfCopy.GetImportedPage(pdfReader_local, pageNum);
+                            //        pdfCopy.AddPage(page);
+                            //    }
+
+                            //pdfReader_local.Close();
+                            
+
+
+                            //document.Close();
+                            //pdfCopy.Close();
+                         
+
+                            #endregion
+                        }
+                           
+                        
                     else if (AppConstants.W8EXPForm == request.FormName)
                         {
                        // image1.SetAbsolutePosition(72, 530);

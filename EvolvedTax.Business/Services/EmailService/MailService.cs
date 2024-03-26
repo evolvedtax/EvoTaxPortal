@@ -19,7 +19,7 @@ namespace EvolvedTax.Business.MailService
     public class MailService : IMailService
     {
         private readonly IInstituteService _instituteService;
-        private readonly ITrailAudit1099Service _trailAudit1099Service;
+        //private readonly ITrailAudit1099Service _trailAudit1099Service;
         private EmailSetting emailSetting;
         private InstituteMaster instituteMaster;
         private readonly EvolvedtaxContext _evolvedtaxContext;
@@ -29,11 +29,12 @@ namespace EvolvedTax.Business.MailService
         private string SupportEmailForTechnology = "technology@evolvedtax.com";
 
 
-        public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
+       // public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, ITrailAudit1099Service trailAudit1099Service, int instituteId = -1)
+        public MailService(IInstituteService instituteService, EvolvedtaxContext evolvedtaxContext, int instituteId = -1)
         {
             _instituteService = instituteService;
             _evolvedtaxContext = evolvedtaxContext;
-            _trailAudit1099Service = trailAudit1099Service;
+           // _trailAudit1099Service = trailAudit1099Service;
             //emailSetting = _evolvedtaxContext.EmailSetting.FirstOrDefault(es => es.InstID == instituteId);
         }
 

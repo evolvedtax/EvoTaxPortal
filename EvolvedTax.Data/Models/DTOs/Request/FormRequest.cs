@@ -26,6 +26,10 @@ public class FormRequest
     public string BackupWithHolding { get; set; } = string.Empty;
     public string Payeecode { get; set; } = string.Empty;
     public string W9Fatca { get; set; } = string.Empty;
+    public bool ThreeB { get; set; } = false;
+    public bool DisregardedEntityW9 { get; set; } = false;
+    [StringLength(45)]
+    public string? OtherEntityType { get; set; } = string.Empty;
 
     public bool? DE { get; set; } = false;
     [StringLength(121)]

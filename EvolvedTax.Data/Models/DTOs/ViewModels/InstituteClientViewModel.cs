@@ -13,5 +13,6 @@ namespace EvolvedTax.Data.Models.DTOs.ViewModels
         public IQueryable<InstituteClientResponse> InstituteClientsResponse { get; set; } = new List<InstituteClientResponse>().AsQueryable();
         public IQueryable<SharedUsersResponse> SharedUsersResponse { get; set; } = new List<SharedUsersResponse>().AsQueryable();
         public InstituteClientRequest InstituteClientsRequest { get; set; } = new InstituteClientRequest();
+        public string ClientUrl { get; set; }
     }
 }

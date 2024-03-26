@@ -554,8 +554,43 @@
                 //allowClear: true
             });
 
+       
 
+            // When the value of the dropdown changes
+            $('#EntityTypeW9').on('change', function () {
 
+                var selectedText = $(this).find("option:selected").text();
+                if (selectedText === 'Other') {
+                  
+                   $('#OherId').show(); // Show the "Other" input
+                }
+                else {
+                    $('#OherId').hide();
+                    $('#other').val('');
+                }
+                if (selectedText === 'Partnership' || selectedText === 'Trust/Estate' || selectedText === 'LLC-Partnership') {;
+                    $('#chkbox3').show();
+                    if (selectedText === 'LLC-Partnership')
+                    {
+                        selectedText = 'LLC';
+                    }
+                    $('#chkbox3-label').text("Please check this box if you have any foreign individual(s) as partner in this " + selectedText + ".");
+                }
+                else
+                {
+                    $('#chkbox3').hide();
+                }
+
+            });
+
+            $("#DisregardedEntity").change(function () {
+                if ($(this).is(':checked')) {
+                    $("#OwnerName").show(); // If checked, show the element
+                } else {
+                    $("#OwnerName").hide(); // If unchecked, hide the element
+                    $('#firstName').val('');
+                }
+            });
 
             //Mailing  Address Validation
             var addressInput = $('#adreess1');
@@ -837,6 +872,7 @@
         });
         $(window).on('load', function () {
             $('select').change();
+            $("#DisregardedEntity").change();
             var checkedRadioButton = $("input[type='radio'][name='FormType']:checked");
             if (checkedRadioButton.length > 0) {
                 // var selectedValuecheckedRadioButton = $("input[type='radio'][name='FormType']:checked").val();
@@ -1045,6 +1081,8 @@
                 // #('#Fatca').val('').change();
             } else {
                 $('#BackupWithHoldingDiv').prop('hidden', false);
+                $('#Payeecode').val(''); // Unselect Payeecode
+                $('#Fatca').val('');     // Unselect Fatca
             }
         }
         function showTab(n) {

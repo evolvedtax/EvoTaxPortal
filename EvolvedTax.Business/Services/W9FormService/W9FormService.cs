@@ -71,7 +71,7 @@ namespace EvolvedTax.Business.Services.W9FormService
         {
             var model = new TblW9form
             {
-                Name = "",
+
                 BusinessEntity = request.GQOrgName,
                 FederalTaxClassification = "",
                 Address = string.Concat(request.MAddress1, " ", request.MAddress2),
@@ -87,6 +87,10 @@ namespace EvolvedTax.Business.Services.W9FormService
                 W9emailAddress = request.EmailId,
                 W9entryDate = DateTime.Now,
                 IsActive = true,
+                Name = request.GQFirstName,
+                OtherEntityType = request.OtherEntityType,
+                ThreeB = request.ThreeB,
+                DisregardedEntity = request.DisregardedEntityW9
             };
 
             if (_evolvedtaxContext.TblW9forms.Any(p => p.W9emailAddress == request.EmailId))
@@ -105,7 +109,7 @@ namespace EvolvedTax.Business.Services.W9FormService
         }
         protected static string W9Creation(FormRequest request)
         {
-           
+
             string templatefile = request.TemplateFilePath;
             string newFile1 = string.Empty;
             if (request.IndividualOrEntityStatus == AppConstants.IndividualStatus)
@@ -148,12 +152,30 @@ namespace EvolvedTax.Business.Services.W9FormService
                         pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                         pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                     }
-         
+
                 }
                 else
                 {
-                    // 2 Business name/disregarded entity name, if different from above
-                    pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_02[0]", request.GQOrgName);
+                    pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_01[0]", request.GQFirstName);
+                    // Check if request.GQOrgName is not null and trim it
+                    if (!string.IsNullOrEmpty(request.GQFirstName))
+                    {
+                 
+                        // Check if GQFirstName is not equal to GQOrgName (case-insensitive)
+                        if (!string.Equals(request.GQFirstName.Trim(), request.GQOrgName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Set the value of the PDF form field if GQFirstName is different from GQOrgName
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_02[0]", request.GQOrgName);
+                        }
+                    }
+
+                 
+                    //if (request.GQFirstName != request.GQOrgName)
+                    //{
+                    //    // 2 Business name/disregarded entity name, if different from above
+                    //    pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_02[0]", request.GQOrgName);
+                    //}
+
                     // 'Employer identification number
                     // ElseIf Mid(SSN_TIN1, 3, 1) = "-" Then
                     pdfFormFields.SetField("topmostSubform[0].Page1[0].f1_14[0]", request?.Ssnitnein?.Substring(0, 2));
@@ -174,19 +196,19 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", "0"); //Other
-                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+                      
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
                         case "2": // C Corporation
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]", "0"); //Individual/sole proprietor
-                           // pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]", "0"); //C corporation
+                                                                                                                      // pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]", "0"); //C corporation
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]", "0"); //S corporation
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[3]", "0"); //Partnership
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", "0"); //Other
-                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+          
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -198,7 +220,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", "0"); //Other
-                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+             
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -210,7 +232,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", "0"); //Other
-                            //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+               
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -222,7 +244,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                             //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", "0"); //Other
-                            //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+                       
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -234,7 +256,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", ""); //Other
-                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+                   
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", "C"); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -246,7 +268,7 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
                             //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", ""); //Other
-                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+                       
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", "S"); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
@@ -262,15 +284,31 @@ namespace EvolvedTax.Business.Services.W9FormService
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", "P"); //p
                             pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", ""); //OtherTextbox
                             break;
+                        case "10": // Other
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]", "0"); //Individual/sole proprietor
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]", "0"); //C corporation
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]", "0"); //S corporation
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[3]", "0"); //Partnership
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]", "0"); //Trust/Estate
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]", "0"); //LLC
+                            //pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]", ""); //Other
+                     
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]", ""); //p
+                            pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]", request.OtherEntityType); //OtherTextbox
+                            break;
                     }
                 }
 
- 
+                if (request.ThreeB == false)
+                {
+                    pdfFormFields.SetField("topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]", "0"); //3b checkbox
+                }
+
 
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]", string.Concat(request.MAddress1, " ", request.MAddress2));
                 // 6 City, state, and ZIP code
                 pdfFormFields.SetField("topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]", string.Concat(request.MCity, " ", request.MState, " ", request.MZipCode));
-  
+
                 pdfFormFields.SetField("Signature", "Form_W9.png");
 
 
@@ -638,6 +676,11 @@ namespace EvolvedTax.Business.Services.W9FormService
             gQuestionData.Ssnitnein = w9Data?.SsnTin;
             gQuestionData.EmailId = w9Data?.W9emailAddress ?? ClientEmailId;
             gQuestionData.W9PrintName = w9Data?.W9printName;
+            gQuestionData.OtherEntityType = w9Data?.OtherEntityType;
+            gQuestionData.ThreeB = w9Data.ThreeB;
+            gQuestionData.GQFirstName = w9Data.Name;
+            gQuestionData.DisregardedEntityW9 = w9Data.DisregardedEntity;
+            
             return gQuestionData;
         }
 
@@ -681,7 +724,7 @@ namespace EvolvedTax.Business.Services.W9FormService
             if (response != null)
             {
                 request.Id = response.Id;
-                response.Name = "";
+
                 response.BusinessEntity = request.GQOrgName;
                 response.FederalTaxClassification = "";
                 response.Address = string.Concat(request.MAddress1, " ", request.MAddress2);
@@ -695,7 +738,11 @@ namespace EvolvedTax.Business.Services.W9FormService
                 response.Fatca = request.W9Fatca;
                 response.SsnTin = request.Ssnitnein;
                 response.W9emailAddress = request.EmailId;
-                response.IsActive=true;
+                response.IsActive = true;
+                response.Name = request.GQFirstName;
+                response.OtherEntityType = request.OtherEntityType;
+                response.ThreeB = request.ThreeB;
+                response.DisregardedEntity = request.DisregardedEntityW9;
                 _evolvedtaxContext.TblW9forms.Update(response);
                 _evolvedtaxContext.SaveChanges();
                 if (request.IsPartialSave)

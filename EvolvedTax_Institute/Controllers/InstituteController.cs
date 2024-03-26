@@ -457,7 +457,19 @@ namespace EvolvedTax_Institute.Controllers
               })
               .ToList();
 
-            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable() };
+            var scheme = HttpContext.Request.Scheme; // "http" or "https"
+            var host = string.Empty;
+            if (_webHostEnvironment.IsDevelopment())
+            {
+                host = HttpContext.Request.Host.Value;
+            }
+            else
+            {
+                host = URLConstants.ClientUrl; // Hostname (e.g., example.com)
+            }
+            var ClientFullURL = $"{scheme}://{host}";
+
+            var model = new InstituteClientViewModel { InstituteClientsResponse = _instituteService.GetClientByEntityId(InstituteId ?? 0, EntityId), SharedUsersResponse = sharedUsersResponse.AsQueryable(),ClientUrl= ClientFullURL };
             return View(model);
         }
         public async Task<IActionResult> SendEmail(int[] selectedValues, int EntityId)

@@ -11,10 +11,12 @@ using EvolvedTax.Common.Constants;
 using EvolvedTax.Data.Models.DTOs.Request;
 using EvolvedTax.Data.Models.Entities;
 using EvolvedTax.Helpers;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static NPOI.SS.Format.CellNumberFormatter;
+using iTextSharp.text;
 
 namespace EvolvedTax_Client.Controllers
 {
@@ -265,11 +267,63 @@ namespace EvolvedTax_Client.Controllers
             // Update the request.FileName to just the filename
             request.FileName = destinationFilePath;
 
+
+            #region For W9 Only Dowload First page of PDF
+
+
             if (request.FormName == AppConstants.W9Form)
             {
                 await _w9FormService.UpdateByClientEmailId(clientEmail, request);
                 await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
+
+                // Remove all pages except the first page for the W9 form
+         
+                string pdfPath = Path.Combine(_webHostEnvironment.WebRootPath, request.FileName);
+                string newPdfPath = Path.Combine(_webHostEnvironment.WebRootPath, "first_page_w9.pdf");
+
+                // Create a PdfReader to read the original PDF
+                using (PdfReader reader = new PdfReader(pdfPath))
+                {
+                    // Create a Document
+                    using (Document document = new Document())
+                    {
+                        // Create a PdfCopy to write the modified PDF
+                        using (PdfCopy copy = new PdfCopy(document, new FileStream(newPdfPath, FileMode.Create)))
+                        {
+                            document.Open();
+
+                            // Get the first page of the original PDF
+                            PdfImportedPage page = copy.GetImportedPage(reader, 1);
+
+                            // Add the first page to the new PDF
+                            copy.AddPage(page);
+                        }
+                    }
+                }
+
+                // Delete the original file if needed
+                if (System.IO.File.Exists(pdfPath))
+                {
+                    System.IO.File.Delete(pdfPath);
+                }
+
+                // Rename the new file to the original file name
+                System.IO.File.Move(newPdfPath, pdfPath);
+
+              
+            
+
+
             }
+            #endregion
+
+
+
+            //if (request.FormName == AppConstants.W9Form)
+            //{
+            //    await _w9FormService.UpdateByClientEmailId(clientEmail, request);
+            //    await _instituteService.UpdateClientByClientEmailId(clientEmail, request);
+            //}
             else if (request.FormName == AppConstants.W8EXPForm)
             {
                 await _w8ExpFormService.UpdateByClientEmailId(clientEmail, request);

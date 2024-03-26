@@ -52,4 +52,8 @@ public partial class TblW9form
     public string? W9emailAddress { get; set; }
 
     public bool? IsActive { get; set; }
+    public string? OtherEntityType { get; set; }
+
+    public bool ThreeB { get; set; }
+    public bool DisregardedEntity { get; set; }
 }

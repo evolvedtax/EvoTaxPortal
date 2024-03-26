@@ -207,7 +207,8 @@
                                                     <td>@item.StatusName</td>
                                                     <td>@item.ClientStatusDate?.ToString("MM-dd-yyyy")</td>
                                                     <td>@string.Concat("Form"," ",item.FormName)</td>
-                                                    <td><a href="~/@item.FileName">@item.FileName</a></td>
+                                               @*      <td><a href="~/@item.FileName">@item.FileName</a></td> *@
+                                                    <td><a href="@($"{Model.ClientUrl}/{@item.FileName}")">@item.FileName</a></td>
                                                     <td>@item.LastUpdatedByName</td>
                                                     <td>@item.LastUpdatedOn?.ToString("MM-dd-yyyy")</td>
                                                     <td class="text-center">
